@@ -1,30 +1,28 @@
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import os
-from pathlib import Path
 import sqlite3
 import subprocess
 import sys
 import tempfile
 import unittest
-
+from pathlib import Path
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1] / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.catalog import create_chapter, rebuild_catalog  # noqa: E402
-from opencntx.core import verify_package  # noqa: E402
-from opencntx.navigator import (  # noqa: E402
+from opencntx.catalog import create_chapter, rebuild_catalog
+from opencntx.core import verify_package
+from opencntx.navigator import (
     NavigatorError,
     build_context_package,
     verify_context_package,
 )
-from opencntx.workflow import approve_task, begin_task, propose_task  # noqa: E402
-from opencntx.workspace import capture_source, init_workspace  # noqa: E402
-
+from opencntx.workflow import approve_task, begin_task, propose_task
+from opencntx.workspace import capture_source, init_workspace
 
 TASK_ID = "TASK-20260816-0001"
 HOT_PATHS_FOR_TEST = (
@@ -184,9 +182,7 @@ def official_snapshot(workspace: Path) -> dict[str, bytes]:
 class NavigatorTests(unittest.TestCase):
     def test_build_creates_standard_task_bound_package_and_both_verifiers_pass(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            workspace, source_id, _, _, proposed = ready_workspace(
-                Path(temporary_directory)
-            )
+            workspace, source_id, _, _, proposed = ready_workspace(Path(temporary_directory))
             before = official_snapshot(workspace)
 
             result = build_context_package(
@@ -234,10 +230,29 @@ class NavigatorTests(unittest.TestCase):
                 ["HOT", "HOT", "HOT", "HOT", "WARM", "COLD", "COLD"],
             )
             self.assertEqual(official_snapshot(workspace), before)
-            self.assertIn("does not grant permission", run_cli("workspace", "context", "build", TASK_ID, "--proposal-digest", proposed.object_digest, "--max-files", "25", "--max-bytes", "100000", "--root", str(workspace), cwd=workspace).stdout)
+            self.assertIn(
+                "does not grant permission",
+                run_cli(
+                    "workspace",
+                    "context",
+                    "build",
+                    TASK_ID,
+                    "--proposal-digest",
+                    proposed.object_digest,
+                    "--max-files",
+                    "25",
+                    "--max-bytes",
+                    "100000",
+                    "--root",
+                    str(workspace),
+                    cwd=workspace,
+                ).stdout,
+            )
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertTrue(any(completed.iterdir()))
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_compact_mode_excludes_history_but_pins_full_roadmap(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -291,22 +306,16 @@ class NavigatorTests(unittest.TestCase):
                 manifest["navigation"]["control"]["mode"],
                 "LEGACY_FULL_ROADMAP",
             )
-            self.assertTrue(
-                manifest["navigation"]["control"]["roadmap_body_loaded"]
-            )
+            self.assertTrue(manifest["navigation"]["control"]["roadmap_body_loaded"])
             self.assertEqual(
                 [item["path"] for item in manifest["navigation"]["read"][:3]],
                 list(HOT_PATHS_FOR_TEST),
             )
-            self.assertFalse(
-                (workspace / ".opencntx" / "control-snapshot.md").exists()
-            )
+            self.assertFalse((workspace / ".opencntx" / "control-snapshot.md").exists())
 
     def test_pre_control_legacy_package_remains_verifiable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            workspace, _, _, _, proposed = ready_workspace(
-                Path(temporary_directory), legacy=True
-            )
+            workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory), legacy=True)
             result = build_context_package(
                 workspace,
                 TASK_ID,
@@ -406,14 +415,20 @@ class NavigatorTests(unittest.TestCase):
                 architect="ARCHITECT",
             )
             approve_task(
-                workspace, TASK_ID, revision=1,
-                proposal_digest=proposed.object_digest, owner="OWNER",
+                workspace,
+                TASK_ID,
+                revision=1,
+                proposal_digest=proposed.object_digest,
+                owner="OWNER",
             )
             begin_task(workspace, TASK_ID, architect="ARCHITECT")
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_control_inputs_invalid")
 
@@ -436,14 +451,20 @@ class NavigatorTests(unittest.TestCase):
                 architect="ARCHITECT",
             )
             approve_task(
-                workspace, TASK_ID, revision=1,
-                proposal_digest=proposed.object_digest, owner="OWNER",
+                workspace,
+                TASK_ID,
+                revision=1,
+                proposal_digest=proposed.object_digest,
+                owner="OWNER",
             )
             begin_task(workspace, TASK_ID, architect="ARCHITECT")
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_content_input_missing")
 
@@ -451,15 +472,21 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             first = build_context_package(
-                workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                workspace,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
             first_context = (first.package_path / "CONTEXT.md").read_bytes()
             first_manifest = (first.package_path / "manifest.json").read_bytes()
 
             second = build_context_package(
-                workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                workspace,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
 
             self.assertEqual((second.package_path / "CONTEXT.md").read_bytes(), first_context)
@@ -471,17 +498,21 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             built = build_context_package(
-                workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                workspace,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
-            before = {
-                path.name: path.read_bytes() for path in built.package_path.iterdir()
-            }
+            before = {path.name: path.read_bytes() for path in built.package_path.iterdir()}
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=1, max_bytes=1,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=1,
+                    max_bytes=1,
                 )
 
             self.assertEqual(context.exception.code, "context_budget_exceeded")
@@ -490,9 +521,7 @@ class NavigatorTests(unittest.TestCase):
             )
             receipts = [
                 json.loads(path.read_text(encoding="utf-8"))
-                for path in sorted(
-                    (workspace / ".opencntx" / "receipts").glob("CTX-*.json")
-                )
+                for path in sorted((workspace / ".opencntx" / "receipts").glob("CTX-*.json"))
             ]
             self.assertEqual(receipts[-1]["status"], "CONTEXT_NOT_BUILT")
             self.assertNotIn(str(workspace), json.dumps(receipts[-1]))
@@ -508,13 +537,14 @@ class NavigatorTests(unittest.TestCase):
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_task_not_executing")
-            self.assertFalse(
-                (workspace / ".opencntx" / "control-snapshot.md").exists()
-            )
+            self.assertFalse((workspace / ".opencntx" / "control-snapshot.md").exists())
 
     def test_current_must_name_exact_task_and_revision(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -529,8 +559,11 @@ class NavigatorTests(unittest.TestCase):
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_current_mismatch")
 
@@ -545,8 +578,11 @@ class NavigatorTests(unittest.TestCase):
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "task_input_stale")
 
@@ -557,8 +593,11 @@ class NavigatorTests(unittest.TestCase):
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
 
             self.assertEqual(context.exception.code, "catalog_rebuild_required")
@@ -574,16 +613,21 @@ class NavigatorTests(unittest.TestCase):
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
             source_id, _, _ = add_source(workspace, "bron.txt", b"tekst\n")
-            chapter = create_chapter(
-                workspace, "CH-PLAN", title="Plan", source_ids=[source_id]
-            ).chapter_path.relative_to(workspace).as_posix()
+            chapter = (
+                create_chapter(workspace, "CH-PLAN", title="Plan", source_ids=[source_id])
+                .chapter_path.relative_to(workspace)
+                .as_posix()
+            )
             rebuild_catalog(workspace)
             proposed, _, _ = activate_task(workspace, [chapter])
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_chapter_not_current")
 
@@ -600,8 +644,11 @@ class NavigatorTests(unittest.TestCase):
             proposed, _, _ = activate_task(workspace, [chapter])
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_source_restricted")
 
@@ -614,8 +661,11 @@ class NavigatorTests(unittest.TestCase):
             rebuild_catalog(other)
             proposed, _, _ = activate_task(other, [chapter, record_path])
             result = build_context_package(
-                other, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                other,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
             self.assertEqual(result.status, "CONTEXT_BUILT")
 
@@ -631,8 +681,11 @@ class NavigatorTests(unittest.TestCase):
             proposed, _, _ = activate_task(workspace, [chapter, record_path])
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_source_quarantined")
 
@@ -643,8 +696,11 @@ class NavigatorTests(unittest.TestCase):
             )
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "context_source_invalid")
             self.assertFalse((workspace / ".opencntx" / "latest").exists())
@@ -665,8 +721,11 @@ class NavigatorTests(unittest.TestCase):
             proposed, _, _ = activate_task(workspace, [parent])
 
             built = build_context_package(
-                workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                workspace,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
             navigation = json.loads(
                 (built.package_path / "manifest.json").read_text(encoding="utf-8")
@@ -688,8 +747,11 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             build_context_package(
-                workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                max_files=25, max_bytes=100_000,
+                workspace,
+                TASK_ID,
+                proposal_digest=proposed.object_digest,
+                max_files=25,
+                max_bytes=100_000,
             )
             receipts_before = sorted(
                 path.name for path in (workspace / ".opencntx" / "receipts").iterdir()
@@ -723,8 +785,11 @@ class NavigatorTests(unittest.TestCase):
 
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
-                    workspace, TASK_ID, proposal_digest=proposed.object_digest,
-                    max_files=25, max_bytes=100_000,
+                    workspace,
+                    TASK_ID,
+                    proposal_digest=proposed.object_digest,
+                    max_files=25,
+                    max_bytes=100_000,
                 )
             self.assertEqual(context.exception.code, "catalog_rebuild_required")
 
@@ -732,28 +797,47 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             build = run_cli(
-                "workspace", "context", "build", TASK_ID,
-                "--proposal-digest", proposed.object_digest,
-                "--max-files", "25", "--max-bytes", "100000",
-                "--root", str(workspace), cwd=workspace,
+                "workspace",
+                "context",
+                "build",
+                TASK_ID,
+                "--proposal-digest",
+                proposed.object_digest,
+                "--max-files",
+                "25",
+                "--max-bytes",
+                "100000",
+                "--root",
+                str(workspace),
+                cwd=workspace,
             )
             verify = run_cli(
-                "workspace", "context", "verify", TASK_ID,
-                "--proposal-digest", proposed.object_digest,
-                "--root", str(workspace), cwd=workspace,
+                "workspace",
+                "context",
+                "verify",
+                TASK_ID,
+                "--proposal-digest",
+                proposed.object_digest,
+                "--root",
+                str(workspace),
+                cwd=workspace,
             )
             self.assertEqual(build.returncode, 0, build.stderr)
             self.assertIn("CONTEXT_BUILT", build.stdout)
             self.assertEqual(verify.returncode, 0, verify.stderr)
             self.assertIn("result: OK", verify.stdout)
 
-            (workspace / "CONTROL" / "OWNER.md").write_text(
-                "gewijzigd\n", encoding="utf-8"
-            )
+            (workspace / "CONTROL" / "OWNER.md").write_text("gewijzigd\n", encoding="utf-8")
             drift = run_cli(
-                "workspace", "context", "verify", TASK_ID,
-                "--proposal-digest", proposed.object_digest,
-                "--root", str(workspace), cwd=workspace,
+                "workspace",
+                "context",
+                "verify",
+                TASK_ID,
+                "--proposal-digest",
+                proposed.object_digest,
+                "--root",
+                str(workspace),
+                cwd=workspace,
             )
             self.assertEqual(drift.returncode, 1, drift.stderr)
             self.assertIn("DRIFT OR INCOMPLETE", drift.stdout)

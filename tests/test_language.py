@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import argparse
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
 import tempfile
 import unittest
-
+from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
@@ -123,7 +122,9 @@ class LanguageContractTests(unittest.TestCase):
             error_result = run_cli_bytes("verify", cwd=REPOSITORY_ROOT, io_encoding=encoding)
             self.assertEqual(help_result.returncode, 0, help_result.stderr)
             self.assertIn(error_result.returncode, {0, 1, 2})
-            combined = help_result.stdout + help_result.stderr + error_result.stdout + error_result.stderr
+            combined = (
+                help_result.stdout + help_result.stderr + error_result.stdout + error_result.stderr
+            )
             self.assertNotIn(b"Traceback", combined)
             self.assertNotIn("\ufffd", combined.decode(encoding.split(":", 1)[0]))
 

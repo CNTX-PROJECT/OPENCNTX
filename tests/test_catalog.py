@@ -1,30 +1,30 @@
 from __future__ import annotations
 
-from contextlib import closing
 import hashlib
 import json
 import os
-from pathlib import Path
 import re
 import sqlite3
 import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import closing
+from pathlib import Path
 from unittest import mock
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.catalog import (  # noqa: E402
-    CatalogError,
+from opencntx.catalog import (
     LEGACY_REQUIRED_SECTIONS,
     REQUIRED_SECTIONS,
+    CatalogError,
     create_chapter,
     rebuild_catalog,
 )
-from opencntx.workspace import capture_source, init_workspace  # noqa: E402
+from opencntx.workspace import capture_source, init_workspace
 
 
 def run_cli(*arguments: str, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -85,9 +85,7 @@ def stored_original(workspace: Path, source_id: str) -> Path:
 
 
 def catalog_value(workspace: Path, query: str, parameters: tuple[object, ...] = ()) -> object:
-    with closing(
-        sqlite3.connect(workspace / ".opencntx" / "catalog.sqlite")
-    ) as connection:
+    with closing(sqlite3.connect(workspace / ".opencntx" / "catalog.sqlite")) as connection:
         row = connection.execute(query, parameters).fetchone()
     assert row is not None
     return row[0]
@@ -125,9 +123,7 @@ class CatalogTests(unittest.TestCase):
                     title="Andere titel",
                 )
             self.assertEqual(result.chapter_path.read_bytes(), before)
-            self.assertEqual(
-                (workspace / "CHAPTERS" / "INDEX.md").read_bytes(), index_before
-            )
+            self.assertEqual((workspace / "CHAPTERS" / "INDEX.md").read_bytes(), index_before)
             self.assertFalse((workspace / ".opencntx" / "catalog.sqlite").exists())
 
     def test_create_rejects_invalid_unknown_drifted_and_duplicate_inputs(self) -> None:
@@ -146,9 +142,7 @@ class CatalogTests(unittest.TestCase):
             source = workspace / "INBOX" / "bron.txt"
             source.write_text("inhoud", encoding="utf-8")
             captured = capture_source(workspace, source)
-            stored_original(workspace, captured.source_id).write_text(
-                "gewijzigd", encoding="utf-8"
-            )
+            stored_original(workspace, captured.source_id).write_text("gewijzigd", encoding="utf-8")
             with self.assertRaisesRegex(CatalogError, "niet exact"):
                 create_chapter(
                     workspace,
@@ -197,19 +191,17 @@ class CatalogTests(unittest.TestCase):
                 ),
                 hashlib.sha256(second.index_path.read_bytes()).hexdigest(),
             )
-            self.assertEqual(
-                catalog_value(workspace, "PRAGMA integrity_check"), "ok"
-            )
-            index = (workspace / "CHAPTERS" / "INDEX.md").read_text(
-                encoding="utf-8"
-            )
+            self.assertEqual(catalog_value(workspace, "PRAGMA integrity_check"), "ok")
+            index = (workspace / "CHAPTERS" / "INDEX.md").read_text(encoding="utf-8")
             self.assertIn(second.state_digest, index)
             self.assertIn("No chapters registered yet", index)
             receipt = read_json(second.receipt_path)
             self.assertEqual(receipt["status"], "CATALOG_REBUILT")
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertEqual(len(list(completed.iterdir())), 2)
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_owner_accepted_exact_chapter_becomes_current(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -304,17 +296,13 @@ class CatalogTests(unittest.TestCase):
             capture_source(workspace, source, supersedes=first.source_id)
             superseded = rebuild_catalog(workspace)
             self.assertEqual(superseded.freshness_counts["STALE"], 1)
-            with closing(
-                sqlite3.connect(workspace / ".opencntx" / "catalog.sqlite")
-            ) as connection:
+            with closing(sqlite3.connect(workspace / ".opencntx" / "catalog.sqlite")) as connection:
                 issue_codes = {
                     row[0] for row in connection.execute("SELECT code FROM catalog_issues")
                 }
             self.assertIn("chapter_source_superseded", issue_codes)
 
-            stored_original(workspace, first.source_id).write_text(
-                "drift", encoding="utf-8"
-            )
+            stored_original(workspace, first.source_id).write_text("drift", encoding="utf-8")
             drifted = rebuild_catalog(workspace)
             self.assertEqual(drifted.freshness_counts["STALE"], 1)
             self.assertEqual(
@@ -350,9 +338,7 @@ class CatalogTests(unittest.TestCase):
             promote_chapter(workspace, "CH-AFHANKELIJK")
             self.assertEqual(rebuild_catalog(workspace).freshness_counts["CURRENT"], 2)
 
-            stored_original(workspace, captured.source_id).write_text(
-                "drift", encoding="utf-8"
-            )
+            stored_original(workspace, captured.source_id).write_text("drift", encoding="utf-8")
             stale = rebuild_catalog(workspace)
             self.assertEqual(stale.freshness_counts["STALE"], 2)
             old_catalog = stale.catalog_path.read_bytes()
@@ -386,9 +372,7 @@ class CatalogTests(unittest.TestCase):
             path = chapter_path(workspace, "CH-ONVOLLEDIG")
             text = path.read_text(encoding="utf-8")
             text = text.replace(captured.source_id, "SRC-20260816-000000000000")
-            text = text.replace(
-                "dependency_ids = []", 'dependency_ids = ["CH-ONTBREEKT"]'
-            )
+            text = text.replace("dependency_ids = []", 'dependency_ids = ["CH-ONTBREEKT"]')
             path.write_text(text, encoding="utf-8", newline="\n")
 
             result = rebuild_catalog(workspace)
@@ -574,9 +558,11 @@ class CatalogTests(unittest.TestCase):
                     raise OSError("gesimuleerde indexfout")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
-            with mock.patch("opencntx.catalog.os.replace", side_effect=fail_index_publish):
-                with self.assertRaisesRegex(CatalogError, "niet volledig"):
-                    rebuild_catalog(workspace)
+            with (
+                mock.patch("opencntx.catalog.os.replace", side_effect=fail_index_publish),
+                self.assertRaisesRegex(CatalogError, "niet volledig"),
+            ):
+                rebuild_catalog(workspace)
 
             official_after = {
                 path.relative_to(workspace).as_posix(): path.read_bytes()

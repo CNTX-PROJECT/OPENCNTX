@@ -2,19 +2,18 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
-
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1] / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.control import (  # noqa: E402
+from opencntx.control import (
     CONTROL_BLOCK_MAX_BYTES,
     CONTROL_END,
     CONTROL_SNAPSHOT_HEADER,
@@ -24,7 +23,7 @@ from opencntx.control import (  # noqa: E402
     inspect_control,
     refresh_control_snapshot,
 )
-from opencntx.workspace import init_workspace  # noqa: E402
+from opencntx.workspace import init_workspace
 
 
 def run_cli(*arguments: str, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -58,9 +57,7 @@ class ControlTests(unittest.TestCase):
 
     def receipts(self, workspace: Path) -> set[str]:
         return {
-            item.name
-            for item in (workspace / ".opencntx" / "receipts").iterdir()
-            if item.is_file()
+            item.name for item in (workspace / ".opencntx" / "receipts").iterdir() if item.is_file()
         }
 
     def test_new_workspace_has_one_marker_pair_and_deterministic_snapshot(self) -> None:
@@ -124,15 +121,17 @@ class ControlTests(unittest.TestCase):
             self.assertNotIn(str(workspace), result.receipt_path.read_text(encoding="utf-8"))
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertEqual(len(list(completed.iterdir())), 1)
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_exact_block_byte_limit_is_accepted_and_one_more_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = self.make_workspace(Path(temporary_directory))
             overhead = len(CONTROL_START) + 1 + len(CONTROL_END)
-            exact = CONTROL_START + b"\n" + b"x" * (
-                CONTROL_BLOCK_MAX_BYTES - overhead
-            ) + CONTROL_END
+            exact = (
+                CONTROL_START + b"\n" + b"x" * (CONTROL_BLOCK_MAX_BYTES - overhead) + CONTROL_END
+            )
             self.assertEqual(len(exact), CONTROL_BLOCK_MAX_BYTES)
             self.roadmap(workspace).write_bytes(exact)
             state = inspect_control(workspace)
@@ -209,9 +208,11 @@ class ControlTests(unittest.TestCase):
                 encoding="utf-8",
                 newline="\n",
             )
-            with mock.patch("opencntx.control.os.replace", side_effect=OSError("test")):
-                with self.assertRaises(ControlError) as context:
-                    refresh_control_snapshot(workspace)
+            with (
+                mock.patch("opencntx.control.os.replace", side_effect=OSError("test")),
+                self.assertRaises(ControlError) as context,
+            ):
+                refresh_control_snapshot(workspace)
             self.assertEqual(context.exception.code, "control_snapshot_write_failed")
             self.assertEqual(self.snapshot(workspace).read_bytes(), previous)
             leftovers = list((workspace / ".opencntx").glob(".control-snapshot.md.*.tmp"))

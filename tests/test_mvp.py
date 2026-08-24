@@ -16,7 +16,6 @@ from opencntx.cli import main as cli_main
 from opencntx.core import OpenCntxError, pack_project
 from opencntx.integrity import IntegrityError
 
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 
@@ -99,7 +98,9 @@ class MvpTests(unittest.TestCase):
             self.assertIn("result: OK", verify_result.stdout)
             completed = root / ".opencntx" / "transactions" / "completed"
             self.assertTrue(any(completed.iterdir()))
-            self.assertEqual(list((root / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((root / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_02_repeated_pack_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -196,9 +197,7 @@ class MvpTests(unittest.TestCase):
             (root / "source.txt").write_text("stable bytes\n", encoding="utf-8")
             write_config(root, include=["source.txt"], required=["source.txt"])
             package, _ = pack_project(root)
-            package_before = {
-                path.name: path.read_bytes() for path in package.iterdir()
-            }
+            package_before = {path.name: path.read_bytes() for path in package.iterdir()}
 
             with (
                 patch(
@@ -282,9 +281,11 @@ class MvpTests(unittest.TestCase):
             root = Path(temporary_directory)
             (root / "blocked.txt").write_text("tekst", encoding="utf-8")
             write_config(root, include=["blocked.txt"])
-            with patch.object(Path, "read_bytes", side_effect=PermissionError("geen toegang")):
-                with self.assertRaisesRegex(OpenCntxError, "cannot be read"):
-                    pack_project(root)
+            with (
+                patch.object(Path, "read_bytes", side_effect=PermissionError("geen toegang")),
+                self.assertRaisesRegex(OpenCntxError, "cannot be read"),
+            ):
+                pack_project(root)
 
     def test_07_path_traversal_and_symlink_escape_are_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -448,9 +449,7 @@ class MvpTests(unittest.TestCase):
             write_config(root, include=["safe.txt"])
             self.assertEqual(run_cli("pack", cwd=root).returncode, 0)
             package = root / ".opencntx" / "latest"
-            package_before = {
-                path.name: path.read_bytes() for path in package.iterdir()
-            }
+            package_before = {path.name: path.read_bytes() for path in package.iterdir()}
 
             secret_value = "gh" + "p_" + ("Z" * 36)
             (root / "secret.txt").write_text(secret_value + "\n", encoding="utf-8")
@@ -483,9 +482,7 @@ class MvpTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("Secret policy warning", result.stderr)
             self.assertNotIn(warning_value, result.stdout + result.stderr)
-            manifest_text = (root / ".opencntx/latest/manifest.json").read_text(
-                encoding="utf-8"
-            )
+            manifest_text = (root / ".opencntx/latest/manifest.json").read_text(encoding="utf-8")
             manifest = json.loads(manifest_text)
             self.assertEqual(manifest["security"]["policy_version"], 1)
             self.assertEqual(len(manifest["security"]["warnings"]), 1)
@@ -553,18 +550,14 @@ class MvpTests(unittest.TestCase):
             self.assertIn("only once", duplicate.stderr)
 
             previous_package = {
-                path.name: path.read_bytes()
-                for path in (root / ".opencntx/latest").iterdir()
+                path.name: path.read_bytes() for path in (root / ".opencntx/latest").iterdir()
             }
             source.write_text(secret_value + "\nchanged\n", encoding="utf-8")
             stale = run_cli("pack", "--allow-secret", finding_id, cwd=root)
             self.assertEqual(stale.returncode, 2)
             self.assertIn("Unknown or stale", stale.stderr)
             self.assertEqual(
-                {
-                    path.name: path.read_bytes()
-                    for path in (root / ".opencntx/latest").iterdir()
-                },
+                {path.name: path.read_bytes() for path in (root / ".opencntx/latest").iterdir()},
                 previous_package,
             )
 
@@ -638,9 +631,7 @@ class MvpTests(unittest.TestCase):
     def test_verify_detects_security_metadata_tampering_read_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "warning.txt").write_text(
-                "password=synthetic-value\n", encoding="utf-8"
-            )
+            (root / "warning.txt").write_text("password=synthetic-value\n", encoding="utf-8")
             write_config(root, include=["warning.txt"])
             self.assertEqual(run_cli("pack", cwd=root).returncode, 0)
             manifest_path = root / ".opencntx/latest/manifest.json"

@@ -1,0 +1,74 @@
+{
+  "format": "opencntx-hardening-adversarial-fixtures",
+  "format_version": 1,
+  "platforms": ["ubuntu", "windows"],
+  "fixtures": [
+    {
+      "coverage_id": "ADV-PATH-ESCAPE",
+      "categories": ["path_escape", "path_swap", "symlink", "reparse_point"],
+      "tests": [
+        "tests.test_integrity.IntegrityTests.test_path_safety_and_directory_sync_are_explicit",
+        "tests.test_workspace.WorkspaceTests.test_symlink_source_is_refused_when_platform_allows_symlinks",
+        "tests.test_catalog.CatalogTests.test_symlinked_chapter_is_rejected_when_platform_allows_symlinks"
+      ],
+      "allowed_skip": "platform_cannot_create_link"
+    },
+    {
+      "coverage_id": "ADV-INACCESSIBLE",
+      "categories": ["source", "target", "lock", "transaction_root", "backup"],
+      "tests": [
+        "tests.test_integrity.IntegrityTests.test_state_digest_normalizes_inaccessible_paths",
+        "tests.test_integrity.IntegrityTests.test_active_writer_cannot_be_recovered_or_interrupted"
+      ],
+      "allowed_skip": null
+    },
+    {
+      "coverage_id": "ADV-STRUCTURE",
+      "categories": ["corrupt_json", "truncated_record", "wrong_type", "major_version", "digest_drift"],
+      "tests": [
+        "tests.test_integrity.IntegrityTests.test_recovery_rejects_target_drift_and_unknown_transaction_content",
+        "tests.test_lifecycle.LifecycleTests.test_unknown_fixture_fails_closed_and_rollback_fixture_is_structural"
+      ],
+      "allowed_skip": null
+    },
+    {
+      "coverage_id": "ADV-SECRETS-BINARY",
+      "categories": ["high_risk_secret", "low_risk_control", "binary_input"],
+      "tests": [
+        "tests.test_security.SecretPolicyTests.test_high_confidence_synthetic_corpus_blocks",
+        "tests.test_security.SecretPolicyTests.test_lower_confidence_synthetic_corpus_warns_without_blocking",
+        "tests.test_workspace.WorkspaceTests.test_capture_binary_is_byte_exact_and_never_interpreted"
+      ],
+      "allowed_skip": null
+    },
+    {
+      "coverage_id": "ADV-BUDGETS",
+      "categories": ["file", "byte", "action", "time", "storage"],
+      "tests": [
+        "tests.test_workspace.WorkspaceTests.test_source_and_total_budgets_are_separate_and_enforced",
+        "tests.test_lifecycle.LifecycleTests.test_disk_preflight_rejects_integer_and_volume_evidence_failures"
+      ],
+      "allowed_skip": null
+    },
+    {
+      "coverage_id": "ADV-IO-FAILURES",
+      "categories": ["disk", "flush", "write", "replace", "before_publish", "after_publish"],
+      "tests": [
+        "tests.test_workspace.WorkspaceTests.test_atomic_publish_failure_leaves_no_source",
+        "tests.test_integrity.IntegrityTests.test_every_transaction_phase_is_diagnosable_and_recoverable",
+        "tests.test_integrity.IntegrityTests.test_directory_sync_capability_matrix_is_explicit",
+        "tests.test_lifecycle.LifecycleTests.test_all_lifecycle_fault_hooks_restore_exact_state"
+      ],
+      "allowed_skip": null
+    },
+    {
+      "coverage_id": "ADV-RETRY-RECOVERY",
+      "categories": ["unchanged_retry", "stale_digest", "unsafe_target", "drifted_target"],
+      "tests": [
+        "tests.test_integrity.IntegrityTests.test_stale_expected_digest_fails_after_the_first_writer_releases",
+        "tests.test_integrity.IntegrityTests.test_recovery_rejects_target_drift_and_unknown_transaction_content"
+      ],
+      "allowed_skip": null
+    }
+  ]
+}

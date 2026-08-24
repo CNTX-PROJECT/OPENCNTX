@@ -2,23 +2,23 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
-from dataclasses import dataclass
-from datetime import UTC, datetime
 import ctypes
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import shutil
-import stat
 import threading
-from typing import Any, Callable, Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
+from contextlib import contextmanager
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path, PurePosixPath
+from typing import Any
 from uuid import uuid4
 
-from .primitives import sha256_bytes as _sha256, timestamp_microseconds as _timestamp
-
+from .primitives import sha256_bytes as _sha256
+from .primitives import timestamp_microseconds as _timestamp
 
 TRANSACTION_FORMAT = "opencntx-transaction"
 TRANSACTION_VERSION = 1
@@ -89,9 +89,7 @@ def _stamp(value: datetime) -> str:
 
 
 def _json_bytes(value: object) -> bytes:
-    return (json.dumps(value, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode(
-        "utf-8"
-    )
+    return (json.dumps(value, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _read_json(path: Path, *, label: str) -> tuple[dict[str, Any], bytes]:
@@ -99,7 +97,9 @@ def _read_json(path: Path, *, label: str) -> tuple[dict[str, Any], bytes]:
         content = path.read_bytes()
         value = json.loads(content)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise IntegrityError(f"{label} is unreadable or invalid.", code="transaction_invalid") from exc
+        raise IntegrityError(
+            f"{label} is unreadable or invalid.", code="transaction_invalid"
+        ) from exc
     if not isinstance(value, dict):
         raise IntegrityError(f"{label} must be a JSON object.", code="transaction_invalid")
     return value, content
@@ -109,7 +109,9 @@ def _is_reparse(path: Path) -> bool:
     try:
         attributes = getattr(path.lstat(), "st_file_attributes", 0)
     except OSError as exc:
-        raise IntegrityError("Managed path metadata is unavailable.", code="managed_path_unsafe") from exc
+        raise IntegrityError(
+            "Managed path metadata is unavailable.", code="managed_path_unsafe"
+        ) from exc
     return bool(attributes & FILE_ATTRIBUTE_REPARSE_POINT)
 
 
@@ -123,7 +125,9 @@ def _relative_parts(relative: str | Path) -> tuple[str, ...]:
         or any(part in {"", ".", ".."} for part in pure.parts)
         or ":" in pure.parts[0]
     ):
-        raise IntegrityError("Managed path must be an exact relative path.", code="managed_path_unsafe")
+        raise IntegrityError(
+            "Managed path must be an exact relative path.", code="managed_path_unsafe"
+        )
     return pure.parts
 
 
@@ -150,7 +154,9 @@ def safe_managed_path(
     except OSError as exc:
         raise IntegrityError("Workspace root is unavailable.", code="managed_path_unsafe") from exc
     if resolved_root.is_symlink() or _is_reparse(resolved_root) or not resolved_root.is_dir():
-        raise IntegrityError("Workspace root must be a normal local directory.", code="managed_path_unsafe")
+        raise IntegrityError(
+            "Workspace root must be a normal local directory.", code="managed_path_unsafe"
+        )
     parts = _relative_parts(relative)
     current = resolved_root
     for index, part in enumerate(parts):
@@ -161,18 +167,24 @@ def safe_managed_path(
                 raise IntegrityError("Managed path is missing.", code="managed_path_unsafe")
             break
         if current.is_symlink() or _is_reparse(current):
-            raise IntegrityError("Managed path contains a link or reparse point.", code="managed_path_unsafe")
+            raise IntegrityError(
+                "Managed path contains a link or reparse point.", code="managed_path_unsafe"
+            )
         try:
             resolved = current.resolve(strict=True)
         except OSError as exc:
-            raise IntegrityError("Managed path cannot be resolved safely.", code="managed_path_unsafe") from exc
+            raise IntegrityError(
+                "Managed path cannot be resolved safely.", code="managed_path_unsafe"
+            ) from exc
         if not resolved.is_relative_to(resolved_root):
             raise IntegrityError("Managed path leaves the workspace.", code="managed_path_unsafe")
     if _path_present(current):
         if kind == "file" and not current.is_file():
             raise IntegrityError("Managed path is not a normal file.", code="managed_path_unsafe")
         if kind == "directory" and not current.is_dir():
-            raise IntegrityError("Managed path is not a normal directory.", code="managed_path_unsafe")
+            raise IntegrityError(
+                "Managed path is not a normal directory.", code="managed_path_unsafe"
+            )
     return current
 
 
@@ -251,7 +263,9 @@ def _write_new(path: Path, content: bytes) -> str:
     try:
         result = write_new_bytes(path, content, sync_parent=True)
     except OSError as exc:
-        raise IntegrityError("Transaction evidence could not be written.", code="transaction_write_failed") from exc
+        raise IntegrityError(
+            "Transaction evidence could not be written.", code="transaction_write_failed"
+        ) from exc
     if result == "FAILED":
         raise IntegrityError("Parent directory flush failed.", code="transaction_durability_failed")
     return result
@@ -294,11 +308,15 @@ def _path_digest(path: Path) -> str:
                 digest.update(chunk)
         return digest.hexdigest()
     if not path.is_dir():
-        raise IntegrityError("A transaction target has an unsupported type.", code="managed_path_unsafe")
+        raise IntegrityError(
+            "A transaction target has an unsupported type.", code="managed_path_unsafe"
+        )
     digest.update(b"D\0")
     for candidate in sorted(path.rglob("*"), key=lambda item: item.relative_to(path).as_posix()):
         if candidate.is_symlink() or _is_reparse(candidate):
-            raise IntegrityError("A transaction target contains a link.", code="managed_path_unsafe")
+            raise IntegrityError(
+                "A transaction target contains a link.", code="managed_path_unsafe"
+            )
         relative = candidate.relative_to(path).as_posix().encode("utf-8")
         if candidate.is_dir():
             digest.update(b"D\0" + relative + b"\0")
@@ -308,16 +326,15 @@ def _path_digest(path: Path) -> str:
                 while chunk := source.read(1024 * 1024):
                     digest.update(chunk)
         else:
-            raise IntegrityError("A transaction target contains an unsupported entry.", code="managed_path_unsafe")
+            raise IntegrityError(
+                "A transaction target contains an unsupported entry.", code="managed_path_unsafe"
+            )
     return digest.hexdigest()
 
 
 def state_digest(paths: Sequence[Path]) -> str:
     try:
-        value = [
-            {"path": path.as_posix(), "sha256": _path_digest(path)}
-            for path in paths
-        ]
+        value = [{"path": path.as_posix(), "sha256": _path_digest(path)} for path in paths]
     except IntegrityError:
         raise
     except OSError as exc:
@@ -345,7 +362,9 @@ class _FileLock:
             try:
                 vars(msvcrt)["locking"](handle.fileno(), vars(msvcrt)["LK_NBLCK"], 1)
             except OSError as exc:
-                raise IntegrityError("Another writer is active.", code="transaction_locked") from exc
+                raise IntegrityError(
+                    "Another writer is active.", code="transaction_locked"
+                ) from exc
         else:
             import fcntl
 
@@ -354,7 +373,9 @@ class _FileLock:
                     handle.fileno(), vars(fcntl)["LOCK_EX"] | vars(fcntl)["LOCK_NB"]
                 )
             except OSError as exc:
-                raise IntegrityError("Another writer is active.", code="transaction_locked") from exc
+                raise IntegrityError(
+                    "Another writer is active.", code="transaction_locked"
+                ) from exc
 
     @staticmethod
     def _unlock(handle: Any) -> None:
@@ -386,7 +407,9 @@ class _FileLock:
                 ) from None
             active = cls.is_active(path)
             code = "transaction_locked" if active else "transaction_recovery_required"
-            message = "Another writer is active." if active else "A stale writer lock requires recovery."
+            message = (
+                "Another writer is active." if active else "A stale writer lock requires recovery."
+            )
             raise IntegrityError(message, code=code) from None
         try:
             handle.write(b"0")
@@ -401,7 +424,9 @@ class _FileLock:
             os.fsync(handle.fileno())
             result = sync_directory(path.parent)
             if result == "FAILED":
-                raise IntegrityError("Lock directory flush failed.", code="transaction_durability_failed")
+                raise IntegrityError(
+                    "Lock directory flush failed.", code="transaction_durability_failed"
+                )
             return cls(path, handle, metadata, created=True)
         except BaseException:
             try:
@@ -463,7 +488,9 @@ class _FileLock:
                 self.path.unlink()
                 sync_directory(self.path.parent)
             except OSError as exc:
-                raise IntegrityError("Writer lock could not be removed.", code="transaction_recovery_required") from exc
+                raise IntegrityError(
+                    "Writer lock could not be removed.", code="transaction_recovery_required"
+                ) from exc
 
 
 _LOCAL = threading.local()
@@ -485,7 +512,9 @@ def _layout(root: Path, *, create: bool) -> dict[str, Path]:
         _create_integrity_directory(candidate)
         result = sync_directory(resolved)
         if result == "FAILED":
-            raise IntegrityError("Integrity root flush failed.", code="transaction_durability_failed")
+            raise IntegrityError(
+                "Integrity root flush failed.", code="transaction_durability_failed"
+            )
     opencntx = safe_managed_path(resolved, ".opencntx", must_exist=True, kind="directory")
     paths = {
         "transactions": opencntx / "transactions",
@@ -498,7 +527,15 @@ def _layout(root: Path, *, create: bool) -> dict[str, Path]:
         "receipts": opencntx / "receipts",
     }
     if create:
-        for key in ("transactions", "locks", "task_locks", "active", "completed", "recovery", "backups"):
+        for key in (
+            "transactions",
+            "locks",
+            "task_locks",
+            "active",
+            "completed",
+            "recovery",
+            "backups",
+        ):
             path = paths[key]
             if _path_present(path):
                 if path.is_symlink() or _is_reparse(path) or not path.is_dir():
@@ -507,7 +544,9 @@ def _layout(root: Path, *, create: bool) -> dict[str, Path]:
                 _create_integrity_directory(path)
                 result = sync_directory(path.parent)
                 if result == "FAILED":
-                    raise IntegrityError("Integrity directory flush failed.", code="transaction_durability_failed")
+                    raise IntegrityError(
+                        "Integrity directory flush failed.", code="transaction_durability_failed"
+                    )
     return paths
 
 
@@ -520,7 +559,9 @@ def _lock_relative(task_id: str | None) -> str:
 
 
 @contextmanager
-def _locks(root: Path, operation: str, *, workspace: bool, task_id: str | None) -> Iterator[list[_FileLock]]:
+def _locks(
+    root: Path, operation: str, *, workspace: bool, task_id: str | None
+) -> Iterator[list[_FileLock]]:
     requests: list[str] = []
     if workspace:
         requests.append(_lock_relative(None))
@@ -587,7 +628,9 @@ class Transaction:
         phases = self.directory / "phases"
         directory_sync = sync_directory(phases)
         if directory_sync == "FAILED":
-            raise IntegrityError("Transaction phase directory flush failed.", code="transaction_durability_failed")
+            raise IntegrityError(
+                "Transaction phase directory flush failed.", code="transaction_durability_failed"
+            )
         value = {
             "details": details or {},
             "directory_sync": directory_sync,
@@ -606,7 +649,9 @@ class Transaction:
         try:
             relative = target.resolve(strict=False).relative_to(self.root).as_posix()
         except (OSError, ValueError) as exc:
-            raise IntegrityError("Transaction target leaves the workspace.", code="transaction_target_invalid") from exc
+            raise IntegrityError(
+                "Transaction target leaves the workspace.", code="transaction_target_invalid"
+            ) from exc
         target = safe_managed_path(self.root, relative)
         index = len(self.targets) + 1
         digest = _path_digest(target)
@@ -619,7 +664,9 @@ class Transaction:
             else:
                 shutil.copy2(target, previous)
             if _path_digest(previous) != digest:
-                raise IntegrityError("Transaction backup verification failed.", code="transaction_backup_failed")
+                raise IntegrityError(
+                    "Transaction backup verification failed.", code="transaction_backup_failed"
+                )
             previous_relative = previous.relative_to(self.directory).as_posix()
             sync_directory(previous.parent)
         record = {
@@ -636,7 +683,9 @@ class Transaction:
     def mark_target_published(self, target: Path) -> None:
         relative = target.resolve(strict=False).relative_to(self.root).as_posix()
         if relative not in {item["path"] for item in self.targets}:
-            raise IntegrityError("Published target was not tracked.", code="transaction_target_invalid")
+            raise IntegrityError(
+                "Published target was not tracked.", code="transaction_target_invalid"
+            )
         self.checkpoint(
             "TARGET_PUBLISHED",
             {"path": relative, "sha256": _path_digest(self.root / relative)},
@@ -692,7 +741,10 @@ class Transaction:
                 else:
                     shutil.copy2(previous, target)
             if _path_digest(target) != item["previous_sha256"]:
-                raise IntegrityError("Automatic rollback could not restore the previous state.", code="transaction_recovery_required")
+                raise IntegrityError(
+                    "Automatic rollback could not restore the previous state.",
+                    code="transaction_recovery_required",
+                )
             sync_directory(target.parent)
 
     def abort(self, error: BaseException) -> None:
@@ -722,7 +774,9 @@ class Transaction:
         _OS_REPLACE(self.directory, destination)
         result = sync_directory(destination.parent)
         if result == "FAILED":
-            raise IntegrityError("Transaction archive flush failed.", code="transaction_durability_failed")
+            raise IntegrityError(
+                "Transaction archive flush failed.", code="transaction_durability_failed"
+            )
         self.directory = destination
 
 
@@ -740,9 +794,13 @@ def writer_transaction(
     resolved = root.resolve(strict=True)
     layout = _layout(resolved, create=True)
     with _locks(resolved, operation, workspace=workspace, task_id=task_id) as locks:
-        if expected_digest is not None:
-            if current_digest is None or current_digest() != expected_digest:
-                raise IntegrityError("Transaction basis changed before publication.", code="transaction_state_changed")
+        if expected_digest is not None and (
+            current_digest is None or current_digest() != expected_digest
+        ):
+            raise IntegrityError(
+                "Transaction basis changed before publication.",
+                code="transaction_state_changed",
+            )
         now = _now()
         transaction_id = f"TXN-{_stamp(now)}-{uuid4().hex[:12]}"
         directory = layout["active"] / transaction_id
@@ -769,10 +827,10 @@ def writer_transaction(
         transaction.checkpoint("INTENT_DURABLE", {})
         try:
             yield transaction
-        except BaseException as exc:
+        except (Exception, GeneratorExit, KeyboardInterrupt, SystemExit) as exc:
             try:
                 transaction.abort(exc)
-            except BaseException:
+            except (Exception, GeneratorExit, KeyboardInterrupt, SystemExit):
                 raise IntegrityError(
                     "Mutation failed and exact recovery is required.",
                     code="transaction_recovery_required",
@@ -808,7 +866,11 @@ def doctor_workspace(project_root: Path) -> DoctorReport:
                 raise IntegrityError("Lock root is unsafe.", code="managed_path_unsafe")
             for lock in sorted(locks_root.rglob("*.lock")):
                 if lock.is_symlink() or _is_reparse(lock) or not lock.is_file():
-                    issues.append(DoctorIssue("managed_path_unsafe", "UNSAFE_UNKNOWN_STATE", "Lock path is unsafe."))
+                    issues.append(
+                        DoctorIssue(
+                            "managed_path_unsafe", "UNSAFE_UNKNOWN_STATE", "Lock path is unsafe."
+                        )
+                    )
                     continue
                 active = _FileLock.is_active(lock)
                 status = "ACTIVE" if active else "RECOVERY_REQUIRED"
@@ -816,12 +878,16 @@ def doctor_workspace(project_root: Path) -> DoctorReport:
                     DoctorIssue(
                         "transaction_locked" if active else "transaction_recovery_required",
                         status,
-                        "A writer is active." if active else "A stale writer lock requires exact recovery.",
+                        "A writer is active."
+                        if active
+                        else "A stale writer lock requires exact recovery.",
                     )
                 )
         if active_root is not None:
             if active_root.is_symlink() or _is_reparse(active_root) or not active_root.is_dir():
-                raise IntegrityError("Active transaction root is unsafe.", code="managed_path_unsafe")
+                raise IntegrityError(
+                    "Active transaction root is unsafe.", code="managed_path_unsafe"
+                )
             for directory in sorted(active_root.iterdir()):
                 if (
                     directory.is_symlink()
@@ -829,10 +895,18 @@ def doctor_workspace(project_root: Path) -> DoctorReport:
                     or not directory.is_dir()
                     or TRANSACTION_ID_PATTERN.fullmatch(directory.name) is None
                 ):
-                    issues.append(DoctorIssue("transaction_unknown", "UNSAFE_UNKNOWN_STATE", "Unknown transaction entry."))
+                    issues.append(
+                        DoctorIssue(
+                            "transaction_unknown",
+                            "UNSAFE_UNKNOWN_STATE",
+                            "Unknown transaction entry.",
+                        )
+                    )
                     continue
                 try:
-                    intent, content = _read_json(directory / "intent.json", label="Transaction intent")
+                    intent, content = _read_json(
+                        directory / "intent.json", label="Transaction intent"
+                    )
                     transaction_id = intent.get("transaction_id")
                     if (
                         transaction_id != directory.name
@@ -885,7 +959,9 @@ def doctor_workspace(project_root: Path) -> DoctorReport:
     except IntegrityError:
         raise
     except OSError as exc:
-        raise IntegrityError("Workspace diagnosis could not be completed.", code="doctor_failed") from exc
+        raise IntegrityError(
+            "Workspace diagnosis could not be completed.", code="doctor_failed"
+        ) from exc
 
 
 def format_doctor_report(report: DoctorReport) -> str:
@@ -893,7 +969,9 @@ def format_doctor_report(report: DoctorReport) -> str:
     for issue in report.issues:
         detail = f"- {issue.status}: {issue.code}: {issue.message}"
         if issue.transaction_id is not None:
-            detail += f" Transaction: {issue.transaction_id}. Intent-SHA-256: {issue.intent_sha256}."
+            detail += (
+                f" Transaction: {issue.transaction_id}. Intent-SHA-256: {issue.intent_sha256}."
+            )
         lines.append(detail)
     if not report.issues:
         lines.append("No active or incomplete transaction state found.")
@@ -917,15 +995,22 @@ def _load_targets(directory: Path) -> list[dict[str, Any]]:
             value.get("index") != expected
             or not isinstance(value.get("path"), str)
             or previous_sha256 != "ABSENT"
-            and (not isinstance(previous_sha256, str) or DIGEST_PATTERN.fullmatch(previous_sha256) is None)
+            and (
+                not isinstance(previous_sha256, str)
+                or DIGEST_PATTERN.fullmatch(previous_sha256) is None
+            )
             or previous_path not in {None, f"previous/{expected:04d}"}
         ):
-            raise IntegrityError("Transaction target record is invalid.", code="transaction_invalid")
+            raise IntegrityError(
+                "Transaction target record is invalid.", code="transaction_invalid"
+            )
         _relative_parts(value["path"])
         if previous_path is not None:
             previous = directory / previous_path
             if not previous.exists() or _path_digest(previous) != previous_sha256:
-                raise IntegrityError("Transaction previous-state proof is invalid.", code="transaction_invalid")
+                raise IntegrityError(
+                    "Transaction previous-state proof is invalid.", code="transaction_invalid"
+                )
         targets.append(value)
     return targets
 
@@ -960,25 +1045,39 @@ def _published_digests(phases: Sequence[dict[str, Any]]) -> dict[str, str]:
     for phase in phases:
         details = phase.get("details")
         if not isinstance(details, dict):
-            raise IntegrityError("Transaction phase details are invalid.", code="transaction_invalid")
+            raise IntegrityError(
+                "Transaction phase details are invalid.", code="transaction_invalid"
+            )
         if phase.get("phase") == "TARGET_PUBLISHED":
             path = details.get("path")
             digest = details.get("sha256")
             if not isinstance(path, str) or not isinstance(digest, str):
-                raise IntegrityError("Published target proof is invalid.", code="transaction_invalid")
+                raise IntegrityError(
+                    "Published target proof is invalid.", code="transaction_invalid"
+                )
             published[path] = digest
         if phase.get("phase") == "PUBLISHED":
             targets = details.get("targets")
             if not isinstance(targets, list):
-                raise IntegrityError("Published bundle proof is invalid.", code="transaction_invalid")
+                raise IntegrityError(
+                    "Published bundle proof is invalid.", code="transaction_invalid"
+                )
             for item in targets:
-                if not isinstance(item, dict) or not isinstance(item.get("path"), str) or not isinstance(item.get("sha256"), str):
-                    raise IntegrityError("Published bundle target is invalid.", code="transaction_invalid")
+                if (
+                    not isinstance(item, dict)
+                    or not isinstance(item.get("path"), str)
+                    or not isinstance(item.get("sha256"), str)
+                ):
+                    raise IntegrityError(
+                        "Published bundle target is invalid.", code="transaction_invalid"
+                    )
                 published[item["path"]] = item["sha256"]
     return published
 
 
-def _recovery_paths(root: Path, transaction_id: str) -> tuple[Path, dict[str, Any], bytes, list[dict[str, Any]], list[dict[str, Any]]]:
+def _recovery_paths(
+    root: Path, transaction_id: str
+) -> tuple[Path, dict[str, Any], bytes, list[dict[str, Any]], list[dict[str, Any]]]:
     if TRANSACTION_ID_PATTERN.fullmatch(transaction_id) is None:
         raise IntegrityError("Transaction ID is invalid.", code="recovery_target_mismatch")
     active = safe_managed_path(
@@ -989,7 +1088,9 @@ def _recovery_paths(root: Path, transaction_id: str) -> tuple[Path, dict[str, An
     )
     intent, content = _read_json(active / "intent.json", label="Transaction intent")
     if intent.get("transaction_id") != transaction_id:
-        raise IntegrityError("Transaction ID does not match the intent.", code="recovery_target_mismatch")
+        raise IntegrityError(
+            "Transaction ID does not match the intent.", code="recovery_target_mismatch"
+        )
     targets = _load_targets(active)
     phases = _phase_records(active)
     return active, intent, content, targets, phases
@@ -1041,16 +1142,22 @@ def recover_workspace(
     try:
         for lock_record in intent.get("locks", []):
             if not isinstance(lock_record, dict) or not isinstance(lock_record.get("path"), str):
-                raise IntegrityError("Transaction lock record is invalid.", code="transaction_invalid")
+                raise IntegrityError(
+                    "Transaction lock record is invalid.", code="transaction_invalid"
+                )
             lock_path = safe_managed_path(root, lock_record["path"], must_exist=True, kind="file")
             if _FileLock.is_active(lock_path):
                 raise IntegrityError("Another writer is active.", code="transaction_locked")
             try:
                 lock_digest = _sha256(lock_path.read_bytes())
             except PermissionError as exc:
-                raise IntegrityError("Another writer is active.", code="transaction_locked") from exc
+                raise IntegrityError(
+                    "Another writer is active.", code="transaction_locked"
+                ) from exc
             except OSError as exc:
-                raise IntegrityError("Writer lock cannot be read.", code="transaction_invalid") from exc
+                raise IntegrityError(
+                    "Writer lock cannot be read.", code="transaction_invalid"
+                ) from exc
             if lock_digest != lock_record.get("sha256"):
                 raise IntegrityError("Writer lock digest changed.", code="recovery_target_mismatch")
             stale_locks.append(_FileLock.open_stale(lock_path))
@@ -1068,7 +1175,9 @@ def recover_workspace(
                 else:
                     shutil.copy2(target, current_backup)
                 if _path_digest(current_backup) != _path_digest(target):
-                    raise IntegrityError("Recovery backup verification failed.", code="transaction_backup_failed")
+                    raise IntegrityError(
+                        "Recovery backup verification failed.", code="transaction_backup_failed"
+                    )
         manifest = {
             "backup_id": recovery_id,
             "current_targets": before_digests,
@@ -1079,7 +1188,9 @@ def recover_workspace(
         }
         _write_new(backup / "manifest.json", _json_bytes(manifest))
         if sync_directory(backup) == "FAILED":
-            raise IntegrityError("Recovery backup flush failed.", code="transaction_durability_failed")
+            raise IntegrityError(
+                "Recovery backup flush failed.", code="transaction_durability_failed"
+            )
 
         for item in reversed(targets):
             target = root / item["path"]
@@ -1095,15 +1206,16 @@ def recover_workspace(
                 else:
                     shutil.copy2(previous, target)
             if _path_digest(target) != item.get("previous_sha256"):
-                raise IntegrityError("Recovered target does not match previous digest.", code="recovery_failed")
+                raise IntegrityError(
+                    "Recovered target does not match previous digest.", code="recovery_failed"
+                )
             sync_directory(target.parent)
 
         recovered = layout["completed"] / f"{transaction_id}-recovered"
         _OS_REPLACE(active, recovered)
         sync_directory(recovered.parent)
         after_digests = [
-            {"path": item["path"], "sha256": _path_digest(root / item["path"])}
-            for item in targets
+            {"path": item["path"], "sha256": _path_digest(root / item["path"])} for item in targets
         ]
         now = _now()
         receipt_id = f"RECOVERY-{_stamp(now)}-{uuid4().hex[:12]}"
@@ -1146,9 +1258,7 @@ def format_recovery_plan(plan: RecoveryPlan, *, applied: bool) -> str:
         f"Backup: {plan.backup_path.relative_to(plan.root).as_posix()}",
     ]
     for target in plan.targets:
-        lines.append(
-            f"- Target: {target['path']} (previous {target['previous_sha256']})"
-        )
+        lines.append(f"- Target: {target['path']} (previous {target['previous_sha256']})")
     if applied:
         if plan.receipt_path is not None:
             lines.append(f"Receipt: {plan.receipt_path.relative_to(plan.root).as_posix()}")

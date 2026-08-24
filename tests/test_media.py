@@ -3,20 +3,19 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
-
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.media import (  # noqa: E402
+from opencntx.media import (
     MediaError,
     media_status,
     promote_derivation,
@@ -25,7 +24,7 @@ from opencntx.media import (  # noqa: E402
     review_derivation,
     verify_media,
 )
-from opencntx.workspace import (  # noqa: E402
+from opencntx.workspace import (
     WorkspaceError,
     capture_source,
     init_workspace,
@@ -124,9 +123,11 @@ class MediaTests(unittest.TestCase):
             workspace, captured, text_path = setup_media(Path(temporary_directory))
             no_space = mock.Mock(total=100, used=100, free=0)
 
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space):
-                with self.assertRaises(WorkspaceError) as context:
-                    register_default(workspace, captured, text_path)
+            with (
+                mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space),
+                self.assertRaises(WorkspaceError) as context,
+            ):
+                register_default(workspace, captured, text_path)
 
             self.assertEqual(context.exception.code, "disk_space_insufficient")
             self.assertFalse((workspace / ".opencntx" / "derived").exists())
@@ -155,9 +156,7 @@ class MediaTests(unittest.TestCase):
 
             self.assertEqual(result.status, "REGISTERED")
             self.assertRegex(result.derivation_id, r"^DRV-\d{8}-[0-9a-f]{12}$")
-            directory = derivation_directory(
-                workspace, result.source_id, result.derivation_id
-            )
+            directory = derivation_directory(workspace, result.source_id, result.derivation_id)
             self.assertEqual((directory / "content.txt").read_bytes(), text_path.read_bytes())
             record = read_json(directory / "record.json")
             self.assertEqual(record["source_id"], captured.source_id)
@@ -176,7 +175,9 @@ class MediaTests(unittest.TestCase):
             self.assertEqual(media_status(workspace, captured.source_id)[0].status, "UNREVIEWED")
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertGreaterEqual(len(list(completed.iterdir())), 2)
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_exact_duplicate_does_not_make_second_content_copy(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -187,21 +188,24 @@ class MediaTests(unittest.TestCase):
 
             self.assertEqual(second.status, "DUPLICATE_DERIVATION")
             self.assertEqual(second.derivation_id, first.derivation_id)
-            directories = list(
-                (workspace / ".opencntx" / "derived" / captured.source_id).iterdir()
-            )
+            directories = list((workspace / ".opencntx" / "derived" / captured.source_id).iterdir())
             self.assertEqual(len(directories), 1)
 
     def test_register_rejects_invalid_utf8_and_nul_without_partial_state(self) -> None:
         for content in (b"\xff\xfe", b"tekst\x00verborgen"):
-            with self.subTest(content=content), tempfile.TemporaryDirectory() as temporary_directory:
+            with (
+                self.subTest(content=content),
+                tempfile.TemporaryDirectory() as temporary_directory,
+            ):
                 workspace, captured, text_path = setup_media(Path(temporary_directory))
                 text_path.write_bytes(content)
 
                 with self.assertRaises(MediaError):
                     register_default(workspace, captured, text_path)
 
-                self.assertEqual(media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED")
+                self.assertEqual(
+                    media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED"
+                )
                 self.assertFalse(any((workspace / ".opencntx").glob(".media-register-*")))
 
     def test_register_rejects_managed_content_and_absolute_metadata(self) -> None:
@@ -238,7 +242,9 @@ class MediaTests(unittest.TestCase):
             with self.assertRaisesRegex(MediaError, "QUARANTINED"):
                 register_default(workspace, captured, text_path)
 
-            self.assertEqual(media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED")
+            self.assertEqual(
+                media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED"
+            )
 
     def test_source_drift_is_visible_and_blocks_new_registration(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -415,7 +421,9 @@ class MediaTests(unittest.TestCase):
             )
 
             self.assertEqual(removed.status, "REMOVED")
-            directory = derivation_directory(workspace, captured.source_id, registered.derivation_id)
+            directory = derivation_directory(
+                workspace, captured.source_id, registered.derivation_id
+            )
             self.assertFalse((directory / "content.txt").exists())
             self.assertTrue((directory / "record.json").is_file())
             self.assertTrue((directory / "removed.json").is_file())
@@ -432,9 +440,7 @@ class MediaTests(unittest.TestCase):
             promoted = promote_derivation(
                 workspace, captured.source_id, registered.derivation_id, review_digest=review_digest
             )
-            promoted_record_path, _ = source_record(
-                workspace, promoted.promoted_source_id or ""
-            )
+            promoted_record_path, _ = source_record(workspace, promoted.promoted_source_id or "")
 
             remove_derivation(
                 workspace,
@@ -465,7 +471,9 @@ class MediaTests(unittest.TestCase):
                     owner="OWNER",
                 )
 
-            directory = derivation_directory(workspace, captured.source_id, registered.derivation_id)
+            directory = derivation_directory(
+                workspace, captured.source_id, registered.derivation_id
+            )
             self.assertTrue((directory / "content.txt").is_file())
             self.assertFalse((directory / "removed.json").exists())
 
@@ -498,7 +506,9 @@ class MediaTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, captured, text_path = setup_media(Path(temporary_directory))
             registered = register_default(workspace, captured, text_path)
-            directory = derivation_directory(workspace, captured.source_id, registered.derivation_id)
+            directory = derivation_directory(
+                workspace, captured.source_id, registered.derivation_id
+            )
             content = directory / "content.txt"
             content.write_text("Gemuteerde tekst.\n", encoding="utf-8")
             before = {path: path.read_bytes() for path in directory.iterdir() if path.is_file()}
@@ -515,7 +525,9 @@ class MediaTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, captured, text_path = setup_media(Path(temporary_directory))
             registered = register_default(workspace, captured, text_path)
-            directory = derivation_directory(workspace, captured.source_id, registered.derivation_id)
+            directory = derivation_directory(
+                workspace, captured.source_id, registered.derivation_id
+            )
             (directory / "surprise.bin").write_bytes(b"unexpected")
 
             with self.assertRaisesRegex(MediaError, "onverwachte"):
@@ -548,7 +560,9 @@ class MediaTests(unittest.TestCase):
             with self.assertRaisesRegex(MediaError, "opslagbudget"):
                 register_default(workspace, captured, text_path)
 
-            self.assertEqual(media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED")
+            self.assertEqual(
+                media_status(workspace, captured.source_id)[0].status, "NOT_INVESTIGATED"
+            )
 
     def test_media_operations_do_not_modify_official_layers_until_promotion(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -618,9 +632,7 @@ class MediaTests(unittest.TestCase):
                 cwd=parent,
             )
             self.assertEqual(reviewed.returncode, 0, reviewed.stderr)
-            accepted = media_status(
-                workspace, captured.source_id, status_entry.derivation_id
-            )[0]
+            accepted = media_status(workspace, captured.source_id, status_entry.derivation_id)[0]
             promoted = run_cli(
                 "workspace",
                 "media",

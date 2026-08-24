@@ -92,17 +92,20 @@ def durable_contract_catalog() -> dict[str, Any]:
         format_name = record.get("format")
         version = record.get("format_version")
         schema_id = record.get("schema_id")
-        key = (format_name, version)
         if (
             not isinstance(format_name, str)
             or not isinstance(version, int)
             or isinstance(version, bool)
             or version != 1
-            or schema_id != schema_identifier(format_name, version)
-            or key in seen
-            or schema_id in seen_schema_ids
             or record.get("unknown_fields") != "REJECT"
             or record.get("unknown_major") != "REJECT_BEFORE_WRITE"
+        ):
+            raise ContractError("Durable contract record is invalid.", code=_ASSET_INVALID)
+        key = (format_name, version)
+        if (
+            schema_id != schema_identifier(format_name, version)
+            or key in seen
+            or schema_id in seen_schema_ids
         ):
             raise ContractError("Durable contract record is invalid.", code=_ASSET_INVALID)
         seen.add(key)

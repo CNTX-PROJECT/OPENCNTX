@@ -3,27 +3,29 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
-
+from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.catalog import rebuild_catalog  # noqa: E402
-from opencntx.navigator import build_context_package  # noqa: E402
-from opencntx.playbook import (  # noqa: E402
+from opencntx.catalog import rebuild_catalog
+from opencntx.navigator import build_context_package
+from opencntx.playbook import (
     DATA_AUTHORITY_STATEMENT,
     LEGACY_OWNER_AUTHORITY_STATEMENT,
     LEGACY_PLAYBOOK_HANDOFF,
     OWNER_AUTHORITY_STATEMENT,
     RESERVED_AUTHORITY_ACTIONS,
     PlaybookError,
+    _json_bytes,
+    _render_playbook,
+    _render_role,
     approve_playbook,
     approve_role,
     executor_status,
@@ -31,15 +33,11 @@ from opencntx.playbook import (  # noqa: E402
     prepare_executor,
     register_playbook,
     register_role,
-    role_status,
     verify_executor,
     verify_playbook,
     verify_role,
-    _json_bytes,
-    _render_playbook,
-    _render_role,
 )
-from opencntx.workflow import (  # noqa: E402
+from opencntx.workflow import (
     _append_event,
     _load_chain,
     approve_task,
@@ -47,8 +45,7 @@ from opencntx.workflow import (  # noqa: E402
     propose_task,
     submit_result,
 )
-from opencntx.workspace import init_workspace  # noqa: E402
-
+from opencntx.workspace import init_workspace
 
 TASK_ID = "TASK-20260817-0001"
 PLAYBOOK_ID = "PB-BRON-CONTROLE"
@@ -228,7 +225,12 @@ class PlaybookTests(unittest.TestCase):
 
             fixtures = (
                 (playbook.definition_path, _render_playbook, "handoff", LEGACY_PLAYBOOK_HANDOFF),
-                (role.definition_path, _render_role, "owner_authority", LEGACY_OWNER_AUTHORITY_STATEMENT),
+                (
+                    role.definition_path,
+                    _render_role,
+                    "owner_authority",
+                    LEGACY_OWNER_AUTHORITY_STATEMENT,
+                ),
             )
             before: dict[Path, tuple[bytes, bytes]] = {}
             for document_path, renderer, field, legacy_value in fixtures:
@@ -249,7 +251,10 @@ class PlaybookTests(unittest.TestCase):
             self.assertTrue(verify_role(workspace, ROLE_ID, 1).ok)
             for document_path, expected in before.items():
                 self.assertEqual(
-                    (document_path.read_bytes(), (document_path.parent / "record.json").read_bytes()),
+                    (
+                        document_path.read_bytes(),
+                        (document_path.parent / "record.json").read_bytes(),
+                    ),
                     expected,
                 )
 
@@ -336,7 +341,9 @@ class PlaybookTests(unittest.TestCase):
                 )
 
             _, role = register_definitions(workspace)
-            record = json.loads((role.definition_path.parent / "record.json").read_text(encoding="utf-8"))
+            record = json.loads(
+                (role.definition_path.parent / "record.json").read_text(encoding="utf-8")
+            )
             self.assertEqual(record["delegation_depth"], 1)
             self.assertIs(record["may_delegate"], False)
             self.assertEqual(record["owner_authority"], OWNER_AUTHORITY_STATEMENT)
@@ -423,18 +430,18 @@ class PlaybookTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
-            common = dict(
-                revision=1,
-                title="Titel",
-                purpose="Doel.",
-                inputs=["Input"],
-                steps=["Stap"],
-                stop_conditions=["Stop"],
-                evidence_requirements=["Bewijs"],
-                allowed_actions=["inspect-source"],
-                forbidden_actions=["external-send"],
-                architect="ARCHITECT",
-            )
+            common = {
+                "revision": 1,
+                "title": "Titel",
+                "purpose": "Doel.",
+                "inputs": ["Input"],
+                "steps": ["Stap"],
+                "stop_conditions": ["Stop"],
+                "evidence_requirements": ["Bewijs"],
+                "allowed_actions": ["inspect-source"],
+                "forbidden_actions": ["external-send"],
+                "architect": "ARCHITECT",
+            }
             with self.assertRaises(PlaybookError):
                 register_playbook(workspace, "pb-fout", **common)
             with self.assertRaises(PlaybookError):
@@ -491,7 +498,9 @@ class PlaybookTests(unittest.TestCase):
             )
 
             self.assertEqual(prepared.status, "EXECUTOR_PACKAGE_PREPARED")
-            self.assertEqual(executor_status(workspace, TASK_ID, prepared.executor_id).status, "READY")
+            self.assertEqual(
+                executor_status(workspace, TASK_ID, prepared.executor_id).status, "READY"
+            )
             self.assertTrue(verify_executor(workspace, TASK_ID, prepared.executor_id).ok)
             record = json.loads(
                 (prepared.assignment_path.parent / "record.json").read_text(encoding="utf-8")
@@ -509,7 +518,9 @@ class PlaybookTests(unittest.TestCase):
             self.assertIn("no OWNER authority", text)
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertTrue(any(completed.iterdir()))
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_executor_requires_approved_definitions(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -537,20 +548,20 @@ class PlaybookTests(unittest.TestCase):
             workspace, playbook, role, proposed, context = start_execution(
                 Path(temporary_directory)
             )
-            base = dict(
-                project_root=workspace,
-                task_id=TASK_ID,
-                revision=1,
-                proposal_digest=proposed.object_digest,
-                playbook_id=PLAYBOOK_ID,
-                playbook_revision=1,
-                playbook_digest=playbook.definition_digest,
-                role_id=ROLE_ID,
-                role_revision=1,
-                role_digest=role.definition_digest,
-                context_manifest_digest=context.manifest_digest,
-                executor="UITVOERDER-1",
-            )
+            base = {
+                "project_root": workspace,
+                "task_id": TASK_ID,
+                "revision": 1,
+                "proposal_digest": proposed.object_digest,
+                "playbook_id": PLAYBOOK_ID,
+                "playbook_revision": 1,
+                "playbook_digest": playbook.definition_digest,
+                "role_id": ROLE_ID,
+                "role_revision": 1,
+                "role_digest": role.definition_digest,
+                "context_manifest_digest": context.manifest_digest,
+                "executor": "UITVOERDER-1",
+            }
             for field in (
                 "proposal_digest",
                 "playbook_digest",
@@ -563,7 +574,7 @@ class PlaybookTests(unittest.TestCase):
     def test_role_id_must_equal_task_executor_role(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             parent = Path(temporary_directory)
-            workspace, playbook, role, proposed, context = start_execution(parent)
+            workspace, playbook, _role, proposed, context = start_execution(parent)
             other_role = register_role(
                 workspace,
                 "ROLE-ANDERE",
@@ -680,12 +691,12 @@ class PlaybookTests(unittest.TestCase):
 
     def test_assignment_and_context_drift_are_reported_read_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            workspace, _, _, _, _, prepared = prepare_ready_executor(
-                Path(temporary_directory)
-            )
+            workspace, _, _, _, _, prepared = prepare_ready_executor(Path(temporary_directory))
             assignment = prepared.assignment_path
             before = snapshot(workspace)
-            self.assertEqual(executor_status(workspace, TASK_ID, prepared.executor_id).status, "READY")
+            self.assertEqual(
+                executor_status(workspace, TASK_ID, prepared.executor_id).status, "READY"
+            )
             self.assertEqual(snapshot(workspace), before)
 
             assignment.write_text("drift\n", encoding="utf-8")
@@ -696,9 +707,7 @@ class PlaybookTests(unittest.TestCase):
 
     def test_context_drift_invalidates_ready_executor(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            workspace, _, _, _, _, prepared = prepare_ready_executor(
-                Path(temporary_directory)
-            )
+            workspace, _, _, _, _, prepared = prepare_ready_executor(Path(temporary_directory))
             context_path = workspace / ".opencntx" / "latest" / "CONTEXT.md"
             context_path.write_bytes(context_path.read_bytes() + b"drift\n")
             report = verify_executor(workspace, TASK_ID, prepared.executor_id)

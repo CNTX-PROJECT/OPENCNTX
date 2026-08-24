@@ -14,14 +14,12 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from xml.etree import ElementTree
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
 from opencntx.cli import build_parser
-
 
 README = ROOT / "README.md"
 CHANGELOG = ROOT / "CHANGELOG.md"
@@ -113,9 +111,7 @@ def _parser_leaf_command_paths(
     prefix: tuple[str, ...] = ("opencntx",),
 ) -> tuple[str, ...]:
     subparser_actions = tuple(
-        action
-        for action in parser._actions
-        if isinstance(action, argparse._SubParsersAction)
+        action for action in parser._actions if isinstance(action, argparse._SubParsersAction)
     )
     if not subparser_actions:
         return (" ".join(prefix),)
@@ -246,9 +242,11 @@ class PublicQualityTests(unittest.TestCase):
                 arguments = shlex.split(command, posix=True)
                 self.assertEqual("opencntx", arguments[0])
                 try:
-                    with contextlib.redirect_stdout(io.StringIO()):
-                        with contextlib.redirect_stderr(io.StringIO()):
-                            parser.parse_args(arguments[1:])
+                    with (
+                        contextlib.redirect_stdout(io.StringIO()),
+                        contextlib.redirect_stderr(io.StringIO()),
+                    ):
+                        parser.parse_args(arguments[1:])
                 except SystemExit as exc:
                     if exc.code != 0:
                         self.fail(
@@ -295,9 +293,9 @@ class PublicQualityTests(unittest.TestCase):
                 )
                 self.assertIn(expected_navigation, lines[:5])
 
-        readme_navigation = PRIMARY_NAVIGATION.replace(
-            "](", "](docs/"
-        ).replace("](docs/README.md)", "](docs/README.md)")
+        readme_navigation = PRIMARY_NAVIGATION.replace("](", "](docs/").replace(
+            "](docs/README.md)", "](docs/README.md)"
+        )
         self.assertIn(readme_navigation, README.read_text(encoding="utf-8"))
 
     def test_community_and_security_routes_are_bounded(self) -> None:
@@ -314,12 +312,8 @@ class PublicQualityTests(unittest.TestCase):
 
         security = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
         support = (ROOT / "SUPPORT.md").read_text(encoding="utf-8")
-        issue_config = (ROOT / ".github/ISSUE_TEMPLATE/config.yml").read_text(
-            encoding="utf-8"
-        )
-        pull_request = (ROOT / ".github/pull_request_template.md").read_text(
-            encoding="utf-8"
-        )
+        issue_config = (ROOT / ".github/ISSUE_TEMPLATE/config.yml").read_text(encoding="utf-8")
+        pull_request = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
         self.assertIn("Report a vulnerability", security)
         self.assertIn("SUPPORT.md", security)
         self.assertIn("public issue", support)
@@ -492,7 +486,7 @@ class PublicQualityTests(unittest.TestCase):
             '"3.14"',
             "PYTHONDONTWRITEBYTECODE",
             "PYTHONUTF8",
-            "python -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0",
+            "python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0",
             "python -m pip install --disable-pip-version-check -r requirements-quality.txt",
             "python -m pip check",
             'environment.write("PIP_NO_INDEX=1\\n")',
@@ -505,7 +499,10 @@ class PublicQualityTests(unittest.TestCase):
             'python tools/quality_gate.py coverage "${{ runner.temp }}/opencntx-coverage.json"',
             "python tools/quality_gate.py lint",
             "python tools/quality_gate.py types",
-            "timeout-minutes: 8",
+            "python -m pip install --disable-pip-version-check -r requirements-security.txt",
+            "python -m pip_audit -r requirements-quality.txt --format json",
+            "tools/r8_hardening.py",
+            "timeout-minutes: 30",
             '"tools/release_artifacts.py"',
             '"build"',
             '"smoke"',
@@ -514,17 +511,21 @@ class PublicQualityTests(unittest.TestCase):
         ):
             self.assertIn(value, text)
 
-        quality_requirements = (ROOT / "requirements-quality.txt").read_text(
-            encoding="utf-8"
-        )
+        quality_requirements = (ROOT / "requirements-quality.txt").read_text(encoding="utf-8")
         self.assertEqual(
             {
+                "build==1.3.0",
                 "coverage==7.15.4",
                 "hypothesis==6.165.10",
                 "mypy==2.3.1",
                 "ruff==0.16.3",
+                "setuptools==83.0.0",
             },
             set(quality_requirements.splitlines()),
+        )
+        self.assertEqual(
+            "pip-audit==2.10.1\n",
+            (ROOT / "requirements-security.txt").read_text(encoding="utf-8"),
         )
         with (ROOT / "pyproject.toml").open("rb") as project_file:
             project = tomllib.load(project_file)["project"]
@@ -608,9 +609,7 @@ class PublicQualityTests(unittest.TestCase):
         roadmap = (DOCS / "roadmap.md").read_text(encoding="utf-8")
         workspace = (DOCS / "workspace.md").read_text(encoding="utf-8")
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        release_tool = (ROOT / "tools" / "release_artifacts.py").read_text(
-            encoding="utf-8"
-        )
+        release_tool = (ROOT / "tools" / "release_artifacts.py").read_text(encoding="utf-8")
 
         self.assertRegex(changelog, rf"(?m)^## {re.escape(version)} - \d{{4}}-\d{{2}}-\d{{2}}$")
         self.assertIn(
@@ -618,8 +617,7 @@ class PublicQualityTests(unittest.TestCase):
             readme,
         )
         self.assertIn(
-            f"git clone --branch v{version} --depth 1 "
-            "https://github.com/CNTX-PROJECT/OPENCNTX.git",
+            f"git clone --branch v{version} --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
             readme,
         )
         self.assertIn("The optional workspace layer", workspace)
@@ -643,9 +641,7 @@ class PublicQualityTests(unittest.TestCase):
         )
         for surface in release_surfaces:
             with self.subTest(surface=surface.relative_to(ROOT)):
-                self.assertNotIn(
-                    "0.2.0.dev0", surface.read_text(encoding="utf-8")
-                )
+                self.assertNotIn("0.2.0.dev0", surface.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

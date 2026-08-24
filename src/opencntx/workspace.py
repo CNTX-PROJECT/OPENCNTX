@@ -2,24 +2,27 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import shutil
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path, PurePosixPath
 from typing import Any, BinaryIO
 from uuid import uuid4
 
 from .integrity import Transaction, state_digest, write_new_bytes, writer_transaction
 from .primitives import (
     pretty_json_bytes as _json_bytes,
+)
+from .primitives import (
     timestamp_microseconds as _timestamp,
+)
+from .primitives import (
     utc_now as _utc_now,
 )
-
 
 WORKSPACE_FORMAT = "opencntx-workspace"
 WORKSPACE_FORMAT_VERSION = 1
@@ -393,7 +396,7 @@ def load_workspace_config(project_root: Path) -> WorkspaceConfig:
     unknown = set(values) - expected
     missing = expected - set(values)
     if unknown or missing:
-        key = sorted(unknown or missing)[0]
+        key = min(unknown or missing)
         raise WorkspaceError(
             f"CONTROL/CURRENT.md bevat een onbekende of ontbrekende instelling: {key}",
             code="current_invalid",
@@ -544,10 +547,8 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
                     ) from exc
                 if (
                     resolved_original.parent != resolved_source_directory
-                    or re.fullmatch(r"original\.[a-z0-9]{1,16}", resolved_original.name)
-                    is None
-                    or tuple(relative.parts[:-1])
-                    != ("SOURCES", year.name, month.name, source_id)
+                    or re.fullmatch(r"original\.[a-z0-9]{1,16}", resolved_original.name) is None
+                    or tuple(relative.parts[:-1]) != ("SOURCES", year.name, month.name, source_id)
                     or source_id[4:8] != year.name
                     or source_id[8:10] != month.name
                     or actual_size != byte_count
@@ -733,9 +734,7 @@ def _write_receipt(
     error_code: str | None = None,
     error: str | None = None,
 ) -> Path:
-    receipts = _validate_managed_path(
-        root, Path(".opencntx") / "receipts", directory=True
-    )
+    receipts = _validate_managed_path(root, Path(".opencntx") / "receipts", directory=True)
     receipt_path = receipts / _receipt_name(attempt_id)
     receipt = {
         "attempt_id": attempt_id,
@@ -839,12 +838,13 @@ def _prepare_capture_plan(
     origin: str | None,
     supersedes: str | None,
 ) -> _CapturePlan:
-    if supersedes is not None:
-        if SOURCE_ID_PATTERN.fullmatch(supersedes) is None or supersedes not in stored:
-            raise WorkspaceError(
-                f"Onbekende supersedes-bron: {supersedes}",
-                code="supersedes_invalid",
-            )
+    if supersedes is not None and (
+        SOURCE_ID_PATTERN.fullmatch(supersedes) is None or supersedes not in stored
+    ):
+        raise WorkspaceError(
+            f"Onbekende supersedes-bron: {supersedes}",
+            code="supersedes_invalid",
+        )
 
     requested_source = source_path.absolute()
     if requested_source.is_symlink():
@@ -913,9 +913,7 @@ def _stage_capture(plan: _CapturePlan) -> tuple[Path, int, str]:
         temporary.mkdir(mode=0o700)
         temporary_original = temporary / plan.original_filename
         try:
-            with plan.resolved_source.open("rb") as source, temporary_original.open(
-                "xb"
-            ) as output:
+            with plan.resolved_source.open("rb") as source, temporary_original.open("xb") as output:
                 byte_count, digest = _copy_and_hash(source, output)
             if os.name != "nt":
                 os.chmod(temporary_original, 0o600)
@@ -1166,6 +1164,7 @@ def _capture_source_unlocked(
                 error=error,
             )
         raise error from exc
+
 
 _TEST_BEFORE_CAPTURE_LOCK = None
 

@@ -2,19 +2,20 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from functools import wraps
 import hashlib
 import html
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import stat
-from typing import Any, Sequence
 import unicodedata
+from collections.abc import Sequence
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from functools import wraps
+from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 from .attempts import (
@@ -34,7 +35,6 @@ from .attempts import (
 from .integrity import Transaction, state_digest, write_new_bytes, writer_transaction
 from .primitives import utc_now as _utc_now
 from .workspace import SHA256_PATTERN, WorkspaceError, validate_workspace
-
 
 TASK_FORMAT = "opencntx-task-event"
 TASK_FORMAT_VERSION = 1
@@ -261,13 +261,16 @@ def _digest(value: object) -> str:
 
 
 def _json_bytes(value: object) -> bytes:
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        allow_nan=False,
-        sort_keys=True,
-        indent=2,
-    ).encode("utf-8") + b"\n"
+    return (
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            allow_nan=False,
+            sort_keys=True,
+            indent=2,
+        ).encode("utf-8")
+        + b"\n"
+    )
 
 
 def _short_text(
@@ -283,13 +286,9 @@ def _short_text(
             code="task_field_invalid",
         )
     if any(unicodedata.category(character) in {"Cc", "Cf", "Cs"} for character in value):
-        raise WorkflowError(
-            f"{field} bevat verboden besturingstekens.", code="task_field_invalid"
-        )
+        raise WorkflowError(f"{field} bevat verboden besturingstekens.", code="task_field_invalid")
     if pattern is not None and pattern.fullmatch(value) is None:
-        raise WorkflowError(
-            f"{field} gebruikt een ongeldig formaat.", code="task_field_invalid"
-        )
+        raise WorkflowError(f"{field} gebruikt een ongeldig formaat.", code="task_field_invalid")
     return value
 
 
@@ -301,24 +300,16 @@ def _actor_id(value: object) -> str:
     return _short_text(value, field="Actor-ID", maximum=120, pattern=ACTOR_ID_PATTERN)
 
 
-def _text_list(
-    values: Sequence[str], *, field: str, required: bool = False
-) -> tuple[str, ...]:
+def _text_list(values: Sequence[str], *, field: str, required: bool = False) -> tuple[str, ...]:
     if isinstance(values, (str, bytes)):
         raise WorkflowError(f"{field} moet een lijst zijn.", code="task_field_invalid")
     if required and not values:
-        raise WorkflowError(
-            f"{field} vereist minimaal één waarde.", code="task_field_invalid"
-        )
+        raise WorkflowError(f"{field} vereist minimaal één waarde.", code="task_field_invalid")
     if len(values) > MAX_LIST_ITEMS:
-        raise WorkflowError(
-            f"{field} bevat te veel waarden.", code="task_field_invalid"
-        )
+        raise WorkflowError(f"{field} bevat te veel waarden.", code="task_field_invalid")
     normalized = tuple(_short_text(value, field=field) for value in values)
     if len(set(normalized)) != len(normalized):
-        raise WorkflowError(
-            f"{field} bevat dubbele waarden.", code="task_field_invalid"
-        )
+        raise WorkflowError(f"{field} bevat dubbele waarden.", code="task_field_invalid")
     return normalized
 
 
@@ -349,16 +340,12 @@ def _assert_no_symlink(root: Path, relative: Path, *, code: str) -> Path:
                 f"Beheerd pad is niet beschikbaar: {relative.as_posix()}", code=code
             ) from exc
         if stat.S_ISLNK(mode):
-            raise WorkflowError(
-                f"Symlink geweigerd: {relative.as_posix()}", code=code
-            )
+            raise WorkflowError(f"Symlink geweigerd: {relative.as_posix()}", code=code)
     resolved = current.resolve(strict=True)
     try:
         resolved.relative_to(root)
     except ValueError as exc:
-        raise WorkflowError(
-            f"Pad verlaat de werkruimte: {relative.as_posix()}", code=code
-        ) from exc
+        raise WorkflowError(f"Pad verlaat de werkruimte: {relative.as_posix()}", code=code) from exc
     return resolved
 
 
@@ -386,7 +373,9 @@ def _hash_file(path: Path, *, maximum: int, code: str) -> tuple[int, str]:
     except WorkflowError:
         raise
     except OSError as exc:
-        raise WorkflowError(f"Bestand kon niet volledig worden gelezen: {path.name}", code=code) from exc
+        raise WorkflowError(
+            f"Bestand kon niet volledig worden gelezen: {path.name}", code=code
+        ) from exc
     identity_before = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
     identity_after = (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
     if identity_before != identity_after or byte_count != before.st_size:
@@ -402,9 +391,7 @@ def _input_record(root: Path, relative_text: str) -> dict[str, object]:
             code="task_input_path_invalid",
         )
     path = _assert_no_symlink(root, relative, code="task_input_unsafe")
-    byte_count, sha256 = _hash_file(
-        path, maximum=MAX_INPUT_BYTES, code="task_input_unavailable"
-    )
+    byte_count, sha256 = _hash_file(path, maximum=MAX_INPUT_BYTES, code="task_input_unavailable")
     return {"path": relative.as_posix(), "bytes": byte_count, "sha256": sha256}
 
 
@@ -536,7 +523,9 @@ def _validate_payload(event_type: str, payload: object) -> dict[str, Any]:
             raise WorkflowError("Controle-uitkomst is ongeldig.", code="task_record_invalid")
         findings = payload["findings"]
         if not isinstance(findings, list):
-            raise WorkflowError("Controlebevindingen moeten een lijst zijn.", code="task_record_invalid")
+            raise WorkflowError(
+                "Controlebevindingen moeten een lijst zijn.", code="task_record_invalid"
+            )
         _text_list(findings, field="Controlebevindingen", required=True)
     elif event_type == "owner-acceptance":
         _validate_digest(payload["result_digest"], field="Resultaatdigest")
@@ -604,9 +593,7 @@ def _validate_payload(event_type: str, payload: object) -> dict[str, Any]:
         new_evidence = payload["new_evidence"]
         if new_evidence is not None:
             _validate_artifact_record(new_evidence, label="Nieuw pogingbewijs")
-            expected_new_path = (
-                f"artifacts/attempt-{attempt_number:04d}-new-evidence.bin"
-            )
+            expected_new_path = f"artifacts/attempt-{attempt_number:04d}-new-evidence.bin"
             if new_evidence["path"] != expected_new_path:
                 raise WorkflowError("Nieuw-bewijspad is ongeldig.", code="task_record_invalid")
         if payload["basis_status"] not in {
@@ -696,7 +683,9 @@ def _validate_event(
     number = value["event_number"]
     event_type = value["event_type"]
     if revision != 1 or type(revision) is not int:
-        raise WorkflowError("Alleen taakrevisie 1 is in deze versie geldig.", code="task_record_invalid")
+        raise WorkflowError(
+            "Alleen taakrevisie 1 is in deze versie geldig.", code="task_record_invalid"
+        )
     if type(number) is not int or number != expected_number:
         raise WorkflowError("Taakevents zijn niet exact opeenvolgend.", code="task_record_invalid")
     if not isinstance(event_type, str) or event_type not in EVENT_SPECS:
@@ -714,21 +703,31 @@ def _validate_event(
         raise WorkflowError("Event gebruikt niet de vereiste actorrol.", code="task_actor_invalid")
     if event_type in {"cancellation", "superseded"}:
         if previous is None or previous.to_status in {"CLOSED", "CANCELLED", "SUPERSEDED"}:
-            raise WorkflowError("Terminale taak kan niet opnieuw wijzigen.", code="task_transition_invalid")
+            raise WorkflowError(
+                "Terminale taak kan niet opnieuw wijzigen.", code="task_transition_invalid"
+            )
         if from_status != previous.to_status:
-            raise WorkflowError("Event begint niet bij de actuele status.", code="task_transition_invalid")
+            raise WorkflowError(
+                "Event begint niet bij de actuele status.", code="task_transition_invalid"
+            )
     else:
         if from_status != expected_from:
-            raise WorkflowError("Event heeft een ongeldige beginstatus.", code="task_transition_invalid")
+            raise WorkflowError(
+                "Event heeft een ongeldige beginstatus.", code="task_transition_invalid"
+            )
         if previous is None:
             if event_type != "proposal":
-                raise WorkflowError("Eerste event moet een voorstel zijn.", code="task_transition_invalid")
+                raise WorkflowError(
+                    "Eerste event moet een voorstel zijn.", code="task_transition_invalid"
+                )
         elif from_status != previous.to_status:
             raise WorkflowError("Event slaat een taakstatus over.", code="task_transition_invalid")
     previous_digest = value["previous_record_digest"]
     if previous is None:
         if previous_digest is not None:
-            raise WorkflowError("Eerste event mag geen vorige digest hebben.", code="task_record_invalid")
+            raise WorkflowError(
+                "Eerste event mag geen vorige digest hebben.", code="task_record_invalid"
+            )
     elif previous_digest != previous.record_digest:
         raise WorkflowError("Taakrecordketen is onderbroken.", code="task_record_digest_mismatch")
     _validate_digest(value["object_digest"], field="Objectdigest")
@@ -740,13 +739,19 @@ def _validate_event(
     if value["record_digest"] != _digest(record_without_digest):
         raise WorkflowError("Recorddigest komt niet overeen.", code="task_record_digest_mismatch")
     if not isinstance(value["created_at"], str) or not value["created_at"].endswith("Z"):
-        raise WorkflowError("Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid")
+        raise WorkflowError(
+            "Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid"
+        )
     try:
         parsed_time = datetime.fromisoformat(value["created_at"].removesuffix("Z") + "+00:00")
     except ValueError as exc:
-        raise WorkflowError("Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid") from exc
-    if parsed_time.tzinfo != timezone.utc:
-        raise WorkflowError("Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid")
+        raise WorkflowError(
+            "Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid"
+        ) from exc
+    if parsed_time.tzinfo != UTC:
+        raise WorkflowError(
+            "Eventtijd gebruikt geen geldige UTC-notatie.", code="task_record_invalid"
+        )
     return TaskEvent(
         event_number=number,
         event_type=event_type,
@@ -785,45 +790,75 @@ def _validate_bindings(events: Sequence[TaskEvent]) -> None:
     for index, event in enumerate(events[1:], start=1):
         payload = event.payload
         if "proposal_digest" in payload and payload["proposal_digest"] != proposal_digest:
-            raise WorkflowError("Event bindt niet aan het taakvoorstel.", code="task_binding_invalid")
+            raise WorkflowError(
+                "Event bindt niet aan het taakvoorstel.", code="task_binding_invalid"
+            )
         if event.event_type == "owner-approval":
             if payload["decision"] != "APPROVE":
-                raise WorkflowError("Goedkeuring bevat geen APPROVE-besluit.", code="task_binding_invalid")
+                raise WorkflowError(
+                    "Goedkeuring bevat geen APPROVE-besluit.", code="task_binding_invalid"
+                )
         elif event.event_type == "execution-begun":
             approval = events[index - 1]
-            if approval.event_type != "owner-approval" or payload["approval_record_digest"] != approval.record_digest:
-                raise WorkflowError("Uitvoering bindt niet aan de OWNER-goedkeuring.", code="task_binding_invalid")
+            if (
+                approval.event_type != "owner-approval"
+                or payload["approval_record_digest"] != approval.record_digest
+            ):
+                raise WorkflowError(
+                    "Uitvoering bindt niet aan de OWNER-goedkeuring.", code="task_binding_invalid"
+                )
         elif event.event_type == "result":
-            begun = next((item for item in reversed(events[:index]) if item.event_type == "execution-begun"), None)
+            begun = next(
+                (item for item in reversed(events[:index]) if item.event_type == "execution-begun"),
+                None,
+            )
             if begun is None or payload["execution_record_digest"] != begun.record_digest:
-                raise WorkflowError("Resultaat bindt niet aan de uitvoering.", code="task_binding_invalid")
+                raise WorkflowError(
+                    "Resultaat bindt niet aan de uitvoering.", code="task_binding_invalid"
+                )
         elif event.event_type == "architect-review":
-            result = next((item for item in reversed(events[:index]) if item.event_type == "result"), None)
+            result = next(
+                (item for item in reversed(events[:index]) if item.event_type == "result"), None
+            )
             if result is None or payload["result_digest"] != result.object_digest:
-                raise WorkflowError("Controle bindt niet aan het resultaat.", code="task_binding_invalid")
+                raise WorkflowError(
+                    "Controle bindt niet aan het resultaat.", code="task_binding_invalid"
+                )
             outcome = payload["outcome"]
-            expected = "AWAITING_OWNER_ACCEPTANCE" if outcome == "PASS" else "RETURNED"
-            if outcome not in {"PASS", "RETURN"} or event.to_status != expected:
-                raise WorkflowError("Controle-uitkomst en status verschillen.", code="task_binding_invalid")
+            expected_status = "AWAITING_OWNER_ACCEPTANCE" if outcome == "PASS" else "RETURNED"
+            if outcome not in {"PASS", "RETURN"} or event.to_status != expected_status:
+                raise WorkflowError(
+                    "Controle-uitkomst en status verschillen.", code="task_binding_invalid"
+                )
         elif event.event_type == "owner-acceptance":
             result = _find_before(events, index, "result")
             review = _find_before(events, index, "architect-review")
-            if payload["result_digest"] != result.object_digest or payload["review_digest"] != review.object_digest:
-                raise WorkflowError("OWNER-aanvaarding bindt niet aan resultaat en controle.", code="task_binding_invalid")
+            if (
+                payload["result_digest"] != result.object_digest
+                or payload["review_digest"] != review.object_digest
+            ):
+                raise WorkflowError(
+                    "OWNER-aanvaarding bindt niet aan resultaat en controle.",
+                    code="task_binding_invalid",
+                )
             decision = payload["decision"]
-            expected = "OWNER_ACCEPTED" if decision == "ACCEPT" else "RETURNED"
-            if decision not in {"ACCEPT", "RETURN"} or event.to_status != expected:
-                raise WorkflowError("OWNER-besluit en status verschillen.", code="task_binding_invalid")
+            expected_status = "OWNER_ACCEPTED" if decision == "ACCEPT" else "RETURNED"
+            if decision not in {"ACCEPT", "RETURN"} or event.to_status != expected_status:
+                raise WorkflowError(
+                    "OWNER-besluit en status verschillen.", code="task_binding_invalid"
+                )
         elif event.event_type == "closure":
-            expected = {
+            expected_digests = {
                 "proposal_digest": proposal_digest,
                 "approval_digest": _find_before(events, index, "owner-approval").object_digest,
                 "result_digest": _find_before(events, index, "result").object_digest,
                 "review_digest": _find_before(events, index, "architect-review").object_digest,
                 "acceptance_digest": _find_before(events, index, "owner-acceptance").object_digest,
             }
-            if payload != expected:
-                raise WorkflowError("Sluitingsbewijs bindt niet alle vereiste digests.", code="task_binding_invalid")
+            if payload != expected_digests:
+                raise WorkflowError(
+                    "Sluitingsbewijs bindt niet alle vereiste digests.", code="task_binding_invalid"
+                )
         elif event.event_type == "attempt":
             if objective_attempts:
                 raise WorkflowError(
@@ -833,7 +868,9 @@ def _validate_bindings(events: Sequence[TaskEvent]) -> None:
             saw_legacy_attempt = True
             attempt_number += 1
             if payload["attempt_number"] != attempt_number:
-                raise WorkflowError("Pogingnummers zijn niet opeenvolgend.", code="task_binding_invalid")
+                raise WorkflowError(
+                    "Pogingnummers zijn niet opeenvolgend.", code="task_binding_invalid"
+                )
             signature = payload["error_signature"]
             if signature == consecutive_signature:
                 if payload["new_basis"] == previous_attempt_basis:
@@ -848,7 +885,9 @@ def _validate_bindings(events: Sequence[TaskEvent]) -> None:
             previous_attempt_basis = payload["new_basis"]
             expected = "BLOCKED" if consecutive_count >= 3 else "IN_EXECUTION"
             if event.to_status != expected:
-                raise WorkflowError("Pogingbewijs en blokkadestatus verschillen.", code="task_binding_invalid")
+                raise WorkflowError(
+                    "Pogingbewijs en blokkadestatus verschillen.", code="task_binding_invalid"
+                )
         elif event.event_type == "objective-attempt":
             if saw_legacy_attempt:
                 raise WorkflowError(
@@ -902,8 +941,14 @@ def _load_chain(root: Path, task_id: str) -> TaskChain:
         raise WorkflowError("Taak bevat geen events.", code="task_record_invalid")
     events: list[TaskEvent] = []
     for expected_number, path in enumerate(files, start=1):
-        if path.is_symlink() or not path.is_file() or EVENT_FILE_PATTERN.fullmatch(path.name) is None:
-            raise WorkflowError("Events-directory bevat onbekende inhoud.", code="task_record_invalid")
+        if (
+            path.is_symlink()
+            or not path.is_file()
+            or EVENT_FILE_PATTERN.fullmatch(path.name) is None
+        ):
+            raise WorkflowError(
+                "Events-directory bevat onbekende inhoud.", code="task_record_invalid"
+            )
         event = _validate_event(
             path,
             _read_json(path),
@@ -943,14 +988,21 @@ def _validate_artifact_inventory(chain: TaskChain) -> None:
     try:
         children = list(artifacts.iterdir())
     except OSError as exc:
-        raise WorkflowError("Artifacts-directory is niet leesbaar.", code="task_path_unsafe") from exc
+        raise WorkflowError(
+            "Artifacts-directory is niet leesbaar.", code="task_path_unsafe"
+        ) from exc
     actual: set[str] = set()
     for child in children:
         if child.is_symlink() or not child.is_file():
-            raise WorkflowError("Artifacts-directory bevat onveilige inhoud.", code="task_artifact_unsafe")
+            raise WorkflowError(
+                "Artifacts-directory bevat onveilige inhoud.", code="task_artifact_unsafe"
+            )
         actual.add(child.name)
     if actual != expected:
-        raise WorkflowError("Artifacts-directory bevat ontbrekende of onbekende inhoud.", code="task_artifact_inventory_mismatch")
+        raise WorkflowError(
+            "Artifacts-directory bevat ontbrekende of onbekende inhoud.",
+            code="task_artifact_inventory_mismatch",
+        )
 
 
 def _task_directories(root: Path) -> list[Path]:
@@ -966,8 +1018,14 @@ def _task_directories(root: Path) -> list[Path]:
                 "TASKS bevat een onvoltooide stagingdirectory; controleer deze vóór nieuw werk.",
                 code="task_staging_incomplete",
             )
-        if child.is_symlink() or not child.is_dir() or TASK_ID_PATTERN.fullmatch(child.name) is None:
-            raise WorkflowError("TASKS bevat onbekende of onveilige inhoud.", code="task_path_unsafe")
+        if (
+            child.is_symlink()
+            or not child.is_dir()
+            or TASK_ID_PATTERN.fullmatch(child.name) is None
+        ):
+            raise WorkflowError(
+                "TASKS bevat onbekende of onveilige inhoud.", code="task_path_unsafe"
+            )
         directories.append(child)
     return directories
 
@@ -1002,7 +1060,9 @@ def _new_event_value(
     if event_type in {"cancellation", "superseded"} and (
         chain is None or chain.status in {"CLOSED", "CANCELLED", "SUPERSEDED"}
     ):
-        raise WorkflowError("Terminale taak kan niet opnieuw wijzigen.", code="task_transition_invalid")
+        raise WorkflowError(
+            "Terminale taak kan niet opnieuw wijzigen.", code="task_transition_invalid"
+        )
     if to_status not in allowed_to:
         raise WorkflowError("Doelstatus is niet toegestaan.", code="task_transition_invalid")
     object_digest = _digest(payload)
@@ -1074,12 +1134,14 @@ def _task_view_bytes(chain: TaskChain, *, legacy: bool = False) -> bytes:
     lines.extend(f"- {_markdown_inline(item)}" for item in proposal["forbidden_actions"])
     lines.extend(["", "## Acceptatiecriteria" if legacy else "## Acceptance criteria", ""])
     lines.extend(f"- {_markdown_inline(item)}" for item in proposal["acceptance_criteria"])
-    lines.extend([
-        "",
-        "## Digestketen" if legacy else "## Digest chain",
-        "",
-        f"- {'Voorstel' if legacy else 'Proposal'}: `{chain.proposal_digest}`",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Digestketen" if legacy else "## Digest chain",
+            "",
+            f"- {'Voorstel' if legacy else 'Proposal'}: `{chain.proposal_digest}`",
+        ]
+    )
     labels = {
         "owner-approval": "OWNER-goedkeuring" if legacy else "OWNER approval",
         "result": "Resultaat" if legacy else "Result",
@@ -1090,25 +1152,31 @@ def _task_view_bytes(chain: TaskChain, *, legacy: bool = False) -> bytes:
     for event in chain.events[1:]:
         if event.event_type in labels:
             lines.append(f"- {labels[event.event_type]}: `{event.object_digest}`")
-    result_event = next(
-        (event for event in chain.events if event.event_type == "result"), None
-    )
+    result_event = next((event for event in chain.events if event.event_type == "result"), None)
     if result_event is not None:
-        lines.extend(["", "## Beperkingen en open vragen" if legacy else "## Limitations and open questions", ""])
+        lines.extend(
+            [
+                "",
+                "## Beperkingen en open vragen" if legacy else "## Limitations and open questions",
+                "",
+            ]
+        )
         limitations = result_event.payload["limitations"]
         questions = result_event.payload["open_questions"]
         if limitations:
             lines.append("- Beperkingen:" if legacy else "- Limitations:")
-            lines.extend(
-                f"  - {_markdown_inline(item)}" for item in limitations
-            )
+            lines.extend(f"  - {_markdown_inline(item)}" for item in limitations)
         else:
-            lines.append("- Beperkingen: geen opgegeven" if legacy else "- Limitations: none provided")
+            lines.append(
+                "- Beperkingen: geen opgegeven" if legacy else "- Limitations: none provided"
+            )
         if questions:
             lines.append("- Open vragen:" if legacy else "- Open questions:")
             lines.extend(f"  - {_markdown_inline(item)}" for item in questions)
         else:
-            lines.append("- Open vragen: geen opgegeven" if legacy else "- Open questions: none provided")
+            lines.append(
+                "- Open vragen: geen opgegeven" if legacy else "- Open questions: none provided"
+            )
     attempts = [event for event in chain.events if event.event_type == "attempt"]
     if attempts:
         lines.extend(["", "## Pogingen en blokkades" if legacy else "## Attempts and blocks", ""])
@@ -1170,13 +1238,15 @@ def _task_view_bytes(chain: TaskChain, *, legacy: bool = False) -> bytes:
                     "- OWNER direction may cancel or supersede this task with one explicit new task ID.",
                 ]
             )
-    lines.extend([
-        "",
-        "## Volgende gate" if legacy else "## Next gate",
-        "",
-        f"- {_next_gate(chain.status, legacy=legacy)}",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Volgende gate" if legacy else "## Next gate",
+            "",
+            f"- {_next_gate(chain.status, legacy=legacy)}",
+            "",
+        ]
+    )
     body = "\n".join(lines).encode("utf-8")
     header = (
         "<!-- opencntx-task-view\n"
@@ -1184,7 +1254,7 @@ def _task_view_bytes(chain: TaskChain, *, legacy: bool = False) -> bytes:
         f"format_version: {TASK_VIEW_VERSION}\n"
         f"body_sha256: {hashlib.sha256(body).hexdigest()}\n"
         "-->\n"
-    ).encode("utf-8")
+    ).encode()
     return header + body
 
 
@@ -1236,13 +1306,20 @@ def _view_is_managed(path: Path) -> bool:
         return False
     header, body = content.split(marker, 1)
     digest_line = next(
-        (line for line in header.decode("utf-8", errors="replace").splitlines() if line.startswith("body_sha256: ")),
+        (
+            line
+            for line in header.decode("utf-8", errors="replace").splitlines()
+            if line.startswith("body_sha256: ")
+        ),
         None,
     )
     if digest_line is None:
         return False
     declared = digest_line.removeprefix("body_sha256: ")
-    return SHA256_PATTERN.fullmatch(declared) is not None and hashlib.sha256(body).hexdigest() == declared
+    return (
+        SHA256_PATTERN.fullmatch(declared) is not None
+        and hashlib.sha256(body).hexdigest() == declared
+    )
 
 
 def _ensure_managed_view(chain: TaskChain) -> None:
@@ -1279,9 +1356,7 @@ def _verify_inputs(root: Path, chain: TaskChain) -> None:
             raise WorkflowError("Taakinputrecord is ongeldig.", code="task_record_invalid")
         current = _input_record(root, item["path"])
         if current != item:
-            raise WorkflowError(
-                f"Taakinput is gewijzigd: {item['path']}", code="task_input_stale"
-            )
+            raise WorkflowError(f"Taakinput is gewijzigd: {item['path']}", code="task_input_stale")
 
 
 def _write_receipt(root: Path, chain: TaskChain, status: str) -> Path:
@@ -1323,9 +1398,7 @@ def _try_failure_receipt(
             code="task_receipt_path_unsafe",
         )
         safe_task_id = (
-            task_id
-            if isinstance(task_id, str) and TASK_ID_PATTERN.fullmatch(task_id)
-            else None
+            task_id if isinstance(task_id, str) and TASK_ID_PATTERN.fullmatch(task_id) else None
         )
         value = {
             "format": TASK_RECEIPT_FORMAT,
@@ -1406,9 +1479,13 @@ def _append_event(
                 code="task_artifact_unsafe",
             )
         for source, expected_record in artifact_sources:
-            relative = _safe_relative(
-                expected_record.get("path"), field="Pogingartifactpad"
-            )
+            artifact_path = expected_record.get("path")
+            if not isinstance(artifact_path, str):
+                raise WorkflowError(
+                    "Pogingartifactpad is ongeldig.",
+                    code="task_artifact_unsafe",
+                )
+            relative = _safe_relative(artifact_path, field="Pogingartifactpad")
             if relative.parts[0] != "artifacts" or len(relative.parts) != 2:
                 raise WorkflowError(
                     "Pogingartifact valt buiten de taak.",
@@ -1488,8 +1565,12 @@ def _propose_task_unlocked(
         "definition_of_done": _short_text(definition_of_done, field="Definition of Done"),
         "executor_role": _short_text(executor_role, field="Uitvoerderrol", maximum=120),
         "inputs": input_records,
-        "allowed_actions": list(_text_list(allowed_actions, field="Toegestane acties", required=True)),
-        "forbidden_actions": list(_text_list(forbidden_actions, field="Verboden acties", required=True)),
+        "allowed_actions": list(
+            _text_list(allowed_actions, field="Toegestane acties", required=True)
+        ),
+        "forbidden_actions": list(
+            _text_list(forbidden_actions, field="Verboden acties", required=True)
+        ),
         "expected_output": _short_text(expected_output, field="Verwachte output"),
         "acceptance_criteria": list(
             _text_list(acceptance_criteria, field="Acceptatiecriteria", required=True)
@@ -1538,7 +1619,9 @@ def _propose_task_unlocked(
             pass
         if isinstance(exc, WorkflowError):
             raise
-        raise WorkflowError("Taak kon niet atomair worden gemaakt.", code="task_write_failed") from exc
+        raise WorkflowError(
+            "Taak kon niet atomair worden gemaakt.", code="task_write_failed"
+        ) from exc
     chain = _load_chain(root, task_id)
     if _transaction is not None:
         _transaction.mark_target_published(destination)
@@ -1646,13 +1729,19 @@ def begin_task(project_root: Path, task_id: str, *, architect: str) -> TaskResul
 def _copy_artifact(source_path: Path, destination: Path) -> dict[str, object]:
     try:
         if source_path.is_symlink():
-            raise WorkflowError("Symlink als resultaat of bewijs geweigerd.", code="task_artifact_unsafe")
+            raise WorkflowError(
+                "Symlink als resultaat of bewijs geweigerd.", code="task_artifact_unsafe"
+            )
         source = source_path.resolve(strict=True)
         before = source.stat()
     except OSError as exc:
-        raise WorkflowError("Resultaat of bewijs is niet beschikbaar.", code="task_artifact_unavailable") from exc
+        raise WorkflowError(
+            "Resultaat of bewijs is niet beschikbaar.", code="task_artifact_unavailable"
+        ) from exc
     if not stat.S_ISREG(before.st_mode) or before.st_size > MAX_ARTIFACT_BYTES:
-        raise WorkflowError("Resultaat of bewijs is geen begrensd regulier bestand.", code="task_artifact_unsafe")
+        raise WorkflowError(
+            "Resultaat of bewijs is geen begrensd regulier bestand.", code="task_artifact_unsafe"
+        )
     temporary = destination.with_name(f".{destination.name}-{uuid4().hex}.tmp")
     digest = hashlib.sha256()
     byte_count = 0
@@ -1662,7 +1751,9 @@ def _copy_artifact(source_path: Path, destination: Path) -> dict[str, object]:
             while chunk := input_handle.read(COPY_CHUNK_SIZE):
                 byte_count += len(chunk)
                 if byte_count > MAX_ARTIFACT_BYTES:
-                    raise WorkflowError("Artifact overschrijdt het budget.", code="task_artifact_too_large")
+                    raise WorkflowError(
+                        "Artifact overschrijdt het budget.", code="task_artifact_too_large"
+                    )
                 digest.update(chunk)
                 output_handle.write(chunk)
             output_handle.flush()
@@ -1671,9 +1762,13 @@ def _copy_artifact(source_path: Path, destination: Path) -> dict[str, object]:
         identity_before = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
         identity_after = (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
         if identity_before != identity_after or byte_count != before.st_size:
-            raise WorkflowError("Artifact veranderde tijdens kopiëren.", code="task_artifact_changed")
+            raise WorkflowError(
+                "Artifact veranderde tijdens kopiëren.", code="task_artifact_changed"
+            )
         if destination.exists() or destination.is_symlink():
-            raise WorkflowError("Bestaand artifact wordt niet overschreven.", code="task_artifact_exists")
+            raise WorkflowError(
+                "Bestaand artifact wordt niet overschreven.", code="task_artifact_exists"
+            )
         os.replace(temporary, destination)
     except WorkflowError:
         try:
@@ -1686,7 +1781,9 @@ def _copy_artifact(source_path: Path, destination: Path) -> dict[str, object]:
             temporary.unlink(missing_ok=True)
         except OSError:
             pass
-        raise WorkflowError("Artifact kon niet veilig worden opgeslagen.", code="task_artifact_write_failed") from exc
+        raise WorkflowError(
+            "Artifact kon niet veilig worden opgeslagen.", code="task_artifact_write_failed"
+        ) from exc
     return {
         "path": f"artifacts/{destination.name}",
         "bytes": byte_count,
@@ -1744,7 +1841,9 @@ def submit_result(
     chain = _load_chain(root, task_id)
     _verify_inputs(root, chain)
     if chain.status != "IN_EXECUTION":
-        raise WorkflowError("Resultaat is niet toegestaan in de actuele status.", code="task_transition_invalid")
+        raise WorkflowError(
+            "Resultaat is niet toegestaan in de actuele status.", code="task_transition_invalid"
+        )
     _ensure_managed_view(chain)
     if len(evidence_paths) > MAX_LIST_ITEMS:
         raise WorkflowError("Te veel bewijsbestanden.", code="task_field_invalid")
@@ -1775,8 +1874,8 @@ def submit_result(
             except OSError:
                 pass
         raise
-    expected_event = chain.directory / "events" / _event_filename(
-        chain.events[-1].event_number + 1, "result"
+    expected_event = (
+        chain.directory / "events" / _event_filename(chain.events[-1].event_number + 1, "result")
     )
     try:
         return _append_event(
@@ -1819,9 +1918,13 @@ def _verify_artifacts(chain: TaskChain) -> None:
         if relative.parts[0] != "artifacts" or len(relative.parts) != 2:
             raise WorkflowError("Artifactpad valt buiten de taak.", code="task_artifact_unsafe")
         path = _assert_no_symlink(chain.directory, relative, code="task_artifact_unsafe")
-        byte_count, sha256 = _hash_file(path, maximum=MAX_ARTIFACT_BYTES, code="task_artifact_unavailable")
+        byte_count, sha256 = _hash_file(
+            path, maximum=MAX_ARTIFACT_BYTES, code="task_artifact_unavailable"
+        )
         if byte_count != record["bytes"] or sha256 != record["sha256"]:
-            raise WorkflowError("Artifactbytes of digest zijn gewijzigd.", code="task_artifact_stale")
+            raise WorkflowError(
+                "Artifactbytes of digest zijn gewijzigd.", code="task_artifact_stale"
+            )
 
 
 def _verify_objective_attempt_authority(root: Path, chain: TaskChain) -> None:
@@ -1872,7 +1975,9 @@ def review_result(
     result = _event(chain, "result")
     _require_exact_digest(result_digest, result.object_digest, "Resultaatdigest")
     if outcome not in {"PASS", "RETURN"}:
-        raise WorkflowError("Controle-uitkomst moet PASS of RETURN zijn.", code="task_field_invalid")
+        raise WorkflowError(
+            "Controle-uitkomst moet PASS of RETURN zijn.", code="task_field_invalid"
+        )
     payload = {
         "result_digest": result.object_digest,
         "outcome": outcome,
@@ -1964,7 +2069,10 @@ def cancel_task(project_root: Path, task_id: str, *, reason: str, owner: str) ->
         event_type="cancellation",
         to_status="CANCELLED",
         actor_id=owner,
-        payload={"proposal_digest": chain.proposal_digest, "reason": _short_text(reason, field="Reden")},
+        payload={
+            "proposal_digest": chain.proposal_digest,
+            "reason": _short_text(reason, field="Reden"),
+        },
         success_status="TASK_CANCELLED",
     )
 

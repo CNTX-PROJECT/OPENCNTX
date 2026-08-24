@@ -3,23 +3,23 @@ from __future__ import annotations
 import json
 import multiprocessing
 import os
-from pathlib import Path
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
-
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.attempts import record_attempt  # noqa: E402
-from opencntx.catalog import create_chapter, rebuild_catalog  # noqa: E402
-from opencntx.integrity import (  # noqa: E402
+from opencntx.attempts import record_attempt
+from opencntx.catalog import create_chapter, rebuild_catalog
+from opencntx.integrity import (
     IntegrityError,
     _create_integrity_directory,
+    _read_json,
     doctor_workspace,
     recover_workspace,
     safe_managed_path,
@@ -27,8 +27,8 @@ from opencntx.integrity import (  # noqa: E402
     sync_directory,
     writer_transaction,
 )
-from opencntx.navigator import build_context_package  # noqa: E402
-from opencntx.playbook import (  # noqa: E402
+from opencntx.navigator import build_context_package
+from opencntx.playbook import (
     RESERVED_AUTHORITY_ACTIONS,
     approve_playbook,
     approve_role,
@@ -36,14 +36,13 @@ from opencntx.playbook import (  # noqa: E402
     register_playbook,
     register_role,
 )
-from opencntx.workflow import (  # noqa: E402
+from opencntx.workflow import (
     approve_task,
     begin_task,
     propose_task,
     task_status,
 )
-from opencntx.workspace import capture_source, init_workspace  # noqa: E402
-
+from opencntx.workspace import capture_source, init_workspace
 
 TASK_ID = "TASK-20260820-0001"
 PLAYBOOK_ID = "PB-INTEGRITY-CHECK"
@@ -60,7 +59,7 @@ def _result(queue, function) -> None:
 
 
 def _approval_worker(root, proposal_digest, barrier, queue) -> None:
-    import opencntx.workflow as workflow
+    from opencntx import workflow
 
     workflow._TEST_BEFORE_TASK_LOCK = barrier.wait
     _result(
@@ -76,7 +75,7 @@ def _approval_worker(root, proposal_digest, barrier, queue) -> None:
 
 
 def _attempt_worker(root, executor_id, evidence, barrier, queue) -> None:
-    import opencntx.workflow as workflow
+    from opencntx import workflow
 
     workflow._TEST_BEFORE_TASK_LOCK = barrier.wait
     _result(
@@ -99,14 +98,14 @@ def _attempt_worker(root, executor_id, evidence, barrier, queue) -> None:
 
 
 def _capture_worker(root, source, barrier, queue) -> None:
-    import opencntx.workspace as workspace
+    from opencntx import workspace
 
     workspace._TEST_BEFORE_CAPTURE_LOCK = barrier.wait
     _result(queue, lambda: capture_source(Path(root), Path(source), origin="OWNER"))
 
 
 def _context_worker(root, proposal_digest, barrier, queue) -> None:
-    import opencntx.navigator as navigator
+    from opencntx import navigator
 
     navigator._TEST_BEFORE_CONTEXT_LOCK = barrier.wait
     _result(
@@ -122,7 +121,7 @@ def _context_worker(root, proposal_digest, barrier, queue) -> None:
 
 
 def _executor_worker(root, arguments, barrier, queue) -> None:
-    import opencntx.playbook as playbook
+    from opencntx import playbook
 
     playbook._TEST_BEFORE_EXECUTOR_LOCK = barrier.wait
     _result(
@@ -145,14 +144,14 @@ def _executor_worker(root, arguments, barrier, queue) -> None:
 
 
 def _catalog_worker(root, barrier, queue) -> None:
-    import opencntx.catalog as catalog
+    from opencntx import catalog
 
     catalog._TEST_BEFORE_CATALOG_LOCK = barrier.wait
     _result(queue, lambda: rebuild_catalog(Path(root)))
 
 
 def _crash_capture_worker(root, source, phase) -> None:
-    import opencntx.integrity as integrity
+    from opencntx import integrity
 
     def crash(_transaction_id: str, observed: str) -> None:
         if observed == phase:
@@ -163,7 +162,7 @@ def _crash_capture_worker(root, source, phase) -> None:
 
 
 def _install_crash_hook(phase: str, exit_code: int) -> None:
-    import opencntx.integrity as integrity
+    from opencntx import integrity
 
     def crash(_transaction_id: str, observed: str) -> None:
         if observed == phase:
@@ -218,7 +217,7 @@ def _crash_executor_worker(root, arguments, phase) -> None:
 
 
 def _crash_transaction_worker(root, phase) -> None:
-    import opencntx.integrity as integrity
+    from opencntx import integrity
 
     def crash(_transaction_id: str, observed: str) -> None:
         if observed == phase:
@@ -284,7 +283,9 @@ def _run_pair(target, arguments) -> list[tuple[str, str]]:
     context = multiprocessing.get_context("spawn")
     barrier = context.Barrier(2)
     queue = context.Queue()
-    processes = [context.Process(target=target, args=(*arguments, barrier, queue)) for _ in range(2)]
+    processes = [
+        context.Process(target=target, args=(*arguments, barrier, queue)) for _ in range(2)
+    ]
     for process in processes:
         process.start()
     for process in processes:
@@ -411,6 +412,14 @@ class IntegrityTests(unittest.TestCase):
         recover_workspace(root, issue.transaction_id, issue.intent_sha256, apply=True)
         self.assertEqual(doctor_workspace(root).status, "HEALTHY")
 
+    def test_transaction_json_must_be_an_object(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "not-an-object.json"
+            path.write_text("[]\n", encoding="utf-8")
+            with self.assertRaises(IntegrityError) as context:
+                _read_json(path, label="Transaction fixture")
+            self.assertEqual("transaction_invalid", context.exception.code)
+
     def test_doctor_is_byte_type_name_and_mtime_read_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory) / "workspace"
@@ -448,7 +457,9 @@ class IntegrityTests(unittest.TestCase):
             source = root / "INBOX" / "crash.txt"
             source.write_text("crash publication\n", encoding="utf-8")
             context = multiprocessing.get_context("spawn")
-            process = context.Process(target=_crash_capture_worker, args=(root, source, "PUBLISHED"))
+            process = context.Process(
+                target=_crash_capture_worker, args=(root, source, "PUBLISHED")
+            )
             process.start()
             process.join(20)
             self.assertEqual(process.exitcode, 91)
@@ -475,7 +486,9 @@ class IntegrityTests(unittest.TestCase):
             source = root / "INBOX" / "crash.txt"
             source.write_text("crash publication\n", encoding="utf-8")
             context = multiprocessing.get_context("spawn")
-            process = context.Process(target=_crash_capture_worker, args=(root, source, "PUBLISHED"))
+            process = context.Process(
+                target=_crash_capture_worker, args=(root, source, "PUBLISHED")
+            )
             process.start()
             process.join(20)
             issue = next(
@@ -489,7 +502,10 @@ class IntegrityTests(unittest.TestCase):
 
     def test_recovery_rejects_target_drift_and_unknown_transaction_content(self) -> None:
         for mutation in ("target-drift", "unknown-content"):
-            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary_directory:
+            with (
+                self.subTest(mutation=mutation),
+                tempfile.TemporaryDirectory() as temporary_directory,
+            ):
                 root = Path(temporary_directory) / "workspace"
                 init_workspace(root)
                 source = root / "INBOX" / "crash.txt"
@@ -518,7 +534,9 @@ class IntegrityTests(unittest.TestCase):
                 report = doctor_workspace(root)
                 self.assertEqual(report.status, "UNSAFE_UNKNOWN_STATE")
                 with self.assertRaises(IntegrityError):
-                    recover_workspace(root, issue.transaction_id, issue.intent_sha256 or "", apply=True)
+                    recover_workspace(
+                        root, issue.transaction_id, issue.intent_sha256 or "", apply=True
+                    )
                 self.assertEqual(before, _snapshot(root))
 
     def test_active_writer_cannot_be_recovered_or_interrupted(self) -> None:
@@ -556,21 +574,23 @@ class IntegrityTests(unittest.TestCase):
             source = root / "INBOX" / "crash.txt"
             source.write_text("crash publication\n", encoding="utf-8")
             context = multiprocessing.get_context("spawn")
-            process = context.Process(target=_crash_capture_worker, args=(root, source, "RECEIPTED"))
+            process = context.Process(
+                target=_crash_capture_worker, args=(root, source, "RECEIPTED")
+            )
             process.start()
             process.join(20)
             self.assertEqual(process.exitcode, 91)
             issue = next(
-                item
-                for item in doctor_workspace(root).issues
-                if item.transaction_id is not None
+                item for item in doctor_workspace(root).issues if item.transaction_id is not None
             )
             assert issue.transaction_id is not None
             assert issue.intent_sha256 is not None
             preview = recover_workspace(root, issue.transaction_id, issue.intent_sha256)
             applied = recover_workspace(root, issue.transaction_id, issue.intent_sha256, apply=True)
             self.assertEqual(applied.backup_path, preview.backup_path)
-            manifest = json.loads((applied.backup_path / "manifest.json").read_text(encoding="utf-8"))
+            manifest = json.loads(
+                (applied.backup_path / "manifest.json").read_text(encoding="utf-8")
+            )
             receipt = json.loads(applied.receipt_path.read_text(encoding="utf-8"))
             self.assertEqual(manifest["intent_sha256"], issue.intent_sha256)
             self.assertTrue(receipt["before_targets"])
@@ -764,14 +784,16 @@ class IntegrityTests(unittest.TestCase):
                 transaction.mark_target_published(target)
                 transaction.mark_published()
                 transaction.mark_receipted(None)
-            with self.assertRaisesRegex(IntegrityError, "basis changed") as error:
-                with writer_transaction(
+            with (
+                self.assertRaisesRegex(IntegrityError, "basis changed") as error,
+                writer_transaction(
                     root,
                     "cas-stale",
                     expected_digest=expected,
                     current_digest=lambda: state_digest((target,)),
-                ):
-                    self.fail("A stale writer must never enter its mutation body.")
+                ),
+            ):
+                self.fail("A stale writer must never enter its mutation body.")
             self.assertEqual(error.exception.code, "transaction_state_changed")
 
     def test_path_safety_and_directory_sync_are_explicit(self) -> None:

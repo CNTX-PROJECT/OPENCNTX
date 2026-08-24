@@ -1,0 +1,31 @@
+{
+  "format": "opencntx-r8-23-security-exceptions",
+  "format_version": 1,
+  "exceptions": [
+    {
+      "path": "src/opencntx/cli_workspace.py",
+      "codes": ["S101"],
+      "reason": "The assertion narrows one internal optional dispatcher result after the parser selected that route."
+    },
+    {
+      "path": "tools/quality_gate.py",
+      "codes": ["S603"],
+      "reason": "The quality gate runs only the current Python executable and fixed repository-owned arguments."
+    },
+    {
+      "path": "tools/r8_hardening.py",
+      "codes": ["S310", "S603"],
+      "reason": "The harness uses one fixed HTTPS release URL and trusted local Python, pip, and OPENCNTX executables."
+    },
+    {
+      "path": "tools/release_artifacts.py",
+      "codes": ["S603"],
+      "reason": "The artifact verifier runs only controlled local build, install, and smoke commands."
+    },
+    {
+      "path": "tools/render_brand.py",
+      "codes": ["S314"],
+      "reason": "The renderer parses only SVG bytes generated and stored inside this repository."
+    }
+  ]
+}

@@ -225,7 +225,7 @@ def _print_task_result(root: Path, result: TaskResult) -> None:
 def _dispatch_task_transition(
     args: argparse.Namespace,
     root: Path,
-) -> object | None:
+) -> TaskResult | None:
     command = args.workspace_task_command
     if command == "propose":
         return propose_task(
@@ -269,7 +269,7 @@ def _dispatch_task_transition(
     return None
 
 
-def _dispatch_task_evidence(args: argparse.Namespace, root: Path) -> object | None:
+def _dispatch_task_evidence(args: argparse.Namespace, root: Path) -> TaskResult | None:
     command = args.workspace_task_command
     if command == "submit-result":
         return submit_result(

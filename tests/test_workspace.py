@@ -3,18 +3,18 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.workspace import (  # noqa: E402
+from opencntx.workspace import (
     WorkspaceError,
     capture_source,
     init_workspace,
@@ -112,9 +112,11 @@ class WorkspaceTests(unittest.TestCase):
             parent = Path(temporary_directory)
             missing = parent / "missing-workspace"
             no_space = mock.Mock(total=100, used=100, free=0)
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space):
-                with self.assertRaises(WorkspaceError) as init_error:
-                    init_workspace(missing)
+            with (
+                mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space),
+                self.assertRaises(WorkspaceError) as init_error,
+            ):
+                init_workspace(missing)
             self.assertEqual(init_error.exception.code, "disk_space_insufficient")
             self.assertFalse(missing.exists())
 
@@ -122,9 +124,11 @@ class WorkspaceTests(unittest.TestCase):
             init_workspace(workspace)
             source = parent / "source.bin"
             source.write_bytes(b"disk-preflight")
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space):
-                with self.assertRaises(WorkspaceError) as capture_error:
-                    capture_source(workspace, source)
+            with (
+                mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space),
+                self.assertRaises(WorkspaceError) as capture_error,
+            ):
+                capture_source(workspace, source)
             self.assertEqual(capture_error.exception.code, "disk_space_insufficient")
             self.assertEqual(list((workspace / "SOURCES").rglob("original*")), [])
             self.assertEqual(list((workspace / ".opencntx").glob(".capture-*")), [])
@@ -172,12 +176,14 @@ class WorkspaceTests(unittest.TestCase):
                     raise OSError("gesimuleerde initialisatiefout")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
-            with mock.patch(
-                "opencntx.workspace.os.replace",
-                side_effect=fail_during_init,
+            with (
+                mock.patch(
+                    "opencntx.workspace.os.replace",
+                    side_effect=fail_during_init,
+                ),
+                self.assertRaisesRegex(WorkspaceError, "niet volledig"),
             ):
-                with self.assertRaisesRegex(WorkspaceError, "niet volledig"):
-                    init_workspace(workspace)
+                init_workspace(workspace)
 
             self.assertEqual(marker.read_text(encoding="utf-8"), "bestaande pakketstaat\n")
             for relative in ("CONTROL", "INBOX", "SOURCES", "CHAPTERS"):
@@ -190,7 +196,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             source = workspace / "INBOX" / "brief.md"
-            content = "Eerste regel\nTweede regel met café.\n".encode("utf-8")
+            content = "Eerste regel\nTweede regel met café.\n".encode()
             source.write_bytes(content)
             source_before = source.read_bytes()
 
@@ -213,7 +219,9 @@ class WorkspaceTests(unittest.TestCase):
             self.assertNotIn(str(source.parent), result.receipt_path.read_text(encoding="utf-8"))
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertEqual(len(list(completed.iterdir())), 1)
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_capture_binary_is_byte_exact_and_never_interpreted(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -419,12 +427,14 @@ class WorkspaceTests(unittest.TestCase):
                 source.write_text("na de kopie", encoding="utf-8")
                 return result
 
-            with mock.patch(
-                "opencntx.workspace._copy_and_hash",
-                side_effect=copy_then_change,
+            with (
+                mock.patch(
+                    "opencntx.workspace._copy_and_hash",
+                    side_effect=copy_then_change,
+                ),
+                self.assertRaisesRegex(WorkspaceError, "veranderde tijdens capture"),
             ):
-                with self.assertRaisesRegex(WorkspaceError, "veranderde tijdens capture"):
-                    capture_source(workspace, source)
+                capture_source(workspace, source)
 
             self.assertEqual(records(workspace), [])
             failure = read_json(receipts(workspace)[0])
@@ -446,12 +456,14 @@ class WorkspaceTests(unittest.TestCase):
                     raise OSError("gesimuleerde publicatiefout")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
-            with mock.patch(
-                "opencntx.workspace.os.replace",
-                side_effect=fail_source_publish,
+            with (
+                mock.patch(
+                    "opencntx.workspace.os.replace",
+                    side_effect=fail_source_publish,
+                ),
+                self.assertRaisesRegex(WorkspaceError, "atomair zichtbaar"),
             ):
-                with self.assertRaisesRegex(WorkspaceError, "atomair zichtbaar"):
-                    capture_source(workspace, source)
+                capture_source(workspace, source)
 
             self.assertEqual(records(workspace), [])
             self.assertFalse(any((workspace / ".opencntx").glob(".capture-*")))

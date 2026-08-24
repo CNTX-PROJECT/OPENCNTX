@@ -2,24 +2,20 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import sqlite3
-from typing import Any, Sequence
+from collections.abc import Sequence
+from dataclasses import dataclass
+from pathlib import Path, PurePosixPath
+from typing import Any
 from uuid import uuid4
 
-from .integrity import Transaction, state_digest, writer_transaction
-from .primitives import (
-    sha256_bytes as _digest_bytes,
-    timestamp_microseconds as _timestamp,
-    utc_now as _utc_now,
-)
 from .catalog import (
     CATALOG_FORMAT,
     CATALOG_FORMAT_VERSION,
+    CatalogIssue,
     ChapterEntry,
     SourceEntry,
     _calculate_freshness,
@@ -27,6 +23,12 @@ from .catalog import (
     _load_sources,
     _state_digest,
     _state_model,
+)
+from .control import (
+    CONTROL_SNAPSHOT_PATH,
+    ControlState,
+    inspect_control,
+    refresh_control_snapshot,
 )
 from .core import (
     DEFAULT_EXCLUDE_PATTERNS,
@@ -40,11 +42,15 @@ from .core import (
     render_context,
     verify_package,
 )
-from .control import (
-    CONTROL_SNAPSHOT_PATH,
-    ControlState,
-    inspect_control,
-    refresh_control_snapshot,
+from .integrity import Transaction, state_digest, writer_transaction
+from .primitives import (
+    sha256_bytes as _digest_bytes,
+)
+from .primitives import (
+    timestamp_microseconds as _timestamp,
+)
+from .primitives import (
+    utc_now as _utc_now,
 )
 from .workflow import (
     TASK_ID_PATTERN,
@@ -55,7 +61,6 @@ from .workflow import (
     _verify_inputs,
 )
 from .workspace import SHA256_PATTERN, WorkspaceError, validate_workspace
-
 
 NAVIGATION_FORMAT = "opencntx-navigation"
 NAVIGATION_FORMAT_VERSION = 1
@@ -95,6 +100,25 @@ CATALOG_TABLE_COLUMNS = {
     "chapter_sources": ("chapter_id", "source_id", "pinned_sha256", "relation"),
     "chapter_dependencies": ("chapter_id", "depends_on"),
     "catalog_issues": ("issue_number", "code", "object_id", "message"),
+}
+CATALOG_SELECT_QUERIES = {
+    "catalog_meta": 'SELECT "key", "value" FROM "catalog_meta"',
+    "sources": (
+        'SELECT "source_id", "record_path", "original_path", "bytes", "sha256", '
+        '"privacy", "captured_at", "supersedes", "integrity" FROM "sources"'
+    ),
+    "chapters": (
+        'SELECT "chapter_id", "title", "scope", "relative_path", "revision", '
+        '"knowledge_status", "last_owner_approval", "chapter_digest", "freshness", '
+        '"open_decisions" FROM "chapters"'
+    ),
+    "chapter_sources": (
+        'SELECT "chapter_id", "source_id", "pinned_sha256", "relation" FROM "chapter_sources"'
+    ),
+    "chapter_dependencies": ('SELECT "chapter_id", "depends_on" FROM "chapter_dependencies"'),
+    "catalog_issues": (
+        'SELECT "issue_number", "code", "object_id", "message" FROM "catalog_issues"'
+    ),
 }
 CURRENT_TASK_PATTERN = re.compile(
     r"^- (?:Active task|Actieve taak): (TASK-\d{8}-\d{4}) "
@@ -169,8 +193,7 @@ class ContextVerifyReport:
 
 def _json_bytes(value: object) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, allow_nan=False, indent=2, sort_keys=True)
-        + "\n"
+        json.dumps(value, ensure_ascii=False, allow_nan=False, indent=2, sort_keys=True) + "\n"
     ).encode("utf-8")
 
 
@@ -184,9 +207,7 @@ def _validate_task_id(value: object) -> str:
 
 def _validate_digest(value: object, *, label: str) -> str:
     if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
-        raise NavigatorError(
-            f"{label} is geen geldige SHA-256.", code="context_digest_invalid"
-        )
+        raise NavigatorError(f"{label} is geen geldige SHA-256.", code="context_digest_invalid")
     return value
 
 
@@ -201,12 +222,7 @@ def _positive_budget(value: object, *, label: str) -> int:
 
 def _path_parts(relative_text: str) -> tuple[str, ...]:
     pure = PurePosixPath(relative_text)
-    if (
-        pure.is_absolute()
-        or not pure.parts
-        or ".." in pure.parts
-        or "\\" in relative_text
-    ):
+    if pure.is_absolute() or not pure.parts or ".." in pure.parts or "\\" in relative_text:
         raise NavigatorError(
             "Contextpad moet draagbaar binnen de werkruimte blijven.",
             code="context_path_invalid",
@@ -229,9 +245,7 @@ def _proposal_inputs(chain: TaskChain) -> tuple[str, ...]:
     payload = chain.events[0].payload
     values = payload.get("inputs")
     if not isinstance(values, list):
-        raise NavigatorError(
-            "Taakvoorstel mist geldige inputs.", code="context_task_invalid"
-        )
+        raise NavigatorError("Taakvoorstel mist geldige inputs.", code="context_task_invalid")
     paths: list[str] = []
     for item in values:
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
@@ -265,9 +279,9 @@ def _catalog_rows(
     sources: dict[str, SourceEntry],
     chapters: dict[str, ChapterEntry],
     freshness: dict[str, str],
-    issues: Sequence[object],
+    issues: Sequence[CatalogIssue],
 ) -> dict[str, list[tuple[object, ...]]]:
-    source_rows = [
+    source_rows: list[tuple[object, ...]] = [
         (
             item.source_id,
             item.record_path,
@@ -281,7 +295,7 @@ def _catalog_rows(
         )
         for item in (sources[source_id] for source_id in sorted(sources))
     ]
-    chapter_rows = [
+    chapter_rows: list[tuple[object, ...]] = [
         (
             item.chapter_id,
             item.title,
@@ -310,7 +324,7 @@ def _catalog_rows(
             for dependency in chapter.dependency_ids
             if dependency in chapters
         )
-    issue_rows = [
+    issue_rows: list[tuple[object, ...]] = [
         (number, item.code, item.object_id, item.message)
         for number, item in enumerate(issues, start=1)
     ]
@@ -385,10 +399,10 @@ def _read_catalog(
                 code="catalog_rebuild_required",
             )
         for table, expected_columns in CATALOG_TABLE_COLUMNS.items():
-            columns = tuple(
+            column_names = tuple(
                 row[1] for row in connection.execute(f'PRAGMA table_info("{table}")')
             )
-            if columns != expected_columns:
+            if column_names != expected_columns:
                 raise NavigatorError(
                     "SQLite-catalogus gebruikt een onbekend schema.",
                     code="catalog_rebuild_required",
@@ -422,8 +436,7 @@ def _read_catalog(
                 code="catalog_rebuild_required",
             )
         for table, expected in expected_rows.items():
-            columns = ", ".join(f'"{column}"' for column in CATALOG_TABLE_COLUMNS[table])
-            actual = list(connection.execute(f'SELECT {columns} FROM "{table}"'))
+            actual = list(connection.execute(CATALOG_SELECT_QUERIES[table]))
             if sorted(actual, key=repr) != sorted(expected, key=repr):
                 raise NavigatorError(
                     "Catalogusrijen verschillen van de officiële werkruimtebytes.",
@@ -495,9 +508,7 @@ def _prepare_route(
             "Contextbouw vereist een exact goedgekeurde taak in IN_EXECUTION.",
             code="context_task_not_executing",
         )
-    approval = next(
-        (event for event in chain.events if event.event_type == "owner-approval"), None
-    )
+    approval = next((event for event in chain.events if event.event_type == "owner-approval"), None)
     execution = next(
         (event for event in chain.events if event.event_type == "execution-begun"), None
     )
@@ -578,19 +589,20 @@ def _prepare_route(
 
     explicit_inputs = set(input_paths)
     for source_id in sorted(selected_source_ids):
-        source = sources.get(source_id)
-        if source is None or source.integrity != "EXACT":
+        selected_source = sources.get(source_id)
+        if selected_source is None or selected_source.integrity != "EXACT":
             raise NavigatorError(
                 f"Bron {source_id} is ontbrekend of niet exact.",
                 code="context_source_stale",
             )
-        if source.privacy == "QUARANTINED":
+        if selected_source.privacy == "QUARANTINED":
             raise NavigatorError(
                 f"Bron {source_id} is QUARANTINED en wordt niet geladen.",
                 code="context_source_quarantined",
             )
-        if source.privacy == "RESTRICTED" and not (
-            source.record_path in explicit_inputs or source.original_path in explicit_inputs
+        if selected_source.privacy == "RESTRICTED" and not (
+            selected_source.record_path in explicit_inputs
+            or selected_source.original_path in explicit_inputs
         ):
             raise NavigatorError(
                 f"RESTRICTED bron {source_id} vereist een expliciete taakinput.",
@@ -672,11 +684,7 @@ def _read_route(
         )
     paths = tuple(item.path for item in route.files)
     exclude_patterns = (
-        tuple(
-            pattern
-            for pattern in DEFAULT_EXCLUDE_PATTERNS
-            if pattern != ".opencntx/**"
-        )
+        tuple(pattern for pattern in DEFAULT_EXCLUDE_PATTERNS if pattern != ".opencntx/**")
         if route.control.mode == "COMPACT_MARKED"
         else DEFAULT_EXCLUDE_PATTERNS
     )
@@ -734,7 +742,7 @@ def _navigation(
                 "source_id": source_id,
             }
         )
-    navigation = {
+    navigation: dict[str, Any] = {
         "format": NAVIGATION_FORMAT,
         "format_version": NAVIGATION_FORMAT_VERSION,
         "task": {
@@ -794,9 +802,7 @@ def _navigation(
             "roadmap_body_loaded": route.control.mode == "LEGACY_FULL_ROADMAP",
             "roadmap_sha256": route.control.roadmap_sha256,
             "snapshot_path": (
-                CONTROL_SNAPSHOT_PATH
-                if route.control.mode == "COMPACT_MARKED"
-                else None
+                CONTROL_SNAPSHOT_PATH if route.control.mode == "COMPACT_MARKED" else None
             ),
             "snapshot_sha256": route.control.snapshot_sha256,
         }
@@ -910,12 +916,8 @@ def _build_context_package_unlocked(
     try:
         max_files = _positive_budget(max_files, label="max-files")
         max_bytes = _positive_budget(max_bytes, label="max-bytes")
-        route = _prepare_route(
-            root, task_id, proposal_digest, refresh_snapshot=True
-        )
-        context_bytes, manifest_bytes, manifest = _package_bytes(
-            route, max_files, max_bytes
-        )
+        route = _prepare_route(root, task_id, proposal_digest, refresh_snapshot=True)
+        context_bytes, manifest_bytes, manifest = _package_bytes(route, max_files, max_bytes)
         confirmed = _prepare_route(root, task_id, proposal_digest)
         if confirmed.fingerprint != route.fingerprint:
             raise NavigatorError(
@@ -1084,8 +1086,7 @@ def verify_context_package(
     try:
         route = _prepare_route(root, task_id, proposal_digest)
         include_control_metadata = (
-            isinstance(navigation.get("control"), dict)
-            or route.control.mode == "COMPACT_MARKED"
+            isinstance(navigation.get("control"), dict) or route.control.mode == "COMPACT_MARKED"
         )
         expected_context, expected_manifest, _ = _package_bytes(
             route,
@@ -1103,9 +1104,7 @@ def verify_context_package(
         current_matches = (
             actual_context == expected_context and actual_manifest == expected_manifest
         )
-        legacy_matches = (
-            actual_context == legacy_context and actual_manifest == legacy_manifest
-        )
+        legacy_matches = actual_context == legacy_context and actual_manifest == legacy_manifest
         if not current_matches and not legacy_matches:
             if actual_context not in {expected_context, legacy_context}:
                 errors.append("CONTEXT.md differs from the current task route")

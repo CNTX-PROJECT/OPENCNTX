@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
-
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
@@ -15,24 +14,22 @@ import sys
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.attempts import (  # noqa: E402
-    AttemptError,
-    MAX_CUMULATIVE_ACTIONS,
-    MAX_CUMULATIVE_DURATION_MS,
+from opencntx import integrity
+from opencntx.attempts import (
     MAX_TOTAL_ATTEMPTS,
+    AttemptError,
     basis_digest,
     fingerprint,
     record_attempt,
 )
-from opencntx.playbook import executor_status  # noqa: E402
-import opencntx.integrity as integrity  # noqa: E402
-from opencntx.workflow import (  # noqa: E402
+from opencntx.playbook import executor_status
+from opencntx.workflow import (
     WorkflowError,
     _load_chain,
     supersede_task,
     task_status,
 )
-from tests.test_playbook import (  # noqa: E402
+from tests.test_playbook import (
     TASK_ID,
     append_legacy_attempt,
     prepare_ready_executor,
@@ -52,9 +49,7 @@ def _canonical(value: object) -> bytes:
 
 
 def ready(parent: Path):
-    workspace, playbook, role, proposed, context, prepared = prepare_ready_executor(
-        parent
-    )
+    workspace, _playbook, _role, _proposed, _context, prepared = prepare_ready_executor(parent)
     basis = workspace / "SOURCES" / "attempt-basis.txt"
     basis.write_text("initial attempt basis\n", encoding="utf-8")
     return workspace, prepared, basis
@@ -135,11 +130,7 @@ class ObjectiveAttemptTests(unittest.TestCase):
         variants = (
             {"command_type": "read-file"},
             {"target": "SOURCES/b.txt"},
-            {
-                "inputs": [
-                    {"path": "SOURCES/a.txt", "bytes": 1, "sha256": "c" * 64}
-                ]
-            },
+            {"inputs": [{"path": "SOURCES/a.txt", "bytes": 1, "sha256": "c" * 64}]},
             {"exit_status": 1},
             {"error_class": "tool-failure"},
         )
@@ -196,7 +187,9 @@ class ObjectiveAttemptTests(unittest.TestCase):
                 "TASK_FINISHED",
             )
             chain = _load_chain(workspace, TASK_ID)
-            attempts = [event.payload for event in chain.events if event.event_type == "objective-attempt"]
+            attempts = [
+                event.payload for event in chain.events if event.event_type == "objective-attempt"
+            ]
             self.assertEqual(len({item["error_fingerprint"] for item in attempts}), 1)
             self.assertEqual(attempts[-1]["block_reason"], "SEMANTIC_REPEAT_LIMIT")
             view = third.task_path.read_text(encoding="utf-8")
@@ -290,7 +283,9 @@ class ObjectiveAttemptTests(unittest.TestCase):
                     new_evidence=b"unique second observation",
                 )
                 self.assertEqual(blocked.task_status, "BLOCKED")
-                self.assertEqual(_load_chain(workspace, TASK_ID).events[-1].payload["block_reason"], reason)
+                self.assertEqual(
+                    _load_chain(workspace, TASK_ID).events[-1].payload["block_reason"], reason
+                )
 
     def test_changed_input_digest_is_a_valid_new_basis(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -330,8 +325,12 @@ class ObjectiveAttemptTests(unittest.TestCase):
                     result_text="cosmetically different result evidence\n",
                 )
             self.assertEqual(context.exception.code, "task_attempt_unchanged")
-            self.assertEqual(list((workspace / "TASKS" / TASK_ID / "events").iterdir()), before_events)
-            self.assertEqual(list((workspace / "TASKS" / TASK_ID / "artifacts").iterdir()), before_artifacts)
+            self.assertEqual(
+                list((workspace / "TASKS" / TASK_ID / "events").iterdir()), before_events
+            )
+            self.assertEqual(
+                list((workspace / "TASKS" / TASK_ID / "artifacts").iterdir()), before_artifacts
+            )
 
     def test_duplicate_explicit_new_evidence_is_not_reusable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -408,7 +407,9 @@ class ObjectiveAttemptTests(unittest.TestCase):
             context_path.write_bytes(context_path.read_bytes() + b"drift\n")
             with self.assertRaises(WorkflowError) as context:
                 append_attempt(parent, workspace, prepared.executor_id, basis, 1)
-            self.assertIn(context.exception.code, {"executor_context_stale", "executor_context_invalid"})
+            self.assertIn(
+                context.exception.code, {"executor_context_stale", "executor_context_invalid"}
+            )
             self.assertEqual(list((workspace / "TASKS" / TASK_ID / "artifacts").iterdir()), [])
 
     def test_status_is_read_only_and_artifact_drift_fails_closed(self) -> None:
@@ -435,17 +436,17 @@ class ObjectiveAttemptTests(unittest.TestCase):
                 if phase == "TARGET_PUBLISHED":
                     raise RuntimeError("forced attempt publication failure")
 
-            with mock.patch.object(
-                integrity,
-                "_TEST_FAULT_HOOK",
-                side_effect=fail_after_first_publish,
+            with (
+                mock.patch.object(
+                    integrity,
+                    "_TEST_FAULT_HOOK",
+                    side_effect=fail_after_first_publish,
+                ),
+                self.assertRaisesRegex(RuntimeError, "forced attempt"),
             ):
-                with self.assertRaisesRegex(RuntimeError, "forced attempt"):
-                    append_attempt(parent, workspace, prepared.executor_id, basis, 1)
+                append_attempt(parent, workspace, prepared.executor_id, basis, 1)
             chain = _load_chain(workspace, TASK_ID)
-            self.assertFalse(
-                any(event.event_type == "objective-attempt" for event in chain.events)
-            )
+            self.assertFalse(any(event.event_type == "objective-attempt" for event in chain.events))
             self.assertEqual(list((workspace / "TASKS" / TASK_ID / "artifacts").iterdir()), [])
 
     def test_recomputed_event_digest_cannot_hide_fingerprint_tampering(self) -> None:

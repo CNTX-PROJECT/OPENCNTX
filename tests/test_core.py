@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
-from types import SimpleNamespace
 import tempfile
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 from opencntx.core import pack_project
@@ -34,12 +34,14 @@ class CoreLifecycleTests(unittest.TestCase):
             (root / "README.md").write_text("# Test\n", encoding="utf-8")
             write_config(root)
 
-            with mock.patch(
-                "opencntx.lifecycle.shutil.disk_usage",
-                return_value=SimpleNamespace(total=100, used=100, free=0),
+            with (
+                mock.patch(
+                    "opencntx.lifecycle.shutil.disk_usage",
+                    return_value=SimpleNamespace(total=100, used=100, free=0),
+                ),
+                self.assertRaises(LifecycleError) as context,
             ):
-                with self.assertRaises(LifecycleError) as context:
-                    pack_project(root)
+                pack_project(root)
 
             self.assertEqual(context.exception.code, "disk_space_insufficient")
             self.assertFalse((root / ".opencntx" / "latest").exists())

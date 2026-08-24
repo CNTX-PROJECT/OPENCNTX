@@ -10,7 +10,6 @@ import zlib
 from pathlib import Path
 from xml.etree import ElementTree
 
-
 ROOT = Path(__file__).resolve().parents[1]
 BRAND = ROOT / "assets" / "brand"
 RENDERER = ROOT / "tools" / "render_brand.py"
@@ -71,9 +70,7 @@ def _local_name(tag: str) -> str:
 def _luminance(color: str) -> float:
     channels = [int(color[index : index + 2], 16) / 255 for index in (1, 3, 5)]
     linear = [
-        value / 12.92
-        if value <= 0.04045
-        else ((value + 0.055) / 1.055) ** 2.4
+        value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
         for value in channels
     ]
     return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
@@ -105,8 +102,8 @@ def _png(path: Path):
         payloads.setdefault(name, []).append(payload)
         offset += 12 + length
     header = payloads[b"IHDR"][0]
-    width, height, bit_depth, color_type, compression, filtering, interlace = (
-        struct.unpack(">IIBBBBB", header)
+    width, height, bit_depth, color_type, compression, filtering, interlace = struct.unpack(
+        ">IIBBBBB", header
     )
     raw = zlib.decompress(b"".join(payloads[b"IDAT"]))
     return (
@@ -143,9 +140,7 @@ class BrandTests(unittest.TestCase):
                 root = ElementTree.fromstring(data)
                 self.assertEqual(str(dimensions[0]), root.attrib["width"])
                 self.assertEqual(str(dimensions[1]), root.attrib["height"])
-                self.assertEqual(
-                    f"0 0 {dimensions[0]} {dimensions[1]}", root.attrib["viewBox"]
-                )
+                self.assertEqual(f"0 0 {dimensions[0]} {dimensions[1]}", root.attrib["viewBox"])
                 self.assertEqual("img", root.attrib["role"])
                 self.assertEqual("title description", root.attrib["aria-labelledby"])
                 self.assertEqual("title", _local_name(root[0].tag))
@@ -175,24 +170,16 @@ class BrandTests(unittest.TestCase):
                 for element in root
                 if _local_name(element.tag) == "g"
             }
-            background = next(
-                element for element in root if _local_name(element.tag) == "rect"
-            )
+            background = next(element for element in root if _local_name(element.tag) == "rect")
             self.assertEqual(colors[0], background.attrib["fill"])
             self.assertEqual("OPEN", groups["word-open"].attrib["aria-label"])
             self.assertEqual("CNTX", groups["word-cntx"].attrib["aria-label"])
             self.assertEqual(colors[1], groups["word-open"].attrib["fill"])
             self.assertEqual(colors[2], groups["word-cntx"].attrib["fill"])
-            text = [
-                element
-                for element in root.iter()
-                if _local_name(element.tag) == "text"
-            ]
+            text = [element for element in root.iter() if _local_name(element.tag) == "text"]
             self.assertEqual(["OPEN", "CNTX"], [element.text for element in text])
             for element in text:
-                self.assertEqual(
-                    "Arial, Helvetica, sans-serif", element.attrib["font-family"]
-                )
+                self.assertEqual("Arial, Helvetica, sans-serif", element.attrib["font-family"])
 
     def test_wordmark_and_social_geometry_is_centered(self) -> None:
         for name in ("opencntx-wordmark-light.svg", "opencntx-wordmark-dark.svg"):
@@ -200,8 +187,8 @@ class BrandTests(unittest.TestCase):
             groups = {element.attrib.get("id"): element for element in root}
             symbol_shapes = list(groups["avatar-symbol"])
             left = min(_shape_left(shape) for shape in symbol_shapes)
-            open_text = list(groups["word-open"])[0]
-            cntx_text = list(groups["word-cntx"])[0]
+            open_text = next(iter(groups["word-open"]))
+            cntx_text = next(iter(groups["word-cntx"]))
             right = float(cntx_text.attrib["x"]) + float(cntx_text.attrib["textLength"])
             self.assertEqual(110.0, left)
             self.assertEqual(690.0, right)
@@ -210,9 +197,7 @@ class BrandTests(unittest.TestCase):
 
         social = ElementTree.parse(BRAND / "opencntx-social-preview.svg").getroot()
         tagline = next(
-            element
-            for element in social.iter()
-            if element.attrib.get("id") == "tagline"
+            element for element in social.iter() if element.attrib.get("id") == "tagline"
         )
         self.assertEqual("640", tagline.attrib["x"])
         self.assertEqual("middle", tagline.attrib["text-anchor"])
@@ -226,9 +211,7 @@ class BrandTests(unittest.TestCase):
         ):
             with self.subTest(name=name):
                 root = ElementTree.parse(BRAND / name).getroot()
-                self.assertFalse(
-                    any(_local_name(element.tag) == "text" for element in root.iter())
-                )
+                self.assertFalse(any(_local_name(element.tag) == "text" for element in root.iter()))
                 groups = {element.attrib.get("id"): element for element in root}
                 self.assertEqual("#7C3AED", groups["avatar-symbol"].attrib["fill"])
                 self.assertEqual("#FFFFFF", groups["context-frame"].attrib["fill"])
@@ -236,11 +219,11 @@ class BrandTests(unittest.TestCase):
         light = (BRAND / "opencntx-symbol-light.svg").read_text(encoding="utf-8")
         dark = (BRAND / "opencntx-symbol-dark.svg").read_text(encoding="utf-8")
         for phrase in (
-            "<title id=\"title\">OPENCNTX symbol for light screens</title>",
-            "<title id=\"title\">OPENCNTX symbol for dark screens</title>",
+            '<title id="title">OPENCNTX symbol for light screens</title>',
+            '<title id="title">OPENCNTX symbol for dark screens</title>',
         ):
-            light = light.replace(phrase, "<title id=\"title\">SYMBOL</title>")
-            dark = dark.replace(phrase, "<title id=\"title\">SYMBOL</title>")
+            light = light.replace(phrase, '<title id="title">SYMBOL</title>')
+            dark = dark.replace(phrase, '<title id="title">SYMBOL</title>')
         self.assertEqual(light, dark)
 
     def test_text_and_graphic_contrasts_meet_the_contract(self) -> None:
@@ -265,9 +248,7 @@ class BrandTests(unittest.TestCase):
                 self.assertEqual((8, 6, 0, 0, 0), profile)
                 stride = dimensions[0] * 4 + 1
                 self.assertEqual(stride * dimensions[1], len(raw))
-                self.assertTrue(
-                    all(raw[row * stride] == 0 for row in range(dimensions[1]))
-                )
+                self.assertTrue(all(raw[row * stride] == 0 for row in range(dimensions[1])))
                 alpha = []
                 for row in range(dimensions[1]):
                     pixels = raw[row * stride + 1 : (row + 1) * stride]

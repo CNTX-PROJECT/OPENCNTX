@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from fnmatch import fnmatchcase
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import shutil
 import tempfile
 import tomllib
+from dataclasses import dataclass
+from fnmatch import fnmatchcase
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 from uuid import uuid4
 
@@ -25,7 +25,6 @@ from .security import (
     format_finding,
     scan_sources,
 )
-
 
 DEFAULT_EXCLUDE_PATTERNS = (
     ".git/**",
@@ -109,12 +108,7 @@ class VerifyReport:
 
     @property
     def ok(self) -> bool:
-        return not (
-            self.changed
-            or self.missing
-            or self.unexpected
-            or self.errors
-        )
+        return not (self.changed or self.missing or self.unexpected or self.errors)
 
 
 def _deduplicate(values: tuple[str, ...] | list[str]) -> tuple[str, ...]:
@@ -184,9 +178,7 @@ def _config_from_tables(
         if add_default_excludes
         else configured_exclude
     )
-    exclude = _deduplicate(
-        [_normalize_pattern(item, "context.exclude") for item in excludes]
-    )
+    exclude = _deduplicate([_normalize_pattern(item, "context.exclude") for item in excludes])
     return ContextConfig(
         goal=goal.strip(),
         include=include,
@@ -219,7 +211,7 @@ def load_config(project_root: Path) -> ContextConfig:
         raise OpenCntxError("opencntx.toml does not contain a valid table structure.")
     unknown_root = set(data) - {"task", "context"}
     if unknown_root:
-        raise OpenCntxError(f"Unknown TOML section or key: {sorted(unknown_root)[0]}")
+        raise OpenCntxError(f"Unknown TOML section or key: {min(unknown_root)}")
     task = data.get("task")
     context = data.get("context")
     if not isinstance(task, dict) or not isinstance(context, dict):
@@ -233,7 +225,7 @@ def load_config(project_root: Path) -> ContextConfig:
         "max_bytes",
     }
     if unknown_task or unknown_context:
-        unknown = sorted(unknown_task | unknown_context)[0]
+        unknown = min(unknown_task | unknown_context)
         raise OpenCntxError(f"Unknown configuration key: {unknown}")
     return _config_from_tables(task, context, add_default_excludes=True)
 
@@ -261,9 +253,7 @@ def _expand(root: Path, pattern: str) -> list[Path]:
     try:
         return sorted(root.glob(pattern), key=lambda path: path.relative_to(root).as_posix())
     except (OSError, ValueError) as exc:
-        raise OpenCntxError(
-            f"Include pattern cannot be expanded: {pattern}: {exc}"
-        ) from exc
+        raise OpenCntxError(f"Include pattern cannot be expanded: {pattern}: {exc}") from exc
 
 
 def discover_sources(
@@ -308,7 +298,9 @@ def discover_sources(
                     f"Source path is missing or inaccessible: {relative_path}: {exc}"
                 ) from exc
             if not resolved.is_relative_to(root):
-                raise OpenCntxError(f"Source path leaves the project root through a symlink: {relative_path}")
+                raise OpenCntxError(
+                    f"Source path leaves the project root through a symlink: {relative_path}"
+                )
             if resolved.is_dir():
                 ignored[(relative_path, "directory")] = {
                     "path": relative_path,
@@ -330,9 +322,7 @@ def discover_sources(
             path=path,
             include_pattern=include_reasons[path],
             required_by=tuple(
-                pattern
-                for pattern in config.required
-                if _matches_pattern(path, pattern)
+                pattern for pattern in config.required if _matches_pattern(path, pattern)
             ),
         )
         for path, _ in ordered_files
@@ -341,9 +331,7 @@ def discover_sources(
         selected_paths = tuple(path for path, _ in ordered_files)
         for pattern in config.required:
             if not any(_matches_pattern(path, pattern) for path in selected_paths):
-                raise OpenCntxError(
-                    f"Required pattern produces no included file: {pattern}"
-                )
+                raise OpenCntxError(f"Required pattern produces no included file: {pattern}")
     return Selection(
         files=ordered_files,
         included=included,
@@ -389,9 +377,7 @@ def _read_source(
         raise
     except OSError as exc:
         raise OpenCntxError(f"Source cannot be read: {safe_path}: {exc}") from exc
-    if b"\x00" in content or any(
-        byte < 32 and byte not in (9, 10, 13) for byte in content
-    ):
+    if b"\x00" in content or any(byte < 32 and byte not in (9, 10, 13) for byte in content):
         raise OpenCntxError(f"Binary source is rejected: {safe_path}")
     try:
         text = content.decode("utf-8")
@@ -446,9 +432,7 @@ def plan_project(
     config = load_config(root)
     selection = discover_sources(root, config, enforce_required=True)
     sources = read_sources(root, selection, config)
-    findings = scan_sources(
-        (source.path, source.text, source.sha256) for source in sources
-    )
+    findings = scan_sources((source.path, source.text, source.sha256) for source in sources)
     try:
         security = assess_findings(findings, allowed_secret_ids)
     except ValueError as exc:
@@ -467,15 +451,13 @@ def format_pack_preview(plan: PackPlan) -> str:
     for included in plan.selection.included:
         required_by = ",".join(included.required_by) if included.required_by else "-"
         lines.append(
-            f"  {included.path} | include={included.include_pattern} "
-            f"| required={required_by}"
+            f"  {included.path} | include={included.include_pattern} | required={required_by}"
         )
 
     lines.append(f"excluded ({len(plan.selection.excluded)}):")
     for excluded in plan.selection.excluded:
         lines.append(
-            f"  {excluded['path']} | pattern={excluded['pattern']} "
-            f"| reason={excluded['reason']}"
+            f"  {excluded['path']} | pattern={excluded['pattern']} | reason={excluded['reason']}"
         )
 
     lines.append(f"ignored ({len(plan.selection.ignored)}):")
@@ -483,9 +465,7 @@ def format_pack_preview(plan: PackPlan) -> str:
         subject = ignored.get("path", ignored.get("pattern", "-"))
         pattern = ignored.get("pattern")
         pattern_part = f" | pattern={pattern}" if pattern is not None else ""
-        lines.append(
-            f"  {subject}{pattern_part} | reason={ignored['reason']}"
-        )
+        lines.append(f"  {subject}{pattern_part} | reason={ignored['reason']}")
 
     lines.extend(
         (
@@ -502,9 +482,7 @@ def format_pack_preview(plan: PackPlan) -> str:
         lines.append(f"{label} ({len(findings)}):")
         lines.extend(f"  {format_finding(finding)}" for finding in findings)
     lines.append(
-        "result: PACK_WOULD_BE_BLOCKED"
-        if plan.security.blocked
-        else "result: PACK_WOULD_SUCCEED"
+        "result: PACK_WOULD_BE_BLOCKED" if plan.security.blocked else "result: PACK_WOULD_SUCCEED"
     )
     return "\n".join(lines)
 
@@ -555,12 +533,10 @@ def _security_manifest(security: SecretAssessment) -> dict[str, Any]:
     return {
         "policy_version": POLICY_VERSION,
         "warnings": [
-            finding_record(finding, disposition="warning")
-            for finding in security.warnings
+            finding_record(finding, disposition="warning") for finding in security.warnings
         ],
         "overrides": [
-            finding_record(finding, disposition="overridden")
-            for finding in security.overrides
+            finding_record(finding, disposition="overridden") for finding in security.overrides
         ],
     }
 
@@ -709,10 +685,7 @@ def pack_project(
         current = plan_project(root, allowed_secret_ids=allowed_secret_ids)
         current_plan_digest = hashlib.sha256(
             json.dumps(
-                [
-                    {"path": source.path, "sha256": source.sha256}
-                    for source in current.sources
-                ],
+                [{"path": source.path, "sha256": source.sha256} for source in current.sources],
                 ensure_ascii=True,
                 separators=(",", ":"),
                 sort_keys=True,
@@ -743,7 +716,9 @@ def _load_manifest(package_path: Path) -> tuple[Path, Path, dict[str, Any], Cont
     try:
         package = package_path.resolve(strict=True)
     except OSError as exc:
-        raise OpenCntxError(f"Package directory is missing or inaccessible: {package_path}") from exc
+        raise OpenCntxError(
+            f"Package directory is missing or inaccessible: {package_path}"
+        ) from exc
     if not package.is_dir() or package.parent.name != ".opencntx":
         raise OpenCntxError("Package directory must be directly below .opencntx.")
     root = package.parent.parent.resolve(strict=True)
@@ -818,8 +793,7 @@ def _manifest_security_errors(
         return ("manifest.json contains invalid override data",)
 
     findings = scan_sources(
-        (source.path, source.text, source.sha256)
-        for source in current_sources.values()
+        (source.path, source.text, source.sha256) for source in current_sources.values()
     )
     try:
         assessment = assess_findings(findings, allowed_ids)
@@ -846,8 +820,7 @@ def verify_package(package_path: Path) -> VerifyReport:
         isinstance(package_info.get("file_count"), bool)
         or package_info.get("file_count") != len(expected)
         or isinstance(package_info.get("total_bytes"), bool)
-        or package_info.get("total_bytes")
-        != sum(item["bytes"] for item in expected.values())
+        or package_info.get("total_bytes") != sum(item["bytes"] for item in expected.values())
         or not isinstance(expected_context_hash, str)
         or re.fullmatch(r"[0-9a-f]{64}", expected_context_hash) is None
     ):
@@ -867,9 +840,7 @@ def verify_package(package_path: Path) -> VerifyReport:
     except OpenCntxError as exc:
         selection = None
         current_paths = {
-            path
-            for path in expected
-            if root.joinpath(*PurePosixPath(path).parts).exists()
+            path for path in expected if root.joinpath(*PurePosixPath(path).parts).exists()
         }
         errors.append(f"Source selection is incomplete: {exc}")
 
@@ -896,9 +867,7 @@ def verify_package(package_path: Path) -> VerifyReport:
                 changed.append(path)
 
     if len(current_paths) > config.max_files:
-        errors.append(
-            f"File budget is now exceeded: {len(current_paths)} > {config.max_files}"
-        )
+        errors.append(f"File budget is now exceeded: {len(current_paths)} > {config.max_files}")
     if total_bytes > config.max_bytes:
         errors.append(f"Byte budget is now exceeded: {total_bytes} > {config.max_bytes}")
 

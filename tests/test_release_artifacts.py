@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import io
 import json
-from pathlib import Path
 import sys
 import tarfile
 import tempfile
 import unittest
 import zipfile
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
@@ -30,9 +29,11 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
             "safe/./relative",
             "nul\x00byte",
         ):
-            with self.subTest(value=value):
-                with self.assertRaises(release_artifacts.ReleaseArtifactError):
-                    release_artifacts._safe_member_path(value)
+            with (
+                self.subTest(value=value),
+                self.assertRaises(release_artifacts.ReleaseArtifactError),
+            ):
+                release_artifacts._safe_member_path(value)
         self.assertEqual(
             "opencntx-0.2.0/src/opencntx/__init__.py",
             release_artifacts._safe_member_path(
@@ -45,7 +46,7 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
             archive = Path(temp_name) / "bad.whl"
             member = zipfile.ZipInfo("opencntx/link")
             member.create_system = 3
-            member.external_attr = (0o120777 << 16)
+            member.external_attr = 0o120777 << 16
             with zipfile.ZipFile(archive, "w") as wheel:
                 wheel.writestr(member, "target")
             with self.assertRaises(release_artifacts.ReleaseArtifactError):
@@ -94,9 +95,9 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
             later.write_bytes(b"later")
             earlier.write_bytes(b"earlier")
             release_artifacts._write_checksums(root, (later, earlier))
-            lines = (root / release_artifacts.CHECKSUMS_NAME).read_text(
-                encoding="ascii"
-            ).splitlines()
+            lines = (
+                (root / release_artifacts.CHECKSUMS_NAME).read_text(encoding="ascii").splitlines()
+            )
             self.assertEqual(
                 ["a.whl", "z.tar.gz"],
                 [line.split("  ", 1)[1] for line in lines],

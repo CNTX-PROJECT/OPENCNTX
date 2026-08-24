@@ -2,20 +2,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
 import os
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 from .integrity import writer_transaction
 from .primitives import (
     pretty_json_bytes as _json_bytes,
+)
+from .primitives import (
     sha256_bytes as _digest,
+)
+from .primitives import (
     timestamp_microseconds as _timestamp,
 )
 from .workspace import WorkspaceError, validate_workspace
-
 
 CONTROL_START = b"<!-- OPENCNTX:CONTROL:START -->"
 CONTROL_END = b"<!-- OPENCNTX:CONTROL:END -->"
@@ -91,9 +94,7 @@ def _read_control_file(root: Path, relative: str) -> bytes:
             f"Controlbestand kan niet veilig worden gelezen: {relative}.",
             code="control_file_unavailable",
         ) from exc
-    if b"\x00" in content or any(
-        byte < 32 and byte not in (9, 10, 13) for byte in content
-    ):
+    if b"\x00" in content or any(byte < 32 and byte not in (9, 10, 13) for byte in content):
         raise ControlError(
             f"Controlbestand bevat onveilige controltekens: {relative}.",
             code="control_file_invalid",
@@ -336,7 +337,7 @@ def _refresh_control_snapshot_unlocked(
     project_root: Path, *, write_receipt: bool = True
 ) -> ControlRefreshResult:
     """Refresh the managed snapshot, or explicitly confirm legacy mode."""
-    created_at = datetime.now(timezone.utc)
+    created_at = datetime.now(UTC)
     attempt_id = f"CONTROL-{created_at.strftime('%Y%m%dT%H%M%S%fZ')}-{uuid4().hex[:8]}"
     root = project_root
     state: ControlState | None = None
@@ -346,7 +347,11 @@ def _refresh_control_snapshot_unlocked(
         snapshot_path: Path | None = None
         if state.mode == "COMPACT_MARKED":
             target = _snapshot_target(root)
-            assert state.snapshot_bytes is not None
+            if state.snapshot_bytes is None:
+                raise ControlError(
+                    "De officiële controlbytes zijn intern onvolledig.",
+                    code="control_file_invalid",
+                )
             _atomic_snapshot(target, state.snapshot_bytes)
             confirmed = inspect_control(root, require_snapshot=True)
             if confirmed.fingerprint != state.fingerprint:

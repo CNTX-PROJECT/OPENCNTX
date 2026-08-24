@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 import hashlib
 import json
-from pathlib import Path, PurePosixPath
 import re
-from typing import Any
 import unicodedata
+from collections.abc import Sequence
+from pathlib import Path, PurePosixPath
+from typing import Any
 
 from .workspace import WorkspaceError
-
 
 FINGERPRINT_FORMAT = "opencntx-attempt-fingerprint"
 FINGERPRINT_VERSION = 1
@@ -113,8 +112,7 @@ def normalize_target(value: object) -> str:
             code="task_attempt_target_invalid",
         )
     if "\\" in value or any(
-        unicodedata.category(character) in {"Cc", "Cf", "Cs"}
-        for character in value
+        unicodedata.category(character) in {"Cc", "Cf", "Cs"} for character in value
     ):
         raise AttemptError(
             "Target must be one portable relative path.",
@@ -246,10 +244,7 @@ def reached_limits(
     attempt_count = len(previous) + 1
     action_count = sum(item["actions_used"] for item in previous) + current_actions
     duration_ms = sum(item["duration_ms"] for item in previous) + current_duration_ms
-    equal_count = (
-        sum(item["error_fingerprint"] == current_fingerprint for item in previous)
-        + 1
-    )
+    equal_count = sum(item["error_fingerprint"] == current_fingerprint for item in previous) + 1
     reached: list[str] = []
     if equal_count >= MAX_EQUAL_FINGERPRINTS:
         reached.append("SEMANTIC_REPEAT_LIMIT")
@@ -353,9 +348,9 @@ def record_attempt(
     new_evidence_path: Path | None = None,
 ):
     """Append one objective failed attempt; never execute or retry a command."""
+    from . import workflow
     from .integrity import IntegrityError, safe_managed_path
     from .playbook import PlaybookError, attempt_executor_binding
-    from . import workflow
 
     try:
         root = workflow.validate_workspace(project_root)
@@ -372,9 +367,7 @@ def record_attempt(
                 code="task_attempt_legacy_chain",
             )
         objective = [
-            event.payload
-            for event in chain.events
-            if event.event_type == "objective-attempt"
+            event.payload for event in chain.events if event.event_type == "objective-attempt"
         ]
         validate_objective_attempt_sequence(objective)
 
