@@ -49,8 +49,15 @@ target-version = "py311"
 [tool.ruff.lint.per-file-ignores]
 "src/opencntx/cli_tasks.py" = ["PLR0911"] # A closed CLI dispatcher has eight terminal routes.
 "src/opencntx/cli_workspace.py" = ["S101"] # Assert narrows an internal optional dispatch result.
+"src/opencntx/integrity.py" = ["BLE001"] # Transaction rollback must cover every process-termination exception class.
 "src/opencntx/primitives.py" = ["TRY004"] # Preserve the established ValueError contract.
 "tests/*.py" = ["S101", "S603"] # Tests use assertions and only fixed local executables.
+"tests/test_integrity.py" = ["BLE001", "S101", "S603"] # The subprocess recorder must report every child failure class.
+"tests/test_lifecycle.py" = ["BLE001", "S101", "S603"] # The subprocess recorder must report every child failure class.
+"tools/quality_gate.py" = ["S603"] # Runs only the current Python and fixed repository commands.
+"tools/r8_hardening.py" = ["BLE001", "E402", "S310", "S603"] # A child reports every failure class; the fixed bootstrap, HTTPS URL, and local executables are trusted.
+"tools/release_artifacts.py" = ["S603"] # Runs only controlled local build and install commands.
+"tools/render_brand.py" = ["S314"] # Parses only SVG bytes generated inside this repository.
 
 [tool.mypy]
 check_untyped_defs = true

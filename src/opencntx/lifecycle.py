@@ -2,23 +2,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
 import ctypes
 import hashlib
-from importlib import resources
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import shutil
 import stat
-from typing import Any, Iterable, Sequence, cast
+from collections.abc import Sequence
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from importlib import resources
+from pathlib import Path, PurePosixPath
+from typing import Any, cast
 from uuid import uuid4
 
 from .contracts import ContractError, validate_durable_record
 from .integrity import (
-    IntegrityError,
     safe_managed_path,
     sync_directory,
     write_new_bytes,
@@ -33,7 +33,6 @@ from .workspace import (
     load_workspace_config,
     validate_workspace,
 )
-
 
 LIFECYCLE_STATE_FORMAT = "opencntx-lifecycle-state"
 LIFECYCLE_STATE_VERSION = 1
@@ -55,7 +54,7 @@ SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
 TRANSACTION_ID_RE = re.compile(r"TXN-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
 RECOVERY_ID_RE = re.compile(r"RECOVERY-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
 MAX_REQUIRED_BYTES = (1 << 63) - 1
-_NOW = lambda: datetime.now(timezone.utc)
+_NOW = lambda: datetime.now(UTC)
 _TEST_FAULT_HOOK = None
 
 
@@ -80,11 +79,13 @@ class DiskPreflight:
 
 
 def _timestamp(value: datetime) -> str:
-    return value.astimezone(timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
+    return value.astimezone(UTC).isoformat(timespec="microseconds").replace("+00:00", "Z")
 
 
 def _canonical(value: object) -> bytes:
-    return (json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n").encode("ascii")
+    return (
+        json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n"
+    ).encode("ascii")
 
 
 def _pretty(value: object) -> bytes:
@@ -110,9 +111,13 @@ def _read_json(path: Path, *, label: str) -> tuple[dict[str, Any], bytes]:
         content = path.read_bytes()
         value = json.loads(content.decode("utf-8"), object_pairs_hook=_strict_object)
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
-        raise LifecycleError(f"{label} is invalid or unreadable.", code="lifecycle_record_invalid") from exc
+        raise LifecycleError(
+            f"{label} is invalid or unreadable.", code="lifecycle_record_invalid"
+        ) from exc
     if not isinstance(value, dict):
-        raise LifecycleError(f"{label} must contain a JSON object.", code="lifecycle_record_invalid")
+        raise LifecycleError(
+            f"{label} must contain a JSON object.", code="lifecycle_record_invalid"
+        )
     return value, content
 
 
@@ -138,9 +143,13 @@ def _write_new(path: Path, content: bytes, *, private: bool = True) -> str:
             sync_parent=True,
         )
     except OSError as exc:
-        raise LifecycleError("Lifecycle evidence could not be written safely.", code="lifecycle_write_failed") from exc
+        raise LifecycleError(
+            "Lifecycle evidence could not be written safely.", code="lifecycle_write_failed"
+        ) from exc
     if result == "FAILED":
-        raise LifecycleError("Lifecycle directory flush failed.", code="lifecycle_durability_failed")
+        raise LifecycleError(
+            "Lifecycle directory flush failed.", code="lifecycle_durability_failed"
+        )
     return result
 
 
@@ -167,7 +176,9 @@ def _schema_bytes(name: str) -> bytes:
     try:
         return resources.files("opencntx").joinpath("schemas", name).read_bytes()
     except (FileNotFoundError, OSError) as exc:
-        raise LifecycleError("Lifecycle schema asset is unavailable.", code="lifecycle_schema_missing") from exc
+        raise LifecycleError(
+            "Lifecycle schema asset is unavailable.", code="lifecycle_schema_missing"
+        ) from exc
 
 
 def schema_assets() -> dict[str, bytes]:
@@ -176,20 +187,35 @@ def schema_assets() -> dict[str, bytes]:
 
 
 def schema_bundle_digest() -> str:
-    records = [{"name": name, "sha256": _sha256(content)} for name, content in schema_assets().items()]
+    records = [
+        {"name": name, "sha256": _sha256(content)} for name, content in schema_assets().items()
+    ]
     return _sha256(_canonical(records))
 
 
 def _compatibility_matrix() -> dict[str, Any]:
     try:
-        value = json.loads(_schema_bytes("compatibility-matrix-v1.json").decode("ascii"), object_pairs_hook=_strict_object)
+        value = json.loads(
+            _schema_bytes("compatibility-matrix-v1.json").decode("ascii"),
+            object_pairs_hook=_strict_object,
+        )
     except (UnicodeError, json.JSONDecodeError, ValueError) as exc:
-        raise LifecycleError("Compatibility matrix is invalid.", code="lifecycle_schema_invalid") from exc
-    if not isinstance(value, dict) or value.get("format") != "opencntx-compatibility-matrix" or value.get("format_version") != 1:
-        raise LifecycleError("Compatibility matrix uses an unknown format.", code="lifecycle_schema_invalid")
+        raise LifecycleError(
+            "Compatibility matrix is invalid.", code="lifecycle_schema_invalid"
+        ) from exc
+    if (
+        not isinstance(value, dict)
+        or value.get("format") != "opencntx-compatibility-matrix"
+        or value.get("format_version") != 1
+    ):
+        raise LifecycleError(
+            "Compatibility matrix uses an unknown format.", code="lifecycle_schema_invalid"
+        )
     records = value.get("records")
     if not isinstance(records, list):
-        raise LifecycleError("Compatibility matrix records are invalid.", code="lifecycle_schema_invalid")
+        raise LifecycleError(
+            "Compatibility matrix records are invalid.", code="lifecycle_schema_invalid"
+        )
     return value
 
 
@@ -205,44 +231,65 @@ def _known_formats() -> dict[tuple[str, int], str]:
         name = item.get("format")
         version = item.get("format_version")
         status = item.get("status")
-        if not isinstance(name, str) or not isinstance(version, int) or status not in {
-            "CURRENT", "LEGACY_READABLE", "MIGRATABLE", "UNSUPPORTED"
-        }:
+        if (
+            not isinstance(name, str)
+            or not isinstance(version, int)
+            or status not in {"CURRENT", "LEGACY_READABLE", "MIGRATABLE", "UNSUPPORTED"}
+        ):
             raise LifecycleError("Compatibility entry is invalid.", code="lifecycle_schema_invalid")
         key = (name, version)
         if key in result:
-            raise LifecycleError("Compatibility matrix contains a duplicate.", code="lifecycle_schema_invalid")
+            raise LifecycleError(
+                "Compatibility matrix contains a duplicate.", code="lifecycle_schema_invalid"
+            )
         result[key] = status
     return result
 
 
 def require_disk_capacity(path: Path, required_bytes: int, operation: str) -> DiskPreflight:
     """Fail before a write when physical free-space evidence is unavailable or insufficient."""
-    if not isinstance(required_bytes, int) or isinstance(required_bytes, bool) or not 0 <= required_bytes <= MAX_REQUIRED_BYTES:
-        raise LifecycleError("Required disk bytes are outside the supported range.", code="disk_space_invalid")
+    if (
+        not isinstance(required_bytes, int)
+        or isinstance(required_bytes, bool)
+        or not 0 <= required_bytes <= MAX_REQUIRED_BYTES
+    ):
+        raise LifecycleError(
+            "Required disk bytes are outside the supported range.", code="disk_space_invalid"
+        )
     probe = path
     while not probe.exists():
         parent = probe.parent
         if parent == probe:
-            raise LifecycleError("Disk-space probe path is unavailable.", code="disk_space_unavailable")
+            raise LifecycleError(
+                "Disk-space probe path is unavailable.", code="disk_space_unavailable"
+            )
         probe = parent
     if _is_link_like(probe) or not probe.is_dir():
         raise LifecycleError("Disk-space probe path is unsafe.", code="disk_space_unavailable")
     try:
         usage = shutil.disk_usage(probe)
     except OSError as exc:
-        raise LifecycleError("Free disk space could not be measured.", code="disk_space_unavailable") from exc
+        raise LifecycleError(
+            "Free disk space could not be measured.", code="disk_space_unavailable"
+        ) from exc
     if not (
-        all(isinstance(value, int) and not isinstance(value, bool) for value in (usage.free, usage.total))
+        all(
+            isinstance(value, int) and not isinstance(value, bool)
+            for value in (usage.free, usage.total)
+        )
         and 0 <= usage.free <= usage.total <= MAX_REQUIRED_BYTES
     ):
-        raise LifecycleError("Free disk space returned invalid values.", code="disk_space_unavailable")
+        raise LifecycleError(
+            "Free disk space returned invalid values.", code="disk_space_unavailable"
+        )
     if usage.free < required_bytes:
         raise LifecycleError(
             f"Insufficient free disk space for {operation}: {usage.free} < {required_bytes} bytes.",
             code="disk_space_insufficient",
         )
-    return DiskPreflight(operation, required_bytes, usage.free, usage.total, probe.resolve(strict=True))
+    return DiskPreflight(
+        operation, required_bytes, usage.free, usage.total, probe.resolve(strict=True)
+    )
 
 
 class _ACL(ctypes.Structure):
@@ -256,7 +303,11 @@ class _ACL(ctypes.Structure):
 
 
 class _ACE_HEADER(ctypes.Structure):
-    _fields_ = [("AceType", ctypes.c_ubyte), ("AceFlags", ctypes.c_ubyte), ("AceSize", ctypes.c_ushort)]
+    _fields_ = [
+        ("AceType", ctypes.c_ubyte),
+        ("AceFlags", ctypes.c_ubyte),
+        ("AceSize", ctypes.c_ushort),
+    ]
 
 
 def _windows_sid(text: str) -> ctypes.c_void_p:
@@ -277,21 +328,40 @@ def _audit_windows(path: Path, *, private: bool) -> PermissionAudit:
         advapi32 = vars(ctypes)["windll"].advapi32
         get_security = advapi32.GetNamedSecurityInfoW
         get_security.argtypes = [
-            ctypes.c_wchar_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p,
-            ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p), ctypes.c_void_p,
+            ctypes.c_wchar_p,
+            ctypes.c_uint32,
+            ctypes.c_uint32,
+            ctypes.c_void_p,
+            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_void_p),
+            ctypes.c_void_p,
             ctypes.POINTER(ctypes.c_void_p),
         ]
         get_security.restype = ctypes.c_uint32
-        result = get_security(str(path), 1, 0x00000004, None, None, ctypes.byref(dacl), None, ctypes.byref(descriptor))
+        result = get_security(
+            str(path), 1, 0x00000004, None, None, ctypes.byref(dacl), None, ctypes.byref(descriptor)
+        )
         if result != 0 or not dacl.value:
-            return PermissionAudit("UNSUPPORTED", "windows", (f"GetNamedSecurityInfoW={result}", "No reliable DACL result."))
+            return PermissionAudit(
+                "UNSUPPORTED",
+                "windows",
+                (f"GetNamedSecurityInfoW={result}", "No reliable DACL result."),
+            )
         get_control = advapi32.GetSecurityDescriptorControl
-        get_control.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_ushort), ctypes.POINTER(ctypes.c_uint32)]
+        get_control.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_ushort),
+            ctypes.POINTER(ctypes.c_uint32),
+        ]
         get_control.restype = ctypes.c_int
         descriptor_control = ctypes.c_ushort()
         descriptor_revision = ctypes.c_uint32()
-        if not get_control(descriptor, ctypes.byref(descriptor_control), ctypes.byref(descriptor_revision)):
-            return PermissionAudit("UNSUPPORTED", "windows", ("Security descriptor control flags were unavailable.",))
+        if not get_control(
+            descriptor, ctypes.byref(descriptor_control), ctypes.byref(descriptor_revision)
+        ):
+            return PermissionAudit(
+                "UNSUPPORTED", "windows", ("Security descriptor control flags were unavailable.",)
+            )
         protection = "protected" if descriptor_control.value & 0x1000 else "inherits-parent-ACL"
         broad = [
             ("Everyone", _windows_sid("S-1-1-0")),
@@ -330,21 +400,30 @@ def _audit_windows(path: Path, *, private: bool) -> PermissionAudit:
                     if mask & broad_write:
                         findings.append(f"{label} has a broad write-capable allow ACE.")
                     elif private and mask & broad_read:
-                        findings.append(f"{label} has a broad read-capable allow ACE on private data.")
+                        findings.append(
+                            f"{label} has a broad read-capable allow ACE on private data."
+                        )
         if findings:
             return PermissionAudit(
                 "WARNING_BROAD_ACCESS",
                 "windows",
-                (f"DACL={protection}; inherited ACEs={inherited_aces}.", *tuple(sorted(set(findings)))),
+                (
+                    f"DACL={protection}; inherited ACEs={inherited_aces}.",
+                    *tuple(sorted(set(findings))),
+                ),
             )
         if unknown:
             return PermissionAudit(
                 "UNSUPPORTED",
                 "windows",
-                (f"DACL={protection}; inherited ACEs={inherited_aces}.", "Unknown or deny ACEs prevent a complete safe observation."),
+                (
+                    f"DACL={protection}; inherited ACEs={inherited_aces}.",
+                    "Unknown or deny ACEs prevent a complete safe observation.",
+                ),
             )
         return PermissionAudit(
-            "SAFE_OBSERVED", "windows",
+            "SAFE_OBSERVED",
+            "windows",
             (
                 f"DACL={protection}; inherited ACEs={inherited_aces}.",
                 "Supported DACL entries showed no broad access in the audited scope.",
@@ -352,7 +431,9 @@ def _audit_windows(path: Path, *, private: bool) -> PermissionAudit:
             ),
         )
     except (AttributeError, OSError, ValueError):
-        return PermissionAudit("UNSUPPORTED", "windows", ("The local Win32 DACL audit was unavailable.",))
+        return PermissionAudit(
+            "UNSUPPORTED", "windows", ("The local Win32 DACL audit was unavailable.",)
+        )
     finally:
         local_free = getattr(getattr(ctypes, "windll", None), "kernel32", None)
         if local_free is not None:
@@ -380,37 +461,58 @@ def audit_permissions(path: Path, *, private: bool = False) -> PermissionAudit:
     broad = mode & (0o077 if private else 0o022)
     if broad:
         return PermissionAudit(
-            "WARNING_BROAD_ACCESS", "posix",
+            "WARNING_BROAD_ACCESS",
+            "posix",
             (f"Observed mode {mode:04o}; disallowed group/other bits {broad:04o}.",),
         )
     return PermissionAudit(
-        "SAFE_OBSERVED", "posix",
-        (f"Observed mode {mode:04o} within the audited scope.", "This is not access-control or confidentiality proof."),
+        "SAFE_OBSERVED",
+        "posix",
+        (
+            f"Observed mode {mode:04o} within the audited scope.",
+            "This is not access-control or confidentiality proof.",
+        ),
     )
 
 
 def _safe_files(root: Path) -> list[Path]:
     files: list[Path] = []
-    managed = ["CONTROL", "INBOX", "SOURCES", "CHAPTERS", "TASKS", "PLAYBOOKS", "ROLES", ".opencntx"]
+    managed = [
+        "CONTROL",
+        "INBOX",
+        "SOURCES",
+        "CHAPTERS",
+        "TASKS",
+        "PLAYBOOKS",
+        "ROLES",
+        ".opencntx",
+    ]
     for name in managed:
         top = root / name
         if not top.exists():
             continue
         if _is_link_like(top) or not top.is_dir():
-            raise LifecycleError("Managed storage contains an unsafe top-level path.", code="lifecycle_path_unsafe")
+            raise LifecycleError(
+                "Managed storage contains an unsafe top-level path.", code="lifecycle_path_unsafe"
+            )
         for current_text, directories, names in os.walk(top, topdown=True, followlinks=False):
             current = Path(current_text)
             safe_directories: list[str] = []
             for directory_name in sorted(directories):
                 candidate = current / directory_name
                 if _is_link_like(candidate) or not candidate.is_dir():
-                    raise LifecycleError("Managed storage contains a link-like directory.", code="lifecycle_path_unsafe")
+                    raise LifecycleError(
+                        "Managed storage contains a link-like directory.",
+                        code="lifecycle_path_unsafe",
+                    )
                 safe_directories.append(directory_name)
             directories[:] = safe_directories
             for file_name in sorted(names):
                 candidate = current / file_name
                 if _is_link_like(candidate) or not candidate.is_file():
-                    raise LifecycleError("Managed storage contains an unsafe entry.", code="lifecycle_path_unsafe")
+                    raise LifecycleError(
+                        "Managed storage contains an unsafe entry.", code="lifecycle_path_unsafe"
+                    )
                 files.append(candidate)
     return sorted(files, key=lambda item: item.relative_to(root).as_posix())
 
@@ -422,7 +524,7 @@ def _storage_category(relative: str) -> str:
         return "derived_content"
     if relative == ".opencntx/catalog.sqlite" or relative.startswith(".opencntx/latest/"):
         return "generated_packages_and_catalog"
-    if relative.startswith(".opencntx/receipts/") or relative.startswith("CONTROL/"):
+    if relative.startswith((".opencntx/receipts/", "CONTROL/")):
         return "receipts_and_control"
     if relative.startswith(("TASKS/", "PLAYBOOKS/", "ROLES/", ".opencntx/executors/")):
         return "tasks_definitions_and_executors"
@@ -450,7 +552,9 @@ def storage_inventory(project_root: Path) -> dict[str, Any]:
         try:
             size = path.stat().st_size
         except OSError as exc:
-            raise LifecycleError("Managed storage changed during measurement.", code="lifecycle_storage_changed") from exc
+            raise LifecycleError(
+                "Managed storage changed during measurement.", code="lifecycle_storage_changed"
+            ) from exc
         categories[_storage_category(relative)] += size
     config = load_workspace_config(root)
     usage = require_disk_capacity(root, 0, "lifecycle-status")
@@ -472,11 +576,12 @@ def _record_inventory(root: Path) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for path in _safe_files(root):
         relative = path.relative_to(root).as_posix()
-        if (
-            not relative.endswith(".json")
-            or relative.startswith(".opencntx/lifecycle/")
-            or relative.startswith(".opencntx/transactions/locks/")
-            or relative.startswith(".opencntx/transactions/active/")
+        if not relative.endswith(".json") or relative.startswith(
+            (
+                ".opencntx/lifecycle/",
+                ".opencntx/transactions/locks/",
+                ".opencntx/transactions/active/",
+            )
         ):
             continue
         value, content = _read_json(path, label=relative)
@@ -485,7 +590,10 @@ def _record_inventory(root: Path) -> list[dict[str, Any]]:
         format_name = value.get("format")
         version = value.get("format_version")
         if not isinstance(format_name, str) or not isinstance(version, int):
-            raise LifecycleError("Durable record has an invalid format discriminator.", code="lifecycle_record_unsupported")
+            raise LifecycleError(
+                "Durable record has an invalid format discriminator.",
+                code="lifecycle_record_unsupported",
+            )
         status = known.get((format_name, version), "UNSUPPORTED")
         if status == "UNSUPPORTED":
             raise LifecycleError(
@@ -500,13 +608,15 @@ def _record_inventory(root: Path) -> list[dict[str, Any]]:
             else:
                 code = "lifecycle_record_invalid"
             raise LifecycleError(str(exc), code=code) from exc
-        records.append({
-            "format": format_name,
-            "format_version": version,
-            "path": relative,
-            "sha256": _sha256(content),
-            "status": status,
-        })
+        records.append(
+            {
+                "format": format_name,
+                "format_version": version,
+                "path": relative,
+                "sha256": _sha256(content),
+                "status": status,
+            }
+        )
     return records
 
 
@@ -531,20 +641,32 @@ def _validate_current_workspace(root: Path) -> None:
     tasks = root / "TASKS"
     for path in sorted(tasks.iterdir(), key=lambda item: item.name):
         if _is_link_like(path) or not path.is_dir():
-            raise LifecycleError("Task storage contains an unsafe entry.", code="lifecycle_record_invalid")
+            raise LifecycleError(
+                "Task storage contains an unsafe entry.", code="lifecycle_record_invalid"
+            )
         _load_chain(root, path.name)
     for definition_type, directory_name in (("PLAYBOOK", "PLAYBOOKS"), ("ROLE", "ROLES")):
         definitions = root / directory_name
         for identifier in sorted(definitions.iterdir(), key=lambda item: item.name):
             if _is_link_like(identifier) or not identifier.is_dir():
-                raise LifecycleError("Definition storage contains an unsafe entry.", code="lifecycle_record_invalid")
+                raise LifecycleError(
+                    "Definition storage contains an unsafe entry.", code="lifecycle_record_invalid"
+                )
             for revision in sorted(identifier.iterdir(), key=lambda item: item.name):
-                if _is_link_like(revision) or not revision.is_dir() or not revision.name.startswith("REV-"):
-                    raise LifecycleError("Definition revision storage is invalid.", code="lifecycle_record_invalid")
+                if (
+                    _is_link_like(revision)
+                    or not revision.is_dir()
+                    or not revision.name.startswith("REV-")
+                ):
+                    raise LifecycleError(
+                        "Definition revision storage is invalid.", code="lifecycle_record_invalid"
+                    )
                 try:
                     number = int(revision.name.removeprefix("REV-"))
                 except ValueError as exc:
-                    raise LifecycleError("Definition revision is invalid.", code="lifecycle_record_invalid") from exc
+                    raise LifecycleError(
+                        "Definition revision is invalid.", code="lifecycle_record_invalid"
+                    ) from exc
                 _load_definition(root, definition_type, identifier.name, number)
     executors = root / ".opencntx" / "executors"
     if executors.exists():
@@ -552,21 +674,30 @@ def _validate_current_workspace(root: Path) -> None:
             raise LifecycleError("Executor storage is unsafe.", code="lifecycle_record_invalid")
         for task_directory in sorted(executors.iterdir(), key=lambda item: item.name):
             if _is_link_like(task_directory) or not task_directory.is_dir():
-                raise LifecycleError("Executor task storage is unsafe.", code="lifecycle_record_invalid")
+                raise LifecycleError(
+                    "Executor task storage is unsafe.", code="lifecycle_record_invalid"
+                )
             for assignment in sorted(task_directory.iterdir(), key=lambda item: item.name):
                 if _is_link_like(assignment) or not assignment.is_dir():
-                    raise LifecycleError("Executor assignment storage is unsafe.", code="lifecycle_record_invalid")
+                    raise LifecycleError(
+                        "Executor assignment storage is unsafe.", code="lifecycle_record_invalid"
+                    )
                 _load_assignment(root, task_directory.name, assignment.name)
     report = doctor_workspace(root)
     if not report.ok:
-        raise LifecycleError("Transaction diagnosis must be clean before migration.", code="lifecycle_migration_blocked")
+        raise LifecycleError(
+            "Transaction diagnosis must be clean before migration.",
+            code="lifecycle_migration_blocked",
+        )
     latest = root / ".opencntx" / "latest"
     if latest.exists() or latest.is_symlink():
         from .core import verify_package
 
         package_report = verify_package(latest)
         if not package_report.ok:
-            raise LifecycleError("Current context package does not verify.", code="lifecycle_migration_blocked")
+            raise LifecycleError(
+                "Current context package does not verify.", code="lifecycle_migration_blocked"
+            )
 
 
 def _state_value(root: Path, records: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -597,12 +728,24 @@ def _load_state(root: Path) -> tuple[dict[str, Any] | None, str | None]:
         return None, None
     value, content = _read_json(path, label="lifecycle state")
     required = {
-        "format", "format_version", "inventory_sha256", "record_count",
-        "schema_bundle_sha256", "trust_statement",
+        "format",
+        "format_version",
+        "inventory_sha256",
+        "record_count",
+        "schema_bundle_sha256",
+        "trust_statement",
     }
-    if set(value) != required or value.get("format") != LIFECYCLE_STATE_FORMAT or value.get("format_version") != 1:
-        raise LifecycleError("Lifecycle state uses an unknown contract.", code="lifecycle_state_invalid")
-    if not isinstance(value.get("record_count"), int) or not isinstance(value.get("inventory_sha256"), str):
+    if (
+        set(value) != required
+        or value.get("format") != LIFECYCLE_STATE_FORMAT
+        or value.get("format_version") != 1
+    ):
+        raise LifecycleError(
+            "Lifecycle state uses an unknown contract.", code="lifecycle_state_invalid"
+        )
+    if not isinstance(value.get("record_count"), int) or not isinstance(
+        value.get("inventory_sha256"), str
+    ):
         raise LifecycleError("Lifecycle state is invalid.", code="lifecycle_state_invalid")
     return value, _sha256(content)
 
@@ -617,28 +760,47 @@ def lifecycle_status(project_root: Path, trust_profile: str) -> dict[str, Any]:
     source_evidence: list[dict[str, str]] = []
     for source in sources.values():
         privacy[source.privacy] += 1
-        source_evidence.append({
-            "alias": "SRC-ALIAS-" + hashlib.sha256(source.source_id.encode("ascii")).hexdigest()[:12],
-            "content_sha256": source.sha256,
-            "record_sha256": _sha256(source.record_path.read_bytes()),
-        })
+        source_evidence.append(
+            {
+                "alias": "SRC-ALIAS-"
+                + hashlib.sha256(source.source_id.encode("ascii")).hexdigest()[:12],
+                "content_sha256": source.sha256,
+                "record_sha256": _sha256(source.record_path.read_bytes()),
+            }
+        )
     root_audit = audit_permissions(root)
     private_audit = audit_permissions(root / ".opencntx", private=True)
     state, state_digest = _load_state(root)
     storage = storage_inventory(root)
     after = [(path, path.stat().st_mtime_ns, path.stat().st_size) for path in _safe_files(root)]
     if before != after:
-        raise LifecycleError("Workspace changed during read-only lifecycle status.", code="lifecycle_status_changed")
-    trust_status = "LOCAL_ASSUMPTION_ONLY" if trust_profile == "single-user-local" else "UNSUPPORTED_FOR_AUTHORIZATION"
+        raise LifecycleError(
+            "Workspace changed during read-only lifecycle status.", code="lifecycle_status_changed"
+        )
+    trust_status = (
+        "LOCAL_ASSUMPTION_ONLY"
+        if trust_profile == "single-user-local"
+        else "UNSUPPORTED_FOR_AUTHORIZATION"
+    )
     return {
         "sources": sorted(source_evidence, key=lambda item: item["alias"]),
         "permission_audit": {
-            "private": {"details": list(private_audit.details), "platform": private_audit.platform, "result": private_audit.result},
-            "root": {"details": list(root_audit.details), "platform": root_audit.platform, "result": root_audit.result},
+            "private": {
+                "details": list(private_audit.details),
+                "platform": private_audit.platform,
+                "result": private_audit.result,
+            },
+            "root": {
+                "details": list(root_audit.details),
+                "platform": root_audit.platform,
+                "result": root_audit.result,
+            },
         },
         "privacy_counts": privacy,
         "publication_warning": "Privacy labels do not encrypt, authenticate, authorize, control access, or grant permission to share.",
-        "state": "CURRENT" if state is not None and state.get("schema_bundle_sha256") == schema_bundle_digest() else "LEGACY_UNREGISTERED",
+        "state": "CURRENT"
+        if state is not None and state.get("schema_bundle_sha256") == schema_bundle_digest()
+        else "LEGACY_UNREGISTERED",
         "state_sha256": state_digest,
         "storage": storage,
         "trust_profile": trust_profile,
@@ -656,7 +818,8 @@ def format_lifecycle_status(report: dict[str, Any]) -> str:
         f"Observed storage: {storage['observed_total_bytes']} bytes",
         f"Budgeted content: {storage['budgeted_content_bytes']} / {storage['configured_max_storage_bytes']} bytes",
         f"Disk free: {storage['free_bytes']} / {storage['total_bytes']} bytes",
-        "Privacy labels: " + ", ".join(f"{key}={value}" for key, value in sorted(report["privacy_counts"].items())),
+        "Privacy labels: "
+        + ", ".join(f"{key}={value}" for key, value in sorted(report["privacy_counts"].items())),
         *[
             f"Source {item['alias']}: content={item['content_sha256']} record={item['record_sha256']}"
             for item in report["sources"]
@@ -690,28 +853,32 @@ def plan_migration(project_root: Path) -> dict[str, Any]:
     else:
         operation = "REGISTER_UNCHANGED_V1"
         target = _state_value(root, records)
-    return _finalize_plan({
-        "basis_inventory_sha256": _inventory_digest(records),
-        "compatibility_matrix_sha256": compatibility_matrix_digest(),
-        "format": LIFECYCLE_PLAN_FORMAT,
-        "format_version": LIFECYCLE_PLAN_VERSION,
-        "operation": operation,
-        "record_count": len(records),
-        "records": records,
-        "schema_bundle_sha256": schema_bundle_digest(),
-        "state_before_sha256": state_sha,
-        "target_state": target,
-    })
+    return _finalize_plan(
+        {
+            "basis_inventory_sha256": _inventory_digest(records),
+            "compatibility_matrix_sha256": compatibility_matrix_digest(),
+            "format": LIFECYCLE_PLAN_FORMAT,
+            "format_version": LIFECYCLE_PLAN_VERSION,
+            "operation": operation,
+            "record_count": len(records),
+            "records": records,
+            "schema_bundle_sha256": schema_bundle_digest(),
+            "state_before_sha256": state_sha,
+            "target_state": target,
+        }
+    )
 
 
 def format_migration_plan(plan: dict[str, Any]) -> str:
-    return "\n".join([
-        f"Lifecycle migration: {plan['operation']}",
-        f"Records: {plan['record_count']}",
-        f"Inventory-SHA-256: {plan['basis_inventory_sha256']}",
-        f"Plan-SHA-256: {plan['plan_sha256']}",
-        "Dry-run only unless --apply and the exact plan digest are supplied.",
-    ])
+    return "\n".join(
+        [
+            f"Lifecycle migration: {plan['operation']}",
+            f"Records: {plan['record_count']}",
+            f"Inventory-SHA-256: {plan['basis_inventory_sha256']}",
+            f"Plan-SHA-256: {plan['plan_sha256']}",
+            "Dry-run only unless --apply and the exact plan digest are supplied.",
+        ]
+    )
 
 
 def write_plan(path: Path, plan: dict[str, Any], *, workspace_root: Path | None = None) -> str:
@@ -719,7 +886,9 @@ def write_plan(path: Path, plan: dict[str, Any], *, workspace_root: Path | None 
         raise LifecycleError("Plan digest is invalid.", code="lifecycle_plan_invalid")
     requested = path.absolute()
     if requested.exists() or requested.is_symlink():
-        raise LifecycleError("Plan destination must be a new regular file.", code="lifecycle_plan_path_invalid")
+        raise LifecycleError(
+            "Plan destination must be a new regular file.", code="lifecycle_plan_path_invalid"
+        )
     if workspace_root is not None:
         root = workspace_root.resolve(strict=True)
         try:
@@ -727,7 +896,9 @@ def write_plan(path: Path, plan: dict[str, Any], *, workspace_root: Path | None 
         except ValueError:
             pass
         else:
-            raise LifecycleError("Plan file must remain outside the workspace.", code="lifecycle_plan_path_invalid")
+            raise LifecycleError(
+                "Plan file must remain outside the workspace.", code="lifecycle_plan_path_invalid"
+            )
     _write_new(requested, _pretty(plan))
     return str(plan["plan_sha256"])
 
@@ -738,9 +909,13 @@ def _load_exact_plan(path: Path, expected_sha256: str) -> dict[str, Any]:
     value, _ = _read_json(path.absolute(), label="lifecycle plan")
     actual = _plan_digest(value)
     if actual != expected_sha256 or value.get("plan_sha256") != expected_sha256:
-        raise LifecycleError("Lifecycle plan digest does not match.", code="lifecycle_plan_digest_mismatch")
+        raise LifecycleError(
+            "Lifecycle plan digest does not match.", code="lifecycle_plan_digest_mismatch"
+        )
     if value.get("format") != LIFECYCLE_PLAN_FORMAT or value.get("format_version") != 1:
-        raise LifecycleError("Lifecycle plan uses an unknown format.", code="lifecycle_plan_invalid")
+        raise LifecycleError(
+            "Lifecycle plan uses an unknown format.", code="lifecycle_plan_invalid"
+        )
     return value
 
 
@@ -748,7 +923,9 @@ def apply_migration(project_root: Path, plan_path: Path, plan_sha256: str) -> di
     root = validate_workspace(project_root)
     plan = _load_exact_plan(plan_path, plan_sha256)
     if plan.get("operation") != "REGISTER_UNCHANGED_V1":
-        raise LifecycleError("Migration plan has no applicable migration.", code="lifecycle_migration_not_applicable")
+        raise LifecycleError(
+            "Migration plan has no applicable migration.", code="lifecycle_migration_not_applicable"
+        )
     current = plan_migration(root)
     if current.get("plan_sha256") != plan_sha256:
         raise LifecycleError("Migration basis changed.", code="lifecycle_plan_stale")
@@ -763,7 +940,9 @@ def apply_migration(project_root: Path, plan_path: Path, plan_sha256: str) -> di
     def current_digest() -> str:
         return _inventory_digest(_record_inventory(root))
 
-    with writer_transaction(root, "lifecycle-migrate", expected_digest=expected, current_digest=current_digest) as transaction:
+    with writer_transaction(
+        root, "lifecycle-migrate", expected_digest=expected, current_digest=current_digest
+    ) as transaction:
         transaction.track_target(state_path)
         if _TEST_FAULT_HOOK is not None:
             _TEST_FAULT_HOOK("MIGRATION_BEFORE_STATE")
@@ -789,11 +968,15 @@ def _path_digest(path: Path) -> str:
                 digest.update(chunk)
         return digest.hexdigest()
     if not path.is_dir():
-        raise LifecycleError("Lifecycle target has an unsupported type.", code="lifecycle_path_unsafe")
+        raise LifecycleError(
+            "Lifecycle target has an unsupported type.", code="lifecycle_path_unsafe"
+        )
     digest.update(b"D\0")
     for candidate in sorted(path.rglob("*"), key=lambda item: item.relative_to(path).as_posix()):
         if _is_link_like(candidate):
-            raise LifecycleError("Lifecycle target contains a link-like entry.", code="lifecycle_path_unsafe")
+            raise LifecycleError(
+                "Lifecycle target contains a link-like entry.", code="lifecycle_path_unsafe"
+            )
         relative = candidate.relative_to(path).as_posix().encode("utf-8")
         if candidate.is_dir():
             digest.update(b"D\0" + relative + b"\0")
@@ -803,7 +986,9 @@ def _path_digest(path: Path) -> str:
                 while chunk := source.read(1024 * 1024):
                     digest.update(chunk)
         else:
-            raise LifecycleError("Lifecycle target contains an unsupported entry.", code="lifecycle_path_unsafe")
+            raise LifecycleError(
+                "Lifecycle target contains an unsupported entry.", code="lifecycle_path_unsafe"
+            )
     return digest.hexdigest()
 
 
@@ -813,16 +998,22 @@ def _path_bytes(path: Path) -> int:
     total = 0
     for candidate in path.rglob("*"):
         if _is_link_like(candidate):
-            raise LifecycleError("Lifecycle target contains a link-like entry.", code="lifecycle_path_unsafe")
+            raise LifecycleError(
+                "Lifecycle target contains a link-like entry.", code="lifecycle_path_unsafe"
+            )
         if candidate.is_file():
             total += candidate.stat().st_size
         elif not candidate.is_dir():
-            raise LifecycleError("Lifecycle target contains an unsupported entry.", code="lifecycle_path_unsafe")
+            raise LifecycleError(
+                "Lifecycle target contains an unsupported entry.", code="lifecycle_path_unsafe"
+            )
     return total
 
 
 def _read_manifest_digest(root: Path) -> str:
-    manifest = safe_managed_path(root, ".opencntx/latest/manifest.json", must_exist=True, kind="file")
+    manifest = safe_managed_path(
+        root, ".opencntx/latest/manifest.json", must_exist=True, kind="file"
+    )
     return _sha256(manifest.read_bytes())
 
 
@@ -838,7 +1029,9 @@ def _latest_is_bound(root: Path, manifest_digest: str) -> bool:
             context = value.get("context")
             if isinstance(context, dict) and context.get("manifest_digest") == manifest_digest:
                 return True
-    manifest, _ = _read_json(root / ".opencntx" / "latest" / "manifest.json", label="latest package manifest")
+    manifest, _ = _read_json(
+        root / ".opencntx" / "latest" / "manifest.json", label="latest package manifest"
+    )
     navigation = manifest.get("navigation")
     task = navigation.get("task") if isinstance(navigation, dict) else None
     task_id = task.get("task_id") if isinstance(task, dict) else None
@@ -855,44 +1048,80 @@ def _cleanup_target(root: Path, target: str) -> tuple[str, Path]:
     if target == "latest-package":
         path = safe_managed_path(root, ".opencntx/latest", must_exist=True, kind="directory")
         from .core import verify_package
+
         report = verify_package(path)
         if not report.ok:
-            raise LifecycleError("Latest package does not fully verify.", code="lifecycle_cleanup_blocked")
+            raise LifecycleError(
+                "Latest package does not fully verify.", code="lifecycle_cleanup_blocked"
+            )
         if _latest_is_bound(root, _read_manifest_digest(root)):
-            raise LifecycleError("Latest package is bound by an executor record.", code="lifecycle_cleanup_blocked")
+            raise LifecycleError(
+                "Latest package is bound by an executor record.", code="lifecycle_cleanup_blocked"
+            )
         return "latest-package", path
     if target == "catalog-cache":
         from .catalog import _load_chapters, _load_sources
+
         _load_sources(root)
         _load_chapters(root)
         path = safe_managed_path(root, ".opencntx/catalog.sqlite", must_exist=True, kind="file")
         try:
             header = path.read_bytes()[:16]
         except OSError as exc:
-            raise LifecycleError("Catalog cache is unreadable.", code="lifecycle_cleanup_blocked") from exc
+            raise LifecycleError(
+                "Catalog cache is unreadable.", code="lifecycle_cleanup_blocked"
+            ) from exc
         if header != b"SQLite format 3\x00":
             raise LifecycleError("Catalog cache is invalid.", code="lifecycle_cleanup_blocked")
         return "catalog-cache", path
     if target.startswith("completed-transaction:"):
         transaction_id = target.split(":", 1)[1]
         if TRANSACTION_ID_RE.fullmatch(transaction_id) is None:
-            raise LifecycleError("Completed transaction ID is invalid.", code="lifecycle_cleanup_target_invalid")
-        path = safe_managed_path(root, f".opencntx/transactions/completed/{transaction_id}", must_exist=True, kind="directory")
+            raise LifecycleError(
+                "Completed transaction ID is invalid.", code="lifecycle_cleanup_target_invalid"
+            )
+        path = safe_managed_path(
+            root,
+            f".opencntx/transactions/completed/{transaction_id}",
+            must_exist=True,
+            kind="directory",
+        )
         intent, _ = _read_json(path / "intent.json", label="completed transaction intent")
-        completion, _ = _read_json(path / "completion.json", label="completed transaction completion")
-        if intent.get("format") != "opencntx-transaction" or intent.get("transaction_id") != transaction_id:
-            raise LifecycleError("Completed transaction intent is invalid.", code="lifecycle_cleanup_blocked")
-        if completion.get("format") != "opencntx-transaction-completion" or completion.get("transaction_id") != transaction_id:
-            raise LifecycleError("Completed transaction completion is invalid.", code="lifecycle_cleanup_blocked")
+        completion, _ = _read_json(
+            path / "completion.json", label="completed transaction completion"
+        )
+        if (
+            intent.get("format") != "opencntx-transaction"
+            or intent.get("transaction_id") != transaction_id
+        ):
+            raise LifecycleError(
+                "Completed transaction intent is invalid.", code="lifecycle_cleanup_blocked"
+            )
+        if (
+            completion.get("format") != "opencntx-transaction-completion"
+            or completion.get("transaction_id") != transaction_id
+        ):
+            raise LifecycleError(
+                "Completed transaction completion is invalid.", code="lifecycle_cleanup_blocked"
+            )
         return "completed-transaction", path
     if target.startswith("recovery-backup:"):
         recovery_id = target.split(":", 1)[1]
         if RECOVERY_ID_RE.fullmatch(recovery_id) is None:
-            raise LifecycleError("Recovery backup ID is invalid.", code="lifecycle_cleanup_target_invalid")
-        path = safe_managed_path(root, f".opencntx/recovery/backups/{recovery_id}", must_exist=True, kind="directory")
+            raise LifecycleError(
+                "Recovery backup ID is invalid.", code="lifecycle_cleanup_target_invalid"
+            )
+        path = safe_managed_path(
+            root, f".opencntx/recovery/backups/{recovery_id}", must_exist=True, kind="directory"
+        )
         manifest, _ = _read_json(path / "manifest.json", label="recovery backup manifest")
-        if manifest.get("format") != "opencntx-recovery-backup" or manifest.get("backup_id") != recovery_id:
-            raise LifecycleError("Recovery backup manifest is invalid.", code="lifecycle_cleanup_blocked")
+        if (
+            manifest.get("format") != "opencntx-recovery-backup"
+            or manifest.get("backup_id") != recovery_id
+        ):
+            raise LifecycleError(
+                "Recovery backup manifest is invalid.", code="lifecycle_cleanup_blocked"
+            )
         recovery_transaction_id = manifest.get("transaction_id")
         intent_sha256 = manifest.get("intent_sha256")
         if (
@@ -900,7 +1129,9 @@ def _cleanup_target(root: Path, target: str) -> tuple[str, Path]:
             or TRANSACTION_ID_RE.fullmatch(recovery_transaction_id) is None
             or SHA256_RE.fullmatch(str(intent_sha256)) is None
         ):
-            raise LifecycleError("Recovery backup binding is invalid.", code="lifecycle_cleanup_blocked")
+            raise LifecycleError(
+                "Recovery backup binding is invalid.", code="lifecycle_cleanup_blocked"
+            )
         completed = safe_managed_path(
             root,
             f".opencntx/transactions/completed/{recovery_transaction_id}-recovered",
@@ -915,7 +1146,10 @@ def _cleanup_target(root: Path, target: str) -> tuple[str, Path]:
             completed_intent.get("transaction_id") != recovery_transaction_id
             or _sha256(completed_intent_bytes) != intent_sha256
         ):
-            raise LifecycleError("Recovery backup has no exact completed transaction binding.", code="lifecycle_cleanup_blocked")
+            raise LifecycleError(
+                "Recovery backup has no exact completed transaction binding.",
+                code="lifecycle_cleanup_blocked",
+            )
         bound = False
         receipt_root = root / ".opencntx" / "receipts"
         for receipt in sorted(receipt_root.glob("*.json")):
@@ -929,9 +1163,13 @@ def _cleanup_target(root: Path, target: str) -> tuple[str, Path]:
                 bound = True
                 break
         if not bound:
-            raise LifecycleError("Recovery backup has no exact recovery receipt.", code="lifecycle_cleanup_blocked")
+            raise LifecycleError(
+                "Recovery backup has no exact recovery receipt.", code="lifecycle_cleanup_blocked"
+            )
         return "recovery-backup", path
-    raise LifecycleError("Cleanup target is outside the fixed allowlist.", code="lifecycle_cleanup_target_invalid")
+    raise LifecycleError(
+        "Cleanup target is outside the fixed allowlist.", code="lifecycle_cleanup_target_invalid"
+    )
 
 
 def _checkpoint_path(root: Path, checkpoint: Path) -> Path:
@@ -943,61 +1181,80 @@ def _checkpoint_path(root: Path, checkpoint: Path) -> Path:
     except ValueError:
         pass
     except OSError as exc:
-        raise LifecycleError("Checkpoint path is unavailable.", code="lifecycle_checkpoint_invalid") from exc
+        raise LifecycleError(
+            "Checkpoint path is unavailable.", code="lifecycle_checkpoint_invalid"
+        ) from exc
     else:
-        raise LifecycleError("Checkpoint must remain outside the workspace.", code="lifecycle_checkpoint_invalid")
+        raise LifecycleError(
+            "Checkpoint must remain outside the workspace.", code="lifecycle_checkpoint_invalid"
+        )
     if requested.is_symlink() or _is_reparse(requested):
         raise LifecycleError("Checkpoint path is link-like.", code="lifecycle_checkpoint_invalid")
     if requested.exists():
         if not requested.is_dir() or any(requested.iterdir()):
-            raise LifecycleError("Checkpoint must be new or empty.", code="lifecycle_checkpoint_invalid")
+            raise LifecycleError(
+                "Checkpoint must be new or empty.", code="lifecycle_checkpoint_invalid"
+            )
     else:
         parent = requested.parent
         if _is_link_like(parent) or not parent.is_dir():
-            raise LifecycleError("Checkpoint parent is unsafe.", code="lifecycle_checkpoint_invalid")
+            raise LifecycleError(
+                "Checkpoint parent is unsafe.", code="lifecycle_checkpoint_invalid"
+            )
     return requested
 
 
 def plan_cleanup(project_root: Path, targets: Sequence[str], checkpoint: Path) -> dict[str, Any]:
     root = validate_workspace(project_root)
     if not targets:
-        raise LifecycleError("At least one explicit cleanup target is required.", code="lifecycle_cleanup_target_invalid")
+        raise LifecycleError(
+            "At least one explicit cleanup target is required.",
+            code="lifecycle_cleanup_target_invalid",
+        )
     if len(set(targets)) != len(targets):
-        raise LifecycleError("Cleanup targets must be unique.", code="lifecycle_cleanup_target_invalid")
+        raise LifecycleError(
+            "Cleanup targets must be unique.", code="lifecycle_cleanup_target_invalid"
+        )
     checkpoint_path = _checkpoint_path(root, checkpoint)
     records: list[dict[str, Any]] = []
     for target in sorted(targets):
         kind, path = _cleanup_target(root, target)
-        records.append({
-            "bytes": _path_bytes(path),
-            "kind": kind,
-            "path": path.relative_to(root).as_posix(),
-            "sha256": _path_digest(path),
-            "target": target,
-        })
+        records.append(
+            {
+                "bytes": _path_bytes(path),
+                "kind": kind,
+                "path": path.relative_to(root).as_posix(),
+                "sha256": _path_digest(path),
+                "target": target,
+            }
+        )
     required = sum(int(item["bytes"]) for item in records) + len(_pretty(records)) + 4096
-    checkpoint_usage = require_disk_capacity(checkpoint_path.parent, required, "lifecycle-cleanup-checkpoint")
-    return _finalize_plan({
-        "basis_targets_sha256": _sha256(_canonical(records)),
-        "checkpoint": str(checkpoint_path),
-        "checkpoint_required_bytes": required,
-        "compatibility_matrix_sha256": compatibility_matrix_digest(),
-        "format": LIFECYCLE_PLAN_FORMAT,
-        "format_version": LIFECYCLE_PLAN_VERSION,
-        "operation": "CLEANUP_EXPLICIT_TARGETS",
-        "schema_bundle_sha256": schema_bundle_digest(),
-        "targets": records,
-    })
+    require_disk_capacity(checkpoint_path.parent, required, "lifecycle-cleanup-checkpoint")
+    return _finalize_plan(
+        {
+            "basis_targets_sha256": _sha256(_canonical(records)),
+            "checkpoint": str(checkpoint_path),
+            "checkpoint_required_bytes": required,
+            "compatibility_matrix_sha256": compatibility_matrix_digest(),
+            "format": LIFECYCLE_PLAN_FORMAT,
+            "format_version": LIFECYCLE_PLAN_VERSION,
+            "operation": "CLEANUP_EXPLICIT_TARGETS",
+            "schema_bundle_sha256": schema_bundle_digest(),
+            "targets": records,
+        }
+    )
 
 
 def format_cleanup_plan(plan: dict[str, Any]) -> str:
-    return "\n".join([
-        "Lifecycle cleanup: PREVIEW",
-        f"Targets: {len(plan['targets'])}",
-        f"Checkpoint bytes required: {plan['checkpoint_required_bytes']}",
-        f"Plan-SHA-256: {plan['plan_sha256']}",
-        "Nothing was removed. Apply requires this exact plan and digest.",
-    ])
+    return "\n".join(
+        [
+            "Lifecycle cleanup: PREVIEW",
+            f"Targets: {len(plan['targets'])}",
+            f"Checkpoint bytes required: {plan['checkpoint_required_bytes']}",
+            f"Plan-SHA-256: {plan['plan_sha256']}",
+            "Nothing was removed. Apply requires this exact plan and digest.",
+        ]
+    )
 
 
 def _copy_target(source: Path, destination: Path) -> None:
@@ -1018,7 +1275,9 @@ def _remove_target(path: Path) -> None:
 def apply_cleanup(project_root: Path, plan_path: Path, plan_sha256: str) -> dict[str, Any]:
     root = validate_workspace(project_root)
     plan = _load_exact_plan(plan_path, plan_sha256)
-    if plan.get("operation") != "CLEANUP_EXPLICIT_TARGETS" or not isinstance(plan.get("targets"), list):
+    if plan.get("operation") != "CLEANUP_EXPLICIT_TARGETS" or not isinstance(
+        plan.get("targets"), list
+    ):
         raise LifecycleError("Cleanup plan operation is invalid.", code="lifecycle_plan_invalid")
     checkpoint = _checkpoint_path(root, Path(str(plan.get("checkpoint"))))
     current_records: list[dict[str, Any]] = []
@@ -1027,15 +1286,20 @@ def apply_cleanup(project_root: Path, plan_path: Path, plan_sha256: str) -> dict
             raise LifecycleError("Cleanup target record is invalid.", code="lifecycle_plan_invalid")
         kind, path = _cleanup_target(root, expected["target"])
         current = {
-            "bytes": _path_bytes(path), "kind": kind, "path": path.relative_to(root).as_posix(),
-            "sha256": _path_digest(path), "target": expected["target"],
+            "bytes": _path_bytes(path),
+            "kind": kind,
+            "path": path.relative_to(root).as_posix(),
+            "sha256": _path_digest(path),
+            "target": expected["target"],
         }
         if current != expected:
             raise LifecycleError("Cleanup basis changed.", code="lifecycle_plan_stale")
         current_records.append(current)
     if _sha256(_canonical(current_records)) != plan.get("basis_targets_sha256"):
         raise LifecycleError("Cleanup target basis is invalid.", code="lifecycle_plan_stale")
-    require_disk_capacity(checkpoint.parent, int(plan["checkpoint_required_bytes"]), "lifecycle-cleanup-checkpoint")
+    require_disk_capacity(
+        checkpoint.parent, int(plan["checkpoint_required_bytes"]), "lifecycle-cleanup-checkpoint"
+    )
 
     def current_digest() -> str:
         values = []
@@ -1047,7 +1311,9 @@ def apply_cleanup(project_root: Path, plan_path: Path, plan_sha256: str) -> dict
     expected_digest = _sha256(_canonical(current_records))
     manifest_path = checkpoint / "manifest.json"
     flush_status = "UNSUPPORTED"
-    with writer_transaction(root, "lifecycle-cleanup", expected_digest=expected_digest, current_digest=current_digest) as transaction:
+    with writer_transaction(
+        root, "lifecycle-cleanup", expected_digest=expected_digest, current_digest=current_digest
+    ) as transaction:
         try:
             checkpoint.mkdir(mode=0o700)
             if os.name != "nt":
@@ -1068,7 +1334,9 @@ def apply_cleanup(project_root: Path, plan_path: Path, plan_sha256: str) -> dict
                 destination = data / f"{index:04d}"
                 _copy_target(source, destination)
                 if _path_digest(destination) != item["sha256"]:
-                    raise LifecycleError("Checkpoint copy digest differs.", code="lifecycle_checkpoint_failed")
+                    raise LifecycleError(
+                        "Checkpoint copy digest differs.", code="lifecycle_checkpoint_failed"
+                    )
                 copied.append({**item, "checkpoint_path": f"data/{index:04d}"})
             if _TEST_FAULT_HOOK is not None:
                 _TEST_FAULT_HOOK("CLEANUP_AFTER_COPY")
@@ -1084,7 +1352,9 @@ def apply_cleanup(project_root: Path, plan_path: Path, plan_sha256: str) -> dict
             _write_new(manifest_path, _pretty(manifest))
             flush_status = sync_directory(checkpoint)
             if flush_status == "FAILED":
-                raise LifecycleError("Checkpoint directory flush failed.", code="lifecycle_durability_failed")
+                raise LifecycleError(
+                    "Checkpoint directory flush failed.", code="lifecycle_durability_failed"
+                )
             manifest["directory_flush"] = flush_status
             _replace_file(manifest_path, _pretty(manifest))
             if _TEST_FAULT_HOOK is not None:
@@ -1138,36 +1408,69 @@ def restore_cleanup(project_root: Path, checkpoint: Path, checkpoint_sha256: str
     except ValueError:
         pass
     else:
-        raise LifecycleError("Checkpoint must remain outside the workspace.", code="lifecycle_checkpoint_invalid")
+        raise LifecycleError(
+            "Checkpoint must remain outside the workspace.", code="lifecycle_checkpoint_invalid"
+        )
     manifest_path = checkpoint_path / "manifest.json"
     value, content = _read_json(manifest_path, label="lifecycle checkpoint")
     if _sha256(content) != checkpoint_sha256:
-        raise LifecycleError("Checkpoint digest does not match.", code="lifecycle_checkpoint_digest_mismatch")
-    if value.get("format") != LIFECYCLE_CHECKPOINT_FORMAT or value.get("format_version") != 1 or not isinstance(value.get("targets"), list):
+        raise LifecycleError(
+            "Checkpoint digest does not match.", code="lifecycle_checkpoint_digest_mismatch"
+        )
+    if (
+        value.get("format") != LIFECYCLE_CHECKPOINT_FORMAT
+        or value.get("format_version") != 1
+        or not isinstance(value.get("targets"), list)
+    ):
         raise LifecycleError("Checkpoint manifest is invalid.", code="lifecycle_checkpoint_invalid")
     restore_bytes = 0
     for item in value["targets"]:
-        if not isinstance(item, dict) or not isinstance(item.get("path"), str) or not isinstance(item.get("checkpoint_path"), str):
-            raise LifecycleError("Checkpoint target record is invalid.", code="lifecycle_checkpoint_invalid")
+        if (
+            not isinstance(item, dict)
+            or not isinstance(item.get("path"), str)
+            or not isinstance(item.get("checkpoint_path"), str)
+        ):
+            raise LifecycleError(
+                "Checkpoint target record is invalid.", code="lifecycle_checkpoint_invalid"
+            )
         target = safe_managed_path(root, item["path"])
         if target.exists() or target.is_symlink():
-            raise LifecycleError("Restore target already exists.", code="lifecycle_restore_conflict")
+            raise LifecycleError(
+                "Restore target already exists.", code="lifecycle_restore_conflict"
+            )
         backup = checkpoint_path / PurePosixPath(item["checkpoint_path"])
-        if _is_link_like(backup) or not backup.exists() or _path_digest(backup) != item.get("sha256"):
-            raise LifecycleError("Checkpoint bytes do not verify.", code="lifecycle_checkpoint_invalid")
+        if (
+            _is_link_like(backup)
+            or not backup.exists()
+            or _path_digest(backup) != item.get("sha256")
+        ):
+            raise LifecycleError(
+                "Checkpoint bytes do not verify.", code="lifecycle_checkpoint_invalid"
+            )
         restore_bytes += _path_bytes(backup)
 
     require_disk_capacity(root, restore_bytes * 2 + 16 * 1024, "lifecycle-restore")
 
-    expected = _sha256(_canonical([{"path": item["path"], "sha256": "ABSENT"} for item in value["targets"]]))
+    expected = _sha256(
+        _canonical([{"path": item["path"], "sha256": "ABSENT"} for item in value["targets"]])
+    )
 
     def current_digest() -> str:
-        return _sha256(_canonical([
-            {"path": item["path"], "sha256": _path_digest(root / PurePosixPath(item["path"]))}
-            for item in value["targets"]
-        ]))
+        return _sha256(
+            _canonical(
+                [
+                    {
+                        "path": item["path"],
+                        "sha256": _path_digest(root / PurePosixPath(item["path"])),
+                    }
+                    for item in value["targets"]
+                ]
+            )
+        )
 
-    with writer_transaction(root, "lifecycle-restore", expected_digest=expected, current_digest=current_digest) as transaction:
+    with writer_transaction(
+        root, "lifecycle-restore", expected_digest=expected, current_digest=current_digest
+    ) as transaction:
         restored: list[Path] = []
         try:
             for item in value["targets"]:
@@ -1175,7 +1478,9 @@ def restore_cleanup(project_root: Path, checkpoint: Path, checkpoint_sha256: str
                 backup = checkpoint_path / PurePosixPath(item["checkpoint_path"])
                 _copy_target(backup, target)
                 if _path_digest(target) != item["sha256"]:
-                    raise LifecycleError("Restored bytes do not verify.", code="lifecycle_restore_failed")
+                    raise LifecycleError(
+                        "Restored bytes do not verify.", code="lifecycle_restore_failed"
+                    )
                 sync_directory(target.parent)
                 restored.append(target)
                 if _TEST_FAULT_HOOK is not None:
@@ -1187,4 +1492,8 @@ def restore_cleanup(project_root: Path, checkpoint: Path, checkpoint_sha256: str
                 if target.exists():
                     _remove_target(target)
             raise
-    return {"status": "RESTORED", "checkpoint_sha256": checkpoint_sha256, "target_count": len(value["targets"])}
+    return {
+        "status": "RESTORED",
+        "checkpoint_sha256": checkpoint_sha256,
+        "target_count": len(value["targets"]),
+    }

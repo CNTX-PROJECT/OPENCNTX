@@ -3,29 +3,35 @@
 from __future__ import annotations
 
 import codecs
-from dataclasses import dataclass
-from datetime import datetime
 import hashlib
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import tempfile
+from collections.abc import Sequence
+from dataclasses import dataclass
+from datetime import datetime
 from functools import wraps
-from typing import Any, BinaryIO, Sequence
+from pathlib import Path
+from typing import Any, BinaryIO
 from uuid import uuid4
 
 from .integrity import writer_transaction
 from .primitives import (
     sha256_bytes,
+)
+from .primitives import (
     timestamp_microseconds as _timestamp,
+)
+from .primitives import (
     utc_now as _utc_now,
 )
 from .workspace import (
     CHUNK_SIZE,
     SHA256_PATTERN,
     SOURCE_ID_PATTERN,
+    CaptureResult,
     StoredSource,
     WorkspaceConfig,
     WorkspaceError,
@@ -37,7 +43,6 @@ from .workspace import (
     load_workspace_config,
     validate_workspace,
 )
-
 
 DERIVATION_FORMAT = "opencntx-derived-content"
 DERIVATION_FORMAT_VERSION = 1
@@ -127,6 +132,8 @@ def _workspace_writer(operation: str):
         return wrapped
 
     return decorate
+
+
 DERIVATION_FILES = {
     "content.txt",
     "record.json",
@@ -217,8 +224,7 @@ class _RegistrationPlan:
 
 def _json_bytes(value: object) -> bytes:
     return (
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n"
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
     ).encode("utf-8")
 
 
@@ -366,8 +372,7 @@ def _validate_utf8_file(path: Path, expected_bytes: int, expected_sha256: str) -
                 byte_count += len(chunk)
                 text = decoder.decode(chunk)
                 if "\x00" in text or any(
-                    (ord(character) < 32 and character not in "\t\n\r")
-                    or ord(character) == 127
+                    (ord(character) < 32 and character not in "\t\n\r") or ord(character) == 127
                     for character in text
                 ):
                     raise MediaError(
@@ -376,8 +381,7 @@ def _validate_utf8_file(path: Path, expected_bytes: int, expected_sha256: str) -
                     )
             tail = decoder.decode(b"", final=True)
             if "\x00" in tail or any(
-                (ord(character) < 32 and character not in "\t\n\r")
-                or ord(character) == 127
+                (ord(character) < 32 and character not in "\t\n\r") or ord(character) == 127
                 for character in tail
             ):
                 raise MediaError(
@@ -428,9 +432,7 @@ def _validate_record(
             )
 
 
-def _validate_review(
-    value: dict[str, Any], record: dict[str, Any], record_sha256: str
-) -> None:
+def _validate_review(value: dict[str, Any], record: dict[str, Any], record_sha256: str) -> None:
     if (
         value.get("format") != REVIEW_FORMAT
         or value.get("format_version") != REVIEW_FORMAT_VERSION
@@ -443,9 +445,7 @@ def _validate_review(
         raise MediaError("Reviewrecord is ongeldig.", code="media_review_invalid")
     _short_text(value.get("reviewed_at"), field="reviewed_at")
     _short_text(value.get("reviewer"), field="reviewer")
-    _text_list(
-        value.get("findings"), field="findings", maximum=MAX_FINDINGS, allow_empty=False
-    )
+    _text_list(value.get("findings"), field="findings", maximum=MAX_FINDINGS, allow_empty=False)
 
 
 def _promotion_origin(record: dict[str, Any]) -> str:
@@ -482,9 +482,7 @@ def _validate_promotion(
         raise MediaError("Promotierecord is ongeldig.", code="media_promotion_invalid")
     _short_text(value.get("promoted_at"), field="promoted_at")
     promoted_source_id = _source_id(value.get("promoted_source_id"))
-    promoted_digest = _digest(
-        value.get("promoted_source_sha256"), field="promoted_source_sha256"
-    )
+    promoted_digest = _digest(value.get("promoted_source_sha256"), field="promoted_source_sha256")
     sources = _stored_sources(root)
     promoted = sources.get(promoted_source_id)
     if promoted is None:
@@ -524,19 +522,16 @@ def _validate_promotion(
             "Gepromoveerd bronrecord wijkt af.",
             code="media_promotion_stale",
         )
-    if (
-        value.get("capture_status") == "CAPTURED"
-        and promoted_record.get("origin") != _promotion_origin(record)
-    ):
+    if value.get("capture_status") == "CAPTURED" and promoted_record.get(
+        "origin"
+    ) != _promotion_origin(record):
         raise MediaError(
             "Gepromoveerde bron mist de exacte mediaherkomst.",
             code="media_promotion_stale",
         )
 
 
-def _validate_removal(
-    value: dict[str, Any], record: dict[str, Any], record_sha256: str
-) -> None:
+def _validate_removal(value: dict[str, Any], record: dict[str, Any], record_sha256: str) -> None:
     if (
         value.get("format") != REMOVAL_FORMAT
         or value.get("format_version") != REMOVAL_FORMAT_VERSION
@@ -559,9 +554,15 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
     try:
         source_children = sorted(derived_root.iterdir(), key=lambda path: path.name)
     except OSError as exc:
-        raise MediaError("Afleidingsopslag is niet leesbaar.", code="media_storage_invalid") from exc
+        raise MediaError(
+            "Afleidingsopslag is niet leesbaar.", code="media_storage_invalid"
+        ) from exc
     for child in source_children:
-        if child.is_symlink() or not child.is_dir() or SOURCE_ID_PATTERN.fullmatch(child.name) is None:
+        if (
+            child.is_symlink()
+            or not child.is_dir()
+            or SOURCE_ID_PATTERN.fullmatch(child.name) is None
+        ):
             raise MediaError(
                 "Afleidingsopslag bevat een onverwacht of onveilig bronpad.",
                 code="media_storage_invalid",
@@ -573,7 +574,9 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
     try:
         children = sorted(source_directory.iterdir(), key=lambda path: path.name)
     except OSError as exc:
-        raise MediaError("Bronafleidingen zijn niet leesbaar.", code="media_storage_invalid") from exc
+        raise MediaError(
+            "Bronafleidingen zijn niet leesbaar.", code="media_storage_invalid"
+        ) from exc
     for directory in children:
         if (
             directory.is_symlink()
@@ -614,9 +617,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
                     f"Afgeleide tekst ontbreekt: {directory.name}.",
                     code="media_content_stale",
                 )
-            _validate_utf8_file(
-                content_path, record["content_bytes"], record["content_sha256"]
-            )
+            _validate_utf8_file(content_path, record["content_bytes"], record["content_sha256"])
         elif content_path.exists() or content_path.is_symlink():
             raise MediaError(
                 f"Verwijderde afleiding bevat nog actieve tekst: {directory.name}.",
@@ -634,12 +635,8 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
         promotion: dict[str, Any] | None = None
         promotion_path = directory / "promotion.json"
         if promotion_path.exists():
-            promotion = _read_json(
-                promotion_path, PROMOTION_FIELDS, label="Promotierecord"
-            )
-            _validate_promotion(
-                root, promotion, record, record_sha256, review, review_sha256
-            )
+            promotion = _read_json(promotion_path, PROMOTION_FIELDS, label="Promotierecord")
+            _validate_promotion(root, promotion, record, record_sha256, review, review_sha256)
 
         if removal is not None:
             status = "REMOVED"
@@ -742,8 +739,7 @@ def _copy_utf8(source: BinaryIO, destination: BinaryIO, maximum: int) -> tuple[i
                 )
             text = decoder.decode(chunk)
             if "\x00" in text or any(
-                (ord(character) < 32 and character not in "\t\n\r")
-                or ord(character) == 127
+                (ord(character) < 32 and character not in "\t\n\r") or ord(character) == 127
                 for character in text
             ):
                 raise MediaError(
@@ -754,8 +750,7 @@ def _copy_utf8(source: BinaryIO, destination: BinaryIO, maximum: int) -> tuple[i
             digest.update(chunk)
         tail = decoder.decode(b"", final=True)
         if "\x00" in tail or any(
-            (ord(character) < 32 and character not in "\t\n\r")
-            or ord(character) == 127
+            (ord(character) < 32 and character not in "\t\n\r") or ord(character) == 127
             for character in tail
         ):
             raise MediaError(
@@ -826,9 +821,7 @@ def _prepare_registration_plan(
             "Afgeleide tekst is niet toegankelijk.",
             code="media_text_unavailable",
         ) from exc
-    if resolved.is_relative_to(root / "SOURCES") or resolved.is_relative_to(
-        root / ".opencntx"
-    ):
+    if resolved.is_relative_to(root / "SOURCES") or resolved.is_relative_to(root / ".opencntx"):
         raise MediaError(
             "Beheerde bron- of afleidingsopslag kan niet als invoer worden gebruikt.",
             code="media_text_managed_path",
@@ -862,9 +855,10 @@ def _stage_derivation(plan: _RegistrationPlan) -> tuple[Path, int, str]:
     staging = plan.root / ".opencntx" / f".media-register-{uuid4().hex}"
     try:
         staging.mkdir(mode=0o700)
-        with plan.resolved_text.open("rb") as source, (staging / "content.txt").open(
-            "xb"
-        ) as output:
+        with (
+            plan.resolved_text.open("rb") as source,
+            (staging / "content.txt").open("xb") as output,
+        ):
             content_bytes, content_sha256 = _copy_utf8(
                 source,
                 output,
@@ -1086,6 +1080,7 @@ def register_derivation(
         if staging.exists():
             shutil.rmtree(staging, ignore_errors=True)
 
+
 def _one_derivation(root: Path, source_id: str, derivation_id: str) -> _Derivation:
     normalized_source_id = _source_id(source_id)
     normalized_derivation_id = _derivation_id(derivation_id)
@@ -1123,7 +1118,9 @@ def review_derivation(
         raise MediaError("Contentdigest verschilt.", code="media_digest_mismatch")
     normalized_decision = decision.strip().upper()
     if normalized_decision not in DECISIONS:
-        raise MediaError("Reviewbeslissing moet ACCEPT of REJECT zijn.", code="media_decision_invalid")
+        raise MediaError(
+            "Reviewbeslissing moet ACCEPT of REJECT zijn.", code="media_decision_invalid"
+        )
     normalized_findings = _text_list(
         list(findings), field="findings", maximum=MAX_FINDINGS, allow_empty=False
     )
@@ -1167,15 +1164,19 @@ def review_derivation(
     )
 
 
-def _rollback_capture(root: Path, result: object) -> None:
+def _rollback_capture(root: Path, result: CaptureResult) -> None:
     try:
         result.receipt_path.unlink(missing_ok=True)
-        if result.status == "CAPTURED":
-            stored = _stored_sources(root).get(result.source_id)
-            if stored is not None and stored.sha256 == result.sha256:
-                shutil.rmtree(stored.record_path.parent)
-    except Exception:
-        pass
+    except OSError:
+        return
+    if result.status != "CAPTURED":
+        return
+    try:
+        stored = _stored_sources(root).get(result.source_id)
+        if stored is not None and stored.sha256 == result.sha256:
+            shutil.rmtree(stored.record_path.parent)
+    except (OSError, WorkspaceError):
+        return
 
 
 @_workspace_writer("media-promote")
@@ -1199,7 +1200,7 @@ def promote_derivation(
         raise MediaError("Reviewdigest verschilt.", code="media_digest_mismatch")
 
     temporary_path: Path | None = None
-    capture_result: object | None = None
+    capture_result: CaptureResult | None = None
     promotion_path = derivation.directory / "promotion.json"
     try:
         with tempfile.NamedTemporaryFile(
@@ -1296,7 +1297,10 @@ def remove_derivation(
         raise MediaError("Afgeleide tekst is al verwijderd.", code="media_removal_state_invalid")
     expected_record = _digest(record_digest, field="record_digest")
     expected_content = _digest(content_sha256, field="content_sha256")
-    if expected_record != derivation.record_sha256 or expected_content != derivation.record["content_sha256"]:
+    if (
+        expected_record != derivation.record_sha256
+        or expected_content != derivation.record["content_sha256"]
+    ):
         raise MediaError("Verwijderdigests verschillen.", code="media_digest_mismatch")
     normalized_owner = _short_text(owner, field="owner")
     removal = {
@@ -1358,9 +1362,7 @@ def remove_derivation(
         record_sha256=expected_record,
         receipt_path=receipt,
         promoted_source_id=(
-            derivation.promotion["promoted_source_id"]
-            if derivation.promotion is not None
-            else None
+            derivation.promotion["promoted_source_id"] if derivation.promotion is not None else None
         ),
     )
 
@@ -1370,9 +1372,7 @@ def media_status(
 ) -> tuple[MediaStatusEntry, ...]:
     root = validate_workspace(project_root)
     normalized_source_id = _source_id(source_id)
-    normalized_derivation_id = (
-        _derivation_id(derivation_id) if derivation_id is not None else None
-    )
+    normalized_derivation_id = _derivation_id(derivation_id) if derivation_id is not None else None
     try:
         _exact_source(root, normalized_source_id, allow_quarantined=True)
         derivations = _load_derivations(root, normalized_source_id)
@@ -1402,7 +1402,11 @@ def media_status(
             ),
         )
     if derivation_id is not None:
-        assert normalized_derivation_id is not None
+        if normalized_derivation_id is None:
+            raise MediaError(
+                "De afleidings-ID is intern onvolledig.",
+                code="media_record_invalid",
+            )
         selected = derivations.get(normalized_derivation_id)
         if selected is None:
             raise MediaError(
@@ -1433,9 +1437,7 @@ def media_status(
             record_sha256=item.record_sha256,
             review_sha256=item.review_sha256,
             promoted_source_id=(
-                item.promotion["promoted_source_id"]
-                if item.promotion is not None
-                else None
+                item.promotion["promoted_source_id"] if item.promotion is not None else None
             ),
         )
         for identifier, item in sorted(derivations.items())
@@ -1470,8 +1472,7 @@ def verify_media(
 def format_media_verify_report(report: MediaVerifyReport) -> str:
     if report.ok:
         statuses = ", ".join(
-            f"{entry.derivation_id or entry.source_id}={entry.status}"
-            for entry in report.entries
+            f"{entry.derivation_id or entry.source_id}={entry.status}" for entry in report.entries
         )
         return f"OK: media registration is exact ({statuses})."
     return "NOT OK:\n" + "\n".join(f"- {issue}" for issue in report.issues)

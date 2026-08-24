@@ -91,9 +91,7 @@ class SecretPolicyTests(unittest.TestCase):
         self.assertEqual(findings, repeated)
         self.assertEqual([finding.line for finding in findings], [1, 2])
         rendered = "\n".join(format_finding(finding) for finding in findings)
-        records = repr(
-            [finding_record(finding, disposition="test") for finding in findings]
-        )
+        records = repr([finding_record(finding, disposition="test") for finding in findings])
         self.assertNotIn("warning-value", rendered)
         self.assertNotIn("warning-value", records)
         self.assertNotIn("PRIVATE KEY", rendered)

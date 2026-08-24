@@ -10,7 +10,7 @@
   "error_code_set_sha256": "3d1c5a72da044f193f2e73ecab92247a85b2eb558d35f5d7470196741ad86493",
   "functions_over_180_lines": 4,
   "mypy_errors_in_initial_safety_list": 11,
-  "ruff_findings": 162,
+  "ruff_findings": 0,
   "safety_module_coverage": {
     "windows": {
       "core.py": {"covered": 453, "total": 667},

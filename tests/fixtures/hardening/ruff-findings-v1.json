@@ -1,0 +1,1554 @@
+{
+  "basis_head": "0ccd95677a12a216dea0e015b180d419a34bf6ab",
+  "basis_observed_counts": {
+    "ubuntu_ci": 155,
+    "windows_export": 154
+  },
+  "candidate_findings": 0,
+  "entries": [
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/__main__.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/attempts.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/attempts.py",
+      "risk": "low",
+      "row": 356
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/catalog.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Iterable`",
+      "path": "src/opencntx/catalog.py",
+      "risk": "low",
+      "row": 15
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 17,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/catalog.py",
+      "risk": "low",
+      "row": 816
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/control.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP017",
+      "column": 31,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `datetime.UTC` alias",
+      "path": "src/opencntx/control.py",
+      "risk": "low",
+      "row": 339
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/core.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "correctness",
+      "code": "FURB192",
+      "column": 61,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence",
+      "path": "src/opencntx/core.py",
+      "risk": "medium",
+      "row": 222
+    },
+    {
+      "category": "correctness",
+      "code": "FURB192",
+      "column": 19,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence",
+      "path": "src/opencntx/core.py",
+      "risk": "medium",
+      "row": 236
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/integrity.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 8,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`stat` imported but unused",
+      "path": "src/opencntx/integrity.py",
+      "risk": "medium",
+      "row": 15
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Callable`, `Iterator`, `Sequence`",
+      "path": "src/opencntx/integrity.py",
+      "risk": "low",
+      "row": 17
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM102",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `if` statement instead of nested `if` statements",
+      "path": "src/opencntx/integrity.py",
+      "risk": "low",
+      "row": 743
+    },
+    {
+      "category": "correctness",
+      "code": "BLE001",
+      "column": 20,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Do not catch blind exception: `BaseException`",
+      "path": "src/opencntx/integrity.py",
+      "risk": "medium",
+      "row": 775
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Iterable`, `Sequence`",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 16
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 25,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`typing.Iterable` imported but unused",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "medium",
+      "row": 16
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`.integrity.IntegrityError` imported but unused",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "medium",
+      "row": 21
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP017",
+      "column": 29,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `datetime.UTC` alias",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 58
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP017",
+      "column": 29,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `datetime.UTC` alias",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 83
+    },
+    {
+      "category": "style-modernization",
+      "code": "PIE810",
+      "column": 8,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Call `startswith` once with a `tuple`",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 425
+    },
+    {
+      "category": "style-modernization",
+      "code": "PIE810",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Call `startswith` once with a `tuple`",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "low",
+      "row": 476
+    },
+    {
+      "category": "correctness",
+      "code": "F841",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Local variable `checkpoint_usage` is assigned to but never used",
+      "path": "src/opencntx/lifecycle.py",
+      "risk": "medium",
+      "row": 979
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/media.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Sequence`",
+      "path": "src/opencntx/media.py",
+      "risk": "low",
+      "row": 16
+    },
+    {
+      "category": "security",
+      "code": "S110",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`try`-`except`-`pass` detected, consider logging the exception",
+      "path": "src/opencntx/media.py",
+      "risk": "high",
+      "row": 1177
+    },
+    {
+      "category": "correctness",
+      "code": "BLE001",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Do not catch blind exception: `Exception`",
+      "path": "src/opencntx/media.py",
+      "risk": "medium",
+      "row": 1177
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/navigator.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Sequence`",
+      "path": "src/opencntx/navigator.py",
+      "risk": "low",
+      "row": 11
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "correctness",
+      "code": "FURB162",
+      "column": 32,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unnecessary timezone replacement with zero offset",
+      "path": "src/opencntx/playbook.py",
+      "risk": "medium",
+      "row": 548
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 692
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 741
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 752
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 1240
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 1244
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 1246
+    },
+    {
+      "category": "style-modernization",
+      "code": "ISC004",
+      "column": 9,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unparenthesized implicit string concatenation in collection",
+      "path": "src/opencntx/playbook.py",
+      "risk": "low",
+      "row": 1250
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/security.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Iterable`",
+      "path": "src/opencntx/security.py",
+      "risk": "low",
+      "row": 8
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/workflow.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP035",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import from `collections.abc` instead: `Sequence`",
+      "path": "src/opencntx/workflow.py",
+      "risk": "low",
+      "row": 16
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP017",
+      "column": 30,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `datetime.UTC` alias",
+      "path": "src/opencntx/workflow.py",
+      "risk": "low",
+      "row": 748
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP012",
+      "column": 14,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unnecessary UTF-8 `encoding` argument to `encode`",
+      "path": "src/opencntx/workflow.py",
+      "risk": "low",
+      "row": 1181
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "src/opencntx/workspace.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "correctness",
+      "code": "FURB192",
+      "column": 15,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Prefer `min` over `sorted()` to compute the minimum value in a sequence",
+      "path": "src/opencntx/workspace.py",
+      "risk": "medium",
+      "row": 396
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM102",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `if` statement instead of nested `if` statements",
+      "path": "src/opencntx/workspace.py",
+      "risk": "low",
+      "row": 842
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`opencntx.attempts.MAX_CUMULATIVE_ACTIONS` imported but unused",
+      "path": "tests/test_attempts.py",
+      "risk": "medium",
+      "row": 20
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`opencntx.attempts.MAX_CUMULATIVE_DURATION_MS` imported but unused",
+      "path": "tests/test_attempts.py",
+      "risk": "medium",
+      "row": 21
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 48,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 27
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 8,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import integrity` in lieu of alias",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 28
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 41,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 28
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 29
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 36,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 35
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF059",
+      "column": 16,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unpacked variable `playbook` is never used",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 55
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF059",
+      "column": 26,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unpacked variable `role` is never used",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 55
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF059",
+      "column": 32,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unpacked variable `proposed` is never used",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 55
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF059",
+      "column": 42,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unpacked variable `context` is never used",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 55
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_attempts.py",
+      "risk": "low",
+      "row": 438
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_brand.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF015",
+      "column": 25,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Prefer `next(iter(groups[\"word-open\"]))` over single element slice",
+      "path": "tests/test_brand.py",
+      "risk": "low",
+      "row": 203
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF015",
+      "column": 25,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Prefer `next(iter(groups[\"word-cntx\"]))` over single element slice",
+      "path": "tests/test_brand.py",
+      "risk": "low",
+      "row": 204
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_catalog.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_catalog.py",
+      "risk": "low",
+      "row": 20
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 33,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_catalog.py",
+      "risk": "low",
+      "row": 20
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 64,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_catalog.py",
+      "risk": "low",
+      "row": 27
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_catalog.py",
+      "risk": "low",
+      "row": 577
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_cli.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_control.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 33,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_control.py",
+      "risk": "low",
+      "row": 17
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 48,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_control.py",
+      "risk": "low",
+      "row": 27
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_control.py",
+      "risk": "low",
+      "row": 212
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_core.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_core.py",
+      "risk": "low",
+      "row": 37
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 47,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 63,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 19
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 35,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 20
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 55,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 30
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 31
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 39
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 64,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 45
+    },
+    {
+      "category": "correctness",
+      "code": "BLE001",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Do not catch blind exception: `BaseException`",
+      "path": "tests/test_integrity.py",
+      "risk": "medium",
+      "row": 58
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import workflow` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 63
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import workflow` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 79
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import workspace` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 102
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import navigator` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 109
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import playbook` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 125
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import catalog` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 148
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import integrity` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 155
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import integrity` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 166
+    },
+    {
+      "category": "style-modernization",
+      "code": "PLR0402",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use `from opencntx import integrity` in lieu of alias",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 221
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_integrity.py",
+      "risk": "low",
+      "row": 767
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_language.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "correctness",
+      "code": "BLE001",
+      "column": 12,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Do not catch blind exception: `BaseException`",
+      "path": "tests/test_lifecycle.py",
+      "risk": "medium",
+      "row": 88
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 186
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 191
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 257
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 267
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_lifecycle.py",
+      "risk": "low",
+      "row": 457
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_media.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 31,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_media.py",
+      "risk": "low",
+      "row": 19
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 35,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_media.py",
+      "risk": "low",
+      "row": 28
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_media.py",
+      "risk": "low",
+      "row": 127
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_mvp.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_mvp.py",
+      "risk": "low",
+      "row": 285
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 63,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 43,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 19
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 35,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 20
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 71,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 25
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 64,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_navigator.py",
+      "risk": "low",
+      "row": 26
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 47,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 18
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 55,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 19
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 20
+    },
+    {
+      "category": "correctness",
+      "code": "F401",
+      "column": 5,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "`opencntx.playbook.role_status` imported but unused",
+      "path": "tests/test_playbook.py",
+      "risk": "medium",
+      "row": 34
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 42
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 48,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 50
+    },
+    {
+      "category": "style-modernization",
+      "code": "C408",
+      "column": 22,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unnecessary `dict()` call (rewrite as a literal)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 426
+    },
+    {
+      "category": "style-modernization",
+      "code": "C408",
+      "column": 20,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unnecessary `dict()` call (rewrite as a literal)",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 540
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF059",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unpacked variable `role` is never used",
+      "path": "tests/test_playbook.py",
+      "risk": "low",
+      "row": 566
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_quality.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_quality.py",
+      "risk": "low",
+      "row": 23
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 21,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_quality.py",
+      "risk": "low",
+      "row": 249
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_release_artifacts.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_release_artifacts.py",
+      "risk": "low",
+      "row": 33
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_workflow.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_workflow.py",
+      "risk": "low",
+      "row": 17
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 34,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_workflow.py",
+      "risk": "low",
+      "row": 17
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 48,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_workflow.py",
+      "risk": "low",
+      "row": 33
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF100",
+      "column": 35,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unused `noqa` directive (non-enabled: `E402`)",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 17
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 115
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 125
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 175
+    },
+    {
+      "category": "style-modernization",
+      "code": "UP012",
+      "column": 23,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Unnecessary UTF-8 `encoding` argument to `encode`",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 193
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 422
+    },
+    {
+      "category": "style-modernization",
+      "code": "SIM117",
+      "column": 13,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Use a single `with` statement with multiple contexts instead of nested `with` statements",
+      "path": "tests/test_workspace.py",
+      "risk": "low",
+      "row": 449
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tools/release_artifacts.py",
+      "risk": "low",
+      "row": 3
+    },
+    {
+      "category": "style-modernization",
+      "code": "I001",
+      "column": 1,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Import block is un-sorted or un-formatted",
+      "path": "tools/render_brand.py",
+      "risk": "low",
+      "row": 1
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF046",
+      "column": 10,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Value being cast to `int` is already an integer",
+      "path": "tools/render_brand.py",
+      "risk": "low",
+      "row": 80
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF046",
+      "column": 10,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Value being cast to `int` is already an integer",
+      "path": "tools/render_brand.py",
+      "risk": "low",
+      "row": 81
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF046",
+      "column": 10,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Value being cast to `int` is already an integer",
+      "path": "tools/render_brand.py",
+      "risk": "low",
+      "row": 82
+    },
+    {
+      "category": "style-modernization",
+      "code": "RUF046",
+      "column": 10,
+      "disposition": "CANDIDATE_FIXED",
+      "message": "Value being cast to `int` is already an integer",
+      "path": "tools/render_brand.py",
+      "risk": "low",
+      "row": 83
+    }
+  ],
+  "format": "opencntx-r8-23-ruff-findings",
+  "format_version": 1,
+  "note": "The basis count difference is preserved; the candidate scan is zero on both CI operating-system families.",
+  "ruff_version": "0.16.3"
+}

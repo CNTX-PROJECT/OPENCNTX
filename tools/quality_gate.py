@@ -28,21 +28,7 @@ REFACTOR_ALLOWLIST = (
     "tests/test_refactor_contract.py",
     "tools/quality_gate.py",
 )
-TYPELIST = (
-    "src/opencntx/primitives.py",
-    "src/opencntx/cli.py",
-    "src/opencntx/cli_core.py",
-    "src/opencntx/cli_content.py",
-    "src/opencntx/cli_definitions.py",
-    "src/opencntx/cli_lifecycle.py",
-    "src/opencntx/cli_tasks.py",
-    "src/opencntx/cli_workspace.py",
-    "src/opencntx/core.py",
-    "src/opencntx/security.py",
-    "src/opencntx/integrity.py",
-    "src/opencntx/lifecycle.py",
-    "src/opencntx/workspace.py",
-)
+TYPELIST = tuple(path.relative_to(ROOT).as_posix() for path in sorted(SOURCE.glob("*.py")))
 FORBIDDEN_SUPPRESSIONS = (
     "# " + "noqa",
     "# " + "type: ignore",
@@ -160,16 +146,22 @@ def check_lint() -> None:
     if not isinstance(findings, list):
         raise QualityGateError("Ruff did not return a JSON findings list")
     maximum = int(baseline["ruff_findings"])
-    if len(findings) > maximum:
-        raise QualityGateError(f"Ruff findings increased: {len(findings)} > {maximum}")
+    if findings or maximum != 0:
+        if findings:
+            sys.stderr.write(json.dumps(findings, indent=2, sort_keys=True) + "\n")
+        raise QualityGateError(
+            f"Ruff must remain at the zero-finding ratchet: {len(findings)} findings, "
+            f"baseline {maximum}"
+        )
     _run([sys.executable, "-m", "ruff", "check", *REFACTOR_ALLOWLIST])
     _run([sys.executable, "-m", "ruff", "format", "--check", *REFACTOR_ALLOWLIST])
+    _run([sys.executable, "-m", "ruff", "check", "src/opencntx", "tools", "--select", "S"])
     print(f"QUALITY_LINT_OK findings={len(findings)} baseline_max={maximum}")
 
 
 def check_types() -> None:
     _run([sys.executable, "-m", "mypy", *TYPELIST])
-    print(f"QUALITY_TYPES_OK files={len(TYPELIST)} baseline_errors_resolved=11")
+    print(f"QUALITY_TYPES_OK files={len(TYPELIST)} errors=0")
 
 
 def _coverage_ratio(summary: dict[str, Any]) -> tuple[int, int, float]:

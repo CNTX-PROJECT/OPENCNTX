@@ -109,6 +109,25 @@ A digest binds a decision to exact bytes. It does not authenticate a natural
 person. OWNER labels are local declarations, so protect the workspace and its
 write permissions.
 
+## What candidate CI proves
+
+The candidate checks keep the same eight named Windows/Linux and Python
+3.11-3.14 jobs. Static quality and security checks require zero unclassified
+findings, type-check all runtime modules, audit pinned development
+dependencies, and inspect built packages. No runtime dependency is added.
+
+On Python 3.14, each operating-system family runs 200 deterministic writer
+contention rounds, a phase-indexed crash/recovery matrix, and an upgrade from
+the exact official v0.3.0 wheel. The upgrade is local and offline after the
+wheel download; it checks that existing user data stays byte-identical through
+upgrade and uninstall.
+
+This is repeatable engineering evidence, not a penetration test,
+certification, SLA, or claim that every future fault is impossible. A Windows
+directory flush can honestly report `UNSUPPORTED`; only `VERIFIED` means the
+specific operating-system call succeeded, and neither status proves survival
+through every hardware or power failure.
+
 ## Deletion and provenance
 
 Most official records are append-only. The media removal route deletes only

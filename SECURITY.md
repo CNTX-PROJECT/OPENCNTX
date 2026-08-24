@@ -193,6 +193,27 @@ copy full context bytes or start execution.
 When the task leaves `IN_EXECUTION`, executor status reports `TASK_FINISHED`.
 The package gains no continuing authority.
 
+## Candidate hardening checks
+
+The existing eight Windows/Linux and Python 3.11-3.14 CI jobs also enforce a
+zero-finding Ruff ratchet and type-check every runtime module. A pinned
+development-only `pip-audit` check covers the build and quality requirements;
+it adds no runtime dependency and is not a penetration test or certification.
+
+The Python 3.14 Windows and Linux jobs run 25 deterministic contention rounds
+for each of eight registered writer families, phase-bound crash/recovery
+fixtures, duplicate clean builds, and an offline upgrade from the exact
+SHA-256-bound v0.3.0 release wheel. The upgrade test verifies existing local
+data before and after upgrade and uninstall. It does not publish a package.
+
+Directory flush reporting remains platform-specific. `VERIFIED` means only
+that the operating-system call succeeded. `UNSUPPORTED` remains an explicit
+limitation, especially on Windows, and is never presented as a power-loss or
+hardware durability guarantee.
+
+These checks bind bytes and observed behavior. They do not prove identity,
+authorship, truth, encryption, access control, or future safety.
+
 ## Reporting a vulnerability
 
 Do not report vulnerabilities in a public issue. Use GitHub's private

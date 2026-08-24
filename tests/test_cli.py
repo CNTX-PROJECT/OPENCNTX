@@ -1,15 +1,14 @@
 from __future__ import annotations
 
+import json
 import os
-from pathlib import Path
 import runpy
 import subprocess
 import sys
 import tempfile
 import tomllib
 import unittest
-import json
-
+from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
@@ -40,27 +39,43 @@ class CliTests(unittest.TestCase):
             init_workspace(workspace)
             help_result = run_cli("workspace", "lifecycle", "--help", cwd=workspace)
             status = run_cli(
-                "workspace", "lifecycle", "status", "--json",
-                "--trust-profile", "shared-team", "--root", str(workspace),
+                "workspace",
+                "lifecycle",
+                "status",
+                "--json",
+                "--trust-profile",
+                "shared-team",
+                "--root",
+                str(workspace),
                 cwd=workspace,
             )
             before = {
                 path.relative_to(workspace).as_posix(): path.read_bytes()
-                for path in workspace.rglob("*") if path.is_file()
+                for path in workspace.rglob("*")
+                if path.is_file()
             }
             migration = run_cli(
-                "workspace", "lifecycle", "migrate", "--dry-run", "--json",
-                "--root", str(workspace), cwd=workspace,
+                "workspace",
+                "lifecycle",
+                "migrate",
+                "--dry-run",
+                "--json",
+                "--root",
+                str(workspace),
+                cwd=workspace,
             )
             after = {
                 path.relative_to(workspace).as_posix(): path.read_bytes()
-                for path in workspace.rglob("*") if path.is_file()
+                for path in workspace.rglob("*")
+                if path.is_file()
             }
 
             self.assertEqual(help_result.returncode, 0, help_result.stderr)
             self.assertIn("{status,migrate,cleanup,restore}", help_result.stdout)
             self.assertEqual(status.returncode, 0, status.stderr)
-            self.assertEqual(json.loads(status.stdout)["trust_status"], "UNSUPPORTED_FOR_AUTHORIZATION")
+            self.assertEqual(
+                json.loads(status.stdout)["trust_status"], "UNSUPPORTED_FOR_AUTHORIZATION"
+            )
             self.assertEqual(migration.returncode, 0, migration.stderr)
             self.assertEqual(json.loads(migration.stdout)["operation"], "ALREADY_CURRENT")
             self.assertEqual(before, after)

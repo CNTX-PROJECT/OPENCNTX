@@ -1,0 +1,22 @@
+{
+  "format": "opencntx-r8-23-dependency-findings",
+  "format_version": 1,
+  "findings": [
+    {
+      "finding_id": "FIND-P1-SETUPTOOLS-NORMALIZATION-2026",
+      "severity": "P1",
+      "package": "setuptools",
+      "affected_version": "80.9.0",
+      "resolved_version": "83.0.0",
+      "advisory_ids": [
+        "PYSEC-2026-3447",
+        "CVE-2026-59890",
+        "GHSA-h35f-9h28-mq5c"
+      ],
+      "impact": "A Unicode-normalization mismatch could bypass an intended MANIFEST.in exclusion on normalization-preserving filesystems and include an excluded file in an sdist.",
+      "scope": "Development-only build dependency; OPENCNTX still has no runtime dependency.",
+      "closure_condition": "The candidate pins setuptools 83.0.0 and the pinned pip-audit 2.10.1 scan reports zero vulnerabilities for requirements-quality.txt.",
+      "status": "CLOSED_IN_CANDIDATE"
+    }
+  ]
+}

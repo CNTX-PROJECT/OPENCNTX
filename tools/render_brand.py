@@ -9,7 +9,6 @@ import zlib
 from pathlib import Path
 from xml.etree import ElementTree
 
-
 ROOT = Path(__file__).resolve().parents[1]
 BRAND = ROOT / "assets" / "brand"
 AA = 4
@@ -30,9 +29,7 @@ GENERATED_PNG_JOBS = (
 )
 
 STATIC_PNG_PATHS = ("assets/brand/opencntx-social-preview-1280x640.png",)
-PNG_PATHS = tuple(
-    f"assets/brand/{job[1]}" for job in GENERATED_PNG_JOBS
-) + STATIC_PNG_PATHS
+PNG_PATHS = tuple(f"assets/brand/{job[1]}" for job in GENERATED_PNG_JOBS) + STATIC_PNG_PATHS
 HASHED_PATHS = tuple(sorted(SVG_PATHS + PNG_PATHS))
 
 
@@ -77,10 +74,10 @@ def _set_pixel(canvas: bytearray, width: int, x: int, y: int, color) -> None:
 
 
 def _draw_rect(canvas, width, height, attrs, color, sx, sy) -> None:
-    x0 = int(round(_number(attrs["x"]) * sx))
-    y0 = int(round(_number(attrs["y"]) * sy))
-    x1 = int(round((_number(attrs["x"]) + _number(attrs["width"])) * sx))
-    y1 = int(round((_number(attrs["y"]) + _number(attrs["height"])) * sy))
+    x0 = round(_number(attrs["x"]) * sx)
+    y0 = round(_number(attrs["y"]) * sy)
+    x1 = round((_number(attrs["x"]) + _number(attrs["width"])) * sx)
+    y1 = round((_number(attrs["y"]) + _number(attrs["height"])) * sy)
     x0, y0 = max(0, x0), max(0, y0)
     x1, y1 = min(width, x1), min(height, y1)
     row = bytes(color) * max(0, x1 - x0)
@@ -95,12 +92,9 @@ def _inside_polygon(px: float, py: float, points) -> bool:
     for current_x, current_y in points:
         crosses = (current_y > py) != (previous_y > py)
         if crosses:
-            boundary_x = (
-                (previous_x - current_x)
-                * (py - current_y)
-                / (previous_y - current_y)
-                + current_x
-            )
+            boundary_x = (previous_x - current_x) * (py - current_y) / (
+                previous_y - current_y
+            ) + current_x
             if px < boundary_x:
                 inside = not inside
         previous_x, previous_y = current_x, current_y
@@ -304,8 +298,7 @@ def check_assets() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Render deterministic shape-only OPENCNTX PNGs and verify every "
-            "committed brand asset."
+            "Render deterministic shape-only OPENCNTX PNGs and verify every committed brand asset."
         )
     )
     mode = parser.add_mutually_exclusive_group(required=True)

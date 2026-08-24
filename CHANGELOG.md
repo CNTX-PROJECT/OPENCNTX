@@ -13,11 +13,20 @@ All notable OPENCNTX changes are recorded here.
   for unknown format majors without changing the recorded input bytes.
 - Expanded the Windows and Ubuntu candidate CI matrix to Python 3.11 through
   3.14, for eight exact jobs in total.
+- Added a closed eight-family writer register, 25 deterministic contention
+  rounds per family and operating system, and phase-indexed crash/recovery
+  evidence in both Python 3.14 platform jobs.
+- Added a pinned development-only static security and dependency audit,
+  complete Ruff finding dispositions, and full-package type checking.
+- Added a hash-bound v0.3.0 wheel upgrade, verification, smoke, and uninstall
+  proof that preserves existing local user data without publishing artifacts.
 
 ### Changed
 
 - Replaced the broad operating-system-independent package claim with the two
   operating-system families actually covered by live CI: Windows and Linux.
+- Reduced the candidate Ruff ratchet to zero findings while preserving narrow,
+  machine-registered technical exceptions for fixed trusted local tooling.
 
 ## 0.3.0 - 2026-08-20
 

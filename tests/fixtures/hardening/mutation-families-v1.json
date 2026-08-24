@@ -1,0 +1,62 @@
+{
+  "format": "opencntx-hardening-mutation-families",
+  "format_version": 1,
+  "families": {
+    "PACKAGE": {
+      "representative": "core-pack",
+      "operations": ["core-pack"]
+    },
+    "SOURCE_CATALOG": {
+      "representative": "capture",
+      "operations": ["capture", "chapter-create", "catalog-rebuild"]
+    },
+    "CONTROL": {
+      "representative": "control-refresh",
+      "operations": ["control-refresh"]
+    },
+    "TASK_WORKFLOW": {
+      "representative": "task-propose",
+      "operations": [
+        "task-propose",
+        "task-owner-approval",
+        "task-execution-begun",
+        "task-result",
+        "task-architect-review",
+        "task-owner-acceptance",
+        "task-closure",
+        "task-cancellation",
+        "task-superseded",
+        "task-objective-attempt"
+      ]
+    },
+    "CONTEXT_EXECUTOR": {
+      "representative": "context-build",
+      "operations": ["context-build", "executor-prepare"]
+    },
+    "DEFINITION": {
+      "representative": "playbook-register",
+      "operations": [
+        "playbook-register",
+        "role-register",
+        "playbook-approve",
+        "role-approve"
+      ]
+    },
+    "DERIVED_MEDIA": {
+      "representative": "media-register",
+      "operations": ["media-register", "media-review", "media-promote", "media-remove"]
+    },
+    "LIFECYCLE": {
+      "representative": "lifecycle-migrate",
+      "operations": ["lifecycle-migrate", "lifecycle-cleanup", "lifecycle-restore"],
+      "targeted_hooks": [
+        "MIGRATION_BEFORE_STATE",
+        "MIGRATION_AFTER_STATE",
+        "CLEANUP_AFTER_COPY",
+        "CLEANUP_BEFORE_REMOVE",
+        "CLEANUP_AFTER_REMOVE",
+        "RESTORE_AFTER_COPY"
+      ]
+    }
+  }
+}

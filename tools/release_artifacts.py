@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import argparse
-from email.parser import BytesParser
-from email.policy import default as email_policy
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath, PureWindowsPath
 import shutil
 import stat
 import subprocess
@@ -16,10 +13,12 @@ import sys
 import tarfile
 import tempfile
 import tomllib
-from typing import Any
 import venv
 import zipfile
-
+from email.parser import BytesParser
+from email.policy import default as email_policy
+from pathlib import Path, PurePosixPath, PureWindowsPath
+from typing import Any
 
 PROJECT_NAME = "opencntx"
 CHECKSUMS_NAME = "SHA256SUMS"
@@ -69,9 +68,7 @@ def _sha256(path: Path) -> str:
 
 
 def _canonical_json(data: dict[str, Any]) -> bytes:
-    return (
-        json.dumps(data, ensure_ascii=True, indent=2, sort_keys=True) + "\n"
-    ).encode("utf-8")
+    return (json.dumps(data, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
 def _project_version(repository: Path) -> str:
@@ -164,9 +161,7 @@ def _artifact_metadata(path: Path) -> tuple[str, str, dict[str, bytes]]:
     if path.name.endswith(".whl"):
         inventory = _zip_inventory(path)
         candidates = [
-            content
-            for name, content in inventory.items()
-            if name.endswith(".dist-info/METADATA")
+            content for name, content in inventory.items() if name.endswith(".dist-info/METADATA")
         ]
     elif path.name.endswith(".tar.gz"):
         inventory = _tar_inventory(path)
@@ -178,9 +173,7 @@ def _artifact_metadata(path: Path) -> tuple[str, str, dict[str, bytes]]:
     else:
         raise ReleaseArtifactError(f"unsupported artifact type: {path.name}")
     if len(candidates) != 1:
-        raise ReleaseArtifactError(
-            f"expected exactly one primary metadata file in {path.name}"
-        )
+        raise ReleaseArtifactError(f"expected exactly one primary metadata file in {path.name}")
     return (
         _metadata_value(candidates[0], "Name"),
         _metadata_value(candidates[0], "Version"),
@@ -192,9 +185,7 @@ def _artifact_pair(directory: Path) -> tuple[Path, Path]:
     wheels = sorted(directory.glob(f"{PROJECT_NAME}-*.whl"))
     sdists = sorted(directory.glob(f"{PROJECT_NAME}-*.tar.gz"))
     if len(wheels) != 1 or len(sdists) != 1:
-        raise ReleaseArtifactError(
-            "expected exactly one opencntx wheel and one opencntx sdist"
-        )
+        raise ReleaseArtifactError("expected exactly one opencntx wheel and one opencntx sdist")
     return wheels[0], sdists[0]
 
 
@@ -253,14 +244,10 @@ def _extract_git_archive(archive_path: Path, destination: Path) -> None:
                 target.mkdir(parents=True, exist_ok=True)
                 continue
             if not member.isfile():
-                raise ReleaseArtifactError(
-                    f"non-regular Git archive member: {normalized}"
-                )
+                raise ReleaseArtifactError(f"non-regular Git archive member: {normalized}")
             source = archive.extractfile(member)
             if source is None:
-                raise ReleaseArtifactError(
-                    f"unreadable Git archive member: {normalized}"
-                )
+                raise ReleaseArtifactError(f"unreadable Git archive member: {normalized}")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(source.read())
 
@@ -381,10 +368,13 @@ def verify_candidate(
             f"found {sorted(actual_names)}"
         )
 
-    expected_checksum_text = "\n".join(
-        f"{_sha256(path)}  {path.name}"
-        for path in sorted((wheel, sdist), key=lambda candidate: candidate.name)
-    ) + "\n"
+    expected_checksum_text = (
+        "\n".join(
+            f"{_sha256(path)}  {path.name}"
+            for path in sorted((wheel, sdist), key=lambda candidate: candidate.name)
+        )
+        + "\n"
+    )
     checksum_text = (directory / CHECKSUMS_NAME).read_text(encoding="ascii")
     if checksum_text != expected_checksum_text:
         raise ReleaseArtifactError("SHA256SUMS does not match the exact artifacts")
@@ -401,10 +391,18 @@ def verify_candidate(
     if record.get("project") != PROJECT_NAME or record.get("version") != expected_version:
         raise ReleaseArtifactError("build record project or version differs")
     source = record.get("source")
-    if not isinstance(source, dict) or source.get("commit") != expected_commit or source.get("tree") != expected_tree:
+    if (
+        not isinstance(source, dict)
+        or source.get("commit") != expected_commit
+        or source.get("tree") != expected_tree
+    ):
         raise ReleaseArtifactError("build record source binding differs")
     provenance = record.get("provenance")
-    if provenance is None or provenance.get("signed") is not False or provenance.get("attestation") is not False:
+    if (
+        provenance is None
+        or provenance.get("signed") is not False
+        or provenance.get("attestation") is not False
+    ):
         raise ReleaseArtifactError("build record must remain explicitly unsigned")
     expected_artifacts = [
         {"filename": path.name, "sha256": _sha256(path), "size": path.stat().st_size}
@@ -415,7 +413,10 @@ def verify_candidate(
     reproducibility = record.get("reproducibility")
     if not isinstance(reproducibility, dict):
         raise ReleaseArtifactError("build record has no reproducibility result")
-    if reproducibility.get("wheel_bytes") is not True or reproducibility.get("sdist_content") is not True:
+    if (
+        reproducibility.get("wheel_bytes") is not True
+        or reproducibility.get("sdist_content") is not True
+    ):
         raise ReleaseArtifactError("required reproducibility evidence is absent")
     return record
 

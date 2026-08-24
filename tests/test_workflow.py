@@ -2,19 +2,18 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
 import tempfile
 import unittest
-
+from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 sys.path.insert(0, str(SOURCE_ROOT))
 
-from opencntx.workflow import (  # noqa: E402
+from opencntx.workflow import (
     WorkflowError,
     _append_event,
     _load_chain,
@@ -30,8 +29,7 @@ from opencntx.workflow import (  # noqa: E402
     supersede_task,
     task_status,
 )
-from opencntx.workspace import init_workspace  # noqa: E402
-
+from opencntx.workspace import init_workspace
 
 TASK_ID = "TASK-20260816-0001"
 
@@ -177,9 +175,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertIn("Generated task card", task_text)
             self.assertIn("Geen externe verzending", task_text)
             self.assertIn(result.object_digest, task_text)
-            self.assertEqual(
-                (workspace / "CONTROL" / "ROADMAP.md").read_bytes(), roadmap_before
-            )
+            self.assertEqual((workspace / "CONTROL" / "ROADMAP.md").read_bytes(), roadmap_before)
             self.assertIsNotNone(result.receipt_path)
 
     def test_wrong_digest_and_status_skip_are_rejected_without_event(self) -> None:
@@ -197,9 +193,7 @@ class WorkflowTests(unittest.TestCase):
                     owner="OWNER",
                 )
             self.assertEqual(digest_error.exception.code, "task_digest_mismatch")
-            failure_receipts = list(
-                (workspace / ".opencntx" / "receipts").glob("TASK-FAIL-*.json")
-            )
+            failure_receipts = list((workspace / ".opencntx" / "receipts").glob("TASK-FAIL-*.json"))
             self.assertEqual(len(failure_receipts), 1)
             failure = json.loads(failure_receipts[0].read_text(encoding="utf-8"))
             self.assertEqual(failure["status"], "TASK_COMMAND_FAILED")
@@ -209,9 +203,7 @@ class WorkflowTests(unittest.TestCase):
             with self.assertRaises(WorkflowError) as transition_error:
                 begin_task(workspace, TASK_ID, architect="ARCHITECT")
             self.assertEqual(transition_error.exception.code, "task_record_invalid")
-            self.assertEqual(
-                len(list((workspace / "TASKS" / TASK_ID / "events").iterdir())), 1
-            )
+            self.assertEqual(len(list((workspace / "TASKS" / TASK_ID / "events").iterdir())), 1)
             self.assertEqual(task_status(workspace, TASK_ID).object_digest, proposed.object_digest)
 
     def test_complete_flow_requires_all_seven_events_and_closes(self) -> None:
@@ -246,8 +238,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertIn("Alleen het gepinde plan is gelezen", task_view)
             self.assertIn("Open questions", task_view)
             event_names = [
-                path.name
-                for path in sorted((workspace / "TASKS" / TASK_ID / "events").iterdir())
+                path.name for path in sorted((workspace / "TASKS" / TASK_ID / "events").iterdir())
             ]
             self.assertEqual(
                 event_names,
@@ -264,7 +255,9 @@ class WorkflowTests(unittest.TestCase):
             self.assertIn(closed.object_digest, closed.task_path.read_text(encoding="utf-8"))
             completed = workspace / ".opencntx" / "transactions" / "completed"
             self.assertGreaterEqual(len(list(completed.iterdir())), 7)
-            self.assertEqual(list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), [])
+            self.assertEqual(
+                list((workspace / ".opencntx" / "transactions" / "locks").rglob("*.lock")), []
+            )
 
     def test_changed_input_invalidates_old_owner_approval(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -286,9 +279,7 @@ class WorkflowTests(unittest.TestCase):
                 begin_task(workspace, TASK_ID, architect="ARCHITECT")
 
             self.assertEqual(context.exception.code, "task_input_stale")
-            self.assertEqual(
-                len(list((workspace / "TASKS" / TASK_ID / "events").iterdir())), 2
-            )
+            self.assertEqual(len(list((workspace / "TASKS" / TASK_ID / "events").iterdir())), 2)
 
     def test_tampered_event_and_unknown_task_content_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -532,9 +523,7 @@ class WorkflowTests(unittest.TestCase):
                 propose(workspace, "TASK-20260816-0002")
             self.assertEqual(context.exception.code, "task_active_exists")
 
-            cancelled = cancel_task(
-                workspace, TASK_ID, reason="OWNER stopt de taak", owner="OWNER"
-            )
+            cancelled = cancel_task(workspace, TASK_ID, reason="OWNER stopt de taak", owner="OWNER")
             self.assertEqual(cancelled.task_status, "CANCELLED")
             next_task = propose(workspace, "TASK-20260816-0002")
             self.assertEqual(next_task.task_status, "AWAITING_OWNER_APPROVAL")
@@ -695,18 +684,31 @@ class WorkflowTests(unittest.TestCase):
                 str(workspace),
             )
             proposed = run_cli(*common_proposal, cwd=REPOSITORY_ROOT)
-            proposal_digest = re.search(
-                r"Object digest: ([0-9a-f]{64})", proposed.stdout
-            ).group(1)
+            proposal_digest = re.search(r"Object digest: ([0-9a-f]{64})", proposed.stdout).group(1)
             approved = run_cli(
-                "workspace", "task", "approve", TASK_ID,
-                "--revision", "1", "--proposal-digest", proposal_digest,
-                "--owner", "OWNER", "--root", str(workspace),
+                "workspace",
+                "task",
+                "approve",
+                TASK_ID,
+                "--revision",
+                "1",
+                "--proposal-digest",
+                proposal_digest,
+                "--owner",
+                "OWNER",
+                "--root",
+                str(workspace),
                 cwd=REPOSITORY_ROOT,
             )
             begun = run_cli(
-                "workspace", "task", "begin", TASK_ID,
-                "--architect", "ARCHITECT", "--root", str(workspace),
+                "workspace",
+                "task",
+                "begin",
+                TASK_ID,
+                "--architect",
+                "ARCHITECT",
+                "--root",
+                str(workspace),
                 cwd=REPOSITORY_ROOT,
             )
             result_file = outside / "cli-result.txt"
@@ -714,39 +716,79 @@ class WorkflowTests(unittest.TestCase):
             result_file.write_text("resultaat", encoding="utf-8")
             evidence_file.write_text("bewijs", encoding="utf-8")
             submitted = run_cli(
-                "workspace", "task", "submit-result", TASK_ID,
-                "--result", str(result_file), "--evidence", str(evidence_file),
-                "--limitation", "begrensde test", "--open-question", "geen",
-                "--executor", "UITVOERDER", "--root", str(workspace),
+                "workspace",
+                "task",
+                "submit-result",
+                TASK_ID,
+                "--result",
+                str(result_file),
+                "--evidence",
+                str(evidence_file),
+                "--limitation",
+                "begrensde test",
+                "--open-question",
+                "geen",
+                "--executor",
+                "UITVOERDER",
+                "--root",
+                str(workspace),
                 cwd=REPOSITORY_ROOT,
             )
-            result_digest = re.search(
-                r"Object digest: ([0-9a-f]{64})", submitted.stdout
-            ).group(1)
+            result_digest = re.search(r"Object digest: ([0-9a-f]{64})", submitted.stdout).group(1)
             reviewed = run_cli(
-                "workspace", "task", "review-result", TASK_ID,
-                "--result-digest", result_digest, "--outcome", "PASS",
-                "--finding", "resultaat en bewijs zijn gekoppeld",
-                "--architect", "ARCHITECT", "--root", str(workspace),
+                "workspace",
+                "task",
+                "review-result",
+                TASK_ID,
+                "--result-digest",
+                result_digest,
+                "--outcome",
+                "PASS",
+                "--finding",
+                "resultaat en bewijs zijn gekoppeld",
+                "--architect",
+                "ARCHITECT",
+                "--root",
+                str(workspace),
                 cwd=REPOSITORY_ROOT,
             )
-            review_digest = re.search(
-                r"Object digest: ([0-9a-f]{64})", reviewed.stdout
-            ).group(1)
+            review_digest = re.search(r"Object digest: ([0-9a-f]{64})", reviewed.stdout).group(1)
             accepted = run_cli(
-                "workspace", "task", "accept-result", TASK_ID,
-                "--result-digest", result_digest, "--review-digest", review_digest,
-                "--decision", "ACCEPT", "--owner", "OWNER",
-                "--root", str(workspace), cwd=REPOSITORY_ROOT,
+                "workspace",
+                "task",
+                "accept-result",
+                TASK_ID,
+                "--result-digest",
+                result_digest,
+                "--review-digest",
+                review_digest,
+                "--decision",
+                "ACCEPT",
+                "--owner",
+                "OWNER",
+                "--root",
+                str(workspace),
+                cwd=REPOSITORY_ROOT,
             )
             closed = run_cli(
-                "workspace", "task", "close", TASK_ID,
-                "--architect", "ARCHITECT", "--root", str(workspace),
+                "workspace",
+                "task",
+                "close",
+                TASK_ID,
+                "--architect",
+                "ARCHITECT",
+                "--root",
+                str(workspace),
                 cwd=REPOSITORY_ROOT,
             )
             status = run_cli(
-                "workspace", "task", "status", TASK_ID,
-                "--root", str(workspace), cwd=REPOSITORY_ROOT,
+                "workspace",
+                "task",
+                "status",
+                TASK_ID,
+                "--root",
+                str(workspace),
+                cwd=REPOSITORY_ROOT,
             )
 
             for completed in (

@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import shutil
 import sqlite3
 import tomllib
-from typing import Any, Iterable
+from collections.abc import Iterable
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path, PurePosixPath
+from typing import Any
 from uuid import uuid4
 
 from .integrity import (
@@ -24,7 +25,11 @@ from .integrity import (
 )
 from .primitives import (
     pretty_json_bytes as _json_bytes,
+)
+from .primitives import (
     timestamp_microseconds as _timestamp,
+)
+from .primitives import (
     utc_now as _utc_now,
 )
 from .workspace import (
@@ -35,7 +40,6 @@ from .workspace import (
     WorkspaceError,
     validate_workspace,
 )
-
 
 CHAPTER_FORMAT = "opencntx-chapter"
 CHAPTER_FORMAT_VERSION = 1
@@ -219,9 +223,7 @@ def _safe_line(value: object, *, field: str, maximum: int, allow_empty: bool = F
     if not isinstance(value, str):
         raise CatalogError(f"{field} moet tekst zijn.", code="chapter_schema_invalid")
     if value != value.strip() or "\n" in value or "\r" in value:
-        raise CatalogError(
-            f"{field} moet één nette regel zijn.", code="chapter_schema_invalid"
-        )
+        raise CatalogError(f"{field} moet één nette regel zijn.", code="chapter_schema_invalid")
     if not allow_empty and not value:
         raise CatalogError(f"{field} mag niet leeg zijn.", code="chapter_schema_invalid")
     if len(value) > maximum:
@@ -237,8 +239,7 @@ def _validate_chapter_id(value: object) -> str:
         raise CatalogError("Hoofdstuk-ID moet tekst zijn.", code="chapter_id_invalid")
     if len(value) > MAX_CHAPTER_ID_LENGTH or CHAPTER_ID_PATTERN.fullmatch(value) is None:
         raise CatalogError(
-            "Hoofdstuk-ID moet CH- gevolgd door hoofdletters, cijfers en "
-            "enkele koppeltekens zijn.",
+            "Hoofdstuk-ID moet CH- gevolgd door hoofdletters, cijfers en enkele koppeltekens zijn.",
             code="chapter_id_invalid",
         )
     return value
@@ -314,9 +315,7 @@ def _load_sources(root: Path) -> dict[str, SourceEntry]:
         if not isinstance(source_id, str) or SOURCE_ID_PATTERN.fullmatch(source_id) is None:
             raise CatalogError("Ongeldige source-ID in record.", code="source_record_invalid")
         if source_id in entries:
-            raise CatalogError(
-                f"Dubbele source-ID: {source_id}.", code="source_id_duplicate"
-            )
+            raise CatalogError(f"Dubbele source-ID: {source_id}.", code="source_id_duplicate")
         if record_path.parent.name != source_id:
             raise CatalogError(
                 f"Source-ID en bronmap verschillen: {source_id}.",
@@ -373,9 +372,7 @@ def _load_sources(root: Path) -> dict[str, SourceEntry]:
         else:
             actual_bytes, actual_hash = _hash_file(original)
             integrity = (
-                "EXACT"
-                if actual_bytes == byte_count and actual_hash == sha256
-                else "DRIFTED"
+                "EXACT" if actual_bytes == byte_count and actual_hash == sha256 else "DRIFTED"
             )
         entries[source_id] = SourceEntry(
             source_id=source_id,
@@ -400,9 +397,7 @@ def _load_sources(root: Path) -> dict[str, SourceEntry]:
 def _split_frontmatter(text: str) -> tuple[dict[str, Any], str]:
     lines = text.splitlines(keepends=True)
     if not lines or lines[0].rstrip("\r\n") != "+++":
-        raise CatalogError(
-            "CHAPTER.md mist TOML-frontmatter.", code="chapter_schema_invalid"
-        )
+        raise CatalogError("CHAPTER.md mist TOML-frontmatter.", code="chapter_schema_invalid")
     closing: int | None = None
     for index, line in enumerate(lines[1:], start=1):
         if line.rstrip("\r\n") == "+++":
@@ -482,9 +477,7 @@ def _parse_source_refs(value: object) -> tuple[SourceReference, ...]:
 
 def _parse_dependencies(value: object, chapter_id: str) -> tuple[str, ...]:
     if not isinstance(value, list):
-        raise CatalogError(
-            "dependency_ids moet een lijst zijn.", code="chapter_schema_invalid"
-        )
+        raise CatalogError("dependency_ids moet een lijst zijn.", code="chapter_schema_invalid")
     dependencies: list[str] = []
     for item in value:
         dependency = _validate_chapter_id(item)
@@ -494,9 +487,7 @@ def _parse_dependencies(value: object, chapter_id: str) -> tuple[str, ...]:
                 code="chapter_dependency_self",
             )
         if dependency in dependencies:
-            raise CatalogError(
-                "Dubbele hoofdstukafhankelijkheid.", code="chapter_schema_invalid"
-            )
+            raise CatalogError("Dubbele hoofdstukafhankelijkheid.", code="chapter_schema_invalid")
         dependencies.append(dependency)
     return tuple(sorted(dependencies))
 
@@ -514,13 +505,9 @@ def _parse_chapter(root: Path, path: Path) -> ChapterEntry:
         raise CatalogError("Hoofdstuk is niet toegankelijk.", code="chapter_unavailable") from exc
     chapters_root = (root / "CHAPTERS").resolve(strict=True)
     if not resolved.is_relative_to(chapters_root):
-        raise CatalogError(
-            "Hoofdstuk verlaat CHAPTERS.", code="catalog_managed_path_escape"
-        )
+        raise CatalogError("Hoofdstuk verlaat CHAPTERS.", code="catalog_managed_path_escape")
     if size > MAX_CHAPTER_BYTES:
-        raise CatalogError(
-            "CHAPTER.md is groter dan 1 MiB.", code="chapter_too_large"
-        )
+        raise CatalogError("CHAPTER.md is groter dan 1 MiB.", code="chapter_too_large")
     try:
         raw = path.read_bytes()
         text = raw.decode("utf-8")
@@ -536,16 +523,11 @@ def _parse_chapter(root: Path, path: Path) -> ChapterEntry:
             "CHAPTER.md heeft onbekende of ontbrekende frontmattervelden.",
             code="chapter_schema_invalid",
         )
-    if (
-        metadata["format"] != CHAPTER_FORMAT
-        or metadata["format_version"] != CHAPTER_FORMAT_VERSION
-    ):
+    if metadata["format"] != CHAPTER_FORMAT or metadata["format_version"] != CHAPTER_FORMAT_VERSION:
         raise CatalogError("Onbekend hoofdstukformaat.", code="chapter_schema_invalid")
     chapter_id = _validate_chapter_id(metadata["chapter_id"])
     if path.parent.name != chapter_id:
-        raise CatalogError(
-            "Hoofdstuk-ID en mapnaam verschillen.", code="chapter_id_path_mismatch"
-        )
+        raise CatalogError("Hoofdstuk-ID en mapnaam verschillen.", code="chapter_id_path_mismatch")
     title = _safe_line(metadata["title"], field="title", maximum=MAX_TITLE_LENGTH)
     scope = _safe_line(metadata["scope"], field="scope", maximum=MAX_SCOPE_LENGTH)
     revision = metadata["revision"]
@@ -773,9 +755,9 @@ def _state_model(
 
 
 def _state_digest(model: dict[str, Any]) -> str:
-    canonical = json.dumps(
-        model, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    canonical = json.dumps(model, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     return hashlib.sha256(canonical).hexdigest()
 
 
@@ -813,8 +795,10 @@ def _render_index(
     else:
         body_lines.extend(
             [
-                "| ID | Title | Scope | Knowledge status | Revision | Freshness | "
-                "Dependencies | Open decisions | Path | Digest |",
+                (
+                    "| ID | Title | Scope | Knowledge status | Revision | Freshness | "
+                    "Dependencies | Open decisions | Path | Digest |"
+                ),
                 "| --- | --- | --- | --- | ---: | --- | --- | ---: | --- | --- |",
             ]
         )
@@ -862,9 +846,7 @@ def _index_is_managed(path: Path, catalog_path: Path) -> bool:
     try:
         content = path.read_bytes()
     except OSError as exc:
-        raise CatalogError(
-            "CHAPTERS/INDEX.md is niet leesbaar.", code="index_unavailable"
-        ) from exc
+        raise CatalogError("CHAPTERS/INDEX.md is niet leesbaar.", code="index_unavailable") from exc
     if content in {
         INDEX_TEMPLATE.encode("utf-8"),
         LEGACY_INDEX_TEMPLATE.encode("utf-8"),
@@ -887,12 +869,11 @@ def _index_is_managed(path: Path, catalog_path: Path) -> bool:
         (line for line in header_lines if line.startswith("index_body_sha256: ")),
         None,
     )
-    generated = (
-        f"format: {INDEX_FORMAT}" in header_lines
-        and f"format_version: {INDEX_FORMAT_VERSION}" in header_lines
-        and body_digest_line is not None
-    )
-    if not generated:
+    if (
+        f"format: {INDEX_FORMAT}" not in header_lines
+        or f"format_version: {INDEX_FORMAT_VERSION}" not in header_lines
+        or body_digest_line is None
+    ):
         return False
     declared_body_digest = body_digest_line.removeprefix("index_body_sha256: ")
     body = "".join(lines[closing + 1 :]).encode("utf-8")
@@ -1061,12 +1042,8 @@ def _build_sqlite(
                 for dependency in chapter.dependency_ids
                 if dependency in chapters
             )
-        connection.executemany(
-            "INSERT INTO chapter_sources VALUES (?, ?, ?, ?)", source_rows
-        )
-        connection.executemany(
-            "INSERT INTO chapter_dependencies VALUES (?, ?)", dependency_rows
-        )
+        connection.executemany("INSERT INTO chapter_sources VALUES (?, ?, ?, ?)", source_rows)
+        connection.executemany("INSERT INTO chapter_dependencies VALUES (?, ?)", dependency_rows)
         connection.executemany(
             "INSERT INTO catalog_issues(issue_number, code, object_id, message) "
             "VALUES (?, ?, ?, ?)",
@@ -1118,9 +1095,7 @@ def _write_catalog_receipt(
         "attempt_id": attempt_id,
         "catalog_path": ".opencntx/catalog.sqlite" if status == "CATALOG_REBUILT" else None,
         "chapter_count": chapter_count,
-        "error": (
-            f"Catalog rebuild failed: {error.code}." if error is not None else None
-        ),
+        "error": (f"Catalog rebuild failed: {error.code}." if error is not None else None),
         "error_code": error.code if error is not None else None,
         "format": CATALOG_RECEIPT_FORMAT,
         "format_version": CATALOG_RECEIPT_VERSION,
@@ -1241,23 +1216,17 @@ def _create_chapter_unlocked(
     if len(set(normalized_source_ids)) != len(normalized_source_ids):
         raise CatalogError("Dubbele --source opgegeven.", code="chapter_source_duplicate")
     if len(set(normalized_dependencies)) != len(normalized_dependencies):
-        raise CatalogError(
-            "Dubbele --depends-on opgegeven.", code="chapter_dependency_duplicate"
-        )
+        raise CatalogError("Dubbele --depends-on opgegeven.", code="chapter_dependency_duplicate")
     sources = _load_sources(root)
     chapters = _load_chapters(root)
     references: list[SourceReference] = []
     superseded = {source.supersedes for source in sources.values() if source.supersedes}
     for source_id in normalized_source_ids:
         if SOURCE_ID_PATTERN.fullmatch(source_id) is None or source_id not in sources:
-            raise CatalogError(
-                f"Onbekende bron: {source_id}.", code="chapter_source_unknown"
-            )
+            raise CatalogError(f"Onbekende bron: {source_id}.", code="chapter_source_unknown")
         source = sources[source_id]
         if source.integrity != "EXACT":
-            raise CatalogError(
-                f"Bron is niet exact: {source_id}.", code="chapter_source_not_exact"
-            )
+            raise CatalogError(f"Bron is niet exact: {source_id}.", code="chapter_source_not_exact")
         if source_id in superseded:
             raise CatalogError(
                 f"Bron is reeds vervangen: {source_id}.",
@@ -1281,9 +1250,7 @@ def _create_chapter_unlocked(
     chapters_root = root / "CHAPTERS"
     final_directory = chapters_root / normalized_id
     if final_directory.exists() or final_directory.is_symlink():
-        raise CatalogError(
-            f"Hoofdstuk bestaat al: {normalized_id}.", code="chapter_exists"
-        )
+        raise CatalogError(f"Hoofdstuk bestaat al: {normalized_id}.", code="chapter_exists")
     temporary = chapters_root / f".chapter-{uuid4().hex}"
     try:
         temporary.mkdir(exist_ok=False)

@@ -4,9 +4,9 @@ import hashlib
 import json
 import multiprocessing
 import os
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
 
 from opencntx.catalog import rebuild_catalog
@@ -29,7 +29,6 @@ from opencntx.lifecycle import (
     write_plan,
 )
 from opencntx.workspace import capture_source, init_workspace
-
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "lifecycle"
@@ -140,7 +139,10 @@ class LifecycleTests(unittest.TestCase):
             self.assertEqual(local["trust_status"], "LOCAL_ASSUMPTION_ONLY")
             self.assertEqual(shared["trust_status"], "UNSUPPORTED_FOR_AUTHORIZATION")
             self.assertEqual(local["privacy_counts"]["PRIVATE"], 1)
-            self.assertEqual(local["sources"][0]["content_sha256"], hashlib.sha256(private.read_bytes()).hexdigest())
+            self.assertEqual(
+                local["sources"][0]["content_sha256"],
+                hashlib.sha256(private.read_bytes()).hexdigest(),
+            )
             self.assertRegex(local["sources"][0]["alias"], r"^SRC-ALIAS-[0-9a-f]{12}$")
             self.assertNotIn(private.name, rendered)
             self.assertNotIn("sensitive fixture words", rendered)
@@ -159,7 +161,9 @@ class LifecycleTests(unittest.TestCase):
             self.assertEqual(path.stat().st_mode, before)
             if os.name != "nt":
                 os.chmod(path, 0o777)
-                self.assertEqual(audit_permissions(path, private=True).result, "WARNING_BROAD_ACCESS")
+                self.assertEqual(
+                    audit_permissions(path, private=True).result, "WARNING_BROAD_ACCESS"
+                )
 
     def test_storage_categories_sum_exactly_and_keep_budget_separate(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -173,7 +177,10 @@ class LifecycleTests(unittest.TestCase):
             report = storage_inventory(root)
 
             self.assertEqual(sum(report["categories"].values()), report["observed_total_bytes"])
-            self.assertEqual(report["categories"]["source_content"], len(b"source-bytes") + next((root / "SOURCES").rglob("record.json")).stat().st_size)
+            self.assertEqual(
+                report["categories"]["source_content"],
+                len(b"source-bytes") + next((root / "SOURCES").rglob("record.json")).stat().st_size,
+            )
             self.assertEqual(report["budgeted_content_bytes"], len(b"source-bytes"))
             self.assertEqual(report["configured_max_storage_bytes"], 20 * 1024**3)
 
@@ -183,26 +190,35 @@ class LifecycleTests(unittest.TestCase):
             with self.assertRaises(LifecycleError) as invalid:
                 require_disk_capacity(path, 1 << 63, "test")
             self.assertEqual(invalid.exception.code, "disk_space_invalid")
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", side_effect=OSError("unavailable")):
-                with self.assertRaises(LifecycleError) as unavailable:
-                    require_disk_capacity(path, 1, "test")
+            with (
+                mock.patch(
+                    "opencntx.lifecycle.shutil.disk_usage", side_effect=OSError("unavailable")
+                ),
+                self.assertRaises(LifecycleError) as unavailable,
+            ):
+                require_disk_capacity(path, 1, "test")
             self.assertEqual(unavailable.exception.code, "disk_space_unavailable")
             invalid_usage = mock.Mock(total=10, used=0, free=11)
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=invalid_usage):
-                with self.assertRaises(LifecycleError) as inconsistent:
-                    require_disk_capacity(path, 1, "test")
+            with (
+                mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=invalid_usage),
+                self.assertRaises(LifecycleError) as inconsistent,
+            ):
+                require_disk_capacity(path, 1, "test")
             self.assertEqual(inconsistent.exception.code, "disk_space_unavailable")
 
     def test_schema_assets_are_unique_packaged_and_matrix_aligned(self) -> None:
         assets = schema_assets()
-        self.assertEqual(set(assets), {
-            "compatibility-matrix-v1.json",
-            "durable-format-contracts-v1.json",
-            "durable-records-v1.schema.json",
-            "lifecycle-plan-v1.schema.json",
-            "lifecycle-state-v1.schema.json",
-            "public-contract-v1.json",
-        })
+        self.assertEqual(
+            set(assets),
+            {
+                "compatibility-matrix-v1.json",
+                "durable-format-contracts-v1.json",
+                "durable-records-v1.schema.json",
+                "lifecycle-plan-v1.schema.json",
+                "lifecycle-state-v1.schema.json",
+                "public-contract-v1.json",
+            },
+        )
         values = {name: json.loads(content.decode("ascii")) for name, content in assets.items()}
         ids = {value["$id"] for value in values.values()}
         self.assertEqual(len(ids), 6)
@@ -210,8 +226,9 @@ class LifecycleTests(unittest.TestCase):
             item["format"] for item in values["compatibility-matrix-v1.json"]["records"]
         }
         schema_formats = set(
-            values["durable-records-v1.schema.json"]["$defs"]["currentRecord"]
-            ["properties"]["format"]["enum"]
+            values["durable-records-v1.schema.json"]["$defs"]["currentRecord"]["properties"][
+                "format"
+            ]["enum"]
         )
         self.assertEqual(matrix_formats, schema_formats)
         self.assertRegex(schema_bundle_digest(), r"^[0-9a-f]{64}$")
@@ -254,9 +271,11 @@ class LifecycleTests(unittest.TestCase):
             write_plan(plan_path, plan, workspace_root=root)
 
             no_space = mock.Mock(total=100, used=100, free=0)
-            with mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space):
-                with self.assertRaises(LifecycleError) as no_space_error:
-                    apply_migration(root, plan_path, plan["plan_sha256"])
+            with (
+                mock.patch("opencntx.lifecycle.shutil.disk_usage", return_value=no_space),
+                self.assertRaises(LifecycleError) as no_space_error,
+            ):
+                apply_migration(root, plan_path, plan["plan_sha256"])
             self.assertEqual(no_space_error.exception.code, "disk_space_insufficient")
             self.assertFalse(state_path.exists())
 
@@ -264,16 +283,106 @@ class LifecycleTests(unittest.TestCase):
                 if phase == "MIGRATION_AFTER_STATE":
                     raise RuntimeError("injected migration failure")
 
-            with mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail):
-                with self.assertRaisesRegex(RuntimeError, "injected migration failure"):
-                    apply_migration(root, plan_path, plan["plan_sha256"])
+            with (
+                mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail),
+                self.assertRaisesRegex(RuntimeError, "injected migration failure"),
+            ):
+                apply_migration(root, plan_path, plan["plan_sha256"])
 
             self.assertFalse(state_path.exists())
+
+    def test_all_lifecycle_fault_hooks_restore_exact_state(self) -> None:
+        for phase in ("MIGRATION_BEFORE_STATE", "MIGRATION_AFTER_STATE"):
+            with self.subTest(phase=phase), tempfile.TemporaryDirectory() as temporary_directory:
+                parent = Path(temporary_directory)
+                root = parent / "workspace"
+                init_workspace(root)
+                state_path = root / ".opencntx" / "lifecycle" / "state.json"
+                state_path.unlink()
+                plan = plan_migration(root)
+                plan_path = parent / "migration-plan.json"
+                write_plan(plan_path, plan, workspace_root=root)
+
+                def fail_migration(observed: str, expected_phase: str = phase) -> None:
+                    if observed == expected_phase:
+                        raise RuntimeError(f"injected {expected_phase}")
+
+                with (
+                    mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail_migration),
+                    self.assertRaisesRegex(RuntimeError, f"injected {phase}"),
+                ):
+                    apply_migration(root, plan_path, plan["plan_sha256"])
+                self.assertFalse(state_path.exists())
+
+        for phase in ("CLEANUP_AFTER_COPY", "CLEANUP_BEFORE_REMOVE", "CLEANUP_AFTER_REMOVE"):
+            with self.subTest(phase=phase), tempfile.TemporaryDirectory() as temporary_directory:
+                parent = Path(temporary_directory)
+                root = parent / "workspace"
+                init_workspace(root)
+                (root / "README.md").write_text("# Lifecycle\n", encoding="utf-8")
+                write_core_config(root)
+                latest, _ = pack_project(root)
+                before = byte_tree(latest)
+                plan = plan_cleanup(root, ["latest-package"], self.private_checkpoint())
+                plan_path = parent / "cleanup-plan.json"
+                write_plan(plan_path, plan, workspace_root=root)
+
+                def fail_cleanup(observed: str, expected_phase: str = phase) -> None:
+                    if observed == expected_phase:
+                        raise RuntimeError(f"injected {expected_phase}")
+
+                with (
+                    mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail_cleanup),
+                    self.assertRaisesRegex(RuntimeError, f"injected {phase}"),
+                ):
+                    apply_cleanup(root, plan_path, plan["plan_sha256"])
+                self.assertEqual(before, byte_tree(latest))
+
+        with (
+            self.subTest(phase="RESTORE_AFTER_COPY"),
+            tempfile.TemporaryDirectory() as temporary_directory,
+        ):
+            parent = Path(temporary_directory)
+            root = parent / "workspace"
+            init_workspace(root)
+            (root / "README.md").write_text("# Lifecycle\n", encoding="utf-8")
+            write_core_config(root)
+            latest, _ = pack_project(root)
+            checkpoint = self.private_checkpoint()
+            plan = plan_cleanup(root, ["latest-package"], checkpoint)
+            plan_path = parent / "cleanup-plan.json"
+            write_plan(plan_path, plan, workspace_root=root)
+            applied = apply_cleanup(root, plan_path, plan["plan_sha256"])
+            before_restore = snapshot(root)
+
+            def fail_restore(observed: str) -> None:
+                if observed == "RESTORE_AFTER_COPY":
+                    raise RuntimeError("injected RESTORE_AFTER_COPY")
+
+            with (
+                mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail_restore),
+                self.assertRaisesRegex(RuntimeError, "injected RESTORE_AFTER_COPY"),
+            ):
+                restore_cleanup(root, checkpoint, applied["checkpoint_sha256"])
+            self.assertFalse(latest.exists())
+            after_restore = snapshot(root)
+            for relative, value in before_restore.items():
+                self.assertEqual(value, after_restore[relative], relative)
+            transaction_evidence = set(after_restore) - set(before_restore)
+            self.assertTrue(transaction_evidence)
+            self.assertTrue(
+                all(
+                    relative.startswith(".opencntx/transactions/completed/")
+                    for relative in transaction_evidence
+                )
+            )
 
     def test_unknown_fixture_fails_closed_and_rollback_fixture_is_structural(self) -> None:
         unknown = json.loads((FIXTURES / "unknown-v99-record.json").read_text(encoding="utf-8"))
         rollback = json.loads((FIXTURES / "rollback-state-v1.json").read_text(encoding="utf-8"))
-        legacy = json.loads((FIXTURES / "legacy-unregistered-v1-record.json").read_text(encoding="utf-8"))
+        legacy = json.loads(
+            (FIXTURES / "legacy-unregistered-v1-record.json").read_text(encoding="utf-8")
+        )
         self.assertEqual(legacy["format_version"], 1)
         self.assertEqual(rollback["format"], "opencntx-lifecycle-state")
 
@@ -349,11 +458,13 @@ class LifecycleTests(unittest.TestCase):
             executors = root / ".opencntx" / "executors"
             executors.mkdir()
             (executors / "active.json").write_text(
-                json.dumps({
-                    "format": "opencntx-executor-assignment",
-                    "format_version": 1,
-                    "context": {"manifest_digest": manifest_digest},
-                }),
+                json.dumps(
+                    {
+                        "format": "opencntx-executor-assignment",
+                        "format_version": 1,
+                        "context": {"manifest_digest": manifest_digest},
+                    }
+                ),
                 encoding="utf-8",
             )
 
@@ -375,41 +486,64 @@ class LifecycleTests(unittest.TestCase):
             completed_id = "TXN-20260820T010203000004Z-111111111111"
             completed = root / ".opencntx" / "transactions" / "completed" / completed_id
             completed.mkdir(parents=True)
-            (completed / "intent.json").write_bytes(json_bytes({
-                "format": "opencntx-transaction", "format_version": 1,
-                "transaction_id": completed_id,
-            }))
-            (completed / "completion.json").write_bytes(json_bytes({
-                "format": "opencntx-transaction-completion", "format_version": 1,
-                "transaction_id": completed_id,
-            }))
+            (completed / "intent.json").write_bytes(
+                json_bytes(
+                    {
+                        "format": "opencntx-transaction",
+                        "format_version": 1,
+                        "transaction_id": completed_id,
+                    }
+                )
+            )
+            (completed / "completion.json").write_bytes(
+                json_bytes(
+                    {
+                        "format": "opencntx-transaction-completion",
+                        "format_version": 1,
+                        "transaction_id": completed_id,
+                    }
+                )
+            )
 
             recovered_id = "TXN-20260820T010203000005Z-222222222222"
-            recovered = root / ".opencntx" / "transactions" / "completed" / f"{recovered_id}-recovered"
+            recovered = (
+                root / ".opencntx" / "transactions" / "completed" / f"{recovered_id}-recovered"
+            )
             recovered.mkdir(parents=True)
-            recovered_intent = json_bytes({
-                "format": "opencntx-transaction", "format_version": 1,
-                "transaction_id": recovered_id,
-            })
+            recovered_intent = json_bytes(
+                {
+                    "format": "opencntx-transaction",
+                    "format_version": 1,
+                    "transaction_id": recovered_id,
+                }
+            )
             (recovered / "intent.json").write_bytes(recovered_intent)
             intent_digest = hashlib.sha256(recovered_intent).hexdigest()
             recovery_id = "RECOVERY-20260820T010203000006Z-333333333333"
             backup = root / ".opencntx" / "recovery" / "backups" / recovery_id
             backup.mkdir(parents=True)
-            (backup / "manifest.json").write_bytes(json_bytes({
-                "backup_id": recovery_id,
-                "format": "opencntx-recovery-backup",
-                "format_version": 1,
-                "intent_sha256": intent_digest,
-                "transaction_id": recovered_id,
-            }))
-            (root / ".opencntx" / "receipts" / "recovery-test.json").write_bytes(json_bytes({
-                "backup_path": backup.relative_to(root).as_posix(),
-                "format": "opencntx-recovery-receipt",
-                "format_version": 1,
-                "intent_sha256": intent_digest,
-                "transaction_id": recovered_id,
-            }))
+            (backup / "manifest.json").write_bytes(
+                json_bytes(
+                    {
+                        "backup_id": recovery_id,
+                        "format": "opencntx-recovery-backup",
+                        "format_version": 1,
+                        "intent_sha256": intent_digest,
+                        "transaction_id": recovered_id,
+                    }
+                )
+            )
+            (root / ".opencntx" / "receipts" / "recovery-test.json").write_bytes(
+                json_bytes(
+                    {
+                        "backup_path": backup.relative_to(root).as_posix(),
+                        "format": "opencntx-recovery-receipt",
+                        "format_version": 1,
+                        "intent_sha256": intent_digest,
+                        "transaction_id": recovered_id,
+                    }
+                )
+            )
             targets = [
                 "catalog-cache",
                 f"completed-transaction:{completed_id}",
@@ -430,7 +564,10 @@ class LifecycleTests(unittest.TestCase):
             self.assertFalse(backup.exists())
             restore_cleanup(root, checkpoint, applied["checkpoint_sha256"])
 
-            self.assertEqual(byte_tree(root / ".opencntx" / "catalog.sqlite"), expected[".opencntx/catalog.sqlite"])
+            self.assertEqual(
+                byte_tree(root / ".opencntx" / "catalog.sqlite"),
+                expected[".opencntx/catalog.sqlite"],
+            )
             self.assertEqual(byte_tree(completed), expected[completed.relative_to(root).as_posix()])
             self.assertEqual(byte_tree(backup), expected[backup.relative_to(root).as_posix()])
 
@@ -454,9 +591,11 @@ class LifecycleTests(unittest.TestCase):
                 if phase == "CLEANUP_AFTER_REMOVE":
                     raise RuntimeError("injected cleanup failure")
 
-            with mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail):
-                with self.assertRaisesRegex(RuntimeError, "injected cleanup failure"):
-                    apply_cleanup(root, plan_path, plan["plan_sha256"])
+            with (
+                mock.patch("opencntx.lifecycle._TEST_FAULT_HOOK", fail),
+                self.assertRaisesRegex(RuntimeError, "injected cleanup failure"),
+            ):
+                apply_cleanup(root, plan_path, plan["plan_sha256"])
 
             self.assertTrue(latest.is_dir())
             self.assertTrue(verify_package(latest).ok)

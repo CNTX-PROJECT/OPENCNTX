@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import re
-from typing import Iterable
-
+from collections.abc import Iterable
+from dataclasses import dataclass
 
 POLICY_VERSION = 1
 CONFIDENCE_HIGH = "HIGH"
@@ -193,9 +192,7 @@ def scan_sources(
 ) -> tuple[SecretFinding, ...]:
     findings: list[SecretFinding] = []
     for path, text, source_sha256 in sources:
-        findings.extend(
-            scan_text(path=path, text=text, source_sha256=source_sha256)
-        )
+        findings.extend(scan_text(path=path, text=text, source_sha256=source_sha256))
     return tuple(
         sorted(
             findings,
@@ -230,27 +227,20 @@ def assess_findings(
             raise ValueError(f"Unknown or stale secret finding ID: {finding_id}")
         if finding.confidence != CONFIDENCE_HIGH:
             raise ValueError(
-                "Only a high-confidence block can be overridden exactly: "
-                f"{finding_id}"
+                f"Only a high-confidence block can be overridden exactly: {finding_id}"
             )
 
     allowed = set(requested)
-    warnings = tuple(
-        finding
-        for finding in findings
-        if finding.confidence == CONFIDENCE_WARNING
-    )
+    warnings = tuple(finding for finding in findings if finding.confidence == CONFIDENCE_WARNING)
     blocked = tuple(
         finding
         for finding in findings
-        if finding.confidence == CONFIDENCE_HIGH
-        and finding.finding_id not in allowed
+        if finding.confidence == CONFIDENCE_HIGH and finding.finding_id not in allowed
     )
     overrides = tuple(
         finding
         for finding in findings
-        if finding.confidence == CONFIDENCE_HIGH
-        and finding.finding_id in allowed
+        if finding.confidence == CONFIDENCE_HIGH and finding.finding_id in allowed
     )
     return SecretAssessment(
         warnings=warnings,

@@ -17,7 +17,7 @@ jobs:
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 8
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -32,6 +32,7 @@ jobs:
     env:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUTF8: "1"
+      PYTHONPATH: src
 
     steps:
       - name: Check out repository
@@ -45,11 +46,40 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install pinned build toolchain
-        run: python -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0
+        run: python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
 
       - name: Install pinned quality toolchain on Python 3.13
         if: matrix.python-version == '3.13'
-        run: python -m pip install --disable-pip-version-check -r requirements-quality.txt
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements-quality.txt
+          python -m pip install --disable-pip-version-check -r requirements-security.txt
+
+      - name: Audit pinned build and quality dependencies
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        run: |
+          python -m pip_audit --version
+          python -m pip_audit -r requirements-quality.txt --format json --output "${RUNNER_TEMP}/opencntx-pip-audit.json"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"]) / "opencntx-pip-audit.json"
+          content = path.read_bytes()
+          result = json.loads(content)
+          dependencies = result.get("dependencies")
+          if not isinstance(dependencies, list):
+              raise SystemExit("pip-audit JSON has no dependency inventory")
+          vulnerabilities = sum(len(item.get("vulns", [])) for item in dependencies)
+          if vulnerabilities:
+              raise SystemExit(f"pip-audit reported {vulnerabilities} vulnerabilities")
+          print(
+              "PIP_AUDIT_OK "
+              f"dependencies={len(dependencies)} vulnerabilities=0 "
+              f"sha256={hashlib.sha256(content).hexdigest()}"
+          )
+          PY
 
       - name: Prepare bounded offline build inputs
         shell: python {0}
@@ -70,7 +100,7 @@ jobs:
                   "--dest",
                   str(wheelhouse),
                   "build==1.3.0",
-                  "setuptools==80.9.0",
+                  "setuptools==83.0.0",
               ],
               check=True,
           )
@@ -162,3 +192,29 @@ jobs:
                   ],
                   check=True,
               )
+
+      - name: Run bounded contention, crash, and v0.3.0 upgrade proofs
+        if: matrix.python-version == '3.14'
+        shell: python {0}
+        run: |
+          import os
+          import pathlib
+          import subprocess
+          import sys
+
+          wheels = sorted(pathlib.Path("dist").glob("opencntx-*.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(f"expected one candidate wheel, found {wheels}")
+          evidence = pathlib.Path(os.environ["RUNNER_TEMP"]) / "opencntx-r8-23-hardening"
+          subprocess.run(
+              [
+                  sys.executable,
+                  "tools/r8_hardening.py",
+                  "platform",
+                  "--candidate",
+                  str(wheels[0]),
+                  "--evidence",
+                  str(evidence),
+              ],
+              check=True,
+          )
