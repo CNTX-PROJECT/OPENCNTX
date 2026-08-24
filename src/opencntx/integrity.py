@@ -271,13 +271,18 @@ def _write_new(path: Path, content: bytes) -> str:
     return result
 
 
-def _create_integrity_directory(path: Path) -> None:
+def _create_integrity_directory(path: Path, *, exist_ok: bool = False) -> None:
     """Create one private POSIX or inherited-ACL Windows integrity directory."""
     try:
         if os.name == "nt":
-            path.mkdir()
+            path.mkdir(exist_ok=exist_ok)
         else:
-            path.mkdir(mode=0o700)
+            path.mkdir(mode=0o700, exist_ok=exist_ok)
+        if path.is_symlink() or _is_reparse(path):
+            raise IntegrityError(
+                "Integrity directory is not a normal directory.",
+                code="managed_path_unsafe",
+            )
         resolved = path.resolve(strict=True)
         if not resolved.is_dir():
             raise IntegrityError(
@@ -509,7 +514,7 @@ def _layout(root: Path, *, create: bool) -> dict[str, Path]:
     resolved = root.resolve(strict=True)
     candidate = resolved / ".opencntx"
     if not _path_present(candidate) and create:
-        _create_integrity_directory(candidate)
+        _create_integrity_directory(candidate, exist_ok=True)
         result = sync_directory(resolved)
         if result == "FAILED":
             raise IntegrityError(
@@ -541,7 +546,7 @@ def _layout(root: Path, *, create: bool) -> dict[str, Path]:
                 if path.is_symlink() or _is_reparse(path) or not path.is_dir():
                     raise IntegrityError("Integrity path is unsafe.", code="managed_path_unsafe")
             else:
-                _create_integrity_directory(path)
+                _create_integrity_directory(path, exist_ok=True)
                 result = sync_directory(path.parent)
                 if result == "FAILED":
                     raise IntegrityError(

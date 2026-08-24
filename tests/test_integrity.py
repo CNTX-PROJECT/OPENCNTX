@@ -240,6 +240,49 @@ def _holding_writer(root, ready, release) -> None:
         release.wait(20)
 
 
+def _first_writer_initialization_worker(root, creation_order, barrier, queue) -> None:
+    from opencntx import integrity
+
+    workspace = Path(root)
+    transaction_root = workspace / ".opencntx" / "transactions"
+    target = workspace / ".opencntx" / "first-writer-target.txt"
+    expected = integrity.state_digest((target,))
+    original = integrity._create_integrity_directory
+
+    def synchronized_create(path: Path, *, exist_ok: bool = False) -> None:
+        if path == transaction_root:
+            barrier.wait(30)
+            with creation_order.get_lock():
+                creation_order.value += 1
+                if exist_ok:
+                    original(path, exist_ok=True)
+                else:
+                    original(path)
+            return
+        if exist_ok:
+            original(path, exist_ok=True)
+            return
+        original(path)
+
+    integrity._create_integrity_directory = synchronized_create
+
+    def mutate() -> str:
+        with integrity.writer_transaction(
+            workspace,
+            "first-writer-initialization",
+            expected_digest=expected,
+            current_digest=lambda: integrity.state_digest((target,)),
+        ) as transaction:
+            transaction.track_target(target)
+            target.write_text("published\n", encoding="utf-8")
+            transaction.mark_target_published(target)
+            transaction.mark_published()
+            transaction.mark_receipted(None)
+        return "published"
+
+    _result(queue, mutate)
+
+
 def _snapshot(root: Path) -> dict[str, tuple[str, int, int, bytes | None]]:
     result: dict[str, tuple[str, int, int, bytes | None]] = {}
     for path in sorted(root.rglob("*")):
@@ -796,6 +839,34 @@ class IntegrityTests(unittest.TestCase):
                 self.fail("A stale writer must never enter its mutation body.")
             self.assertEqual(error.exception.code, "transaction_state_changed")
 
+    def test_two_first_writers_initialize_shared_layout_before_lock_safely(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory) / "workspace"
+            init_workspace(root)
+            self.assertFalse((root / ".opencntx" / "transactions").exists())
+            context = multiprocessing.get_context("spawn")
+            creation_order = context.Value("i", 0)
+
+            results = _run_pair(
+                _first_writer_initialization_worker,
+                (root, creation_order),
+            )
+
+            self.assertEqual(creation_order.value, 2, results)
+            self.assertEqual(sum(status == "success" for status, _ in results), 1, results)
+            self.assertEqual(sum(status == "error" for status, _ in results), 1, results)
+            loser_codes = {code for status, code in results if status == "error"}
+            self.assertTrue(
+                loser_codes <= {"transaction_locked", "transaction_state_changed"},
+                results,
+            )
+            self.assertNotIn("managed_path_unsafe", loser_codes)
+            self.assertEqual(
+                (root / ".opencntx" / "first-writer-target.txt").read_text(encoding="utf-8"),
+                "published\n",
+            )
+            self.assertEqual(doctor_workspace(root).status, "HEALTHY")
+
     def test_path_safety_and_directory_sync_are_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory) / "workspace"
@@ -823,11 +894,12 @@ class IntegrityTests(unittest.TestCase):
             mock.patch.object(Path, "mkdir") as mkdir,
             mock.patch.object(Path, "resolve", return_value=resolved),
             mock.patch.object(Path, "is_dir", return_value=True),
+            mock.patch("opencntx.integrity._is_reparse", return_value=False),
             mock.patch("opencntx.integrity.os.scandir", return_value=scan),
             mock.patch("opencntx.integrity.os.name", "nt"),
         ):
             _create_integrity_directory(directory)
-        mkdir.assert_called_once_with()
+        mkdir.assert_called_once_with(exist_ok=False)
 
         scan = mock.MagicMock()
         scan.__enter__.return_value = iter(())
@@ -835,11 +907,55 @@ class IntegrityTests(unittest.TestCase):
             mock.patch.object(Path, "mkdir") as mkdir,
             mock.patch.object(Path, "resolve", return_value=resolved),
             mock.patch.object(Path, "is_dir", return_value=True),
+            mock.patch("opencntx.integrity._is_reparse", return_value=False),
             mock.patch("opencntx.integrity.os.scandir", return_value=scan),
             mock.patch("opencntx.integrity.os.name", "posix"),
         ):
             _create_integrity_directory(directory)
-        mkdir.assert_called_once_with(mode=0o700)
+        mkdir.assert_called_once_with(mode=0o700, exist_ok=False)
+
+    def test_shared_integrity_directory_creation_is_selectively_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            shared = root / "shared"
+            shared.mkdir()
+
+            _create_integrity_directory(shared, exist_ok=True)
+
+            with self.assertRaises(IntegrityError) as unique_error:
+                _create_integrity_directory(shared)
+            self.assertEqual(unique_error.exception.code, "managed_path_unsafe")
+
+            unsafe_file = root / "unsafe-file"
+            unsafe_file.write_text("not a directory\n", encoding="utf-8")
+            with self.assertRaises(IntegrityError) as unsafe_error:
+                _create_integrity_directory(unsafe_file, exist_ok=True)
+            self.assertEqual(unsafe_error.exception.code, "managed_path_unsafe")
+
+    def test_shared_integrity_directory_rejects_a_reparse_like_winner(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            reparse_like = root / "reparse-like"
+            reparse_like.mkdir()
+
+            with (
+                mock.patch("opencntx.integrity._is_reparse", return_value=True),
+                self.assertRaises(IntegrityError) as error,
+            ):
+                _create_integrity_directory(reparse_like, exist_ok=True)
+            self.assertEqual(error.exception.code, "managed_path_unsafe")
+
+    def test_shared_integrity_directory_flush_failure_stays_hard(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory) / "workspace"
+            init_workspace(root)
+            with (
+                mock.patch("opencntx.integrity.sync_directory", return_value="FAILED"),
+                self.assertRaises(IntegrityError) as error,
+                writer_transaction(root, "failed-layout-flush"),
+            ):
+                self.fail("A failed layout flush must never enter the mutation body.")
+            self.assertEqual(error.exception.code, "transaction_durability_failed")
 
     def test_state_digest_normalizes_inaccessible_paths(self) -> None:
         with (
