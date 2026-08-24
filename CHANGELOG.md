@@ -4,6 +4,21 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+### Added
+
+- Added a machine-readable contract catalog for all 1,575 accepted public
+  surfaces and explicit field, type, relationship, and major-version contracts
+  for all 36 durable formats.
+- Added immutable synthetic v0.3.0 compatibility fixtures and fail-closed tests
+  for unknown format majors without changing the recorded input bytes.
+- Expanded the Windows and Ubuntu candidate CI matrix to Python 3.11 through
+  3.14, for eight exact jobs in total.
+
+### Changed
+
+- Replaced the broad operating-system-independent package claim with the two
+  operating-system families actually covered by live CI: Windows and Linux.
+
 ## 0.3.0 - 2026-08-20
 
 ### Added

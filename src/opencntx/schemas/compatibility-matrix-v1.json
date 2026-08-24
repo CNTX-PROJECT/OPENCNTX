@@ -1,43 +1,619 @@
 {
-  "$id": "https://opencntx.org/schemas/compatibility-matrix-v1.json",
+  "$id": "urn:uuid:28916692-05ca-57f9-831a-39a7318a6797",
   "format": "opencntx-compatibility-matrix",
   "format_version": 1,
   "records": [
-    {"format": "opencntx-attempt-basis", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-attempt-fingerprint", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-capture-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-catalog", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-catalog-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-chapter", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-chapter-index", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-control-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-control-snapshot", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-definition-approval", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-derived-content", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-derived-promotion", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-derived-removal", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-derived-review", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-executor-assignment", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-lifecycle-checkpoint", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-lifecycle-plan", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-lifecycle-state", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-manifest", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-media-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-navigation", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-navigation-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-playbook", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-playbook-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-recovery-backup", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-recovery-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-role", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-source", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-task-event", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-task-receipt", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-task-view", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-transaction", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-transaction-completion", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-transaction-phase", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-workspace", "format_version": 1, "status": "CURRENT"},
-    {"format": "opencntx-writer-lock", "format_version": 1, "status": "CURRENT"}
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-attempt-basis-v1.json.gz",
+      "fixture_sha256": "70e3416314888c5ed98d737b986dd5ab630511a4e72e5f4b04f5570a01a75f8e",
+      "format": "opencntx-attempt-basis",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-attempt-basis-733be289c5b1b825"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-b-ca089a6f6a315af1"
+      ],
+      "schema_id": "urn:uuid:f7abe8e0-630f-5568-afa0-f5266cce54aa",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-attempt-fingerprint-v1.json.gz",
+      "fixture_sha256": "d450326978ef7d89b264d9f869542522d84405e4cac375a09f8f141589647e32",
+      "format": "opencntx-attempt-fingerprint",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-attempt-fingerprint-a5de86d23501f333"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-f-c8ec5fa0c9308512"
+      ],
+      "schema_id": "urn:uuid:3af9f9a4-16d0-54e2-b527-f7598b1b1057",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-capture-receipt-v1.json.gz",
+      "fixture_sha256": "f47c0ed02dbe58ddf67a17f61d038b9f5f6a5e0677c5953d1345ce51b5362bdb",
+      "format": "opencntx-capture-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-capture-receipt-ab99961191584678"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-capture-r-5dda7b854a932dff"
+      ],
+      "schema_id": "urn:uuid:5270999a-8fdb-54b4-ae93-fcd9515ed09d",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-catalog-v1.json.gz",
+      "fixture_sha256": "cc17e0a21a4afb5d3b60cbf09dbc57f588e2ba3fcef17f54ee44ad3c024d7600",
+      "format": "opencntx-catalog",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-catalog-24b73d341fa6e64a"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-3b337d03cd6ba294"
+      ],
+      "schema_id": "urn:uuid:4599aee6-35c5-5d9e-936b-f6633a795403",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-catalog-receipt-v1.json.gz",
+      "fixture_sha256": "c39f26147b2135887cf0efb80a70eb1f60de475fe3c374260965cadddfa13f1a",
+      "format": "opencntx-catalog-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-catalog-receipt-18959c2bc124d403"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-r-fceed32da03f0722"
+      ],
+      "schema_id": "urn:uuid:403c2e1d-372b-597b-9ff9-e93f8c81162f",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-chapter-v1.md.gz",
+      "fixture_sha256": "07189ecd56c10f69fc44faa5d7d40ac36592c9e7f3816b160bdb4d7c14a876e1",
+      "format": "opencntx-chapter",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-chapter-0c13d1b90214dd66"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-312d85a8c135aefa"
+      ],
+      "schema_id": "urn:uuid:7395c870-bd59-562c-b488-78af33181e7d",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-chapter-index-v1.md.gz",
+      "fixture_sha256": "ff1fff2d041b5d2aa5cc214060af17bd7f7789a3d9460a1c4627ea84216615bd",
+      "format": "opencntx-chapter-index",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-chapter-index-f18cd0440417fe43"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-i-ac53a3ecba3789f3"
+      ],
+      "schema_id": "urn:uuid:477ed27a-b266-5200-9bab-6dca7967a406",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-control-receipt-v1.json.gz",
+      "fixture_sha256": "5ead9b605dce6b2ff03640a4e37f6e3eee07203c9977d70532c14b7ebda8e386",
+      "format": "opencntx-control-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-control-receipt-b9298d82188f83ca"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-r-35826cb89096252f"
+      ],
+      "schema_id": "urn:uuid:fa463d27-77ca-5310-af3b-3b9fdc57b556",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-control-snapshot-v1.md.gz",
+      "fixture_sha256": "8bc850cea2d1c07f90661831716ca7b4e4342f90913e3ded3c37e6380e5e3dbb",
+      "format": "opencntx-control-snapshot",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-control-snapshot-7af26113228ee1bf"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-s-35bdffe3d117ab33"
+      ],
+      "schema_id": "urn:uuid:8ccfc353-48b0-5c32-b2a9-32a1af337dba",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-definition-approval-v1.json.gz",
+      "fixture_sha256": "805c5e6c97e974040726dd28060de8849f5b4798c9a996fb1c484c68a304f7a9",
+      "format": "opencntx-definition-approval",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-definition-approval-bbec5b53d4ed6ec2"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-definitio-348c12d6c016161a"
+      ],
+      "schema_id": "urn:uuid:69aa68d8-a83d-5ea7-9a06-920f0529aff3",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-content-v1.json.gz",
+      "fixture_sha256": "3567a0f45c2b74164e95bd4e67443c09968820b1f3b7bb1b9e0e6550630a74db",
+      "format": "opencntx-derived-content",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-content-183301d22b973781"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-c-b3a2990865e063fe"
+      ],
+      "schema_id": "urn:uuid:339e04e7-3c0c-564c-b94b-cb05edb8f82b",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-promotion-v1.json.gz",
+      "fixture_sha256": "3497919754d2433461f002552fce1e30dcc4ddec936c88eb6c954d598ad3173b",
+      "format": "opencntx-derived-promotion",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-promotion-4970840057b169c7"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-p-ec606d8752927fd4"
+      ],
+      "schema_id": "urn:uuid:679fecb1-ecca-5856-9495-518e299f9b9c",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-removal-v1.json.gz",
+      "fixture_sha256": "e2b1a08444f26016b3507d0c767d74d07c62813d1bde8c937bf7c541c5f29e48",
+      "format": "opencntx-derived-removal",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-removal-fddc4ebb7ca35832"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-7864af66b9be43c7"
+      ],
+      "schema_id": "urn:uuid:d3cd15d6-019f-5f1d-998b-b8a302297d1d",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-review-v1.json.gz",
+      "fixture_sha256": "bc829e8d8c2adf4b9a2661a34b3b9f3ccc355455962dcf0fd87485d38d041378",
+      "format": "opencntx-derived-review",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-review-81325684194ef420"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-d7438057bce761f0"
+      ],
+      "schema_id": "urn:uuid:d400d220-f29c-5964-b7d5-53a5634d86f2",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-executor-assignment-v1.json.gz",
+      "fixture_sha256": "cc96c2ef9ed251e87e120f176baa31dad4c4e33cce84588b215a5377b9b57be4",
+      "format": "opencntx-executor-assignment",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-executor-assignment-d17e29a3b98e69ce"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-executor-596e96d710a8b3b2"
+      ],
+      "schema_id": "urn:uuid:63ae4ba5-73b6-5f1a-bdc4-171c89590ba5",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-checkpoint-v1.json.gz",
+      "fixture_sha256": "c2b18859faceb3f92d832c5e83694c67cf5136a70a932c43042a1e478745ba85",
+      "format": "opencntx-lifecycle-checkpoint",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-checkpoint-8c185169c503cf5e"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-747fbac9b4f77656"
+      ],
+      "schema_id": "urn:uuid:a5477029-87db-5a90-b2ea-51ded498d713",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-plan-v1.json.gz",
+      "fixture_sha256": "c58a281f17c8629590a4404a00db7dea9c1ff36754501a2d78eb7035c0885498",
+      "format": "opencntx-lifecycle-plan",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-plan-279772ad050f0a4d"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-01638685e04c91f6"
+      ],
+      "schema_id": "urn:uuid:97fce532-4a6a-590c-8e47-3ca4fafa0af5",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-state-v1.json.gz",
+      "fixture_sha256": "82e6105fca6a300bd87299333986fadff903000bfc191e00fd366e413d2f8ebf",
+      "format": "opencntx-lifecycle-state",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-state-eb749b34a018eb72"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-c28a158a735211a8"
+      ],
+      "schema_id": "urn:uuid:965ede70-688b-5563-b19a-b1d004afb190",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-manifest-v1.json.gz",
+      "fixture_sha256": "47d9670640c8c80fc45f612038704502a13ee064d70c80528afcee1b82aaa0ea",
+      "format": "opencntx-manifest",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-manifest-1eedc6b2a79e9152"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-core-load-manifest-afa1c2598f170872"
+      ],
+      "schema_id": "urn:uuid:cb1907db-28f6-5109-9d22-a14564cd80b1",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-media-receipt-v1.json.gz",
+      "fixture_sha256": "baedc938cdf87170319eb5b7ef15f9f3274290feed1fd3d7f42b6283af78460e",
+      "format": "opencntx-media-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-media-receipt-3c7a6bdbc0fc47af"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-media-rec-d22403eb4b613db6"
+      ],
+      "schema_id": "urn:uuid:a919da61-0c55-5a4a-8ce9-2ea5cd3d8a24",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-navigation-v1.json.gz",
+      "fixture_sha256": "6517dde505f505b9977b2612cbe0e2202b9e5d0ec3897c9bacb450ea83086ac6",
+      "format": "opencntx-navigation",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-navigation-7b85c46d3492ed6e"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-a89f32cd28333db9"
+      ],
+      "schema_id": "urn:uuid:e8062d7b-e6be-59cb-8aa5-fd64db24adb3",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-navigation-receipt-v1.json.gz",
+      "fixture_sha256": "1600cc2f85cd6717dc4f7597432f9f8036f29c13526544905c43f5c700423396",
+      "format": "opencntx-navigation-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-navigation-receipt-d3dd4f97016ffbb3"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-daa0e60e2559f794"
+      ],
+      "schema_id": "urn:uuid:197a9ba9-375a-5968-9a4f-8b2a686908a5",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-playbook-v1.json.gz",
+      "fixture_sha256": "ae9e9b758343c81acea57ef962fe50461d964c7cb0310fee978280d6dd245a33",
+      "format": "opencntx-playbook",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-playbook-5ff4c40721205035"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-772adaa84d979bee"
+      ],
+      "schema_id": "urn:uuid:6b0beccf-db4c-506d-8f67-979b09b6f908",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-playbook-receipt-v1.json.gz",
+      "fixture_sha256": "71a3ab8366940849b9b89b8156c5b57457eca54bf37290a505aa894110a72ffd",
+      "format": "opencntx-playbook-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-playbook-receipt-ce01ec51e310a0d3"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-f3f99f35e807bd74"
+      ],
+      "schema_id": "urn:uuid:4a825708-8465-5fe4-9a25-13cd66154650",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-recovery-backup-v1.json.gz",
+      "fixture_sha256": "0e273ef40c8aaedabb9f822a8b60702861cb879fb118c4a5d24f81b3a41dc912",
+      "format": "opencntx-recovery-backup",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-recovery-backup-7321a23ccedf48a7"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-8cbf58a27044fc02"
+      ],
+      "schema_id": "urn:uuid:435355a8-2256-5b49-a5aa-abb8b38405cc",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-recovery-receipt-v1.json.gz",
+      "fixture_sha256": "964022de15e8e6ddbb4bdd0365b36600dbe1d63c0ed6d07ed9baf5ac22aff229",
+      "format": "opencntx-recovery-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-recovery-receipt-0fca09c9d152c838"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-562d686b85ec12bb"
+      ],
+      "schema_id": "urn:uuid:35774de7-c817-595f-8c7f-d23d32ed10ae",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-role-v1.json.gz",
+      "fixture_sha256": "afdc99c1acc8957d9c4479b3d062c9521dcfda7afec1c77c54c5f4768f14692c",
+      "format": "opencntx-role",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-role-165f555b7d58a3bc"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-role-2293af48b4720c95"
+      ],
+      "schema_id": "urn:uuid:f9bbb78e-5a12-5402-9f21-f3d3fe443ed5",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-source-v1.json.gz",
+      "fixture_sha256": "bf4222045d09f6d104a7e223920275b2d205fef9cf41ead62a7f545455c56b55",
+      "format": "opencntx-source",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-source-1b0d07b117679f1e"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-catalog-load-sources-691c3b7e5a8ef93b"
+      ],
+      "schema_id": "urn:uuid:7e8f1924-8b9f-5019-8a10-92e097e1dc72",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-event-v1.json.gz",
+      "fixture_sha256": "e47a7f5c5b99eef14f6d4f47325506487f9a347372053af81b15d1b369335766",
+      "format": "opencntx-task-event",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-event-6b631e2d49d2affc"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-even-9438ac2657ad14a8"
+      ],
+      "schema_id": "urn:uuid:3d6efa19-4815-5a0f-9327-8b33466cffd0",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-receipt-v1.json.gz",
+      "fixture_sha256": "78f61737414e10b17206c973000e3aef04af31b2e13805216239b59c63005513",
+      "format": "opencntx-task-receipt",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-receipt-48ea8382896611b5"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-rece-14de3cbe9733b933"
+      ],
+      "schema_id": "urn:uuid:3cccf25e-0d77-5942-a2a4-89c6f6884df9",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-view-v1.md.gz",
+      "fixture_sha256": "400af45a584036a21e6d9d4b054e4e30ec9b4f2d92ba0b0631cfbaf627c9d1d6",
+      "format": "opencntx-task-view",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-view-18a97bb40df9983a"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-view-6ecd9485d397c7f0"
+      ],
+      "schema_id": "urn:uuid:7b3911bc-9666-50de-858b-85a63199f6e3",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-v1.json.gz",
+      "fixture_sha256": "9ee05c0bf49b21048d42512dc2bfcad3eada061a8897c5d7b9082c7660528765",
+      "format": "opencntx-transaction",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-901a0fadf84cadec"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-0b4ee26226456574"
+      ],
+      "schema_id": "urn:uuid:dc129727-683a-55d6-b5e9-a6cf9e0df903",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-completion-v1.json.gz",
+      "fixture_sha256": "72286a42d4fd189edcef52092d82d856c146385a1a06b4fd0481de56108ddea3",
+      "format": "opencntx-transaction-completion",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-completion-73e25565459c3c2d"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-1a51a421f651f4b8"
+      ],
+      "schema_id": "urn:uuid:b8d54c2f-29bf-5b6f-9bb5-0c4f1384747b",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-phase-v1.json.gz",
+      "fixture_sha256": "dcc155fa021ddbbb9880f93e2ab009c2df89e61a9fe7b547d786645793f3841b",
+      "format": "opencntx-transaction-phase",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-phase-86941bdd5bcf3e3f"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-d9f2c3c4848bbab4"
+      ],
+      "schema_id": "urn:uuid:53d1cd1e-7169-5d1e-8d41-1673ab88065e",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-workspace-v1.md.gz",
+      "fixture_sha256": "093a181f8c27aeaef8a5308f42f1145aa3cf6e621667674b561db0f5ffdf550d",
+      "format": "opencntx-workspace",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-workspace-d88e1b056c1c70a0"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-workspace-eb024eff0c99933d"
+      ],
+      "schema_id": "urn:uuid:9728a315-bbd1-53be-997e-c3fdaaa83716",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata"
+    },
+    {
+      "contract_asset": "durable-format-contracts-v1.json",
+      "fixture_path": "tests/fixtures/v0.3.0/durable-records/opencntx-writer-lock-v1.json.gz",
+      "fixture_sha256": "f1ce977d4897d83f0b31eae5a82ad5c445fc79a5597335e355f08bbb508f76a8",
+      "format": "opencntx-writer-lock",
+      "format_version": 1,
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-writer-lock-26317ebaa59744b8"
+      ],
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-writer-lo-109382e1abfd0107"
+      ],
+      "schema_id": "urn:uuid:a17fb1cd-4c98-56a2-947a-0a33ad3acceb",
+      "status": "CURRENT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record"
+    }
   ]
 }

@@ -25,6 +25,8 @@ the smallest route that matches your current goal.
 - [Core commands](core.md) — exact behavior of `init`, `pack`, and `verify`.
 - [Context packages](context-packets.md) — package files, budgets, hashes,
   inspection, and source drift.
+- [Contracts and compatibility](contracts-and-compatibility.md) — the public
+  surface catalog, 36 durable formats, fixtures, and fail-closed version rules.
 - [Command reference](commands.md) — all 49 documented CLI paths.
 
 ## Advanced / Alpha workspace

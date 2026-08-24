@@ -1,34 +1,65 @@
 {
-  "$id": "https://opencntx.org/schemas/durable-records-v1.schema.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Structural discriminator contract for OPENCNTX durable JSON records. Runtime Python validators additionally enforce fields, digests, paths, and relations.",
-  "oneOf": [
-    {"$ref": "#/$defs/currentRecord"}
-  ],
   "$defs": {
     "currentRecord": {
-      "type": "object",
-      "required": ["format", "format_version"],
+      "additionalProperties": true,
       "properties": {
         "format": {
           "enum": [
-            "opencntx-attempt-basis", "opencntx-attempt-fingerprint", "opencntx-capture-receipt",
-            "opencntx-catalog", "opencntx-catalog-receipt", "opencntx-chapter", "opencntx-chapter-index",
-            "opencntx-control-receipt", "opencntx-control-snapshot", "opencntx-definition-approval",
-            "opencntx-derived-content", "opencntx-derived-promotion", "opencntx-derived-removal",
-            "opencntx-derived-review", "opencntx-executor-assignment", "opencntx-lifecycle-checkpoint",
-            "opencntx-lifecycle-plan", "opencntx-lifecycle-state", "opencntx-manifest",
-            "opencntx-media-receipt", "opencntx-navigation", "opencntx-navigation-receipt",
-            "opencntx-playbook", "opencntx-playbook-receipt", "opencntx-recovery-backup",
-            "opencntx-recovery-receipt", "opencntx-role", "opencntx-source", "opencntx-task-event",
-            "opencntx-task-receipt", "opencntx-task-view", "opencntx-transaction",
-            "opencntx-transaction-completion", "opencntx-transaction-phase", "opencntx-workspace",
+            "opencntx-attempt-basis",
+            "opencntx-attempt-fingerprint",
+            "opencntx-capture-receipt",
+            "opencntx-catalog",
+            "opencntx-catalog-receipt",
+            "opencntx-chapter",
+            "opencntx-chapter-index",
+            "opencntx-control-receipt",
+            "opencntx-control-snapshot",
+            "opencntx-definition-approval",
+            "opencntx-derived-content",
+            "opencntx-derived-promotion",
+            "opencntx-derived-removal",
+            "opencntx-derived-review",
+            "opencntx-executor-assignment",
+            "opencntx-lifecycle-checkpoint",
+            "opencntx-lifecycle-plan",
+            "opencntx-lifecycle-state",
+            "opencntx-manifest",
+            "opencntx-media-receipt",
+            "opencntx-navigation",
+            "opencntx-navigation-receipt",
+            "opencntx-playbook",
+            "opencntx-playbook-receipt",
+            "opencntx-recovery-backup",
+            "opencntx-recovery-receipt",
+            "opencntx-role",
+            "opencntx-source",
+            "opencntx-task-event",
+            "opencntx-task-receipt",
+            "opencntx-task-view",
+            "opencntx-transaction",
+            "opencntx-transaction-completion",
+            "opencntx-transaction-phase",
+            "opencntx-workspace",
             "opencntx-writer-lock"
           ]
         },
-        "format_version": {"const": 1}
+        "format_version": {
+          "const": 1
+        }
       },
-      "additionalProperties": true
+      "required": [
+        "format",
+        "format_version"
+      ],
+      "type": "object"
     }
-  }
+  },
+  "$id": "urn:uuid:70e810d7-f4d5-5d32-a494-826727360656",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Structural discriminator contract for OPENCNTX durable JSON records. Runtime Python validators additionally enforce fields, digests, paths, and relations.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/currentRecord"
+    }
+  ]
 }

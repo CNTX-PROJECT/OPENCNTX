@@ -1,18 +1,37 @@
 {
-  "$id": "https://opencntx.org/schemas/lifecycle-state-v1.schema.json",
+  "$id": "urn:uuid:67c5aede-60b9-5256-9b1d-a3d9a4f167b6",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": [
-    "format", "format_version", "inventory_sha256", "record_count",
-    "schema_bundle_sha256", "trust_statement"
-  ],
+  "additionalProperties": false,
   "properties": {
-    "format": {"const": "opencntx-lifecycle-state"},
-    "format_version": {"const": 1},
-    "inventory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "record_count": {"type": "integer", "minimum": 0},
-    "schema_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "trust_statement": {"const": "local-observation-not-access-control"}
+    "format": {
+      "const": "opencntx-lifecycle-state"
+    },
+    "format_version": {
+      "const": 1
+    },
+    "inventory_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "record_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "schema_bundle_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "trust_statement": {
+      "const": "local-observation-not-access-control"
+    }
   },
-  "additionalProperties": false
+  "required": [
+    "format",
+    "format_version",
+    "inventory_sha256",
+    "record_count",
+    "schema_bundle_sha256",
+    "trust_statement"
+  ],
+  "type": "object"
 }

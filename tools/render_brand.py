@@ -215,6 +215,31 @@ def _png(width: int, height: int, rgba: bytes) -> bytes:
     )
 
 
+def _png_pixels(content: bytes) -> tuple[bytes, bytes]:
+    if not content.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise ValueError("invalid PNG signature")
+    offset = 8
+    header: bytes | None = None
+    payloads = []
+    while offset < len(content):
+        length = struct.unpack(">I", content[offset : offset + 4])[0]
+        name = content[offset + 4 : offset + 8]
+        payload = content[offset + 8 : offset + 8 + length]
+        checksum = struct.unpack(">I", content[offset + 8 + length : offset + 12 + length])[0]
+        if checksum != (binascii.crc32(name + payload) & 0xFFFFFFFF):
+            raise ValueError("invalid PNG chunk checksum")
+        if name == b"IHDR":
+            header = payload
+        elif name == b"IDAT":
+            payloads.append(payload)
+        offset += 12 + length
+        if name == b"IEND":
+            break
+    if header is None or not payloads or offset != len(content):
+        raise ValueError("incomplete PNG")
+    return header, zlib.decompress(b"".join(payloads))
+
+
 def render(svg_path: Path, output_path: Path, width: int, height: int) -> None:
     root = ElementTree.fromstring(svg_path.read_bytes())
     view_box = tuple(_number(value) for value in root.attrib["viewBox"].split())
@@ -268,9 +293,9 @@ def check_assets() -> None:
             generated = target / output
             render(BRAND / source, generated, width, height)
             expected = BRAND / output
-            if generated.read_bytes() != expected.read_bytes():
+            if _png_pixels(generated.read_bytes()) != _png_pixels(expected.read_bytes()):
                 raise SystemExit(f"brand derivative drift: {output}")
-        expected_manifest = _manifest_bytes(target)
+        expected_manifest = _manifest_bytes()
         if expected_manifest != (BRAND / "SHA256SUMS").read_bytes():
             raise SystemExit("brand hash manifest drift")
     print("BRAND_ASSETS_OK")

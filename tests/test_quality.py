@@ -50,6 +50,7 @@ GUIDES = {
     "context-packets.md",
     "core.md",
     "commands.md",
+    "contracts-and-compatibility.md",
     "faq.md",
     "glossary.md",
     "how-it-works.md",
@@ -488,6 +489,7 @@ class PublicQualityTests(unittest.TestCase):
             '"3.11"',
             '"3.12"',
             '"3.13"',
+            '"3.14"',
             "PYTHONDONTWRITEBYTECODE",
             "PYTHONUTF8",
             "python -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0",
@@ -527,6 +529,21 @@ class PublicQualityTests(unittest.TestCase):
         with (ROOT / "pyproject.toml").open("rb") as project_file:
             project = tomllib.load(project_file)["project"]
         self.assertNotIn("dependencies", project)
+        self.assertEqual(
+            {
+                "Programming Language :: Python :: 3.11",
+                "Programming Language :: Python :: 3.12",
+                "Programming Language :: Python :: 3.13",
+                "Programming Language :: Python :: 3.14",
+            },
+            {
+                classifier
+                for classifier in project["classifiers"]
+                if classifier.startswith("Programming Language :: Python :: 3.")
+            },
+        )
+        self.assertNotIn("Operating System :: OS Independent", project["classifiers"])
+        self.assertEqual(1, text.count("${{ matrix.os }} / Python ${{ matrix.python-version }}"))
 
     def test_public_ci_status_is_active_and_unambiguous(self) -> None:
         status_documents = (README, CHANGELOG, DOCS / "platforms.md")

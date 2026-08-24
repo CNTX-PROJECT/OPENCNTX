@@ -28,7 +28,7 @@ OPENCNTX never sends them for you.
 
 ## Start in four steps
 
-OPENCNTX requires Python 3.11 or newer. The package line is `v0.3.0` and
+OPENCNTX requires Python 3.11 through 3.14. The package line is `v0.3.0` and
 remains Alpha. It is public only when both the live `v0.3.0` tag and the
 `OPENCNTX v0.3.0` GitHub Release are present.
 
@@ -149,9 +149,9 @@ route, never in a public issue.
 |---|---|
 | Release line | `v0.3.0` Alpha; public only after the live tag and GitHub Release exist |
 | Package version | `0.3.0` |
-| Python | 3.11, 3.12, and 3.13 |
+| Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
-| CI | `CI_ACTIVE`, six required matrix jobs |
+| CI | `CI_ACTIVE`, eight candidate matrix jobs |
 | Runtime dependencies | none |
 | License | [Apache-2.0](LICENSE) |
 
@@ -162,6 +162,7 @@ builds are unpublished candidates. OPENCNTX is not published on PyPI or
 TestPyPI. See [Release artifacts](docs/release-artifacts.md) for the exact
 boundary.
 
-Only a successful live CI run on the exact commit proves those six jobs. See
+Only a successful live CI run on the exact commit proves those eight jobs. The
+live `main` ruleset remains a separate repository setting. See
 the [changelog](CHANGELOG.md), [support routes](SUPPORT.md), and
 [contribution guide](CONTRIBUTING.md) for project-specific details.
