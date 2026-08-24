@@ -1,15 +1,42 @@
 {
-  "$id": "https://opencntx.org/schemas/lifecycle-plan-v1.schema.json",
+  "$id": "urn:uuid:1cb6ed73-70bb-510b-b25f-f1f00e4aa0d7",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": ["format", "format_version", "operation", "plan_sha256", "schema_bundle_sha256"],
+  "additionalProperties": true,
   "properties": {
-    "format": {"const": "opencntx-lifecycle-plan"},
-    "format_version": {"const": 1},
-    "operation": {"enum": ["ALREADY_CURRENT", "REGISTER_UNCHANGED_V1", "CLEANUP_EXPLICIT_TARGETS"]},
-    "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "schema_bundle_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "targets": {"type": "array", "items": {"type": "object"}}
+    "format": {
+      "const": "opencntx-lifecycle-plan"
+    },
+    "format_version": {
+      "const": 1
+    },
+    "operation": {
+      "enum": [
+        "ALREADY_CURRENT",
+        "REGISTER_UNCHANGED_V1",
+        "CLEANUP_EXPLICIT_TARGETS"
+      ]
+    },
+    "plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_bundle_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    }
   },
-  "additionalProperties": true
+  "required": [
+    "format",
+    "format_version",
+    "operation",
+    "plan_sha256",
+    "schema_bundle_sha256"
+  ],
+  "type": "object"
 }

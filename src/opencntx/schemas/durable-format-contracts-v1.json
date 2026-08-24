@@ -1,0 +1,7453 @@
+{
+  "$id": "urn:uuid:e99e4ef5-7a3e-5d3b-bdf8-60384582a507",
+  "basis_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+  "contract_count": 36,
+  "format": "opencntx-durable-format-contracts",
+  "format_version": 1,
+  "records": [
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": [
+            "opencntx-attempt-basis"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "inputs",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        }
+      ],
+      "field_types": {
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "inputs": [
+          "array"
+        ]
+      },
+      "fixture": {
+        "bytes": 103,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-attempt-basis-v1.json.gz",
+        "payload_bytes": 80,
+        "payload_sha256": "65f0aeeddc82777cc5e04ee9f23e98a98f15dfe04e3cbf2515070ecef77a2c9e",
+        "read_only": true,
+        "sha256": "70e3416314888c5ed98d737b986dd5ab630511a4e72e5f4b04f5570a01a75f8e",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-attempt-basis",
+      "format_id": "FMT-OPENCNTX-ATTEMPT-BASIS-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-attempt-basis-733be289c5b1b825"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-b-ca089a6f6a315af1"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-attempt-basis"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "inputs"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:f7abe8e0-630f-5568-afa0-f5266cce54aa",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-b-ca089a6f6a315af1"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "command_type",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "error_class",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "exit_status",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-attempt-fingerprint"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "inputs",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "target",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "command_type": [
+          "string"
+        ],
+        "error_class": [
+          "string"
+        ],
+        "exit_status": [
+          "integer"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "inputs": [
+          "array"
+        ],
+        "target": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 241,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-attempt-fingerprint-v1.json.gz",
+        "payload_bytes": 218,
+        "payload_sha256": "ed30dac01e2154ca8eec1cc624a4987f5d74b7c811f40af78cdb0968baf3347d",
+        "read_only": true,
+        "sha256": "d450326978ef7d89b264d9f869542522d84405e4cac375a09f8f141589647e32",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-attempt-fingerprint",
+      "format_id": "FMT-OPENCNTX-ATTEMPT-FINGERPRINT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-attempt-fingerprint-a5de86d23501f333"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-f-c8ec5fa0c9308512"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-attempt-fingerprint"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "command_type",
+        "error_class",
+        "exit_status",
+        "format",
+        "format_version",
+        "inputs",
+        "target"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:3af9f9a4-16d0-54e2-b527-f7598b1b1057",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-attempt-f-c8ec5fa0c9308512"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "attempt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "captured_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error_code",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-capture-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "origin",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "original_name",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "privacy",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "attempt_id": [
+          "string"
+        ],
+        "bytes": [
+          "integer"
+        ],
+        "captured_at": [
+          "string"
+        ],
+        "error": [
+          "string",
+          "null"
+        ],
+        "error_code": [
+          "string",
+          "null"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "origin": [
+          "string",
+          "null"
+        ],
+        "original_name": [
+          "string"
+        ],
+        "privacy": [
+          "string"
+        ],
+        "sha256": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 484,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-capture-receipt-v1.json.gz",
+        "payload_bytes": 461,
+        "payload_sha256": "666a6bd0e4f254d6312b2747dd5ff109fe11642d9cbdff597c5cbd5118196355",
+        "read_only": true,
+        "sha256": "f47c0ed02dbe58ddf67a17f61d038b9f5f6a5e0677c5953d1345ce51b5362bdb",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-capture-receipt",
+      "format_id": "FMT-OPENCNTX-CAPTURE-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-capture-receipt-ab99961191584678"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-capture-r-5dda7b854a932dff"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-capture-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "attempt_id",
+        "bytes",
+        "captured_at",
+        "error",
+        "error_code",
+        "format",
+        "format_version",
+        "origin",
+        "original_name",
+        "privacy",
+        "sha256",
+        "source_id",
+        "status"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:5270999a-8fdb-54b4-ae93-fcd9515ed09d",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-capture-r-5dda7b854a932dff"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "chapters",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-catalog"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "issues",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "sources",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        }
+      ],
+      "field_types": {
+        "chapters": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "issues": [
+          "array"
+        ],
+        "sources": [
+          "array"
+        ]
+      },
+      "fixture": {
+        "bytes": 132,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-catalog-v1.json.gz",
+        "payload_bytes": 109,
+        "payload_sha256": "4c41ca90d173cc004d5449bbde0db4aff83f8306d95f0062813384fefda6d757",
+        "read_only": true,
+        "sha256": "cc17e0a21a4afb5d3b60cbf09dbc57f588e2ba3fcef17f54ee44ad3c024d7600",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-catalog",
+      "format_id": "FMT-OPENCNTX-CATALOG-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-catalog-24b73d341fa6e64a"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-3b337d03cd6ba294"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-catalog"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "sources",
+        "chapters",
+        "issues"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:4599aee6-35c5-5d9e-936b-f6633a795403",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-3b337d03cd6ba294"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "workspace_state_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "attempt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "catalog_path",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "chapter_count",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error_code",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-catalog-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "freshness",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "generated_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "index_path",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "recovery_action",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_count",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "workspace_state_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "attempt_id": [
+          "string"
+        ],
+        "catalog_path": [
+          "string",
+          "null"
+        ],
+        "chapter_count": [
+          "integer"
+        ],
+        "error": [
+          "string",
+          "null"
+        ],
+        "error_code": [
+          "string",
+          "null"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "freshness": [
+          "object"
+        ],
+        "generated_at": [
+          "string"
+        ],
+        "index_path": [
+          "string",
+          "null"
+        ],
+        "recovery_action": [
+          "string",
+          "null"
+        ],
+        "source_count": [
+          "integer"
+        ],
+        "status": [
+          "string"
+        ],
+        "workspace_state_digest": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 544,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-catalog-receipt-v1.json.gz",
+        "payload_bytes": 521,
+        "payload_sha256": "3ccdd80b953336f5e440ca613956d61c18930d79584f73790c3322429718c3da",
+        "read_only": true,
+        "sha256": "c39f26147b2135887cf0efb80a70eb1f60de475fe3c374260965cadddfa13f1a",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-catalog-receipt",
+      "format_id": "FMT-OPENCNTX-CATALOG-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-catalog-receipt-18959c2bc124d403"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-r-fceed32da03f0722"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-catalog-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "attempt_id",
+        "catalog_path",
+        "chapter_count",
+        "error",
+        "error_code",
+        "format",
+        "format_version",
+        "freshness",
+        "generated_at",
+        "index_path",
+        "recovery_action",
+        "source_count",
+        "status",
+        "workspace_state_digest"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:403c2e1d-372b-597b-9ff9-e93f8c81162f",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-catalog-r-fceed32da03f0722"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_MARKDOWN_PRODUCER_BYTES"
+      },
+      "conditional_requirements": [],
+      "encoding": "markdown",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "chapter_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "dependency_ids",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-chapter"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "knowledge_status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "last_owner_approval",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "scope",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_refs",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "title",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "chapter_id": [
+          "string"
+        ],
+        "dependency_ids": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "knowledge_status": [
+          "string"
+        ],
+        "last_owner_approval": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "scope": [
+          "string"
+        ],
+        "source_refs": [
+          "array"
+        ],
+        "title": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 267,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-chapter-v1.md.gz",
+        "payload_bytes": 244,
+        "payload_sha256": "fde562088bc4a5bce998b28df29dadcf7ef5a72e57277d8ee9bef7b86229b22c",
+        "read_only": true,
+        "sha256": "07189ecd56c10f69fc44faa5d7d40ac36592c9e7f3816b160bdb4d7c14a876e1",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-chapter",
+      "format_id": "FMT-OPENCNTX-CHAPTER-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-chapter-0c13d1b90214dd66"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-312d85a8c135aefa"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-chapter"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "chapter_id",
+        "title",
+        "scope",
+        "revision",
+        "knowledge_status",
+        "last_owner_approval",
+        "dependency_ids",
+        "source_refs"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:7395c870-bd59-562c-b488-78af33181e7d",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-312d85a8c135aefa"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "index_body_sha256",
+          "workspace_state_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_MARKDOWN_PRODUCER_BYTES"
+      },
+      "conditional_requirements": [],
+      "encoding": "markdown",
+      "field_contracts": [
+        {
+          "enum": [
+            "opencntx-chapter-index"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "generated_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "index_body_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "workspace_state_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "generated_at": [
+          "string"
+        ],
+        "index_body_sha256": [
+          "string"
+        ],
+        "workspace_state_digest": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 312,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-chapter-index-v1.md.gz",
+        "payload_bytes": 289,
+        "payload_sha256": "d15928774af8e57fa48c623fd73b320e9c29f1f41d4b720fe1450a52e5e11881",
+        "read_only": true,
+        "sha256": "ff1fff2d041b5d2aa5cc214060af17bd7f7789a3d9460a1c4627ea84216615bd",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-chapter-index",
+      "format_id": "FMT-OPENCNTX-CHAPTER-INDEX-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-chapter-index-f18cd0440417fe43"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-i-ac53a3ecba3789f3"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-chapter-index"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "generated_at",
+        "workspace_state_digest",
+        "index_body_sha256"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:477ed27a-b266-5200-9bab-6dca7967a406",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-chapter-i-ac53a3ecba3789f3"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "block_sha256",
+          "roadmap_sha256",
+          "snapshot_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "attempt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "block_bytes",
+          "required": true,
+          "types": [
+            "integer",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "block_sha256",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error_code",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-control-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "mode",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "next_action",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "roadmap_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "snapshot_path",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "snapshot_sha256",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "attempt_id": [
+          "string"
+        ],
+        "block_bytes": [
+          "integer",
+          "null"
+        ],
+        "block_sha256": [
+          "string",
+          "null"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "error": [
+          "string",
+          "null"
+        ],
+        "error_code": [
+          "string",
+          "null"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "mode": [
+          "string"
+        ],
+        "next_action": [
+          "string",
+          "null"
+        ],
+        "roadmap_sha256": [
+          "string"
+        ],
+        "snapshot_path": [
+          "string",
+          "null"
+        ],
+        "snapshot_sha256": [
+          "string",
+          "null"
+        ],
+        "status": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 647,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-control-receipt-v1.json.gz",
+        "payload_bytes": 624,
+        "payload_sha256": "3cc04c4cb4f1173698014bc4bb4c30783347f24b733ea0347efd1a6bfa1f5bc5",
+        "read_only": true,
+        "sha256": "5ead9b605dce6b2ff03640a4e37f6e3eee07203c9977d70532c14b7ebda8e386",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-control-receipt",
+      "format_id": "FMT-OPENCNTX-CONTROL-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-control-receipt-b9298d82188f83ca"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-r-35826cb89096252f"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-control-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "attempt_id",
+        "block_bytes",
+        "block_sha256",
+        "created_at",
+        "error",
+        "error_code",
+        "format",
+        "format_version",
+        "mode",
+        "next_action",
+        "roadmap_sha256",
+        "snapshot_path",
+        "snapshot_sha256",
+        "status"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:fa463d27-77ca-5310-af3b-3b9fdc57b556",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-r-35826cb89096252f"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "block_sha256",
+          "current_sha256",
+          "owner_sha256",
+          "roadmap_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_MARKDOWN_PRODUCER_BYTES"
+      },
+      "conditional_requirements": [],
+      "encoding": "markdown",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "block_bytes",
+          "required": true,
+          "types": [
+            "integer",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "block_sha256",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "current_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-control-snapshot"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "mode",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "owner_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "roadmap_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "block_bytes": [
+          "integer",
+          "null"
+        ],
+        "block_sha256": [
+          "string",
+          "null"
+        ],
+        "current_sha256": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "mode": [
+          "string"
+        ],
+        "owner_sha256": [
+          "string"
+        ],
+        "roadmap_sha256": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 511,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-control-snapshot-v1.md.gz",
+        "payload_bytes": 488,
+        "payload_sha256": "f2c10db7a6dd3221d48aaeffe7523e4ace17f0fc99ee8db8d27a3bca41c8c434",
+        "read_only": true,
+        "sha256": "8bc850cea2d1c07f90661831716ca7b4e4342f90913e3ded3c37e6380e5e3dbb",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-control-snapshot",
+      "format_id": "FMT-OPENCNTX-CONTROL-SNAPSHOT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-control-snapshot-7af26113228ee1bf"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-s-35bdffe3d117ab33"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-control-snapshot"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "mode",
+        "owner_sha256",
+        "roadmap_sha256",
+        "current_sha256",
+        "block_sha256",
+        "block_bytes"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:8ccfc353-48b0-5c32-b2a9-32a1af337dba",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-control-s-35bdffe3d117ab33"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "definition_digest",
+          "document_digest",
+          "record_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "approved_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "decision",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_type",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "document_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-definition-approval"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "owner",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        }
+      ],
+      "field_types": {
+        "approved_at": [
+          "string"
+        ],
+        "decision": [
+          "string"
+        ],
+        "definition_digest": [
+          "string"
+        ],
+        "definition_id": [
+          "string"
+        ],
+        "definition_type": [
+          "string"
+        ],
+        "document_digest": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "owner": [
+          "string"
+        ],
+        "record_digest": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ]
+      },
+      "fixture": {
+        "bytes": 571,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-definition-approval-v1.json.gz",
+        "payload_bytes": 548,
+        "payload_sha256": "2dc6b1eeb24aeba91dd68943080b365bf4bb53aa871c07c1aaec91be7cb75598",
+        "read_only": true,
+        "sha256": "805c5e6c97e974040726dd28060de8849f5b4798c9a996fb1c484c68a304f7a9",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-definition-approval",
+      "format_id": "FMT-OPENCNTX-DEFINITION-APPROVAL-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-definition-approval-bbec5b53d4ed6ec2"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-definitio-348c12d6c016161a"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-definition-approval"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "approved_at",
+        "decision",
+        "definition_digest",
+        "definition_id",
+        "definition_type",
+        "document_digest",
+        "format",
+        "format_version",
+        "owner",
+        "record_digest",
+        "revision"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:69aa68d8-a83d-5ea7-9a06-920f0529aff3",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-definitio-348c12d6c016161a"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "content_sha256",
+          "source_record_sha256",
+          "source_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "derivation_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-derived-content"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "kind",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "locators",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "privacy",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "producer",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "producer_class",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "supersedes_derivation_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        }
+      ],
+      "field_types": {
+        "content_bytes": [
+          "integer"
+        ],
+        "content_sha256": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "derivation_id": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "kind": [
+          "string"
+        ],
+        "locators": [
+          "array"
+        ],
+        "privacy": [
+          "string"
+        ],
+        "producer": [
+          "string"
+        ],
+        "producer_class": [
+          "string"
+        ],
+        "source_bytes": [
+          "integer"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "source_record_sha256": [
+          "string"
+        ],
+        "source_sha256": [
+          "string"
+        ],
+        "supersedes_derivation_id": [
+          "string",
+          "null"
+        ]
+      },
+      "fixture": {
+        "bytes": 733,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-content-v1.json.gz",
+        "payload_bytes": 710,
+        "payload_sha256": "8a85326f8be3d1977298c078006f2e6efc4558e7077a5317a18dd2e60c3fc152",
+        "read_only": true,
+        "sha256": "3567a0f45c2b74164e95bd4e67443c09968820b1f3b7bb1b9e0e6550630a74db",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-derived-content",
+      "format_id": "FMT-OPENCNTX-DERIVED-CONTENT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-content-183301d22b973781"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-c-b3a2990865e063fe"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-derived-content"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "content_bytes",
+        "content_sha256",
+        "created_at",
+        "derivation_id",
+        "format",
+        "format_version",
+        "kind",
+        "locators",
+        "privacy",
+        "producer",
+        "producer_class",
+        "source_bytes",
+        "source_id",
+        "source_record_sha256",
+        "source_sha256",
+        "supersedes_derivation_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:339e04e7-3c0c-564c-b94b-cb05edb8f82b",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-c-b3a2990865e063fe"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "content_sha256",
+          "promoted_source_record_sha256",
+          "promoted_source_sha256",
+          "record_sha256",
+          "review_sha256",
+          "source_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "capture_status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "derivation_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-derived-promotion"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "promoted_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "promoted_source_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "promoted_source_record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "promoted_source_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "review_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "capture_status": [
+          "string"
+        ],
+        "content_sha256": [
+          "string"
+        ],
+        "derivation_id": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "promoted_at": [
+          "string"
+        ],
+        "promoted_source_id": [
+          "string",
+          "null"
+        ],
+        "promoted_source_record_sha256": [
+          "string"
+        ],
+        "promoted_source_sha256": [
+          "string"
+        ],
+        "record_sha256": [
+          "string"
+        ],
+        "review_sha256": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "source_sha256": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 859,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-promotion-v1.json.gz",
+        "payload_bytes": 836,
+        "payload_sha256": "a37e3744b6bd0c7afe072721a6247a09760897818fee4987de592ad0bc05b0c5",
+        "read_only": true,
+        "sha256": "3497919754d2433461f002552fce1e30dcc4ddec936c88eb6c954d598ad3173b",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-derived-promotion",
+      "format_id": "FMT-OPENCNTX-DERIVED-PROMOTION-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-promotion-4970840057b169c7"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-p-ec606d8752927fd4"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-derived-promotion"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "capture_status",
+        "content_sha256",
+        "derivation_id",
+        "format",
+        "format_version",
+        "promoted_at",
+        "promoted_source_id",
+        "promoted_source_record_sha256",
+        "promoted_source_sha256",
+        "record_sha256",
+        "review_sha256",
+        "source_id",
+        "source_sha256"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:679fecb1-ecca-5856-9495-518e299f9b9c",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-p-ec606d8752927fd4"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "content_sha256",
+          "record_sha256",
+          "source_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "derivation_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-derived-removal"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "owner",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "removed_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "content_sha256": [
+          "string"
+        ],
+        "derivation_id": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "owner": [
+          "string"
+        ],
+        "record_sha256": [
+          "string"
+        ],
+        "removed_at": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "source_sha256": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 497,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-removal-v1.json.gz",
+        "payload_bytes": 474,
+        "payload_sha256": "8d0fbcb7a452af293852c18b8c2652aab03ad487b1162dece4c611be81593f2f",
+        "read_only": true,
+        "sha256": "e2b1a08444f26016b3507d0c767d74d07c62813d1bde8c937bf7c541c5f29e48",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-derived-removal",
+      "format_id": "FMT-OPENCNTX-DERIVED-REMOVAL-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-removal-fddc4ebb7ca35832"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-7864af66b9be43c7"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-derived-removal"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "content_sha256",
+        "derivation_id",
+        "format",
+        "format_version",
+        "owner",
+        "record_sha256",
+        "removed_at",
+        "source_id",
+        "source_sha256"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:d3cd15d6-019f-5f1d-998b-b8a302297d1d",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-7864af66b9be43c7"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "content_sha256",
+          "record_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "decision",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "derivation_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "findings",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-derived-review"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "reviewed_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "reviewer",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "content_sha256": [
+          "string"
+        ],
+        "decision": [
+          "string"
+        ],
+        "derivation_id": [
+          "string"
+        ],
+        "findings": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "record_sha256": [
+          "string"
+        ],
+        "reviewed_at": [
+          "string"
+        ],
+        "reviewer": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 469,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-derived-review-v1.json.gz",
+        "payload_bytes": 446,
+        "payload_sha256": "c7a46e85ef3e752f82d3d9e45f5991f48e6191f0d80eee04db1cc1fd49ec9284",
+        "read_only": true,
+        "sha256": "bc829e8d8c2adf4b9a2661a34b3b9f3ccc355455962dcf0fd87485d38d041378",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-derived-review",
+      "format_id": "FMT-OPENCNTX-DERIVED-REVIEW-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-derived-review-81325684194ef420"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-d7438057bce761f0"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-derived-review"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "content_sha256",
+        "decision",
+        "derivation_id",
+        "findings",
+        "format",
+        "format_version",
+        "record_sha256",
+        "reviewed_at",
+        "reviewer",
+        "source_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:d400d220-f29c-5964-b7d5-53a5634d86f2",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-derived-r-d7438057bce761f0"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "record_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "allowed_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "context",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "data_authority",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "delegation_depth",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "document",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "evidence_requirements",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "executor_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "executor_statement",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "forbidden_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-executor-assignment"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "may_delegate",
+          "required": true,
+          "types": [
+            "boolean"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "playbook",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "role",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "steps",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "stop_conditions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "task",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        }
+      ],
+      "field_types": {
+        "allowed_actions": [
+          "array"
+        ],
+        "context": [
+          "object"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "data_authority": [
+          "string"
+        ],
+        "delegation_depth": [
+          "integer"
+        ],
+        "document": [
+          "object"
+        ],
+        "evidence_requirements": [
+          "array"
+        ],
+        "executor_id": [
+          "string"
+        ],
+        "executor_statement": [
+          "string"
+        ],
+        "forbidden_actions": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "may_delegate": [
+          "boolean"
+        ],
+        "playbook": [
+          "object"
+        ],
+        "record_digest": [
+          "string"
+        ],
+        "role": [
+          "object"
+        ],
+        "steps": [
+          "array"
+        ],
+        "stop_conditions": [
+          "array"
+        ],
+        "task": [
+          "object"
+        ]
+      },
+      "fixture": {
+        "bytes": 612,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-executor-assignment-v1.json.gz",
+        "payload_bytes": 589,
+        "payload_sha256": "eb746525b9961ce1635a5ef6aaefe32d48d94fa524f6d8a8cbfd4bcc6b65df08",
+        "read_only": true,
+        "sha256": "cc96c2ef9ed251e87e120f176baa31dad4c4e33cce84588b215a5377b9b57be4",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-executor-assignment",
+      "format_id": "FMT-OPENCNTX-EXECUTOR-ASSIGNMENT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-executor-assignment-d17e29a3b98e69ce"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-executor-596e96d710a8b3b2"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-executor-assignment"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "allowed_actions",
+        "context",
+        "created_at",
+        "data_authority",
+        "delegation_depth",
+        "document",
+        "evidence_requirements",
+        "executor_id",
+        "executor_statement",
+        "forbidden_actions",
+        "format",
+        "format_version",
+        "may_delegate",
+        "playbook",
+        "record_digest",
+        "role",
+        "steps",
+        "stop_conditions",
+        "task"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:63ae4ba5-73b6-5f1a-bdc4-171c89590ba5",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-executor-596e96d710a8b3b2"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "plan_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "checkpoint_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "completed_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "directory_flush",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-lifecycle-checkpoint"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "plan_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "targets",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        }
+      ],
+      "field_types": {
+        "checkpoint_id": [
+          "string"
+        ],
+        "completed_at": [
+          "string"
+        ],
+        "directory_flush": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "plan_sha256": [
+          "string"
+        ],
+        "targets": [
+          "array"
+        ]
+      },
+      "fixture": {
+        "bytes": 330,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-checkpoint-v1.json.gz",
+        "payload_bytes": 307,
+        "payload_sha256": "8440ccf893d9473c0a0a103ba178f332c9d9eec3f16e119b9c7bca0f04964afd",
+        "read_only": true,
+        "sha256": "c2b18859faceb3f92d832c5e83694c67cf5136a70a932c43042a1e478745ba85",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-lifecycle-checkpoint",
+      "format_id": "FMT-OPENCNTX-LIFECYCLE-CHECKPOINT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-checkpoint-8c185169c503cf5e"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-747fbac9b4f77656"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-lifecycle-checkpoint"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "checkpoint_id",
+        "completed_at",
+        "directory_flush",
+        "format",
+        "format_version",
+        "plan_sha256",
+        "targets"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:a5477029-87db-5a90-b2ea-51ded498d713",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-747fbac9b4f77656"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "basis_inventory_sha256",
+          "basis_targets_sha256",
+          "compatibility_matrix_sha256",
+          "schema_bundle_sha256",
+          "state_before_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "basis_inventory_sha256",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "basis_targets_sha256",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "checkpoint",
+          "required": false,
+          "types": [
+            "object",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "checkpoint_required_bytes",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "compatibility_matrix_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-lifecycle-plan"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_count",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "records",
+          "required": false,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "schema_bundle_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "state_before_sha256",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "target_state",
+          "required": false,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "targets",
+          "required": false,
+          "types": [
+            "array"
+          ]
+        }
+      ],
+      "field_types": {
+        "basis_inventory_sha256": [
+          "string"
+        ],
+        "basis_targets_sha256": [
+          "string"
+        ],
+        "checkpoint": [
+          "object",
+          "null"
+        ],
+        "checkpoint_required_bytes": [
+          "string"
+        ],
+        "compatibility_matrix_sha256": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "operation": [
+          "string"
+        ],
+        "record_count": [
+          "integer"
+        ],
+        "records": [
+          "array"
+        ],
+        "schema_bundle_sha256": [
+          "string"
+        ],
+        "state_before_sha256": [
+          "string"
+        ],
+        "target_state": [
+          "object"
+        ],
+        "targets": [
+          "array"
+        ]
+      },
+      "fixture": {
+        "bytes": 319,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-plan-v1.json.gz",
+        "payload_bytes": 296,
+        "payload_sha256": "7cd5ca9677a27b7d6977a250fadf2a029ce4d524c54f3d3b91c275ad557ed9da",
+        "read_only": true,
+        "sha256": "c58a281f17c8629590a4404a00db7dea9c1ff36754501a2d78eb7035c0885498",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-lifecycle-plan",
+      "format_id": "FMT-OPENCNTX-LIFECYCLE-PLAN-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [
+        "basis_inventory_sha256",
+        "basis_targets_sha256",
+        "checkpoint",
+        "checkpoint_required_bytes",
+        "record_count",
+        "records",
+        "state_before_sha256",
+        "target_state",
+        "targets"
+      ],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-plan-279772ad050f0a4d"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-01638685e04c91f6"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-lifecycle-plan"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "compatibility_matrix_sha256",
+        "format",
+        "format_version",
+        "operation",
+        "schema_bundle_sha256"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:97fce532-4a6a-590c-8e47-3ca4fafa0af5",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-01638685e04c91f6"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "inventory_sha256",
+          "schema_bundle_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": [
+            "opencntx-lifecycle-state"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "inventory_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_count",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "schema_bundle_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "trust_statement",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "inventory_sha256": [
+          "string"
+        ],
+        "record_count": [
+          "integer"
+        ],
+        "schema_bundle_sha256": [
+          "string"
+        ],
+        "trust_statement": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 342,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-lifecycle-state-v1.json.gz",
+        "payload_bytes": 319,
+        "payload_sha256": "bd79a802e17ab5f3f9f8971570b00adf9ebfb19b83d029a35bfa1ae077809664",
+        "read_only": true,
+        "sha256": "82e6105fca6a300bd87299333986fadff903000bfc191e00fd366e413d2f8ebf",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-lifecycle-state",
+      "format_id": "FMT-OPENCNTX-LIFECYCLE-STATE-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-lifecycle-state-eb749b34a018eb72"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-c28a158a735211a8"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-lifecycle-state"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "inventory_sha256",
+        "record_count",
+        "schema_bundle_sha256",
+        "trust_statement"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:965ede70-688b-5563-b19a-b1d004afb190",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-lifecycle-c28a158a735211a8"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "excluded",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-manifest"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "ignored",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "package",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "selection",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "sources",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "task",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        }
+      ],
+      "field_types": {
+        "excluded": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "ignored": [
+          "array"
+        ],
+        "package": [
+          "object"
+        ],
+        "selection": [
+          "object"
+        ],
+        "sources": [
+          "array"
+        ],
+        "task": [
+          "object"
+        ]
+      },
+      "fixture": {
+        "bytes": 184,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-manifest-v1.json.gz",
+        "payload_bytes": 161,
+        "payload_sha256": "f6f71853d63743530305db20937c2f62d9b402b5899846ef62fa5930478ebe67",
+        "read_only": true,
+        "sha256": "47d9670640c8c80fc45f612038704502a13ee064d70c80528afcee1b82aaa0ea",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-manifest",
+      "format_id": "FMT-OPENCNTX-MANIFEST-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-manifest-1eedc6b2a79e9152"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-core-load-manifest-afa1c2598f170872"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-manifest"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "task",
+        "selection",
+        "package",
+        "sources",
+        "excluded",
+        "ignored"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:cb1907db-28f6-5109-9d22-a14564cd80b1",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-core-load-manifest-afa1c2598f170872"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "content_sha256",
+          "record_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "content_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "derivation_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-media-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "promoted_source_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "content_sha256": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "derivation_id": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "operation": [
+          "string"
+        ],
+        "promoted_source_id": [
+          "string",
+          "null"
+        ],
+        "record_sha256": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 493,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-media-receipt-v1.json.gz",
+        "payload_bytes": 470,
+        "payload_sha256": "208d4f2a1683f2721595ec91f81c94d0326a2bc61d56fe930edf7d32f217a5c5",
+        "read_only": true,
+        "sha256": "baedc938cdf87170319eb5b7ef15f9f3274290feed1fd3d7f42b6283af78460e",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-media-receipt",
+      "format_id": "FMT-OPENCNTX-MEDIA-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-media-receipt-3c7a6bdbc0fc47af"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-media-rec-d22403eb4b613db6"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-media-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "content_sha256",
+        "created_at",
+        "derivation_id",
+        "format",
+        "format_version",
+        "operation",
+        "promoted_source_id",
+        "record_sha256",
+        "source_id",
+        "status"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:a919da61-0c55-5a4a-8ce9-2ea5cd3d8a24",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-media-rec-d22403eb4b613db6"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "catalog_state_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "budget",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "catalog_state_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "chapters",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-navigation"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "not_read",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "read",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "scope_statement",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "sources",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "task",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "warnings",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        }
+      ],
+      "field_types": {
+        "budget": [
+          "object"
+        ],
+        "catalog_state_digest": [
+          "string"
+        ],
+        "chapters": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "not_read": [
+          "array"
+        ],
+        "read": [
+          "array"
+        ],
+        "scope_statement": [
+          "string"
+        ],
+        "sources": [
+          "array"
+        ],
+        "task": [
+          "object"
+        ],
+        "warnings": [
+          "array"
+        ]
+      },
+      "fixture": {
+        "bytes": 341,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-navigation-v1.json.gz",
+        "payload_bytes": 318,
+        "payload_sha256": "0e7daff0c72c860532ba01baa942635b6d5785f0b805018c7c383d6c75b84d10",
+        "read_only": true,
+        "sha256": "6517dde505f505b9977b2612cbe0e2202b9e5d0ec3897c9bacb450ea83086ac6",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-navigation",
+      "format_id": "FMT-OPENCNTX-NAVIGATION-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-navigation-7b85c46d3492ed6e"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-a89f32cd28333db9"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-navigation"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "task",
+        "catalog_state_digest",
+        "budget",
+        "read",
+        "chapters",
+        "sources",
+        "not_read",
+        "warnings",
+        "scope_statement"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:e8062d7b-e6be-59cb-8aa5-fd64db24adb3",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-a89f32cd28333db9"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "context_sha256",
+          "manifest_sha256",
+          "proposal_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "attempt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "context_sha256",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error_code",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "file_count",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-navigation-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "manifest_sha256",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "next_action",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "package_path",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "proposal_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "task_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "total_bytes",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        }
+      ],
+      "field_types": {
+        "attempt_id": [
+          "string"
+        ],
+        "context_sha256": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "error": [
+          "string",
+          "null"
+        ],
+        "error_code": [
+          "string",
+          "null"
+        ],
+        "file_count": [
+          "integer"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "manifest_sha256": [
+          "string"
+        ],
+        "next_action": [
+          "string",
+          "null"
+        ],
+        "operation": [
+          "string"
+        ],
+        "package_path": [
+          "string",
+          "null"
+        ],
+        "proposal_digest": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ],
+        "task_id": [
+          "string",
+          "null"
+        ],
+        "total_bytes": [
+          "integer"
+        ]
+      },
+      "fixture": {
+        "bytes": 301,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-navigation-receipt-v1.json.gz",
+        "payload_bytes": 278,
+        "payload_sha256": "fae40641ca9f9a736e55124b8a51b539a8a7c0c3eb9e3da2a234e15ac598fb44",
+        "read_only": true,
+        "sha256": "1600cc2f85cd6717dc4f7597432f9f8036f29c13526544905c43f5c700423396",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-navigation-receipt",
+      "format_id": "FMT-OPENCNTX-NAVIGATION-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [
+        "context_sha256",
+        "error",
+        "error_code",
+        "file_count",
+        "manifest_sha256",
+        "next_action",
+        "proposal_digest",
+        "total_bytes"
+      ],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-navigation-receipt-d3dd4f97016ffbb3"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-daa0e60e2559f794"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-navigation-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "attempt_id",
+        "created_at",
+        "format",
+        "format_version",
+        "operation",
+        "package_path",
+        "status",
+        "task_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:197a9ba9-375a-5968-9a4f-8b2a686908a5",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-navigatio-daa0e60e2559f794"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "supersedes_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "allowed_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "architect",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_type",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "document",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "evidence_requirements",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "forbidden_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-playbook"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "handoff",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "inputs",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "purpose",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "steps",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "stop_conditions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "supersedes_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "title",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "allowed_actions": [
+          "array"
+        ],
+        "architect": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "definition_id": [
+          "string"
+        ],
+        "definition_type": [
+          "string"
+        ],
+        "document": [
+          "object"
+        ],
+        "evidence_requirements": [
+          "array"
+        ],
+        "forbidden_actions": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "handoff": [
+          "string"
+        ],
+        "inputs": [
+          "array"
+        ],
+        "purpose": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "steps": [
+          "array"
+        ],
+        "stop_conditions": [
+          "array"
+        ],
+        "supersedes_digest": [
+          "string"
+        ],
+        "title": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 605,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-playbook-v1.json.gz",
+        "payload_bytes": 582,
+        "payload_sha256": "77d5b84cd5e4869c2439466e5054d417c8fe86daff268d1b0a3c3112bad89148",
+        "read_only": true,
+        "sha256": "ae9e9b758343c81acea57ef962fe50461d964c7cb0310fee978280d6dd245a33",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-playbook",
+      "format_id": "FMT-OPENCNTX-PLAYBOOK-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-playbook-5ff4c40721205035"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-772adaa84d979bee"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-playbook"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "allowed_actions",
+        "architect",
+        "created_at",
+        "definition_id",
+        "definition_type",
+        "document",
+        "evidence_requirements",
+        "forbidden_actions",
+        "format",
+        "format_version",
+        "handoff",
+        "inputs",
+        "purpose",
+        "revision",
+        "steps",
+        "stop_conditions",
+        "supersedes_digest",
+        "title"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:6b0beccf-db4c-506d-8f67-979b09b6f908",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-772adaa84d979bee"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "approval_record_digest",
+          "definition_digest",
+          "document_digest",
+          "record_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "approval_record_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "attempt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_id",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_type",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "document_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "executor_id",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-playbook-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "task_id",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        }
+      ],
+      "field_types": {
+        "approval_record_digest": [
+          "string"
+        ],
+        "attempt_id": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "definition_digest": [
+          "string"
+        ],
+        "definition_id": [
+          "string"
+        ],
+        "definition_type": [
+          "string"
+        ],
+        "document_digest": [
+          "string"
+        ],
+        "executor_id": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "operation": [
+          "string"
+        ],
+        "record_digest": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "status": [
+          "string"
+        ],
+        "task_id": [
+          "string",
+          "null"
+        ]
+      },
+      "fixture": {
+        "bytes": 225,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-playbook-receipt-v1.json.gz",
+        "payload_bytes": 202,
+        "payload_sha256": "c0de2db48f8494b36c24fa9781c6445d3fd6294dc2d57085c3b6642d2e0d2e67",
+        "read_only": true,
+        "sha256": "71a3ab8366940849b9b89b8156c5b57457eca54bf37290a505aa894110a72ffd",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-playbook-receipt",
+      "format_id": "FMT-OPENCNTX-PLAYBOOK-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [
+        "approval_record_digest",
+        "definition_digest",
+        "definition_id",
+        "definition_type",
+        "document_digest",
+        "executor_id",
+        "record_digest",
+        "revision",
+        "task_id"
+      ],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-playbook-receipt-ce01ec51e310a0d3"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-f3f99f35e807bd74"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-playbook-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "attempt_id",
+        "created_at",
+        "format",
+        "format_version",
+        "operation",
+        "status"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:4a825708-8465-5fe4-9a25-13cd66154650",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-playbook-f3f99f35e807bd74"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "intent_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "backup_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "current_targets",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-recovery-backup"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "intent_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "transaction_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "backup_id": [
+          "string"
+        ],
+        "current_targets": [
+          "object"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "intent_sha256": [
+          "string"
+        ],
+        "transaction_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 283,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-recovery-backup-v1.json.gz",
+        "payload_bytes": 260,
+        "payload_sha256": "a90843f3fbc2fd936a586a5fe7691103c8e30ef1acc646633bda4a557da708ad",
+        "read_only": true,
+        "sha256": "0e273ef40c8aaedabb9f822a8b60702861cb879fb118c4a5d24f81b3a41dc912",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-recovery-backup",
+      "format_id": "FMT-OPENCNTX-RECOVERY-BACKUP-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-recovery-backup-7321a23ccedf48a7"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-8cbf58a27044fc02"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-recovery-backup"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "backup_id",
+        "current_targets",
+        "format",
+        "format_version",
+        "intent_sha256",
+        "transaction_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:435355a8-2256-5b49-a5aa-abb8b38405cc",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-8cbf58a27044fc02"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "intent_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "action",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "after_targets",
+          "required": false,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "backup_path",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "before_targets",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "completed_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-recovery-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "intent_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "receipt_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "transaction_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "action": [
+          "string"
+        ],
+        "after_targets": [
+          "object"
+        ],
+        "backup_path": [
+          "string"
+        ],
+        "before_targets": [
+          "object"
+        ],
+        "completed_at": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "intent_sha256": [
+          "string"
+        ],
+        "receipt_id": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ],
+        "transaction_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 420,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-recovery-receipt-v1.json.gz",
+        "payload_bytes": 397,
+        "payload_sha256": "46fcab47ce857c442415e5c15822627ea2957c0292747b6d3953117ac067cb3f",
+        "read_only": true,
+        "sha256": "964022de15e8e6ddbb4bdd0365b36600dbe1d63c0ed6d07ed9baf5ac22aff229",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-recovery-receipt",
+      "format_id": "FMT-OPENCNTX-RECOVERY-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [
+        "after_targets"
+      ],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-recovery-receipt-0fca09c9d152c838"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-562d686b85ec12bb"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-recovery-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "action",
+        "backup_path",
+        "before_targets",
+        "completed_at",
+        "format",
+        "format_version",
+        "intent_sha256",
+        "receipt_id",
+        "status",
+        "transaction_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:35774de7-c817-595f-8c7f-d23d32ed10ae",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-recovery-562d686b85ec12bb"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "supersedes_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "allowed_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "architect",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "definition_type",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "delegation_depth",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "document",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "forbidden_actions",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-role"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "handoff",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "may_delegate",
+          "required": true,
+          "types": [
+            "boolean"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "owner_authority",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "responsibilities",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "supersedes_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "title",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "allowed_actions": [
+          "array"
+        ],
+        "architect": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "definition_id": [
+          "string"
+        ],
+        "definition_type": [
+          "string"
+        ],
+        "delegation_depth": [
+          "integer"
+        ],
+        "document": [
+          "object"
+        ],
+        "forbidden_actions": [
+          "array"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "handoff": [
+          "string"
+        ],
+        "may_delegate": [
+          "boolean"
+        ],
+        "owner_authority": [
+          "string"
+        ],
+        "responsibilities": [
+          "array"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "supersedes_digest": [
+          "string"
+        ],
+        "title": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 606,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-role-v1.json.gz",
+        "payload_bytes": 583,
+        "payload_sha256": "15594c755ff1d42e807c71d626e40e42706d4cdfa57300b5119c8180a61e2805",
+        "read_only": true,
+        "sha256": "afdc99c1acc8957d9c4479b3d062c9521dcfda7afec1c77c54c5f4768f14692c",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-role",
+      "format_id": "FMT-OPENCNTX-ROLE-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-role-165f555b7d58a3bc"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-role-2293af48b4720c95"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-role"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "allowed_actions",
+        "architect",
+        "created_at",
+        "definition_id",
+        "definition_type",
+        "delegation_depth",
+        "document",
+        "forbidden_actions",
+        "format",
+        "format_version",
+        "handoff",
+        "may_delegate",
+        "owner_authority",
+        "responsibilities",
+        "revision",
+        "supersedes_digest",
+        "title"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:f9bbb78e-5a12-5402-9f21-f3d3fe443ed5",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-role-2293af48b4720c95"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "captured_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-source"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "origin",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "original_name",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "privacy",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "source_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "stored_path",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "supersedes",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        }
+      ],
+      "field_types": {
+        "bytes": [
+          "integer"
+        ],
+        "captured_at": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "origin": [
+          "string",
+          "null"
+        ],
+        "original_name": [
+          "string"
+        ],
+        "privacy": [
+          "string"
+        ],
+        "sha256": [
+          "string"
+        ],
+        "source_id": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ],
+        "stored_path": [
+          "string"
+        ],
+        "supersedes": [
+          "string",
+          "null"
+        ]
+      },
+      "fixture": {
+        "bytes": 449,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-source-v1.json.gz",
+        "payload_bytes": 426,
+        "payload_sha256": "e6b42ca9608661e2d62bdce4623100a6f179ef58de2f8b0f36c9e8e13be5688e",
+        "read_only": true,
+        "sha256": "bf4222045d09f6d104a7e223920275b2d205fef9cf41ead62a7f545455c56b55",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-source",
+      "format_id": "FMT-OPENCNTX-SOURCE-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-source-1b0d07b117679f1e"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-catalog-load-sources-691c3b7e5a8ef93b"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-source"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "bytes",
+        "captured_at",
+        "format",
+        "format_version",
+        "origin",
+        "original_name",
+        "privacy",
+        "sha256",
+        "source_id",
+        "status",
+        "stored_path",
+        "supersedes"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:7e8f1924-8b9f-5019-8a10-92e097e1dc72",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-opencntx-catalog-load-sources-691c3b7e5a8ef93b"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "object_digest",
+          "previous_record_digest",
+          "record_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "actor_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "actor_role",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "event_number",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "event_type",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-task-event"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "from_status",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "object_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "payload",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "previous_record_digest",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "task_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "to_status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "actor_id": [
+          "string"
+        ],
+        "actor_role": [
+          "string"
+        ],
+        "created_at": [
+          "string"
+        ],
+        "event_number": [
+          "integer"
+        ],
+        "event_type": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "from_status": [
+          "string",
+          "null"
+        ],
+        "object_digest": [
+          "string"
+        ],
+        "payload": [
+          "object"
+        ],
+        "previous_record_digest": [
+          "string",
+          "null"
+        ],
+        "record_digest": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "task_id": [
+          "string",
+          "null"
+        ],
+        "to_status": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 665,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-event-v1.json.gz",
+        "payload_bytes": 642,
+        "payload_sha256": "710744437c58fc57b098e6923c726266dab7d1d78651a717522f3993c21b17ea",
+        "read_only": true,
+        "sha256": "e47a7f5c5b99eef14f6d4f47325506487f9a347372053af81b15d1b369335766",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-task-event",
+      "format_id": "FMT-OPENCNTX-TASK-EVENT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-event-6b631e2d49d2affc"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-even-9438ac2657ad14a8"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-task-event"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "task_id",
+        "revision",
+        "event_number",
+        "event_type",
+        "from_status",
+        "to_status",
+        "actor_role",
+        "actor_id",
+        "created_at",
+        "previous_record_digest",
+        "object_digest",
+        "payload",
+        "record_digest"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:3d6efa19-4815-5a0f-9327-8b33466cffd0",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-even-9438ac2657ad14a8"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "object_digest",
+          "record_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "error_code",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "event_number",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "event_type",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-task-receipt"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "next_action",
+          "required": false,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "object_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "record_digest",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "revision",
+          "required": false,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "task_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "task_path",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "task_status",
+          "required": false,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "created_at": [
+          "string"
+        ],
+        "error": [
+          "string",
+          "null"
+        ],
+        "error_code": [
+          "string",
+          "null"
+        ],
+        "event_number": [
+          "integer"
+        ],
+        "event_type": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "next_action": [
+          "string",
+          "null"
+        ],
+        "object_digest": [
+          "string"
+        ],
+        "operation": [
+          "string"
+        ],
+        "record_digest": [
+          "string"
+        ],
+        "revision": [
+          "integer"
+        ],
+        "status": [
+          "string"
+        ],
+        "task_id": [
+          "string",
+          "null"
+        ],
+        "task_path": [
+          "string"
+        ],
+        "task_status": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 179,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-receipt-v1.json.gz",
+        "payload_bytes": 156,
+        "payload_sha256": "3ffceec9e6b97d0dbc8bbebf2682c037dc7066516e4f7f137b331031408ee78a",
+        "read_only": true,
+        "sha256": "78f61737414e10b17206c973000e3aef04af31b2e13805216239b59c63005513",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-task-receipt",
+      "format_id": "FMT-OPENCNTX-TASK-RECEIPT-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [
+        "error",
+        "error_code",
+        "event_number",
+        "event_type",
+        "next_action",
+        "object_digest",
+        "operation",
+        "record_digest",
+        "revision",
+        "task_path",
+        "task_status"
+      ],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-receipt-48ea8382896611b5"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-rece-14de3cbe9733b933"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-task-receipt"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "status",
+        "task_id",
+        "created_at"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:3cccf25e-0d77-5942-a2a4-89c6f6884df9",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-rece-14de3cbe9733b933"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "body_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_MARKDOWN_PRODUCER_BYTES"
+      },
+      "conditional_requirements": [],
+      "encoding": "markdown",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "body_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-task-view"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        }
+      ],
+      "field_types": {
+        "body_sha256": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ]
+      },
+      "fixture": {
+        "bytes": 200,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-task-view-v1.md.gz",
+        "payload_bytes": 177,
+        "payload_sha256": "9461dd642123fe9126948be6bd28e8db71db2b5a601a922237fc3d1e23653614",
+        "read_only": true,
+        "sha256": "400af45a584036a21e6d9d4b054e4e30ec9b4f2d92ba0b0631cfbaf627c9d1d6",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-task-view",
+      "format_id": "FMT-OPENCNTX-TASK-VIEW-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-task-view-18a97bb40df9983a"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-view-6ecd9485d397c7f0"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-task-view"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "body_sha256"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:7b3911bc-9666-50de-858b-85a63199f6e3",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-task-view-6ecd9485d397c7f0"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "expected_digest"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "expected_digest",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-transaction"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "locks",
+          "required": true,
+          "types": [
+            "array"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": true,
+          "path": "task_id",
+          "required": true,
+          "types": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "transaction_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "created_at": [
+          "string"
+        ],
+        "expected_digest": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "locks": [
+          "array"
+        ],
+        "operation": [
+          "string"
+        ],
+        "task_id": [
+          "string",
+          "null"
+        ],
+        "transaction_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 341,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-v1.json.gz",
+        "payload_bytes": 318,
+        "payload_sha256": "f1b40a7b484a85eb793c7254520ec2815bfe38a33a3e44b25109352dab4810a1",
+        "read_only": true,
+        "sha256": "9ee05c0bf49b21048d42512dc2bfcad3eada061a8897c5d7b9082c7660528765",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-transaction",
+      "format_id": "FMT-OPENCNTX-TRANSACTION-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-901a0fadf84cadec"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-0b4ee26226456574"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-transaction"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "created_at",
+        "expected_digest",
+        "format",
+        "format_version",
+        "locks",
+        "operation",
+        "task_id",
+        "transaction_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:dc129727-683a-55d6-b5e9-a6cf9e0df903",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-0b4ee26226456574"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [
+          "intent_sha256"
+        ],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "completed_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-transaction-completion"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "intent_sha256",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "status",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "transaction_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "completed_at": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "intent_sha256": [
+          "string"
+        ],
+        "status": [
+          "string"
+        ],
+        "transaction_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 294,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-completion-v1.json.gz",
+        "payload_bytes": 271,
+        "payload_sha256": "3847462a5dbd5cef4d25c0f5e0a8de67e04bc1c0676c46a0fc85b674eca7f2c3",
+        "read_only": true,
+        "sha256": "72286a42d4fd189edcef52092d82d856c146385a1a06b4fd0481de56108ddea3",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-transaction-completion",
+      "format_id": "FMT-OPENCNTX-TRANSACTION-COMPLETION-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-completion-73e25565459c3c2d"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-1a51a421f651f4b8"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-transaction-completion"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "completed_at",
+        "format",
+        "format_version",
+        "intent_sha256",
+        "status",
+        "transaction_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:b8d54c2f-29bf-5b6f-9bb5-0c4f1384747b",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-1a51a421f651f4b8"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "details",
+          "required": true,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "directory_sync",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-transaction-phase"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "phase",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "phase_number",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "recorded_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "transaction_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "details": [
+          "object"
+        ],
+        "directory_sync": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "phase": [
+          "string"
+        ],
+        "phase_number": [
+          "integer"
+        ],
+        "recorded_at": [
+          "string"
+        ],
+        "transaction_id": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 289,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-transaction-phase-v1.json.gz",
+        "payload_bytes": 266,
+        "payload_sha256": "740de1c30cb998dc6c412b86eb8912762ba14bed2eda37e257bc2e1dd796ceab",
+        "read_only": true,
+        "sha256": "dcc155fa021ddbbb9880f93e2ab009c2df89e61a9fe7b547d786645793f3841b",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-transaction-phase",
+      "format_id": "FMT-OPENCNTX-TRANSACTION-PHASE-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-transaction-phase-86941bdd5bcf3e3f"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-d9f2c3c4848bbab4"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-transaction-phase"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "details",
+        "directory_sync",
+        "format",
+        "format_version",
+        "phase",
+        "phase_number",
+        "recorded_at",
+        "transaction_id"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:53d1cd1e-7169-5d1e-8d41-1673ab88065e",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-transacti-d9f2c3c4848bbab4"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_MARKDOWN_PRODUCER_BYTES"
+      },
+      "conditional_requirements": [],
+      "encoding": "markdown",
+      "field_contracts": [
+        {
+          "enum": [
+            "opencntx-workspace"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "max_source_bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "max_storage_bytes",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        }
+      ],
+      "field_types": {
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "max_source_bytes": [
+          "integer"
+        ],
+        "max_storage_bytes": [
+          "integer"
+        ]
+      },
+      "fixture": {
+        "bytes": 147,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-workspace-v1.md.gz",
+        "payload_bytes": 124,
+        "payload_sha256": "d122b004f42847ac1d8ed8d4e64c6ff37b61664fdb94a34fb15f8d14e9c2e0f8",
+        "read_only": true,
+        "sha256": "093a181f8c27aeaef8a5308f42f1145aa3cf6e621667674b561db0f5ffdf550d",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-workspace",
+      "format_id": "FMT-OPENCNTX-WORKSPACE-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-workspace-d88e1b056c1c70a0"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-workspace-eb024eff0c99933d"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-workspace"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "format",
+        "format_version",
+        "max_source_bytes",
+        "max_storage_bytes"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:9728a315-bbd1-53be-997e-c3fdaaa83716",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_metadata",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-workspace-eb024eff0c99933d"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    },
+    {
+      "canonicalization": {
+        "digest_field_paths": [],
+        "fixture_digest_boundary": "EXACT_FILE_BYTES",
+        "serialization": "UTF8_JSON_SORTED_KEYS_INDENT_2"
+      },
+      "conditional_requirements": [],
+      "encoding": "json",
+      "field_contracts": [
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "created_at",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            "opencntx-writer-lock"
+          ],
+          "nullable": false,
+          "path": "format",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": [
+            1
+          ],
+          "nullable": false,
+          "path": "format_version",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "host",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "lock_id",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "operation",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "pid",
+          "required": true,
+          "types": [
+            "integer"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "scope",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
+          "path": "target",
+          "required": true,
+          "types": [
+            "string"
+          ]
+        }
+      ],
+      "field_types": {
+        "created_at": [
+          "string"
+        ],
+        "format": [
+          "string"
+        ],
+        "format_version": [
+          "integer"
+        ],
+        "host": [
+          "string"
+        ],
+        "lock_id": [
+          "string"
+        ],
+        "operation": [
+          "string"
+        ],
+        "pid": [
+          "integer"
+        ],
+        "scope": [
+          "string"
+        ],
+        "target": [
+          "string"
+        ]
+      },
+      "fixture": {
+        "bytes": 287,
+        "contains_user_data": false,
+        "expected_read": "ACCEPT",
+        "expected_verify": "SHA256_AND_CONTRACT_MATCH",
+        "generation": "REPRODUCIBLE_V030_PRODUCER_SHAPE",
+        "path": "tests/fixtures/v0.3.0/durable-records/opencntx-writer-lock-v1.json.gz",
+        "payload_bytes": 264,
+        "payload_sha256": "44a3acf94ddce519b4e1c0229a83974b2eb59462de7802d452db5d24f3430b0d",
+        "read_only": true,
+        "sha256": "f1ce977d4897d83f0b31eae5a82ad5c445fc79a5597335e355f08bbb508f76a8",
+        "source_head": "6f54cc5d763e4dd036db36955917d9d331dea404",
+        "source_release": "v0.3.0"
+      },
+      "format": "opencntx-writer-lock",
+      "format_id": "FMT-OPENCNTX-WRITER-LOCK-V1",
+      "format_version": 1,
+      "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
+      "optional_fields": [],
+      "producer_surface_ids": [
+        "SURF-MACHINE_OUTPUT-opencntx-writer-lock-26317ebaa59744b8"
+      ],
+      "read_claim": "FIXTURE_ACCEPTED_READ_ONLY",
+      "reader_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-writer-lo-109382e1abfd0107"
+      ],
+      "relationships": [
+        {
+          "field": "format",
+          "kind": "const",
+          "value": "opencntx-writer-lock"
+        },
+        {
+          "field": "format_version",
+          "kind": "const",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "created_at",
+        "format",
+        "format_version",
+        "host",
+        "lock_id",
+        "operation",
+        "pid",
+        "scope",
+        "target"
+      ],
+      "rollback_claim": "NOT_APPLICABLE_NO_FIXTURE_WRITE",
+      "schema_id": "urn:uuid:a17fb1cd-4c98-56a2-947a-0a33ad3acceb",
+      "unknown_fields": "REJECT",
+      "unknown_major": "REJECT_BEFORE_WRITE",
+      "validator": "opencntx.contracts.validate_durable_record",
+      "validator_surface_ids": [
+        "SURF-SCHEMA_OR_VALIDATOR-runtime-discriminator-opencntx-writer-lo-109382e1abfd0107"
+      ],
+      "verify_claim": "FIXTURE_SHA256_AND_CONTRACT_MATCH"
+    }
+  ]
+}

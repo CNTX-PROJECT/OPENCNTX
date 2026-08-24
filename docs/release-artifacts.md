@@ -84,7 +84,7 @@ both files actually meet that stronger test.
 
 ## Installation and removal smoke
 
-Each of the six Windows/Ubuntu and Python 3.11/3.12/3.13 CI jobs builds twice,
+Each of the eight Windows/Ubuntu and Python 3.11/3.12/3.13/3.14 CI jobs builds twice,
 then tests both the wheel and sdist from an isolated environment. Each artifact
 must support:
 
@@ -112,7 +112,7 @@ publication, the release owner must:
 2. bind package version, exact tag, commit, tree, and artifact version;
 3. build from the exact clean tag;
 4. verify checksums, the build record, both installation routes, uninstall,
-   and all six CI jobs;
+   and all eight CI jobs;
 5. check the package-index namespace again at that time;
 6. approve the exact GitHub Release and/or package-index mutation separately;
 7. verify the bytes downloaded from the real publication channel.

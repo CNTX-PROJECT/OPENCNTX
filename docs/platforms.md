@@ -14,6 +14,7 @@ source and artifact bytes are never changed by that display fallback.
 - Python 3.11
 - Python 3.12
 - Python 3.13
+- Python 3.14
 
 ## Fully tested operating systems
 
@@ -33,12 +34,12 @@ controls appropriate to the data.
 
 Status label: `CI_ACTIVE`
 
-Every pull request and push to `main` runs six jobs:
+Every pull request and push to `main` runs eight jobs:
 
-| Operating system | Python 3.11 | Python 3.12 | Python 3.13 |
-|---|:---:|:---:|:---:|
-| Ubuntu | ✓ | ✓ | ✓ |
-| Windows | ✓ | ✓ | ✓ |
+| Operating system | Python 3.11 | Python 3.12 | Python 3.13 | Python 3.14 |
+|---|:---:|:---:|:---:|:---:|
+| Ubuntu | yes | yes | yes | yes |
+| Windows | yes | yes | yes | yes |
 
 Each job:
 
@@ -55,7 +56,7 @@ Each job:
 8. installs, exercises, and uninstalls both selected artifacts outside the
    checkout.
 
-The six job names and matrix positions are unchanged. CI does not upload the
+The eight job names are the operating-system and Python-version pairs. CI does not upload the
 temporary candidates or publish them to a release or package index.
 
 ## What counts as proof
@@ -64,8 +65,10 @@ Only a completed successful live run on the exact candidate or main commit is
 green CI evidence. A workflow file, local run, or empty check list is not live
 CI proof.
 
-The `main` ruleset requires the exact six matrix check names and strict current
-commit status.
+The live `main` ruleset is a separate repository setting. Expanding its required
+checks is not performed by this source change and needs its own approval after
+integration. The candidate is green only when all eight jobs on its exact commit
+are successful.
 
 Workspace transactions flush file bytes and then request a parent-directory
 flush. Ubuntu uses a directory file descriptor and `fsync`; Windows uses a
@@ -94,6 +97,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 tools/render_brand.py --check
 - [Start here](start-here.md)
 - [Troubleshooting](troubleshooting.md)
 - [Release artifacts](release-artifacts.md)
+- [Contracts and compatibility](contracts-and-compatibility.md)
 - [Public roadmap](roadmap.md)
 - [Contribution guide](../CONTRIBUTING.md)
 

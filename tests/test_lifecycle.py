@@ -197,13 +197,15 @@ class LifecycleTests(unittest.TestCase):
         assets = schema_assets()
         self.assertEqual(set(assets), {
             "compatibility-matrix-v1.json",
+            "durable-format-contracts-v1.json",
             "durable-records-v1.schema.json",
             "lifecycle-plan-v1.schema.json",
             "lifecycle-state-v1.schema.json",
+            "public-contract-v1.json",
         })
         values = {name: json.loads(content.decode("ascii")) for name, content in assets.items()}
         ids = {value["$id"] for value in values.values()}
-        self.assertEqual(len(ids), 4)
+        self.assertEqual(len(ids), 6)
         matrix_formats = {
             item["format"] for item in values["compatibility-matrix-v1.json"]["records"]
         }
@@ -285,6 +287,20 @@ class LifecycleTests(unittest.TestCase):
             with self.assertRaises(LifecycleError) as context:
                 plan_migration(root)
             self.assertEqual(context.exception.code, "lifecycle_record_unsupported")
+
+            (root / ".opencntx" / "receipts" / "unknown.json").write_text(
+                json.dumps(
+                    {
+                        "format": "opencntx-manifest",
+                        "format_version": 1,
+                        "unexpected": True,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaises(LifecycleError) as invalid_context:
+                plan_migration(root)
+            self.assertEqual(invalid_context.exception.code, "lifecycle_record_invalid")
 
     def test_cleanup_plan_apply_and_restore_are_digest_bound(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

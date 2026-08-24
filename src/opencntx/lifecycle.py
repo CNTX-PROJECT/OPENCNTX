@@ -16,6 +16,7 @@ import stat
 from typing import Any, Iterable, Sequence, cast
 from uuid import uuid4
 
+from .contracts import ContractError, validate_durable_record
 from .integrity import (
     IntegrityError,
     safe_managed_path,
@@ -44,9 +45,11 @@ TRUST_PROFILES = ("single-user-local", "shared-team")
 AUDIT_RESULTS = ("SAFE_OBSERVED", "WARNING_BROAD_ACCESS", "UNSUPPORTED", "UNSAFE_PATH")
 SCHEMA_FILES = (
     "compatibility-matrix-v1.json",
+    "durable-format-contracts-v1.json",
     "durable-records-v1.schema.json",
     "lifecycle-plan-v1.schema.json",
     "lifecycle-state-v1.schema.json",
+    "public-contract-v1.json",
 )
 SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
 TRANSACTION_ID_RE = re.compile(r"TXN-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
@@ -489,6 +492,14 @@ def _record_inventory(root: Path) -> list[dict[str, Any]]:
                 f"Unsupported durable record format: {format_name} v{version}.",
                 code="lifecycle_record_unsupported",
             )
+        try:
+            validate_durable_record(value)
+        except ContractError as exc:
+            if exc.code == "contract_version_unsupported":
+                code = "lifecycle_record_unsupported"
+            else:
+                code = "lifecycle_record_invalid"
+            raise LifecycleError(str(exc), code=code) from exc
         records.append({
             "format": format_name,
             "format_version": version,
