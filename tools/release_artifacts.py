@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
 import shutil
@@ -25,13 +26,31 @@ CHECKSUMS_NAME = "SHA256SUMS"
 RECORD_NAME = "BUILD-RECORD.json"
 RECORD_SCHEMA = "opencntx-build-record-v1"
 BUILD_FRONTEND = "build==1.3.0"
-BUILD_BACKEND = "setuptools==80.9.0"
+BUILD_BACKEND = "setuptools==83.0.0"
 MAX_ARCHIVE_MEMBER_BYTES = 25 * 1024 * 1024
 MAX_ARCHIVE_TOTAL_BYTES = 100 * 1024 * 1024
 
 
 class ReleaseArtifactError(Exception):
     """A bounded release-candidate validation failure."""
+
+
+def _validate_build_toolchain() -> None:
+    for distribution, expected_version in (
+        ("build", "1.3.0"),
+        ("setuptools", "83.0.0"),
+    ):
+        try:
+            actual_version = importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError as exc:
+            raise ReleaseArtifactError(
+                f"required build tool is not installed: {distribution}"
+            ) from exc
+        if actual_version != expected_version:
+            raise ReleaseArtifactError(
+                f"installed {distribution} version differs: "
+                f"expected {expected_version}, found {actual_version}"
+            )
 
 
 def _run(
@@ -390,6 +409,10 @@ def verify_candidate(
         raise ReleaseArtifactError("build record schema is not supported")
     if record.get("project") != PROJECT_NAME or record.get("version") != expected_version:
         raise ReleaseArtifactError("build record project or version differs")
+    if record.get("build_frontend") != BUILD_FRONTEND:
+        raise ReleaseArtifactError("build record frontend differs from the approved pin")
+    if record.get("build_backend") != BUILD_BACKEND:
+        raise ReleaseArtifactError("build record backend differs from the approved pin")
     source = record.get("source")
     if (
         not isinstance(source, dict)
@@ -430,6 +453,7 @@ def build_candidate(
 ) -> dict[str, Any]:
     repository = repository.resolve()
     output = output.resolve()
+    _validate_build_toolchain()
     if output.exists() and any(output.iterdir()):
         raise ReleaseArtifactError(f"output directory is not empty: {output}")
     if _git(repository, "status", "--porcelain=v1"):
