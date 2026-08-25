@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
+import json
 import os
 import re
 import shlex
@@ -655,6 +656,28 @@ class PublicQualityTests(unittest.TestCase):
         for surface in release_surfaces:
             with self.subTest(surface=surface.relative_to(ROOT)):
                 self.assertNotIn("0.2.0.dev0", surface.read_text(encoding="utf-8"))
+
+    def test_active_build_toolchain_pins_are_consistent(self) -> None:
+        active_surfaces = {
+            ".github/workflows/ci.yml": WORKFLOW,
+            "requirements-quality.txt": ROOT / "requirements-quality.txt",
+            "docs/release-artifacts.md": DOCS / "release-artifacts.md",
+            "docs/platforms.md": DOCS / "platforms.md",
+            "tools/release_artifacts.py": ROOT / "tools" / "release_artifacts.py",
+        }
+        for name, surface in active_surfaces.items():
+            with self.subTest(surface=name):
+                text = surface.read_text(encoding="utf-8")
+                self.assertIn("build==1.3.0", text)
+                self.assertIn("setuptools==83.0.0", text)
+
+        with (ROOT / "tests/fixtures/hardening/dependency-findings-v1.json").open(
+            encoding="utf-8"
+        ) as findings_file:
+            finding = json.load(findings_file)["findings"][0]
+        self.assertEqual("setuptools", finding["package"])
+        self.assertEqual("80.9.0", finding["affected_version"])
+        self.assertEqual("83.0.0", finding["resolved_version"])
 
 
 if __name__ == "__main__":

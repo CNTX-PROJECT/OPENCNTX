@@ -45,7 +45,7 @@ Each job:
 
 1. checks out the exact commit;
 2. sets up the selected Python version;
-3. installs the pinned `build==1.3.0` and `setuptools==80.9.0` build toolchain;
+3. installs the pinned `build==1.3.0` and `setuptools==83.0.0` build toolchain;
 4. runs the complete test suite with `ResourceWarning` treated as an error;
 5. exports the exact clean Git tree twice and builds one wheel and one sdist
    from each independent source directory;
