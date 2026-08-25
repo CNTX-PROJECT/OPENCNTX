@@ -7,7 +7,7 @@ features or expose private project records.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
-  <img src="../assets/docs/roadmap.svg" alt="OPENCNTX progressed from the three-command core through the workspace foundation to the current v0.3 Alpha line">
+  <img src="../assets/docs/roadmap.svg" alt="OPENCNTX progressed from the three-command core through the workspace foundation to the current v1.0.0b1 Beta line">
 </picture>
 
 ## Completed foundation
@@ -111,15 +111,30 @@ features or expose private project records.
 - treats v0.3.0 as publicly released only when both the live `v0.3.0` tag and
   the `OPENCNTX v0.3.0` GitHub Release actually exist.
 
+### v1.0.0b1 Beta line
+
+- freezes the existing v1 public surface without adding product behavior;
+- versions the package as `1.0.0b1` with
+  `Development Status :: 4 - Beta` maturity;
+- keeps Python `>=3.11`, zero runtime dependencies, and the existing local,
+  provider-neutral product boundary;
+- defines the exact-tag installation route
+  `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0b1"`
+  and exactly four GitHub Release assets:
+  `opencntx-1.0.0b1-py3-none-any.whl`, `opencntx-1.0.0b1.tar.gz`,
+  `SHA256SUMS`, and `BUILD-RECORD.json`;
+- treats v1.0.0b1 as publicly released only when both the live `v1.0.0b1` tag
+  and the `OPENCNTX v1.0.0b1` GitHub Release actually exist.
+
 ## Current state
 
-- Current package line: `v0.3.0`
-- Package version: `0.3.0`
-- Maturity: Alpha
+- Current package line: `v1.0.0b1`
+- Package version: `1.0.0b1`
+- Maturity: Beta
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context
-- Public release condition: both the live `v0.3.0` tag and the matching GitHub
+- Public release condition: both the live `v1.0.0b1` tag and the matching GitHub
   Release must exist
 - Distribution after publication: exact Git tag plus GitHub Release with the
   four exact assets named above; no PyPI or TestPyPI package

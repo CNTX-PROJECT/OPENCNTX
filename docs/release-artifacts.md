@@ -8,26 +8,26 @@ grant authority to publish anything.
 
 ## Current public distribution
 
-The package line is `v0.3.0` and remains Alpha. It becomes a public release only
-when both the live `v0.3.0` tag and the `OPENCNTX v0.3.0` GitHub Release exist.
+The package line is `v1.0.0b1` and is Beta. It becomes a public release only
+when both the live `v1.0.0b1` tag and the `OPENCNTX v1.0.0b1` GitHub Release exist.
 After that point, install it from the exact public Git tag as described in
 [Start here](start-here.md):
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v0.3.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0b1"`.
 
 - OPENCNTX is not published on PyPI or TestPyPI.
 - The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
   build record attached to it.
-- The v0.3.0 GitHub Release must contain exactly the four files named below.
+- The v1.0.0b1 GitHub Release must contain exactly the four files named below.
 
-Until the live v0.3.0 tag and Release both exist, all v0.3.0 builds are
+Until the live v1.0.0b1 tag and Release both exist, all v1.0.0b1 builds are
 unpublished candidates and must not be presented as public release assets.
 
 ## Candidate output
 
 The local release helper emits exactly four candidate files:
 
-1. `opencntx-0.3.0-py3-none-any.whl`;
-2. `opencntx-0.3.0.tar.gz`;
+1. `opencntx-1.0.0b1-py3-none-any.whl`;
+2. `opencntx-1.0.0b1.tar.gz`;
 3. `SHA256SUMS` for those two artifacts;
 4. `BUILD-RECORD.json`.
 
@@ -44,21 +44,21 @@ The output directory must be absent or empty.
 PowerShell:
 
 ```powershell
-python -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0
+python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 0.3.0 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.0.0b1 --expected-commit $commit --expected-tree $tree
 ```
 
 Ubuntu:
 
 ```bash
-python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0
+python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
 commit=$(git rev-parse HEAD)
 tree=$(git rev-parse 'HEAD^{tree}')
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 0.3.0 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.0.0b1 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
 The helper exports the exact Git tree to two independent temporary source
@@ -96,26 +96,25 @@ must support:
 Run the same bounded smoke for both local candidates:
 
 ```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-0.3.0-py3-none-any.whl --expected-version 0.3.0
-python tools/release_artifacts.py smoke --artifact dist\opencntx-0.3.0.tar.gz --expected-version 0.3.0
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.0.0b1-py3-none-any.whl --expected-version 1.0.0b1
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.0.0b1.tar.gz --expected-version 1.0.0b1
 ```
 
 This tests a local candidate. It is not proof that an external package-index
 installation works.
 
-## Future release gate
+## Separate publication gate
 
-A future release needs a separate exact decision and fresh evidence. Before
+A public release needs a separate exact decision and fresh evidence. Before
 publication, the release owner must:
 
-1. choose a new package version;
-2. bind package version, exact tag, commit, tree, and artifact version;
-3. build from the exact clean tag;
-4. verify checksums, the build record, both installation routes, uninstall,
+1. bind package version, exact tag, commit, tree, and artifact version;
+2. build from the exact clean commit and tree;
+3. verify checksums, the build record, both installation routes, uninstall,
    and all eight CI jobs;
-5. check the package-index namespace again at that time;
-6. approve the exact GitHub Release and/or package-index mutation separately;
-7. verify the bytes downloaded from the real publication channel.
+4. check the package-index namespace again at that time;
+5. approve the exact GitHub Release mutation separately;
+6. verify the bytes downloaded from the real publication channel.
 
 A PyPI 404 at one moment is not ownership or reservation evidence. This
 repository contains no PyPI token, trusted-publishing configuration, OIDC

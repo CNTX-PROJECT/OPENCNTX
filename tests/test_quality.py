@@ -600,13 +600,15 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertRegex(version, r"^\d+\.\d+\.\d+$")
-        self.assertIn("Development Status :: 3 - Alpha", project["classifiers"])
+        self.assertEqual(version, "1.0.0b1")
+        self.assertIn("Development Status :: 4 - Beta", project["classifiers"])
+        self.assertNotIn("Development Status :: 3 - Alpha", project["classifiers"])
         changelog = CHANGELOG.read_text(encoding="utf-8")
         readme = README.read_text(encoding="utf-8")
         start_here = (DOCS / "start-here.md").read_text(encoding="utf-8")
         faq = (DOCS / "faq.md").read_text(encoding="utf-8")
         roadmap = (DOCS / "roadmap.md").read_text(encoding="utf-8")
+        release_artifacts = (DOCS / "release-artifacts.md").read_text(encoding="utf-8")
         workspace = (DOCS / "workspace.md").read_text(encoding="utf-8")
         workflow = WORKFLOW.read_text(encoding="utf-8")
         release_tool = (ROOT / "tools" / "release_artifacts.py").read_text(encoding="utf-8")
@@ -625,10 +627,21 @@ class PublicQualityTests(unittest.TestCase):
         self.assertIn("expected_version", release_tool)
         self.assertNotRegex(workflow, r'expected_version\s*=\s*["\']\d')
 
-        for public_surface in (readme, start_here, faq, roadmap):
+        for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
-                self.assertIn("Alpha", public_surface)
+                self.assertIn("v1.0.0b1", public_surface)
+                self.assertIn("Beta", public_surface)
                 self.assertNotRegex(public_surface, r"(?i)\bstable release\b")
+
+        for asset_name in (
+            "opencntx-1.0.0b1-py3-none-any.whl",
+            "opencntx-1.0.0b1.tar.gz",
+            "SHA256SUMS",
+            "BUILD-RECORD.json",
+        ):
+            with self.subTest(asset=asset_name):
+                for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
+                    self.assertIn(asset_name, public_surface)
 
         release_surfaces = (
             ROOT / "pyproject.toml",
