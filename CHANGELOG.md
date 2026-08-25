@@ -4,6 +4,10 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+No changes recorded.
+
+## 1.0.0b1 - 2026-08-25
+
 ### Added
 
 - Added a machine-readable contract catalog for all 1,575 accepted public
@@ -23,6 +27,8 @@ All notable OPENCNTX changes are recorded here.
 
 ### Changed
 
+- Reclassified the package from Alpha to Beta without changing product
+  behavior, runtime dependencies, or the local provider-neutral boundary.
 - Replaced the broad operating-system-independent package claim with the two
   operating-system families actually covered by live CI: Windows and Linux.
 - Reduced the candidate Ruff ratchet to zero findings while preserving narrow,

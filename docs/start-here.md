@@ -21,21 +21,21 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
-## 2. Install the Alpha release after publication
+## 2. Install the Beta release after publication
 
-The package line is `v0.3.0` and remains Alpha. It is publicly installable
-only after both the live `v0.3.0` tag and the `OPENCNTX v0.3.0` GitHub Release
+The package line is `v1.0.0b1` and is Beta. It is publicly installable only
+after both the live `v1.0.0b1` tag and the `OPENCNTX v1.0.0b1` GitHub Release
 exist. OPENCNTX is not published on PyPI or TestPyPI.
 
 With `pipx` and Git available, install the exact tag in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v0.3.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0b1"
 opencntx --version
 opencntx --help
 ```
 
-Do not remove `@v0.3.0` or replace it with `main`. The pin is what binds the
+Do not remove `@v1.0.0b1` or replace it with `main`. The pin is what binds the
 installation to the named release. The following source-checkout routes remain
 available when `pipx` is not the intended environment.
 
@@ -44,7 +44,7 @@ available when `pipx` is not the intended environment.
 Open PowerShell:
 
 ```powershell
-git clone --branch v0.3.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.0.0b1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -59,7 +59,7 @@ launcher is available in PowerShell. Do not use unofficial installers.
 Open a terminal:
 
 ```bash
-git clone --branch v0.3.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.0.0b1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python3 -m pip install .
 opencntx --help
@@ -80,7 +80,7 @@ opencntx --help
 opencntx --version
 ```
 
-The Alpha release prints exactly `opencntx 0.3.0`.
+The Beta release prints exactly `opencntx 1.0.0b1`.
 
 ## 4. Open a small project
 
@@ -198,10 +198,10 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The `v0.3.0` release exists publicly only when its live tag and GitHub Release
+The `v1.0.0b1` release exists publicly only when its live tag and GitHub Release
 both exist. That Release must contain exactly
-`opencntx-0.3.0-py3-none-any.whl`, `opencntx-0.3.0.tar.gz`, `SHA256SUMS`, and
-`BUILD-RECORD.json`. Until then, all v0.3.0 builds are unpublished candidates.
+`opencntx-1.0.0b1-py3-none-any.whl`, `opencntx-1.0.0b1.tar.gz`, `SHA256SUMS`,
+and `BUILD-RECORD.json`. Until then, all v1.0.0b1 builds are unpublished candidates.
 OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local candidate builds,
 checksums, reproducibility limits, and the separate publication gate.
