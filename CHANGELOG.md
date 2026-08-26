@@ -6,6 +6,16 @@ All notable OPENCNTX changes are recorded here.
 
 No changes recorded.
 
+## 1.0.0rc1 - 2026-08-26
+
+### Changed
+
+- Registered the existing top-level manifest `security` object as optional in
+  the durable-format contract, so current packages remain lifecycle-compatible
+  while every other unknown top-level field still fails closed.
+- Advanced the prerelease package and release surfaces to RC1 while retaining
+  the `Development Status :: 4 - Beta` classifier and existing product scope.
+
 ## 1.0.0b1 - 2026-08-25
 
 ### Added

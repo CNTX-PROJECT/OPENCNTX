@@ -3738,6 +3738,15 @@
         {
           "enum": null,
           "nullable": false,
+          "path": "security",
+          "required": false,
+          "types": [
+            "object"
+          ]
+        },
+        {
+          "enum": null,
+          "nullable": false,
           "path": "selection",
           "required": true,
           "types": [
@@ -3779,6 +3788,9 @@
         "package": [
           "object"
         ],
+        "security": [
+          "object"
+        ],
         "selection": [
           "object"
         ],
@@ -3807,7 +3819,9 @@
       "format_id": "FMT-OPENCNTX-MANIFEST-V1",
       "format_version": 1,
       "migration_claim": "NOT_REQUIRED_FOR_BOUND_V030_FIXTURE",
-      "optional_fields": [],
+      "optional_fields": [
+        "security"
+      ],
       "producer_surface_ids": [
         "SURF-MACHINE_OUTPUT-opencntx-manifest-1eedc6b2a79e9152"
       ],

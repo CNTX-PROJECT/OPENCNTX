@@ -450,6 +450,7 @@ FORMAT_FIELDS: dict[str, tuple[str, ...]] = {
 
 
 OPTIONAL_FIELDS: dict[str, tuple[str, ...]] = {
+    "opencntx-manifest": ("security",),
     "opencntx-lifecycle-plan": (
         "basis_inventory_sha256",
         "basis_targets_sha256",
@@ -563,6 +564,7 @@ OBJECT_FIELDS = {
     "playbook",
     "role",
     "selection",
+    "security",
     "task",
     "target_state",
 }

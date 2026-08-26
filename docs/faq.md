@@ -92,18 +92,18 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The `v1.0.0b1` line is Beta and is installable from its exact Git tag only
-after both that live tag and the `OPENCNTX v1.0.0b1` GitHub Release exist.
+No. The `v1.0.0rc1` line is Beta and is installable from its exact Git tag only
+after both that live tag and the `OPENCNTX v1.0.0rc1` GitHub Release exist.
 The exact isolated route is
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0b1"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0rc1"`.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The `v1.0.0b1` Release is complete
-only when it is live with exactly `opencntx-1.0.0b1-py3-none-any.whl`,
-`opencntx-1.0.0b1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Until its live
+The historical `v0.2.0` Release has none. The `v1.0.0rc1` Release is complete
+only when it is live with exactly `opencntx-1.0.0rc1-py3-none-any.whl`,
+`opencntx-1.0.0rc1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Until its live
 tag and GitHub Release both exist, these are unpublished candidates rather
 than public release assets. See [Release artifacts](release-artifacts.md) for
 checksums, build records, reproducibility limits, and the separate publication

@@ -601,7 +601,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.0.0b1")
+        self.assertEqual(version, "1.0.0rc1")
         self.assertIn("Development Status :: 4 - Beta", project["classifiers"])
         self.assertNotIn("Development Status :: 3 - Alpha", project["classifiers"])
         changelog = CHANGELOG.read_text(encoding="utf-8")
@@ -630,13 +630,13 @@ class PublicQualityTests(unittest.TestCase):
 
         for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
-                self.assertIn("v1.0.0b1", public_surface)
+                self.assertIn("v1.0.0rc1", public_surface)
                 self.assertIn("Beta", public_surface)
                 self.assertNotRegex(public_surface, r"(?i)\bstable release\b")
 
         for asset_name in (
-            "opencntx-1.0.0b1-py3-none-any.whl",
-            "opencntx-1.0.0b1.tar.gz",
+            "opencntx-1.0.0rc1-py3-none-any.whl",
+            "opencntx-1.0.0rc1.tar.gz",
             "SHA256SUMS",
             "BUILD-RECORD.json",
         ):

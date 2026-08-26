@@ -259,6 +259,20 @@ class LifecycleTests(unittest.TestCase):
                 self.assertEqual(after[relative], value, relative)
             self.assertTrue((root / ".opencntx" / "lifecycle" / "state.json").is_file())
 
+    def test_current_pack_manifest_security_is_migration_compatible(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory) / "workspace"
+            init_workspace(root)
+            (root / "README.md").write_text("# Lifecycle\n", encoding="utf-8")
+            write_core_config(root)
+            latest, _ = pack_project(root)
+            manifest = json.loads((latest / "manifest.json").read_text(encoding="utf-8"))
+
+            self.assertIsInstance(manifest["security"], dict)
+            plan = plan_migration(root)
+            self.assertEqual("ALREADY_CURRENT", plan["operation"])
+            self.assertEqual(plan["plan_sha256"], _plan_digest(plan))
+
     def test_migration_fault_rolls_back_to_absent_sidecar(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             parent = Path(temporary_directory)

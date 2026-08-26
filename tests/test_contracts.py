@@ -296,6 +296,32 @@ class DurableFormatContractTests(unittest.TestCase):
                 self.assertEqual("contract_version_unsupported", context.exception.code)
                 self.assertEqual(before, value)
 
+    def test_manifest_accepts_existing_security_object_and_rejects_other_fields(self) -> None:
+        manifest = {
+            "format": "opencntx-manifest",
+            "format_version": 1,
+            "task": {},
+            "selection": {},
+            "package": {},
+            "sources": [],
+            "excluded": [],
+            "ignored": [],
+            "security": {},
+        }
+        contract = validate_durable_record(manifest)
+        self.assertEqual(["security"], contract["optional_fields"])
+        self.assertEqual(["object"], contract["field_types"]["security"])
+
+        unknown = {**manifest, "unexpected": True}
+        with self.assertRaises(ContractError) as context:
+            validate_durable_record(unknown)
+        self.assertEqual("contract_fields_invalid", context.exception.code)
+
+        wrong_type = {**manifest, "security": []}
+        with self.assertRaises(ContractError) as type_context:
+            validate_durable_record(wrong_type)
+        self.assertEqual("contract_field_type_invalid", type_context.exception.code)
+
     def test_schema_bundle_contains_contracts_and_no_unmanaged_domain(self) -> None:
         assets = schema_assets()
         self.assertEqual(
