@@ -1,20 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="626" viewBox="0 0 1200 626" role="img" aria-labelledby="title desc">
   <title id="title">Stable workspace map for dark screens</title>
-  <desc id="desc">Four equal cards organize control, captured sources, reviewed knowledge, and bounded work inside one stable optional workspace.</desc>
-  <rect width="1200" height="590" fill="#0D1117"/>
-  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">Stable workspace for longer projects</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="130" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="630" y="130" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="60" y="360" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="630" y="360" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <text x="315" y="196" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">CONTROL</text>
-    <text x="315" y="246" text-anchor="middle" font-size="21" fill="#FFFFFF">OWNER, ROADMAP, CURRENT</text>
-    <text x="885" y="196" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">SOURCES</text>
-    <text x="885" y="246" text-anchor="middle" font-size="21" fill="#FFFFFF">Exact supplied bytes and receipts</text>
-    <text x="315" y="426" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">KNOWLEDGE</text>
-    <text x="315" y="476" text-anchor="middle" font-size="21" fill="#FFFFFF">Chapters, catalog, derived text</text>
-    <text x="885" y="426" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">BOUNDED WORK</text>
-    <text x="885" y="476" text-anchor="middle" font-size="21" fill="#FFFFFF">Tasks, playbooks, roles, results</text>
-  </g>
+  <desc id="desc">Four areas organize control, captured sources, reviewed knowledge, and bounded work inside one stable optional workspace.</desc>
+  <rect width="1200" height="626" fill="#0B1020"/>
+  <rect x="60" y="42" width="172" height="32" rx="16" fill="#1E293B"/>
+  <text x="146.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">OPTIONAL WORKSPACE</text>
+  <text x="60" y="124" text-anchor="start" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Stable workspace for longer projects</text>
+  <text x="60" y="158" text-anchor="start" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">Four clearly separated areas keep authority, evidence, knowledge, and work understandable.</text>
+  <rect x="64" y="226" width="520" height="162" rx="20" fill="#1E293B"/>
+  <rect id="card-control" x="60" y="218" width="520" height="162" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="60" y="218" width="520" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="320.0" cy="272" r="22" fill="#1E293B"/>
+  <text x="320.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="320.0" y="326" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">CONTROL</text>
+  <text x="320.0" y="368" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">OWNER, ROADMAP, CURRENT</text>
+  <rect x="624" y="226" width="520" height="162" rx="20" fill="#1E293B"/>
+  <rect id="card-sources" x="620" y="218" width="520" height="162" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="620" y="218" width="520" height="6" rx="3" fill="#22D3EE"/>
+  <circle cx="880.0" cy="272" r="22" fill="#164E63"/>
+  <text x="880.0" y="279" text-anchor="middle" fill="#22D3EE" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="880.0" y="326" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">SOURCES</text>
+  <text x="880.0" y="368" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Exact supplied bytes and receipts</text>
+  <rect x="64" y="422" width="520" height="162" rx="20" fill="#1E293B"/>
+  <rect id="card-knowledge" x="60" y="414" width="520" height="162" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="60" y="414" width="520" height="6" rx="3" fill="#FBBF24"/>
+  <circle cx="320.0" cy="468" r="22" fill="#78350F"/>
+  <text x="320.0" y="475" text-anchor="middle" fill="#FBBF24" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="320.0" y="522" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">KNOWLEDGE</text>
+  <text x="320.0" y="564" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Chapters, catalog, derived text</text>
+  <rect x="624" y="422" width="520" height="162" rx="20" fill="#1E293B"/>
+  <rect id="card-work" x="620" y="414" width="520" height="162" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="620" y="414" width="520" height="6" rx="3" fill="#34D399"/>
+  <circle cx="880.0" cy="468" r="22" fill="#064E3B"/>
+  <text x="880.0" y="475" text-anchor="middle" fill="#34D399" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">04</text>
+  <text x="880.0" y="522" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">BOUNDED WORK</text>
+  <text x="880.0" y="564" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Tasks, playbooks, roles, results</text>
+  <line x1="580" y1="299" x2="600" y2="299" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="590" y1="289" x2="590" y2="496" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="580" y1="496" x2="600" y2="496" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="590" cy="397" r="6" fill="#DDA0DD"/>
 </svg>

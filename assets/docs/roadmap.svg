@@ -1,25 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="450" viewBox="0 0 1200 450" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="472" viewBox="0 0 1200 472" role="img" aria-labelledby="title desc">
   <title id="title">Completed OPENCNTX roadmap</title>
-  <desc id="desc">Four equal milestones show the runnable core, version 0.1, workspace foundation, and the version 1.0.0 Production/Stable line.</desc>
-  <rect width="1200" height="450" fill="#FFFFFF"/>
-  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#111318">Completed public milestones</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="150" width="240" height="240" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="340" y="150" width="240" height="240" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="620" y="150" width="240" height="240" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="900" y="150" width="240" height="240" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <text x="180" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">CORE</text>
-    <text x="180" y="270" text-anchor="middle" font-size="20" fill="#111318">init · pack · verify</text>
-    <text x="460" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">v0.1.0</text>
-    <text x="460" y="270" text-anchor="middle" font-size="20" fill="#111318">Public core release</text>
-    <text x="740" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">WORKSPACE</text>
-    <text x="740" y="270" text-anchor="middle" font-size="20" fill="#111318">Stable project flow</text>
-    <text x="1020" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">v1.0.0</text>
-    <text x="1020" y="270" text-anchor="middle" font-size="20" fill="#111318">Production/Stable line</text>
-  </g>
-  <g stroke="#7C3AED" stroke-width="6" fill="#7C3AED">
-    <line x1="306" y1="320" x2="322" y2="320"/><polygon points="322,308 340,320 322,332"/>
-    <line x1="586" y1="320" x2="602" y2="320"/><polygon points="602,308 620,320 602,332"/>
-    <line x1="866" y1="320" x2="882" y2="320"/><polygon points="882,308 900,320 882,332"/>
-  </g>
+  <desc id="desc">Four completed milestones show the runnable core, public core release, workspace foundation, and version 1.0.0 Production Stable line.</desc>
+  <rect width="1200" height="472" fill="#F8FAFC"/>
+  <rect x="60" y="42" width="148" height="32" rx="16" fill="#0B1020"/>
+  <text x="134.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">RELEASE JOURNEY</text>
+  <text x="60" y="124" text-anchor="start" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Completed public milestones</text>
+  <text x="60" y="158" text-anchor="start" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">The public line progresses from a small core to a stable project workspace.</text>
+  <line x1="160" y1="274" x2="1040" y2="274" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/>
+  <rect x="64" y="226" width="240" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-core" x="60" y="218" width="240" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="60" y="218" width="240" height="6" rx="3" fill="#047857"/>
+  <circle cx="180.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="180.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">✓</text>
+  <text x="180.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="720" letter-spacing="-0.4">CORE</text>
+  <text x="180.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">init · pack · verify</text>
+  <rect x="344" y="226" width="240" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-v010" x="340" y="218" width="240" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="340" y="218" width="240" height="6" rx="3" fill="#047857"/>
+  <circle cx="460.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="460.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">✓</text>
+  <text x="460.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="720" letter-spacing="-0.4">v0.1.0</text>
+  <text x="460.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Public core release</text>
+  <rect x="624" y="226" width="240" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-workspace" x="620" y="218" width="240" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="620" y="218" width="240" height="6" rx="3" fill="#047857"/>
+  <circle cx="740.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="740.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">✓</text>
+  <text x="740.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="720" letter-spacing="-0.4">WORKSPACE</text>
+  <text x="740.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Stable project flow</text>
+  <rect x="904" y="226" width="240" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-v100" x="900" y="218" width="240" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="900" y="218" width="240" height="6" rx="3" fill="#047857"/>
+  <circle cx="1020.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="1020.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">✓</text>
+  <text x="1020.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="720" letter-spacing="-0.4">v1.0.0</text>
+  <text x="1020.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Production/Stable line</text>
 </svg>

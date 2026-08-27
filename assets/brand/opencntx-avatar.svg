@@ -1,20 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
   <title id="title">OPENCNTX avatar</title>
-  <desc id="description">A centered purple rounded square containing a symmetric white context frame.</desc>
-  <g id="avatar-symbol" aria-label="OPENCNTX context frame" fill="#7C3AED">
-    <rect x="128" y="64" width="256" height="384"/>
-    <rect x="64" y="128" width="384" height="256"/>
-    <circle cx="128" cy="128" r="64"/>
-    <circle cx="384" cy="128" r="64"/>
-    <circle cx="128" cy="384" r="64"/>
-    <circle cx="384" cy="384" r="64"/>
+  <desc id="description">Two offset context brackets form a precise white and Plum portal on a deep-navy rounded tile.</desc>
+  <g id="avatar-tile" aria-label="Deep-navy avatar tile" fill="#0B1020">
+    <rect x="112" y="48" width="288" height="416"/>
+    <rect x="48" y="112" width="416" height="288"/>
+    <circle cx="112" cy="112" r="64"/><circle cx="400" cy="112" r="64"/>
+    <circle cx="112" cy="400" r="64"/><circle cx="400" cy="400" r="64"/>
   </g>
-  <g id="context-frame" aria-label="Context frame" fill="#FFFFFF">
-    <rect x="150" y="150" width="28" height="212"/>
-    <rect x="150" y="150" width="106" height="28"/>
-    <rect x="150" y="334" width="106" height="28"/>
-    <rect x="334" y="150" width="28" height="212"/>
-    <rect x="256" y="150" width="106" height="28"/>
-    <rect x="256" y="334" width="106" height="28"/>
+  <g id="context-primary" aria-label="Open context bracket" fill="#FFFFFF">
+    <rect x="132" y="132" width="34" height="248"/><rect x="132" y="132" width="154" height="34"/><rect x="132" y="346" width="154" height="34"/>
   </g>
+  <g id="context-accent" aria-label="Verified context bracket" fill="#DDA0DD">
+    <rect x="346" y="182" width="34" height="148"/><rect x="226" y="182" width="154" height="34"/><rect x="226" y="296" width="154" height="34"/>
+  </g>
+  <rect id="evidence-node" x="239" y="239" width="34" height="34" fill="#FFFFFF"/>
 </svg>

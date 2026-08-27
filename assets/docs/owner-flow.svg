@@ -1,27 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="450" viewBox="0 0 1200 450" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="472" viewBox="0 0 1200 472" role="img" aria-labelledby="title desc">
   <title id="title">OWNER approval flow</title>
-  <desc id="desc">Six equal steps show the OWNER goal, ARCHITECT proposal, OWNER approval, bounded work, review, and OWNER acceptance.</desc>
-  <rect width="1200" height="450" fill="#FFFFFF"/>
-  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#111318">Every authority change is explicit</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="244" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="428" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="612" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="796" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="980" y="150" width="160" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <text x="140" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">OWNER</text><text x="140" y="255" text-anchor="middle" font-size="19" fill="#111318">Goal</text>
-    <text x="324" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">ARCHITECT</text><text x="324" y="255" text-anchor="middle" font-size="19" fill="#111318">Proposal</text>
-    <text x="508" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">OWNER</text><text x="508" y="255" text-anchor="middle" font-size="19" fill="#111318">Approval</text>
-    <text x="692" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">EXECUTOR</text><text x="692" y="255" text-anchor="middle" font-size="19" fill="#111318">Bounded work</text>
-    <text x="876" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">ARCHITECT</text><text x="876" y="255" text-anchor="middle" font-size="19" fill="#111318">Review</text>
-    <text x="1060" y="215" text-anchor="middle" font-size="23" font-weight="700" fill="#6D28D9">OWNER</text><text x="1060" y="255" text-anchor="middle" font-size="19" fill="#111318">Decision</text>
-  </g>
-  <g stroke="#7C3AED" stroke-width="5" fill="#7C3AED">
-    <line x1="224" y1="320" x2="232" y2="320"/><polygon points="232,310 244,320 232,330"/>
-    <line x1="408" y1="320" x2="416" y2="320"/><polygon points="416,310 428,320 416,330"/>
-    <line x1="592" y1="320" x2="600" y2="320"/><polygon points="600,310 612,320 600,330"/>
-    <line x1="776" y1="320" x2="784" y2="320"/><polygon points="784,310 796,320 784,330"/>
-    <line x1="960" y1="320" x2="968" y2="320"/><polygon points="968,310 980,320 968,330"/>
-  </g>
+  <desc id="desc">Six checkpoints preserve explicit authority from the OWNER goal to the OWNER decision.</desc>
+  <rect width="1200" height="472" fill="#F8FAFC"/>
+  <rect x="60" y="42" width="148" height="32" rx="16" fill="#0B1020"/>
+  <text x="134.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">AUTHORITY CHAIN</text>
+  <text x="60" y="124" text-anchor="start" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Every authority change is explicit</text>
+  <text x="60" y="158" text-anchor="start" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">The OWNER remains the only final authority from goal through acceptance.</text>
+  <rect x="64" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-goal" x="60" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="60" y="218" width="160" height="6" rx="3" fill="#0891B2"/>
+  <circle cx="140.0" cy="272" r="22" fill="#CFFAFE"/>
+  <text x="140.0" y="279" text-anchor="middle" fill="#0891B2" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="140.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">OWNER</text>
+  <text x="140.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Goal</text>
+  <line x1="226" y1="320" x2="228" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="220,312 228,320 220,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="248" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-proposal" x="244" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="244" y="218" width="160" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="324.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="324.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="324.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">ARCHITECT</text>
+  <text x="324.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Proposal</text>
+  <line x1="410" y1="320" x2="412" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="404,312 412,320 404,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="432" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-approval" x="428" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="428" y="218" width="160" height="6" rx="3" fill="#0891B2"/>
+  <circle cx="508.0" cy="272" r="22" fill="#CFFAFE"/>
+  <text x="508.0" y="279" text-anchor="middle" fill="#0891B2" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="508.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">OWNER</text>
+  <text x="508.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Approval</text>
+  <line x1="594" y1="320" x2="596" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="588,312 596,320 588,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="616" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-work" x="612" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="612" y="218" width="160" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="692.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="692.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">04</text>
+  <text x="692.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">EXECUTOR</text>
+  <text x="692.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Bounded work</text>
+  <line x1="778" y1="320" x2="780" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="772,312 780,320 772,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="800" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-review" x="796" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="796" y="218" width="160" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="876.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="876.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">05</text>
+  <text x="876.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">ARCHITECT</text>
+  <text x="876.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Review</text>
+  <line x1="962" y1="320" x2="964" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="956,312 964,320 956,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="984" y="226" width="160" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-decision" x="980" y="218" width="160" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="980" y="218" width="160" height="6" rx="3" fill="#0891B2"/>
+  <circle cx="1060.0" cy="272" r="22" fill="#CFFAFE"/>
+  <text x="1060.0" y="279" text-anchor="middle" fill="#0891B2" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">06</text>
+  <text x="1060.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="720" letter-spacing="-0.4">OWNER</text>
+  <text x="1060.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Decision</text>
 </svg>

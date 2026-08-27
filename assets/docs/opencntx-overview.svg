@@ -1,24 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
   <title id="title">OPENCNTX overview</title>
-  <desc id="desc">Three equal cards show selected local files becoming a reviewable context package that the user may share with any AI tool.</desc>
-  <rect width="1200" height="500" fill="#FFFFFF"/>
-  <text x="600" y="82" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#111318">Small context. Clear evidence. Any model.</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="160" width="320" height="280" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="440" y="160" width="320" height="280" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="820" y="160" width="320" height="280" rx="24" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <text x="220" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#6D28D9">1. Select</text>
-    <text x="220" y="292" text-anchor="middle" font-size="22" fill="#111318">Choose local UTF-8 files</text>
-    <text x="220" y="330" text-anchor="middle" font-size="22" fill="#4B5563">Set patterns and budgets</text>
-    <text x="600" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#6D28D9">2. Review</text>
-    <text x="600" y="292" text-anchor="middle" font-size="22" fill="#111318">Inspect the context package</text>
-    <text x="600" y="330" text-anchor="middle" font-size="22" fill="#4B5563">Verify paths, bytes, and hashes</text>
-    <text x="980" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#6D28D9">3. Share</text>
-    <text x="980" y="292" text-anchor="middle" font-size="22" fill="#111318">Use the reviewed output</text>
-    <text x="980" y="330" text-anchor="middle" font-size="22" fill="#4B5563">with any tool you choose</text>
-  </g>
-  <line x1="390" y1="300" x2="422" y2="300" stroke="#7C3AED" stroke-width="6"/>
-  <polygon points="422,288 440,300 422,312" fill="#7C3AED"/>
-  <line x1="770" y1="300" x2="802" y2="300" stroke="#7C3AED" stroke-width="6"/>
-  <polygon points="802,288 820,300 802,312" fill="#7C3AED"/>
+  <desc id="desc">Three stages turn selected local files into a reviewable context package that the user may share with any AI tool.</desc>
+  <rect width="1200" height="500" fill="#F8FAFC"/>
+  <rect x="60" y="42" width="124" height="32" rx="16" fill="#0B1020"/>
+  <text x="122.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">CORE PROMISE</text>
+  <text x="60" y="124" text-anchor="start" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Small context. Clear evidence. Any model.</text>
+  <text x="60" y="158" text-anchor="start" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">A deliberate three-step path from local files to reviewed output.</text>
+  <rect x="64" y="226" width="330" height="232" rx="20" fill="#F1F5F9"/>
+  <rect id="card-select" x="60" y="218" width="330" height="232" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="60" y="218" width="330" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="225.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="225.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="225.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">Select</text>
+  <text x="225.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Choose local UTF-8 files</text>
+  <text x="225.0" y="398" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Set patterns and budgets</text>
+  <line x1="398" y1="334" x2="417" y2="334" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="409,326 417,334 409,342" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="439" y="226" width="330" height="232" rx="20" fill="#F1F5F9"/>
+  <rect id="card-review" x="435" y="218" width="330" height="232" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="435" y="218" width="330" height="6" rx="3" fill="#0891B2"/>
+  <circle cx="600.0" cy="272" r="22" fill="#CFFAFE"/>
+  <text x="600.0" y="279" text-anchor="middle" fill="#0891B2" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="600.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">Review</text>
+  <text x="600.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Inspect the context package</text>
+  <text x="600.0" y="398" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Verify paths, bytes, and hashes</text>
+  <line x1="773" y1="334" x2="792" y2="334" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="784,326 792,334 784,342" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="814" y="226" width="330" height="232" rx="20" fill="#F1F5F9"/>
+  <rect id="card-share" x="810" y="218" width="330" height="232" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="810" y="218" width="330" height="6" rx="3" fill="#047857"/>
+  <circle cx="975.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="975.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="975.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">Share</text>
+  <text x="975.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Use the reviewed output</text>
+  <text x="975.0" y="398" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">with any tool you choose</text>
 </svg>

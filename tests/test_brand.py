@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import colorsys
 import hashlib
 import os
+import re
 import struct
 import subprocess
 import sys
@@ -32,20 +34,22 @@ PNG_DIMENSIONS = {
 
 PALETTE = {
     "#FFFFFF",
-    "#0D1117",
-    "#111318",
-    "#7C3AED",
-    "#6D28D9",
-    "#C084FC",
+    "#F8FAFC",
+    "#0B1020",
+    "#111827",
+    "#171E32",
+    "#DDA0DD",
+    "#22D3EE",
+    "#94A3B8",
 }
 
-ALLOWED_ELEMENTS = {"svg", "g", "title", "desc", "rect", "circle", "text"}
+ALLOWED_ELEMENTS = {"svg", "g", "title", "desc", "rect", "circle", "text", "tspan"}
 ALLOWED_ATTRIBUTES = {
     "svg": {"width", "height", "viewBox", "role", "aria-labelledby"},
     "g": {"id", "fill", "aria-label"},
     "title": {"id"},
     "desc": {"id"},
-    "rect": {"x", "y", "width", "height", "fill"},
+    "rect": {"id", "x", "y", "width", "height", "fill"},
     "circle": {"cx", "cy", "r", "fill"},
     "text": {
         "id",
@@ -60,6 +64,7 @@ ALLOWED_ATTRIBUTES = {
         "textLength",
         "lengthAdjust",
     },
+    "tspan": {"fill"},
 }
 
 
@@ -115,6 +120,23 @@ def _png(path: Path):
 
 
 class BrandTests(unittest.TestCase):
+    def test_plum_is_the_only_purple_hue_in_every_public_visual(self) -> None:
+        visual_roots = (BRAND, ROOT / "assets" / "docs")
+        colors = set()
+        for visual_root in visual_roots:
+            for path in visual_root.glob("*.svg"):
+                colors.update(re.findall(r"#[0-9A-F]{6}", path.read_text(encoding="utf-8")))
+
+        purple_hues = set()
+        for color in colors:
+            red, green, blue = (int(color[index : index + 2], 16) / 255 for index in (1, 3, 5))
+            hue, saturation, _ = colorsys.rgb_to_hsv(red, green, blue)
+            degrees = hue * 360
+            if 270 <= degrees <= 330 and saturation >= 0.15:
+                purple_hues.add(color)
+
+        self.assertEqual({"#DDA0DD"}, purple_hues)
+
     def test_svg_profile_dimensions_and_accessibility_are_exact(self) -> None:
         forbidden = (
             b"<script",
@@ -158,12 +180,8 @@ class BrandTests(unittest.TestCase):
                     if fill:
                         self.assertIn(fill, PALETTE)
 
-    def test_wordmarks_use_standard_text_and_exact_owner_colors(self) -> None:
-        expected = {
-            "opencntx-wordmark-light.svg": ("#FFFFFF", "#6D28D9", "#111318"),
-            "opencntx-wordmark-dark.svg": ("#0D1117", "#C084FC", "#FFFFFF"),
-        }
-        for name, colors in expected.items():
+    def test_wordmarks_use_one_rounded_text_run_and_exact_plum(self) -> None:
+        for name in ("opencntx-wordmark-light.svg", "opencntx-wordmark-dark.svg"):
             root = ElementTree.parse(BRAND / name).getroot()
             groups = {
                 element.attrib.get("id"): element
@@ -171,36 +189,56 @@ class BrandTests(unittest.TestCase):
                 if _local_name(element.tag) == "g"
             }
             background = next(element for element in root if _local_name(element.tag) == "rect")
-            self.assertEqual(colors[0], background.attrib["fill"])
-            self.assertEqual("OPEN", groups["word-open"].attrib["aria-label"])
-            self.assertEqual("CNTX", groups["word-cntx"].attrib["aria-label"])
-            self.assertEqual(colors[1], groups["word-open"].attrib["fill"])
-            self.assertEqual(colors[2], groups["word-cntx"].attrib["fill"])
-            text = [element for element in root.iter() if _local_name(element.tag) == "text"]
-            self.assertEqual(["OPEN", "CNTX"], [element.text for element in text])
-            for element in text:
-                self.assertEqual("Arial, Helvetica, sans-serif", element.attrib["font-family"])
+            self.assertEqual("#0B1020", background.attrib["fill"])
+            self.assertEqual("OPENCNTX", groups["wordmark"].attrib["aria-label"])
+            wordmark = next(iter(groups["wordmark"]))
+            self.assertEqual("text", _local_name(wordmark.tag))
+            self.assertEqual(
+                "Trebuchet MS, Trebuchet, Arial, sans-serif",
+                wordmark.attrib["font-family"],
+            )
+            self.assertEqual("-0.015em", wordmark.attrib["letter-spacing"])
+            self.assertEqual("spacing", wordmark.attrib["lengthAdjust"])
+            spans = list(wordmark)
+            self.assertEqual(["open", "cntx"], [span.text for span in spans])
+            self.assertEqual(["#FFFFFF", "#DDA0DD"], [span.attrib["fill"] for span in spans])
 
     def test_wordmark_and_social_geometry_is_centered(self) -> None:
         for name in ("opencntx-wordmark-light.svg", "opencntx-wordmark-dark.svg"):
             root = ElementTree.parse(BRAND / name).getroot()
             groups = {element.attrib.get("id"): element for element in root}
-            symbol_shapes = list(groups["avatar-symbol"])
+            symbol_shapes = list(groups["avatar-tile"])
             left = min(_shape_left(shape) for shape in symbol_shapes)
-            open_text = next(iter(groups["word-open"]))
-            cntx_text = next(iter(groups["word-cntx"]))
-            right = float(cntx_text.attrib["x"]) + float(cntx_text.attrib["textLength"])
-            self.assertEqual(110.0, left)
-            self.assertEqual(690.0, right)
+            wordmark = next(iter(groups["wordmark"]))
+            right = float(wordmark.attrib["x"]) + float(wordmark.attrib["textLength"])
+            self.assertEqual(132.0, left)
+            self.assertEqual(668.0, right)
             self.assertEqual(left, 800.0 - right)
-            self.assertEqual(260.0, float(open_text.attrib["x"]))
+            self.assertEqual(286.0, float(wordmark.attrib["x"]))
 
         social = ElementTree.parse(BRAND / "opencntx-social-preview.svg").getroot()
+        social_wordmark = next(
+            element for element in social.iter() if element.attrib.get("id") == "social-wordmark"
+        )
+        self.assertEqual(
+            "Trebuchet MS, Trebuchet, Arial, sans-serif",
+            social_wordmark.attrib["font-family"],
+        )
+        self.assertEqual("-0.015em", social_wordmark.attrib["letter-spacing"])
+        self.assertEqual("spacing", social_wordmark.attrib["lengthAdjust"])
+        self.assertEqual(
+            ["open", "cntx"],
+            [span.text for span in social_wordmark],
+        )
+        self.assertEqual(
+            ["#FFFFFF", "#DDA0DD"],
+            [span.attrib["fill"] for span in social_wordmark],
+        )
         tagline = next(
             element for element in social.iter() if element.attrib.get("id") == "tagline"
         )
-        self.assertEqual("640", tagline.attrib["x"])
-        self.assertEqual("middle", tagline.attrib["text-anchor"])
+        self.assertEqual("116", tagline.attrib["x"])
+        self.assertNotIn("text-anchor", tagline.attrib)
         self.assertEqual("Small context. Clear evidence. Any model.", tagline.text)
 
     def test_avatar_is_theme_neutral_symmetric_and_contains_no_text(self) -> None:
@@ -213,8 +251,13 @@ class BrandTests(unittest.TestCase):
                 root = ElementTree.parse(BRAND / name).getroot()
                 self.assertFalse(any(_local_name(element.tag) == "text" for element in root.iter()))
                 groups = {element.attrib.get("id"): element for element in root}
-                self.assertEqual("#7C3AED", groups["avatar-symbol"].attrib["fill"])
-                self.assertEqual("#FFFFFF", groups["context-frame"].attrib["fill"])
+                self.assertEqual("#0B1020", groups["avatar-tile"].attrib["fill"])
+                self.assertEqual("#FFFFFF", groups["context-primary"].attrib["fill"])
+                self.assertEqual("#DDA0DD", groups["context-accent"].attrib["fill"])
+                evidence = next(
+                    element for element in root if element.attrib.get("id") == "evidence-node"
+                )
+                self.assertEqual("#FFFFFF", evidence.attrib["fill"])
 
         light = (BRAND / "opencntx-symbol-light.svg").read_text(encoding="utf-8")
         dark = (BRAND / "opencntx-symbol-dark.svg").read_text(encoding="utf-8")
@@ -228,14 +271,14 @@ class BrandTests(unittest.TestCase):
 
     def test_text_and_graphic_contrasts_meet_the_contract(self) -> None:
         text_pairs = (
-            ("#111318", "#FFFFFF"),
-            ("#6D28D9", "#FFFFFF"),
-            ("#FFFFFF", "#0D1117"),
-            ("#C084FC", "#0D1117"),
+            ("#111827", "#FFFFFF"),
+            ("#F8FAFC", "#0B1020"),
+            ("#94A3B8", "#0B1020"),
         )
         for foreground, background in text_pairs:
             self.assertGreaterEqual(_contrast(foreground, background), 4.5)
-        self.assertGreaterEqual(_contrast("#7C3AED", "#FFFFFF"), 3.0)
+        self.assertGreaterEqual(_contrast("#DDA0DD", "#0B1020"), 4.5)
+        self.assertGreaterEqual(_contrast("#FFFFFF", "#0B1020"), 4.5)
 
     def test_png_dimensions_profiles_and_transparency_are_exact(self) -> None:
         for name, dimensions in PNG_DIMENSIONS.items():

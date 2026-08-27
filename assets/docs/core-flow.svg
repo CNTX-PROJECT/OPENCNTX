@@ -1,29 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="450" viewBox="0 0 1200 450" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="472" viewBox="0 0 1200 472" role="img" aria-labelledby="title desc">
   <title id="title">Core package flow</title>
-  <desc id="desc">Five equal steps show initialization, preview and packing, human review, verification, and optional sharing.</desc>
-  <rect width="1200" height="450" fill="#FFFFFF"/>
-  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#111318">The complete core flow</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="150" width="180" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="285" y="150" width="180" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="510" y="150" width="180" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="735" y="150" width="180" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <rect x="960" y="150" width="180" height="240" rx="22" fill="#F6F3FF" stroke="#7C3AED" stroke-width="4"/>
-    <text x="150" y="218" text-anchor="middle" font-size="26" font-weight="700" fill="#6D28D9">1. Init</text>
-    <text x="375" y="218" text-anchor="middle" font-size="22" font-weight="700" fill="#6D28D9">2. Preview / pack</text>
-    <text x="600" y="218" text-anchor="middle" font-size="26" font-weight="700" fill="#6D28D9">3. Inspect</text>
-    <text x="825" y="218" text-anchor="middle" font-size="26" font-weight="700" fill="#6D28D9">4. Verify</text>
-    <text x="1050" y="218" text-anchor="middle" font-size="26" font-weight="700" fill="#6D28D9">5. Share</text>
-    <text x="150" y="278" text-anchor="middle" font-size="20" fill="#111318">Create config</text>
-    <text x="375" y="278" text-anchor="middle" font-size="20" fill="#111318">Build package</text>
-    <text x="600" y="278" text-anchor="middle" font-size="20" fill="#111318">Read all output</text>
-    <text x="825" y="278" text-anchor="middle" font-size="20" fill="#111318">Check drift</text>
-    <text x="1050" y="278" text-anchor="middle" font-size="20" fill="#111318">Your decision</text>
-  </g>
-  <g stroke="#7C3AED" stroke-width="6" fill="#7C3AED">
-    <line x1="246" y1="270" x2="267" y2="270"/><polygon points="267,258 285,270 267,282"/>
-    <line x1="471" y1="270" x2="492" y2="270"/><polygon points="492,258 510,270 492,282"/>
-    <line x1="696" y1="270" x2="717" y2="270"/><polygon points="717,258 735,270 717,282"/>
-    <line x1="921" y1="270" x2="942" y2="270"/><polygon points="942,258 960,270 942,282"/>
-  </g>
+  <desc id="desc">Five checkpoints show initialization, preview and packing, human review, verification, and optional sharing.</desc>
+  <rect width="1200" height="472" fill="#F8FAFC"/>
+  <rect x="60" y="42" width="156" height="32" rx="16" fill="#0B1020"/>
+  <text x="138.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">FIVE CHECKPOINTS</text>
+  <text x="60" y="124" text-anchor="start" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">The complete core flow</text>
+  <text x="60" y="158" text-anchor="start" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">Every checkpoint is visible, reviewable, and under your control.</text>
+  <rect x="64" y="226" width="184" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-init" x="60" y="218" width="184" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="60" y="218" width="184" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="152.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="152.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="152.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">Init</text>
+  <text x="152.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Create config</text>
+  <line x1="251" y1="320" x2="267" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="259,312 267,320 259,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="288" y="226" width="184" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-pack" x="284" y="218" width="184" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="284" y="218" width="184" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="376.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="376.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="376.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">Preview / pack</text>
+  <text x="376.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Build package</text>
+  <line x1="475" y1="320" x2="491" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="483,312 491,320 483,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="512" y="226" width="184" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-inspect" x="508" y="218" width="184" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="508" y="218" width="184" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="600.0" cy="272" r="22" fill="#0B1020"/>
+  <text x="600.0" y="279" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="600.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">Inspect</text>
+  <text x="600.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Read all output</text>
+  <line x1="699" y1="320" x2="715" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="707,312 715,320 707,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="736" y="226" width="184" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-verify" x="732" y="218" width="184" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="732" y="218" width="184" height="6" rx="3" fill="#0891B2"/>
+  <circle cx="824.0" cy="272" r="22" fill="#CFFAFE"/>
+  <text x="824.0" y="279" text-anchor="middle" fill="#0891B2" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">04</text>
+  <text x="824.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">Verify</text>
+  <text x="824.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Check drift</text>
+  <line x1="923" y1="320" x2="939" y2="320" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="931,312 939,320 931,328" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="960" y="226" width="184" height="204" rx="20" fill="#F1F5F9"/>
+  <rect id="card-share" x="956" y="218" width="184" height="204" rx="20" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="956" y="218" width="184" height="6" rx="3" fill="#047857"/>
+  <circle cx="1048.0" cy="272" r="22" fill="#D1FAE5"/>
+  <text x="1048.0" y="279" text-anchor="middle" fill="#047857" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">05</text>
+  <text x="1048.0" y="326" text-anchor="middle" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">Share</text>
+  <text x="1048.0" y="368" text-anchor="middle" fill="#475569" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Your decision</text>
 </svg>
