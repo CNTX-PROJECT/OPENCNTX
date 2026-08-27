@@ -3,7 +3,7 @@
 [Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
 
 OPENCNTX publishes machine-readable contracts with the installed package. They
-make the current Beta boundary reviewable without turning it into a Stable
+make the current prerelease/RC boundary reviewable without turning it into a Stable
 compatibility promise.
 
 ## Public surface catalog

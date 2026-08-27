@@ -28,9 +28,9 @@ OPENCNTX never sends them for you.
 
 ## Start in four steps
 
-OPENCNTX requires Python 3.11 through 3.14. The package line is `v1.0.0b1` and
-is Beta. It is public only when both the live `v1.0.0b1` tag and the
-`OPENCNTX v1.0.0b1` GitHub Release are present.
+OPENCNTX requires Python 3.11 through 3.14. The package line is `v1.0.0rc1` and
+is Beta. It is public only when both the live `v1.0.0rc1` tag and the
+`OPENCNTX v1.0.0rc1` GitHub Release are present.
 
 ### 1. Install the Beta release after publication
 
@@ -38,7 +38,7 @@ With `pipx` and Git already installed, one pinned command creates an isolated
 tool environment:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0b1"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0rc1"
 opencntx --version
 opencntx --help
 ```
@@ -46,7 +46,7 @@ opencntx --help
 The source-checkout route remains available:
 
 ```powershell
-git clone --branch v1.0.0b1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.0.0rc1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -147,17 +147,17 @@ route, never in a public issue.
 
 | Item | Current public state |
 |---|---|
-| Release line | `v1.0.0b1` Beta; public only after the live tag and GitHub Release exist |
-| Package version | `1.0.0b1` |
+| Release line | `v1.0.0rc1` Beta; public only after the live tag and GitHub Release exist |
+| Package version | `1.0.0rc1` |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`, eight candidate matrix jobs |
 | Runtime dependencies | none |
 | License | [Apache-2.0](LICENSE) |
 
-The `v1.0.0b1` GitHub Release is complete only when it is live with exactly
-`opencntx-1.0.0b1-py3-none-any.whl`, `opencntx-1.0.0b1.tar.gz`, `SHA256SUMS`,
-and `BUILD-RECORD.json`. Until the live tag and Release both exist, all v1.0.0b1
+The `v1.0.0rc1` GitHub Release is complete only when it is live with exactly
+`opencntx-1.0.0rc1-py3-none-any.whl`, `opencntx-1.0.0rc1.tar.gz`, `SHA256SUMS`,
+and `BUILD-RECORD.json`. Until the live tag and Release both exist, all v1.0.0rc1
 builds are unpublished candidates. OPENCNTX is not published on PyPI or
 TestPyPI. See [Release artifacts](docs/release-artifacts.md) for the exact
 boundary.

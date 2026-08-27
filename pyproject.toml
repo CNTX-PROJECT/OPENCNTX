@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.0.0b1"
+version = "1.0.0rc1"
 description = "Create small, explicit, verifiable context packages for one AI task."
 readme = "README.md"
 requires-python = ">=3.11"
