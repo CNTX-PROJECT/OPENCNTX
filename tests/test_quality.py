@@ -601,8 +601,12 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.0.0rc1")
-        self.assertIn("Development Status :: 4 - Beta", project["classifiers"])
+        self.assertEqual(version, "1.0.0")
+        self.assertIn(
+            "Development Status :: 5 - Production/Stable",
+            project["classifiers"],
+        )
+        self.assertNotIn("Development Status :: 4 - Beta", project["classifiers"])
         self.assertNotIn("Development Status :: 3 - Alpha", project["classifiers"])
         changelog = CHANGELOG.read_text(encoding="utf-8")
         readme = README.read_text(encoding="utf-8")
@@ -610,6 +614,7 @@ class PublicQualityTests(unittest.TestCase):
         faq = (DOCS / "faq.md").read_text(encoding="utf-8")
         roadmap = (DOCS / "roadmap.md").read_text(encoding="utf-8")
         release_artifacts = (DOCS / "release-artifacts.md").read_text(encoding="utf-8")
+        contracts = (DOCS / "contracts-and-compatibility.md").read_text(encoding="utf-8")
         workspace = (DOCS / "workspace.md").read_text(encoding="utf-8")
         workflow = WORKFLOW.read_text(encoding="utf-8")
         release_tool = (ROOT / "tools" / "release_artifacts.py").read_text(encoding="utf-8")
@@ -630,13 +635,24 @@ class PublicQualityTests(unittest.TestCase):
 
         for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
-                self.assertIn("v1.0.0rc1", public_surface)
-                self.assertIn("Beta", public_surface)
-                self.assertNotRegex(public_surface, r"(?i)\bstable release\b")
+                self.assertIn("v1.0.0", public_surface)
+                self.assertIn("Stable", public_surface)
+                self.assertNotIn("v1.0.0rc1", public_surface)
+                self.assertNotIn("Development Status :: 4 - Beta", public_surface)
+
+        for maintenance_claim in (
+            "1.0.x",
+            "backward-compatible",
+            "separate OWNER assignment",
+            "does not promise unlimited support",
+            "2.0.0",
+        ):
+            with self.subTest(maintenance_claim=maintenance_claim):
+                self.assertIn(maintenance_claim, contracts)
 
         for asset_name in (
-            "opencntx-1.0.0rc1-py3-none-any.whl",
-            "opencntx-1.0.0rc1.tar.gz",
+            "opencntx-1.0.0-py3-none-any.whl",
+            "opencntx-1.0.0.tar.gz",
             "SHA256SUMS",
             "BUILD-RECORD.json",
         ):

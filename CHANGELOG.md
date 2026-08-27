@@ -6,6 +6,18 @@ All notable OPENCNTX changes are recorded here.
 
 No changes recorded.
 
+## 1.0.0 - 2026-08-27
+
+### Changed
+
+- Advanced the package and release metadata from the accepted RC1 to final
+  `1.0.0` with `Development Status :: 5 - Production/Stable`, without changing
+  product behavior, runtime dependencies, supported platforms, or the frozen
+  public contract.
+- Synchronized the public Stable, installation, release-artifact, and roadmap
+  text and added a bounded maintenance contract for future `1.0.x` fixes and
+  backward-compatible `1.x` additions.
+
 ## 1.0.0rc1 - 2026-08-26
 
 ### Changed
