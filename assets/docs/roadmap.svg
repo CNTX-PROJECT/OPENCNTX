@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="472" viewBox="0 0 1200 472" role="img" aria-labelledby="title desc">
   <title id="title">Completed OPENCNTX roadmap</title>
   <desc id="desc">Four completed milestones show the runnable core, public core release, workspace foundation, and version 1.0.0 Production Stable line.</desc>
-  <rect width="1200" height="472" fill="#F8FAFC"/>
   <rect x="60" y="42" width="148" height="32" rx="16" fill="#0B1020"/>
   <text x="134.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">RELEASE JOURNEY</text>
   <text x="60" y="124" text-anchor="start" fill="#0F172A" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Completed public milestones</text>

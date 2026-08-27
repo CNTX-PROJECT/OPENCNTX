@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="160" viewBox="0 0 800 160" role="img" aria-labelledby="title description">
   <title id="title">OPENCNTX wordmark for light screens</title>
-  <desc id="description">Centered lowercase OPENCNTX wordmark with a white and Plum portal on deep navy and one continuous rounded letter rhythm.</desc>
-  <rect x="0" y="0" width="800" height="160" fill="#0B1020"/>
+  <desc id="description">Centered lowercase OPENCNTX wordmark with deep-ink and Plum lettering on a transparent light-screen canvas and one continuous rounded letter rhythm.</desc>
   <g id="avatar-tile" aria-label="OPENCNTX portal symbol" fill="#171E32">
     <rect x="152" y="20" width="78" height="120"/><rect x="132" y="40" width="118" height="80"/>
     <circle cx="152" cy="40" r="20"/><circle cx="230" cy="40" r="20"/><circle cx="152" cy="120" r="20"/><circle cx="230" cy="120" r="20"/>
@@ -14,6 +13,6 @@
   </g>
   <rect x="187" y="76" width="9" height="9" fill="#FFFFFF"/>
   <g id="wordmark" aria-label="OPENCNTX">
-    <text x="286" y="113" font-family="Trebuchet MS, Trebuchet, Arial, sans-serif" font-size="90" font-weight="700" letter-spacing="-0.015em" textLength="382" lengthAdjust="spacing"><tspan fill="#FFFFFF">open</tspan><tspan fill="#DDA0DD">cntx</tspan></text>
+    <text x="286" y="113" font-family="Trebuchet MS, Trebuchet, Arial, sans-serif" font-size="90" font-weight="700" letter-spacing="-0.015em" textLength="382" lengthAdjust="spacing"><tspan fill="#0F172A">open</tspan><tspan fill="#DDA0DD">cntx</tspan></text>
   </g>
 </svg>

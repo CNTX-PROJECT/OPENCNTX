@@ -9,8 +9,10 @@ the reviewed output, and the small white square represents traceable evidence.
 ## Core rule
 
 - Write `OPENCNTX` in uppercase without a space.
-- Write the official display wordmark as lowercase `opencntx` on deep navy.
-- `open` is white and `cntx` is Plum in every official logo.
+- Write the official display wordmark as lowercase `opencntx` on a transparent
+  canvas that inherits the host surface.
+- `open` is white on dark screens and deep ink on light screens. `cntx` is
+  always Plum.
 - Use the same open-context portal for the avatar, icon, wordmark, and social
   preview.
 - Center the complete mark, not only the text.
@@ -22,7 +24,7 @@ the reviewed output, and the small white square represents traceable evidence.
 
 | Use | Light screen | Dark screen |
 |---|---|---|
-| Canvas | `#F8FAFC` | `#0B1020` |
+| Host canvas (not painted by embedded assets) | `#F8FAFC` | `#0B1020` |
 | Surface | `#FFFFFF` | `#111827` |
 | Main text | `#0F172A` | `#F8FAFC` |
 | Secondary text | `#475569` | `#CBD5E1` |
@@ -58,8 +60,8 @@ No font file or remote font request is bundled.
 
 | File | Use |
 |---|---|
-| `opencntx-wordmark-light.svg` | centered wordmark on a light screen |
-| `opencntx-wordmark-dark.svg` | centered wordmark on a dark screen |
+| `opencntx-wordmark-light.svg` | transparent centered wordmark for a light screen |
+| `opencntx-wordmark-dark.svg` | transparent centered wordmark for a dark screen |
 | `opencntx-avatar.svg` | theme-neutral avatar source without small text |
 | `opencntx-avatar-512.png` | generated avatar upload |
 | `opencntx-symbol-light.svg` | compact symbol for a light screen |
@@ -70,9 +72,10 @@ No font file or remote font request is bundled.
 | `opencntx-social-preview-1280x640.png` | approved exact social preview export |
 
 Documentation diagrams use the light filename as the default and a matching
-`-dark.svg` file for dark screens. Both variants have identical words and
-geometry. Their restrained cards, accent rails, numbered checkpoints, and
-connectors form one reusable information system rather than separate artwork.
+`-dark.svg` file for dark screens. Both variants have transparent outer
+canvases plus identical words and geometry. Their restrained cards, accent
+rails, numbered checkpoints, and connectors form one reusable information
+system rather than separate artwork.
 
 ## Alignment and clear space
 
@@ -88,8 +91,8 @@ connectors form one reusable information system rather than separate artwork.
 ## Do not
 
 - change the OPEN/CNTX color relationship;
-- place the wordmark on another colored background instead of its official
-  deep-navy canvas;
+- add an opaque outer canvas behind an embedded wordmark or documentation
+  diagram;
 - add gradients, glow, decorative network lines, or photo textures;
 - stretch, rotate, or crop the mark;
 - add small text to the avatar;
