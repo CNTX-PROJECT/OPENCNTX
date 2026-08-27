@@ -21,15 +21,15 @@ import release_artifacts
 
 class ReleaseArtifactUnitTests(unittest.TestCase):
     def _write_candidate_record(self, root: Path) -> dict[str, Any]:
-        wheel = root / "opencntx-1.0.0rc1-py3-none-any.whl"
-        sdist = root / "opencntx-1.0.0rc1.tar.gz"
+        wheel = root / "opencntx-1.0.0-py3-none-any.whl"
+        sdist = root / "opencntx-1.0.0.tar.gz"
         wheel.write_bytes(b"wheel")
         sdist.write_bytes(b"sdist")
         artifacts = (wheel, sdist)
         release_artifacts._write_checksums(root, artifacts)
         record = release_artifacts._record(
             artifacts=artifacts,
-            version="1.0.0rc1",
+            version="1.0.0",
             commit="a" * 40,
             tree="b" * 40,
             source_date_epoch=1,
@@ -113,7 +113,7 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
                     record,
                     release_artifacts.verify_candidate(
                         root,
-                        expected_version="1.0.0rc1",
+                        expected_version="1.0.0",
                         expected_commit="a" * 40,
                         expected_tree="b" * 40,
                     ),
@@ -144,7 +144,7 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
                 ):
                     release_artifacts.verify_candidate(
                         root,
-                        expected_version="1.0.0rc1",
+                        expected_version="1.0.0",
                         expected_commit="a" * 40,
                         expected_tree="b" * 40,
                     )

@@ -3,8 +3,26 @@
 [Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
 
 OPENCNTX publishes machine-readable contracts with the installed package. They
-make the current prerelease/RC boundary reviewable without turning it into a Stable
-compatibility promise.
+make the `1.0.0` Production/Stable boundary reviewable. Stable applies only to
+the documented CLI, data-format, platform, and support boundaries; internal
+Python implementation details are not a promised public library API.
+
+## Maintenance after 1.0.0
+
+- A `1.0.x` patch release may contain backward-compatible defect, security,
+  and documentation corrections within the frozen 1.0 contract. It may not
+  intentionally break that contract or automatically add a product feature.
+- A future `1.x` minor release may add only backward-compatible behavior after
+  a separate OWNER assignment. Existing Stable routes and supported durable
+  format majors remain valid within that line.
+- An intentional breaking change requires a separately approved proposal,
+  migration and deprecation decision, and a new major line such as `2.0.0`.
+- Support, deprecation, and end-of-life dates are published only through an
+  explicit future decision. Version `1.0.0` does not promise unlimited support,
+  a response-time SLA, certification, macOS, Python 3.15, or a public Python
+  library API.
+- Completing `1.0.0` does not automatically start `1.0.1`, maintenance work,
+  or a new roadmap.
 
 ## Public surface catalog
 
@@ -56,9 +74,9 @@ complete, safe, or automatically migratable.
 
 ## Platform boundary
 
-The candidate source supports Python 3.11, 3.12, 3.13, and 3.14 on Windows and
+The Stable source supports Python 3.11, 3.12, 3.13, and 3.14 on Windows and
 Ubuntu. Only a successful live run of all eight operating-system and Python
-pairs on the exact commit counts as candidate proof. The current GitHub ruleset
-is a separate setting and is not changed by these source files.
+pairs on the exact commit proves that commit. The current GitHub ruleset is a
+separate setting and is not changed by these source files.
 
 [Documentation home](README.md)
