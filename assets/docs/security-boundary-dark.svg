@@ -1,25 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="516" viewBox="0 0 1200 516" role="img" aria-labelledby="title desc">
   <title id="title">Local security boundary for dark screens</title>
-  <desc id="desc">Three equal cards show local files, local OPENCNTX processing, and an external AI tool that receives data only after the user's separate sharing decision.</desc>
-  <rect width="1200" height="500" fill="#0D1117"/>
-  <text x="600" y="82" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">Local until you choose to share</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="160" width="300" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="450" y="160" width="300" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="840" y="160" width="300" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <text x="210" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">LOCAL FILES</text>
-    <text x="210" y="292" text-anchor="middle" font-size="21" fill="#FFFFFF">You select the input</text>
-    <text x="210" y="330" text-anchor="middle" font-size="21" fill="#D1D5DB">Nothing is uploaded</text>
-    <text x="600" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">OPENCNTX</text>
-    <text x="600" y="292" text-anchor="middle" font-size="21" fill="#FFFFFF">Builds and verifies locally</text>
-    <text x="600" y="330" text-anchor="middle" font-size="21" fill="#D1D5DB">You inspect the output</text>
-    <text x="990" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#C084FC">EXTERNAL TOOL</text>
-    <text x="990" y="292" text-anchor="middle" font-size="21" fill="#FFFFFF">Receives only what you send</text>
-    <text x="990" y="330" text-anchor="middle" font-size="21" fill="#D1D5DB">Outside OPENCNTX control</text>
-  </g>
-  <line x1="370" y1="300" x2="432" y2="300" stroke="#C084FC" stroke-width="6"/>
-  <polygon points="432,288 450,300 432,312" fill="#C084FC"/>
-  <line x1="760" y1="300" x2="822" y2="300" stroke="#C084FC" stroke-width="6" stroke-dasharray="12 10"/>
-  <polygon points="822,288 840,300 822,312" fill="#C084FC"/>
-  <text x="800" y="275" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#D1D5DB">your decision</text>
+  <desc id="desc">Local files stay inside the OPENCNTX boundary until the user separately chooses to share reviewed output with an external tool.</desc>
+  <rect width="1200" height="516" fill="#0B1020"/>
+  <rect x="60" y="42" width="156" height="32" rx="16" fill="#1E293B"/>
+  <text x="138.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">PRIVACY BOUNDARY</text>
+  <text x="60" y="124" text-anchor="start" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Local until you choose to share</text>
+  <text x="60" y="158" text-anchor="start" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">OPENCNTX does not upload your files; the final transfer remains your decision.</text>
+  <rect x="44" y="202" width="742" height="264" rx="28" fill="none" stroke="#DDA0DD" stroke-width="2" stroke-dasharray="10 10"/>
+  <rect x="68" y="186" width="164" height="32" rx="16" fill="#1E293B"/>
+  <text x="150" y="208" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="780" letter-spacing="1.4">LOCAL BOUNDARY</text>
+  <rect x="76" y="242" width="310" height="204" rx="20" fill="#1E293B"/>
+  <rect id="card-local-files" x="72" y="234" width="310" height="204" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="72" y="234" width="310" height="6" rx="3" fill="#DDA0DD"/>
+  <circle cx="227.0" cy="288" r="22" fill="#1E293B"/>
+  <text x="227.0" y="295" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="227.0" y="342" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">LOCAL FILES</text>
+  <text x="227.0" y="384" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">You select the input</text>
+  <text x="227.0" y="414" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Nothing is uploaded</text>
+  <rect x="430" y="242" width="310" height="204" rx="20" fill="#1E293B"/>
+  <rect id="card-opencntx" x="426" y="234" width="310" height="204" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="426" y="234" width="310" height="6" rx="3" fill="#22D3EE"/>
+  <circle cx="581.0" cy="288" r="22" fill="#164E63"/>
+  <text x="581.0" y="295" text-anchor="middle" fill="#22D3EE" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="581.0" y="342" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="720" letter-spacing="-0.4">OPENCNTX</text>
+  <text x="581.0" y="384" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Builds and verifies locally</text>
+  <text x="581.0" y="414" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">You inspect the output</text>
+  <line x1="389" y1="336" x2="409" y2="336" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="401,328 409,336 401,344" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="850" y="242" width="294" height="204" rx="20" fill="#1E293B"/>
+  <rect id="card-external" x="846" y="234" width="294" height="204" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="846" y="234" width="294" height="6" rx="3" fill="#34D399"/>
+  <circle cx="993.0" cy="288" r="22" fill="#064E3B"/>
+  <text x="993.0" y="295" text-anchor="middle" fill="#34D399" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="993.0" y="342" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="720" letter-spacing="-0.4">EXTERNAL TOOL</text>
+  <text x="993.0" y="384" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Receives only what you send</text>
+  <text x="993.0" y="414" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Outside OPENCNTX control</text>
+  <line x1="786" y1="336" x2="829" y2="336" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="821,328 829,336 821,344" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="757" y="370" width="112" height="28" rx="14" fill="#064E3B"/>
+  <text x="813" y="390" text-anchor="middle" fill="#34D399" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="11" font-weight="800" letter-spacing="1.0">YOUR DECISION</text>
 </svg>

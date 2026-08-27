@@ -403,8 +403,8 @@ class PublicQualityTests(unittest.TestCase):
                 dark = ElementTree.parse(diagram_root / dark_name).getroot()
                 self.assertEqual("1200", light.attrib["width"])
                 self.assertEqual(light.attrib["viewBox"], dark.attrib["viewBox"])
-                self.assertEqual("#FFFFFF", list(light)[2].attrib["fill"])
-                self.assertEqual("#0D1117", list(dark)[2].attrib["fill"])
+                self.assertEqual("#F8FAFC", list(light)[2].attrib["fill"])
+                self.assertEqual("#0B1020", list(dark)[2].attrib["fill"])
 
                 def geometry(root):
                     result = []
@@ -428,22 +428,21 @@ class PublicQualityTests(unittest.TestCase):
                     element
                     for element in light.iter()
                     if element.tag.rsplit("}", 1)[-1] == "rect"
-                    and element.attrib.get("stroke-width") == "4"
+                    and element.attrib.get("id", "").startswith("card-")
                 ]
-                widths = {float(card.attrib["width"]) for card in cards}
-                heights = {float(card.attrib["height"]) for card in cards}
-                self.assertEqual(1, len(widths))
-                self.assertEqual(1, len(heights))
-                x_values = sorted({float(card.attrib["x"]) for card in cards})
-                width = widths.pop()
-                self.assertEqual(60.0, x_values[0])
-                self.assertEqual(1140.0, x_values[-1] + width)
-                if len(x_values) > 2:
-                    gaps = {
-                        x_values[index + 1] - x_values[index] - width
-                        for index in range(len(x_values) - 1)
-                    }
-                    self.assertEqual(1, len(gaps))
+                self.assertGreaterEqual(len(cards), 3)
+                for card in cards:
+                    x = float(card.attrib["x"])
+                    y = float(card.attrib["y"])
+                    width = float(card.attrib["width"])
+                    height = float(card.attrib["height"])
+                    self.assertGreaterEqual(x, 44.0)
+                    self.assertGreaterEqual(y, 218.0)
+                    self.assertLessEqual(x + width, 1140.0)
+                    self.assertGreaterEqual(width, 150.0)
+                    self.assertGreaterEqual(height, 150.0)
+                    self.assertEqual("20", card.attrib["rx"])
+                    self.assertEqual("2", card.attrib["stroke-width"])
 
         public_markdown = "\n".join(
             path.read_text(encoding="utf-8") for path in (README, *DOCS.glob("*.md"))

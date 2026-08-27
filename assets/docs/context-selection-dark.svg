@@ -1,20 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
   <title id="title">Task-bound context selection for dark screens</title>
-  <desc id="desc">Three equal cards separate always-needed hot context, task-related warm context, and excluded cold history.</desc>
-  <rect width="1200" height="500" fill="#0D1117"/>
-  <text x="600" y="82" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">Load only what the task proves it needs</text>
-  <g font-family="Arial, Helvetica, sans-serif">
-    <rect x="60" y="160" width="320" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="440" y="160" width="320" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <rect x="820" y="160" width="320" height="280" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
-    <text x="220" y="235" text-anchor="middle" font-size="30" font-weight="700" fill="#C084FC">HOT</text>
-    <text x="220" y="292" text-anchor="middle" font-size="22" fill="#FFFFFF">Control and exact task</text>
-    <text x="220" y="330" text-anchor="middle" font-size="22" fill="#D1D5DB">Always required</text>
-    <text x="600" y="235" text-anchor="middle" font-size="30" font-weight="700" fill="#C084FC">WARM</text>
-    <text x="600" y="292" text-anchor="middle" font-size="22" fill="#FFFFFF">Pinned current knowledge</text>
-    <text x="600" y="330" text-anchor="middle" font-size="22" fill="#D1D5DB">Included by relation</text>
-    <text x="980" y="235" text-anchor="middle" font-size="30" font-weight="700" fill="#C084FC">COLD</text>
-    <text x="980" y="292" text-anchor="middle" font-size="22" fill="#FFFFFF">Unrelated project history</text>
-    <text x="980" y="330" text-anchor="middle" font-size="22" fill="#D1D5DB">Not loaded</text>
-  </g>
+  <desc id="desc">Hot, warm, and cold lanes separate required task context, related knowledge, and excluded history.</desc>
+  <rect width="1200" height="500" fill="#0B1020"/>
+  <rect x="60" y="42" width="172" height="32" rx="16" fill="#1E293B"/>
+  <text x="146.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">TASK-BOUND CONTEXT</text>
+  <text x="60" y="124" text-anchor="start" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Load only what the task proves it needs</text>
+  <text x="60" y="158" text-anchor="start" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="450">A simple temperature model keeps attention on the current objective.</text>
+  <rect x="64" y="226" width="330" height="232" rx="20" fill="#1E293B"/>
+  <rect id="card-hot" x="60" y="218" width="330" height="232" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="60" y="218" width="330" height="6" rx="3" fill="#FCA5A5"/>
+  <circle cx="225.0" cy="272" r="22" fill="#7F1D1D"/>
+  <text x="225.0" y="279" text-anchor="middle" fill="#FCA5A5" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">01</text>
+  <text x="225.0" y="326" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">HOT</text>
+  <text x="225.0" y="368" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Control and exact task</text>
+  <text x="225.0" y="398" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Always required</text>
+  <rect x="439" y="226" width="330" height="232" rx="20" fill="#1E293B"/>
+  <rect id="card-warm" x="435" y="218" width="330" height="232" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="435" y="218" width="330" height="6" rx="3" fill="#FBBF24"/>
+  <circle cx="600.0" cy="272" r="22" fill="#78350F"/>
+  <text x="600.0" y="279" text-anchor="middle" fill="#FBBF24" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">02</text>
+  <text x="600.0" y="326" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">WARM</text>
+  <text x="600.0" y="368" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Pinned current knowledge</text>
+  <text x="600.0" y="398" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Included by relation</text>
+  <rect x="814" y="226" width="330" height="232" rx="20" fill="#1E293B"/>
+  <rect id="card-cold" x="810" y="218" width="330" height="232" rx="20" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <rect x="810" y="218" width="330" height="6" rx="3" fill="#22D3EE"/>
+  <circle cx="975.0" cy="272" r="22" fill="#164E63"/>
+  <text x="975.0" y="279" text-anchor="middle" fill="#22D3EE" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="800">03</text>
+  <text x="975.0" y="326" text-anchor="middle" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="720" letter-spacing="-0.4">COLD</text>
+  <text x="975.0" y="368" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Unrelated project history</text>
+  <text x="975.0" y="398" text-anchor="middle" fill="#CBD5E1" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="450">Not loaded</text>
 </svg>
