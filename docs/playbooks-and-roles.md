@@ -1,9 +1,9 @@
 # Playbooks and roles
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-> **Advanced / Alpha:** playbooks, roles, and executor packages are optional
-> workspace features and are not required for the core package route.
+> **Stable and optional:** playbooks, roles, and executor packages belong to
+> the workspace route. They are not required for a core context package.
 
 Playbooks and roles describe a bounded method and a bounded set of actions.
 They do not start a person, process, tool, model, or agent.

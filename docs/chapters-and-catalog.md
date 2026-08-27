@@ -1,9 +1,9 @@
 # Chapters and catalog
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-> **Advanced / Alpha:** chapters and the local catalog are optional workspace
-> features and are not required for a first context package.
+> **Stable and optional:** chapters and the local catalog help longer projects.
+> You do not need them for a first core context package.
 
 Chapters turn captured sources into small reviewed knowledge units. The local
 catalog makes those units easy to find without replacing their official files.
@@ -72,7 +72,7 @@ sources.
 
 ## Related pages
 
-- [Advanced / Alpha workspace](workspace.md)
+- [Workspace](workspace.md)
 - [Context navigation](context-navigation.md)
 - [OWNER flow](owner-flow.md)
 - [Glossary](glossary.md)

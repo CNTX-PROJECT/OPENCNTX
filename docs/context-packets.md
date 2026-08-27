@@ -1,6 +1,6 @@
 # Context packages
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 A context package is a small, reviewable snapshot for one task. It contains
 selected text plus enough metadata to detect later changes.
@@ -71,7 +71,7 @@ run `pack` again to create a new complete snapshot.
 
 ## Core packages and workspace context
 
-Core packages follow `opencntx.toml` patterns directly. Advanced / Alpha workspace context
+Core packages follow `opencntx.toml` patterns directly. Workspace context
 packages follow an approved task and its explicit relationships. They share
 the same principle—small, deterministic, reviewable context—but use different
 inputs and records.

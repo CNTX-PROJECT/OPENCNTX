@@ -1,6 +1,6 @@
 # Command reference
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This navigation table documents 49 public CLI paths: five orientation and
 version routes plus all 44 executable routes from the real parser. It does not invent options or grant
@@ -100,7 +100,7 @@ tool text is ASCII-safe; when a narrow Windows console cannot represent a user
 character, the CLI escapes that character instead of crashing or changing the
 stored bytes.
 
-## Advanced / Alpha: compact current roadmap control
+## Workspace: compact current roadmap control
 
 Refresh a supported marked current block with:
 
@@ -111,7 +111,7 @@ opencntx workspace control refresh --root my-project
 The snapshot is derived. It does not edit, interpret, approve, or synchronize
 the official roadmap.
 
-## Advanced / Alpha: transaction diagnosis and recovery
+## Workspace: transaction diagnosis and recovery
 
 Diagnose without writing, creating a lock, or repairing anything:
 
@@ -136,7 +136,7 @@ Apply refuses an active writer, changed intent, unsafe link, unknown transaction
 data, or changed target. It creates and verifies a retained local backup before
 rolling the named transaction back and writes a recovery receipt.
 
-## Advanced / Alpha: privacy, storage, and format lifecycle
+## Workspace: privacy, storage, and format lifecycle
 
 Audit one workspace without changing it:
 
@@ -180,7 +180,7 @@ No cleanup is automatic. Migration does not rewrite existing version-1 domain
 records, and unknown future formats stop fail-closed. See [Privacy, storage,
 and format lifecycle](privacy-storage-lifecycle.md).
 
-## Advanced / Alpha: objective failed-attempt evidence
+## Workspace: objective failed-attempt evidence
 
 Record facts about one failed external action without executing or retrying it:
 
@@ -243,7 +243,7 @@ digests remain controlling.
 ## Related pages
 
 - [Core commands](core.md)
-- [Advanced / Alpha workspace](workspace.md)
+- [Workspace](workspace.md)
 - [OWNER flow](owner-flow.md)
 - [Privacy, storage, and format lifecycle](privacy-storage-lifecycle.md)
 - [Troubleshooting](troubleshooting.md)

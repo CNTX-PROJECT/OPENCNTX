@@ -1,7 +1,12 @@
 # Code of Conduct
 
+[Project overview](README.md) · [Contributing](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Security](SECURITY.md)
+
 OPENCNTX welcomes respectful participation from people with different
 experience levels, backgrounds, tools, and viewpoints.
+
+In short: help people, protect private information, discuss evidence rather
+than personalities, and correct mistakes openly.
 
 ## Expected behavior
 

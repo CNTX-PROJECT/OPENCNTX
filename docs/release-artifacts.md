@@ -1,18 +1,15 @@
 # Release artifacts
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page explains how OPENCNTX prepares and verifies wheel and source
-distribution candidates. It does not announce a package-index publication or
-grant authority to publish anything.
+This page explains the four files in the immutable `v1.0.0` GitHub Release and
+how contributors prepare equivalent local candidates. It does not grant
+authority to publish a new release or package-index upload.
 
 ## Current public distribution
 
-The package line is `v1.0.0` and is Production/Stable. It becomes a public
-release only when both the live `v1.0.0` tag and the `OPENCNTX v1.0.0` GitHub
-Release exist.
-After that point, install it from the exact public Git tag as described in
-[Start here](start-here.md):
+The `v1.0.0` Production/Stable release is live and immutable. Install it from
+the exact public Git tag as described in [Get started](start-here.md):
 `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0"`.
 
 - OPENCNTX is not published on PyPI or TestPyPI.
@@ -20,8 +17,8 @@ After that point, install it from the exact public Git tag as described in
   build record attached to it.
 - The v1.0.0 GitHub Release must contain exactly the four files named below.
 
-Until the live v1.0.0 tag and Release both exist, all v1.0.0 builds are
-unpublished candidates and must not be presented as public release assets.
+Any file built locally is an unpublished candidate unless it is one of the
+four exact assets attached to the immutable GitHub Release.
 
 ## Candidate output
 

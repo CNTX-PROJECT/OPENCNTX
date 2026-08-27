@@ -1,9 +1,9 @@
 # Context navigation
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-> **Advanced / Alpha:** this page is optional. The core package route does not
-> require workspace tasks, chapters, or navigation.
+> **Stable and optional:** this page is for structured workspaces. The core
+> package route does not require tasks, chapters, or context navigation.
 
 The context navigator builds one deterministic package for one approved task.
 It follows explicit pins instead of searching or guessing across the whole

@@ -1,6 +1,6 @@
 # Public roadmap
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This page reports completed public facts. It does not promise unapproved
 features or expose private project records.
@@ -108,8 +108,7 @@ features or expose private project records.
   `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v0.3.0"`
   and exactly four GitHub Release assets: `opencntx-0.3.0-py3-none-any.whl`,
   `opencntx-0.3.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`;
-- treats v0.3.0 as publicly released only when both the live `v0.3.0` tag and
-  the `OPENCNTX v0.3.0` GitHub Release actually exist.
+- published v0.3.0 through its exact Git tag and matching GitHub Release.
 
 ### v1.0.0 Production/Stable line
 
@@ -123,8 +122,9 @@ features or expose private project records.
   and exactly four GitHub Release assets:
   `opencntx-1.0.0-py3-none-any.whl`, `opencntx-1.0.0.tar.gz`,
   `SHA256SUMS`, and `BUILD-RECORD.json`;
-- treats v1.0.0 as publicly released only when both the live `v1.0.0` tag and
-  the `OPENCNTX v1.0.0` GitHub Release actually exist.
+- published v1.0.0 through its exact Git tag and immutable GitHub Release;
+- aligned the complete documented CLI, including the optional workspace, with
+  the Production/Stable contract.
 
 ## Current state
 
@@ -134,10 +134,9 @@ features or expose private project records.
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context
-- Public release condition: both the live `v1.0.0` tag and the matching GitHub
-  Release must exist
-- Distribution after publication: exact Git tag plus GitHub Release with the
-  four exact assets named above; no PyPI or TestPyPI package
+- Public release: live exact `v1.0.0` tag plus immutable matching GitHub Release
+- Distribution: exact Git tag plus the four verified GitHub Release assets
+  named above; no PyPI or TestPyPI package
 
 ## Future work
 

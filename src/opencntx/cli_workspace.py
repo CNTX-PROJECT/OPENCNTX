@@ -41,7 +41,7 @@ def register_workspace_commands(
     """Register workspace commands in their stable public order."""
     parser = subparsers.add_parser(
         "workspace",
-        help="Advanced / Alpha: local storage, media, catalog, task gates, and navigation",
+        help="Stable workspace: local sources, knowledge, task gates, and navigation",
     )
     workspace = parser.add_subparsers(dest="workspace_command", required=True)
     _register_workspace_foundation(workspace)

@@ -13,7 +13,7 @@
     <text x="460" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">v0.1.0</text>
     <text x="460" y="270" text-anchor="middle" font-size="20" fill="#111318">Public core release</text>
     <text x="740" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">WORKSPACE</text>
-    <text x="740" y="270" text-anchor="middle" font-size="20" fill="#111318">Bounded project flow</text>
+    <text x="740" y="270" text-anchor="middle" font-size="20" fill="#111318">Stable project flow</text>
     <text x="1020" y="218" text-anchor="middle" font-size="27" font-weight="700" fill="#6D28D9">v1.0.0</text>
     <text x="1020" y="270" text-anchor="middle" font-size="20" fill="#111318">Production/Stable line</text>
   </g>

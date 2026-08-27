@@ -1,5 +1,7 @@
 # Security Policy
 
+[Project overview](README.md) · [Security in plain language](docs/security.md) · [Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md)
+
 ## Choose the correct route
 
 - **Possible vulnerability:** use GitHub's private **Report a vulnerability**
@@ -13,6 +15,16 @@ This document is the canonical technical security boundary for OPENCNTX.
 
 A hash makes changed bytes visible. It does not prove that content is true,
 complete, safe, or approved by an OWNER.
+
+## Five rules that matter most
+
+1. Preview first and inspect every generated context file before sharing it.
+2. Never paste a password, token, private key, personal record, or private
+   project into a public issue.
+3. Treat privacy labels and hashes as evidence—not encryption or approval.
+4. Stop on a non-zero exit code; do not describe an incomplete operation as
+   successful.
+5. Report a possible vulnerability privately through GitHub.
 
 ## Core context packages
 

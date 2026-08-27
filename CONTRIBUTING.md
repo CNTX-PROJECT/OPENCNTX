@@ -1,6 +1,10 @@
 # Contributing to OPENCNTX
 
+[Project overview](README.md) · [Documentation](docs/README.md) · [Support](SUPPORT.md) · [Security](SECURITY.md) · [Code of Conduct](CODE_OF_CONDUCT.md)
+
 Thank you for helping improve a small, local, provider-neutral context tool.
+The best contribution solves one clear problem, includes proof, and leaves
+unrelated behavior untouched.
 
 ## Before you start
 
@@ -9,6 +13,14 @@ Thank you for helping improve a small, local, provider-neutral context tool.
 3. Search existing issues before opening a new one.
 4. Report possible vulnerabilities privately, never in a public issue.
 5. Keep one pull request focused on one bounded problem.
+
+| If you want to… | Start here |
+|---|---|
+| ask how something works | [Support](SUPPORT.md) |
+| report a normal defect | the public bug form, with a small safe reproduction |
+| suggest a change | the feature form, explaining the user problem first |
+| report a vulnerability | GitHub's private **Report a vulnerability** route |
+| change a public contract | describe compatibility and migration effects clearly |
 
 ## Local checks
 
@@ -20,7 +32,7 @@ python -m coverage run --branch --source=opencntx -m unittest discover -s tests
 python -m coverage json -o coverage.json
 python tools/quality_gate.py all --coverage-report coverage.json
 python tools/render_brand.py --check
-python -m pip install --disable-pip-version-check build==1.3.0 setuptools==80.9.0
+python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree

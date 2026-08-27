@@ -1,77 +1,84 @@
 # OPENCNTX documentation
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-Use this page as the complete index. You do not need to read everything. Pick
-the smallest route that matches your current goal.
+You do not need to read every page. Choose what you want to do, follow the
+smallest matching route, and open the technical reference only when you need
+more detail.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
   <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review and verify a small context package, then decide whether to share it">
 </picture>
 
-## First visit
+## Start with a goal
 
-1. [Start here](start-here.md) — install OPENCNTX and create your first package
-   in one continuous guide.
-2. [How it works](how-it-works.md) — understand the product before using more
-   advanced workspace features.
-3. [Troubleshooting](troubleshooting.md) — solve a specific failure without
-   reading unrelated pages.
-4. [FAQ](faq.md) — get short answers to common questions.
+| I want to… | Best page |
+|---|---|
+| install OPENCNTX and build a first package | [Get started](start-here.md) |
+| understand the product in five minutes | [How it works](how-it-works.md) |
+| learn the three-command core | [Core commands](core.md) |
+| organize a longer project | [Workspace](workspace.md) |
+| look up an exact command | [Command reference](commands.md) |
+| solve a failure | [Troubleshooting](troubleshooting.md) |
+| understand what stays local | [Security in plain language](security.md) |
 
-## Core context packages
+## Core package guides
+
+The core route is the shortest path: choose files, preview, pack, inspect, and
+verify.
 
 - [Core commands](core.md) — exact behavior of `init`, `pack`, and `verify`.
-- [Context packages](context-packets.md) — package files, budgets, hashes,
-  inspection, and source drift.
-- [Contracts and compatibility](contracts-and-compatibility.md) — the public
-  surface catalog, 36 durable formats, fixtures, and fail-closed version rules.
-- [Command reference](commands.md) — all 49 documented CLI paths.
+- [Context packages](context-packets.md) — package files, limits, hashes, and
+  source drift.
+- [Contracts and compatibility](contracts-and-compatibility.md) — the frozen
+  1.0 public surface and durable-format rules.
 
-## Advanced / Alpha workspace
+## Stable workspace guides
 
-- [Advanced / Alpha workspace](workspace.md) — directory structure, control snapshot, and exact
-  source capture.
-- [Chapters and catalog](chapters-and-catalog.md) — reviewed revisions,
-  dependencies, freshness, and the replaceable catalog.
-- [Context navigation](context-navigation.md) — small hot, warm, and cold task
-  context.
-- [Media and derived text](media.md) — safely register UTF-8 text that another
-  tool already produced.
-- [Privacy, storage, and format lifecycle](privacy-storage-lifecycle.md) —
-  audit local trust, storage, compatibility, migration, and explicit cleanup.
+The workspace is optional. Use it when a project needs more structure than one
+context package.
 
-## Approval and bounded work
+- [Workspace](workspace.md) — create the directory, capture sources, diagnose
+  writes, and understand the normal project flow.
+- [Chapters and catalog](chapters-and-catalog.md) — turn supplied sources into
+  reviewed knowledge and rebuild the local index.
+- [Context navigation](context-navigation.md) — include only the approved hot
+  and warm context for one task.
+- [Media and derived text](media.md) — register text that another tool already
+  produced without confusing it with the original file.
+- [Privacy, storage, and format lifecycle](privacy-storage-lifecycle.md) — audit
+  local access, compatibility, migration, cleanup, and restore.
 
-- [Playbooks and roles](playbooks-and-roles.md) — methods, allowed actions, and
-  executor-package limits.
-- [OWNER flow](owner-flow.md) — explicit proposal approval, bounded work,
-  review, result decision, and closure.
+## Decisions and bounded work
 
-## Safety and project reference
+- [Playbooks and roles](playbooks-and-roles.md) — define a method and the
+  actions an executor may use.
+- [OWNER flow](owner-flow.md) — move from goal to proposal, approval, result,
+  review, and closure without letting the tool approve itself.
 
-- [Security in plain language](security.md) — local trust boundary and safe
-  handling.
-- [Platforms and CI](platforms.md) — supported Python versions and live test
-  evidence.
-- [Release artifacts](release-artifacts.md) — clean candidate builds,
-  checksums, reproducibility limits, installation smoke, and publication gate.
-- [Public roadmap](roadmap.md) — completed milestones without unapproved
-  promises.
-- [Glossary](glossary.md) — fixed meanings of project terms.
-- [Brand guide](brand.md) — official colors, wordmarks, avatar, diagrams, and
-  reproduction rules.
+## Project and technical reference
+
+- [Platforms and CI](platforms.md) — supported Python versions, Windows/Ubuntu
+  coverage, and what green CI really proves.
+- [Release artifacts](release-artifacts.md) — wheel, sdist, checksums, build
+  record, and the exact publication boundary.
+- [Public roadmap](roadmap.md) — completed milestones and current state, with no
+  promises about future features.
+- [FAQ](faq.md) — short answers to common questions.
+- [Glossary](glossary.md) — plain meanings of fixed project terms.
+- [Brand guide](brand.md) — official colors, wordmarks, diagrams, and visual
+  rules.
 
 ## Product boundary
 
 OPENCNTX creates local, explicit, verifiable files. It does not call an AI
 model, choose a provider, upload context, run an agent, execute supplied
-content, or replace human review. **Any model** means that you may use reviewed
-output with a tool that accepts text or files.
+content, or replace human review. **Any model** means that reviewed output can
+be used with a tool that accepts text or files.
 
-Use `opencntx --help` and the relevant nested `--help` route as the exact
-source for command options. Use the root [Security Policy](../SECURITY.md) as
-the canonical technical safety boundary.
+Use `opencntx --help` and the relevant nested `--help` route for exact command
+options. Use the root [Security Policy](../SECURITY.md) as the canonical
+technical safety boundary.
 
-[Back to the project README](../README.md)
+[Back to the project overview](../README.md)

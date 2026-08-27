@@ -4,7 +4,17 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
-No changes recorded.
+### Changed
+
+- Aligned the complete documented CLI with the `1.0.0` Production/Stable
+  contract by replacing the remaining current `Advanced / Alpha` workspace
+  labels with one Stable, optional workspace description.
+- Reworked the public landing page and every documentation guide around a
+  consistent task-first navigation, simpler opening explanations, clear
+  product boundaries, and the already published immutable Stable release.
+- Corrected the contributor build command to the active `build==1.3.0` and
+  `setuptools==83.0.0` toolchain and added regression coverage for that public
+  instruction.
 
 ## 1.0.0 - 2026-08-27
 
