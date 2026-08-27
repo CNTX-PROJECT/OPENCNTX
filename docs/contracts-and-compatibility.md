@@ -1,6 +1,6 @@
 # Contracts and compatibility
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 OPENCNTX publishes machine-readable contracts with the installed package. They
 make the `1.0.0` Production/Stable boundary reviewable. Stable applies only to

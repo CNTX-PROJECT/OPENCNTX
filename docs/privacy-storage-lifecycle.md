@@ -1,8 +1,8 @@
 # Privacy, storage, and format lifecycle
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This Advanced / Alpha surface makes local trust, storage, compatibility, and
+This Stable workspace surface makes local trust, storage, compatibility, and
 explicit cleanup inspectable. It does not encrypt files, create user
 identities, grant authority, synchronize data, publish artifacts, or clean up
 automatically.
@@ -128,7 +128,7 @@ decisions.
 
 ## Related pages
 
-- [Advanced / Alpha workspace](workspace.md)
+- [Workspace](workspace.md)
 - [Command reference](commands.md)
 - [Security in plain language](security.md)
 - [Troubleshooting](troubleshooting.md)

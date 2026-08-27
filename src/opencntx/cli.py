@@ -23,7 +23,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Create a small, explicit, and verifiable context package for one task.",
         epilog=(
             "Core route: init, pack --preview, pack, inspect CONTEXT.md, verify. "
-            "Advanced / Alpha: workspace."
+            "Stable workspace: structured local flow for longer projects."
         ),
     )
     parser.add_argument(

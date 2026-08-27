@@ -1,6 +1,6 @@
 # How OPENCNTX works
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 OPENCNTX solves one practical problem: large or mixed project history makes it
 hard to give an AI tool only the information needed for the current task.
@@ -40,9 +40,9 @@ It does **not** mean that OPENCNTX:
 `init`, `pack --preview`, `pack`, inspection, and `verify` create and check one
 context package directly from a project directory.
 
-### Advanced / Alpha workspace layer
+### Stable workspace layer
 
-The optional Advanced / Alpha workspace stores supplied sources, chapters,
+The optional Stable workspace stores supplied sources, chapters,
 tasks, playbooks, roles, approvals, and evidence as readable local records. It
 can select a small context set for one approved task, but none of these
 concepts is required for the core route.
@@ -78,7 +78,7 @@ boundary changes only when you deliberately move output elsewhere.
 
 - [Start here](start-here.md)
 - [Context packages](context-packets.md)
-- [Advanced / Alpha workspace](workspace.md)
+- [Workspace](workspace.md)
 - [OWNER flow](owner-flow.md)
 - [Security](security.md)
 

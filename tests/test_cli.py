@@ -95,7 +95,8 @@ class CliTests(unittest.TestCase):
         self.assertIn("{init,pack,verify,workspace}", result.stdout)
         self.assertIn("explicit, and verifiable context package", result.stdout)
         self.assertLess(result.stdout.index("init"), result.stdout.index("workspace"))
-        self.assertIn("Advanced / Alpha", result.stdout)
+        self.assertIn("Stable workspace", result.stdout)
+        self.assertNotIn("Advanced / Alpha", result.stdout)
 
     def test_init_creates_expected_template(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

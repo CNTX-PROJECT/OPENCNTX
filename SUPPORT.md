@@ -1,10 +1,11 @@
 # Support
 
+[Project overview](README.md) · [Get started](docs/start-here.md) · [Troubleshooting](docs/troubleshooting.md) · [Security](SECURITY.md)
+
 Choose the smallest route that matches your need.
 
-The tested candidate support boundary is Windows or Ubuntu with Python 3.11,
-3.12, 3.13, or 3.14. Other systems may work, but are not claimed by the live
-CI matrix.
+The Stable support boundary is Windows or Ubuntu with Python 3.11, 3.12, 3.13,
+or 3.14. Other systems may work, but are not claimed by the live CI matrix.
 
 | Need | Route |
 |---|---|

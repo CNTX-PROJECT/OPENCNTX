@@ -1,6 +1,6 @@
 # Brand guide
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 The OPENCNTX identity is calm, readable, and symmetric. It uses one simple
 context-frame symbol and a standard sans-serif wordmark.

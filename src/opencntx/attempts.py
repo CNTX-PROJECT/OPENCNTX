@@ -1,4 +1,4 @@
-"""Objective, digest-bound failed-attempt evidence for Advanced / Alpha tasks."""
+"""Objective, digest-bound failed-attempt evidence for Stable workspace tasks."""
 
 from __future__ import annotations
 

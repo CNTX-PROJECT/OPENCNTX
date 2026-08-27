@@ -1,6 +1,6 @@
 # Frequently asked questions
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 ## Does OPENCNTX contain an AI model?
 
@@ -15,9 +15,9 @@ recommend a provider.
 
 ## Is OPENCNTX only for experienced developers?
 
-No. New users can follow the three-command core. Experienced users can use
-explicit patterns and budgets. The workspace, tasks, playbooks, and roles are
-optional Advanced / Alpha surfaces.
+No. New users can follow the short core route. Longer projects can use the
+Stable workspace, tasks, playbooks, and roles. Those tools are optional, so you
+can learn them only when you need them.
 
 ## What language does the CLI use?
 
@@ -92,20 +92,19 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The `v1.0.0` line is Production/Stable and is installable from its exact Git
-tag only after both that live tag and the `OPENCNTX v1.0.0` GitHub Release exist.
-The exact isolated route is
+No. The immutable `v1.0.0` Production/Stable release is installed from its
+exact Git tag. The exact isolated route is
 `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0"`.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The `v1.0.0` Release is complete only
-when it is live with exactly `opencntx-1.0.0-py3-none-any.whl`,
-`opencntx-1.0.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Until its live
-tag and GitHub Release both exist, these are unpublished candidates rather
-than public release assets. See [Release artifacts](release-artifacts.md) for
+The historical `v0.2.0` Release has none. The immutable `v1.0.0` Release has
+exactly `opencntx-1.0.0-py3-none-any.whl`,
+`opencntx-1.0.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Files built
+locally remain unpublished candidates rather than public release assets. See
+[Release artifacts](release-artifacts.md) for
 checksums, build records, reproducibility limits, and the separate publication
 gate.
 

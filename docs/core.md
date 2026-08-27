@@ -1,6 +1,6 @@
 # Core commands: init, pack, and verify
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 The core flow creates one bounded context package from local UTF-8 text. It is
 the shortest OPENCNTX path and does not require a workspace.

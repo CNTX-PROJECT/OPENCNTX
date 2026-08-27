@@ -1,8 +1,8 @@
 # OWNER flow
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-> **Advanced / Alpha:** this task lifecycle is optional workspace behavior.
+> **Stable and optional:** this task lifecycle belongs to the workspace route.
 > The core package route does not require roles, approvals, or task records.
 
 The workspace can record one task from goal to accepted result without letting

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590" role="img" aria-labelledby="title desc">
-  <title id="title">Workspace map for dark screens</title>
-  <desc id="desc">Four equal cards organize control, captured sources, reviewed knowledge, and bounded work inside one local workspace.</desc>
+  <title id="title">Stable workspace map for dark screens</title>
+  <desc id="desc">Four equal cards organize control, captured sources, reviewed knowledge, and bounded work inside one stable optional workspace.</desc>
   <rect width="1200" height="590" fill="#0D1117"/>
-  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">One local workspace, four clear areas</text>
+  <text x="600" y="75" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#FFFFFF">Stable workspace for longer projects</text>
   <g font-family="Arial, Helvetica, sans-serif">
     <rect x="60" y="130" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>
     <rect x="630" y="130" width="510" height="170" rx="24" fill="#17131F" stroke="#C084FC" stroke-width="4"/>

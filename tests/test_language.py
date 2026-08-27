@@ -64,14 +64,15 @@ class LanguageContractTests(unittest.TestCase):
             self.assertIsNone(forbidden.search(help_text), help_text)
             self.assertNotIn("\ufffd", help_text)
 
-    def test_root_help_orders_core_before_advanced_workspace(self) -> None:
+    def test_root_help_orders_core_before_stable_workspace(self) -> None:
         result = run_cli_bytes("--help", cwd=REPOSITORY_ROOT)
         self.assertEqual(result.returncode, 0, result.stderr)
         text = result.stdout.decode("utf-8")
         self.assertLess(text.index("init"), text.index("workspace"))
         self.assertIn("pack --preview", text)
         self.assertIn("inspect CONTEXT.md", text)
-        self.assertIn("Advanced / Alpha", text)
+        self.assertIn("Stable workspace", text)
+        self.assertNotIn("Advanced / Alpha", text)
 
     def test_version_uses_the_single_package_version(self) -> None:
         from opencntx import __version__

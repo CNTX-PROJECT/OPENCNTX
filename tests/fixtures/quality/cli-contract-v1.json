@@ -41,7 +41,7 @@
       "argv": ["--help"],
       "exit_code": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "1a063d0bb009bdd251385f94e090722ba4d3af242d12eff86b4a5e65770a320f"
+      "stdout_sha256": "3b0a6c229b0368ffbdc4a675a07ce0dcf588ff5a7adfba6383fa0a1944c97270"
     },
     "task-help": {
       "argv": ["workspace", "task", "--help"],

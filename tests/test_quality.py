@@ -79,14 +79,15 @@ DARK_DIAGRAMS = {name.replace(".svg", "-dark.svg") for name in LIGHT_DIAGRAMS}
 DIAGRAMS = LIGHT_DIAGRAMS | DARK_DIAGRAMS
 
 PRIMARY_NAVIGATION = (
-    "[Start here](start-here.md) · [How it works](how-it-works.md) · "
-    "[Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · "
-    "[Security](security.md) · [All docs](README.md)"
+    "[Overview](../README.md) · [Get started](start-here.md) · "
+    "[How it works](how-it-works.md) · [Workspace](workspace.md) · "
+    "[Commands](commands.md) · [Security](security.md) · [All guides](README.md)"
 )
-LEGACY_PRIMARY_NAVIGATION = PRIMARY_NAVIGATION.replace(
-    "[Advanced / Alpha workspace]", "[Workspace]"
+README_NAVIGATION = (
+    "[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · "
+    "[Workspace](docs/workspace.md) · [Commands](docs/commands.md) · "
+    "[Security](docs/security.md) · [All guides](docs/README.md)"
 )
-PROTECTED_LEGACY_NAVIGATION_GUIDES = {"brand.md", "roadmap.md", "security.md"}
 
 EXPECTED_ACTION_USES = {
     "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
@@ -262,7 +263,7 @@ class PublicQualityTests(unittest.TestCase):
         self.assertIn('srcset="assets/brand/opencntx-wordmark-dark.svg"', text)
         self.assertIn('src="assets/brand/opencntx-wordmark-light.svg"', text)
         self.assertIn('<div align="center">', text)
-        self.assertIn("[Start here](docs/start-here.md)", text)
+        self.assertIn("[Get started](docs/start-here.md)", text)
         targets = {Path(target).as_posix() for target in _local_links(README)}
         required = {
             "docs/start-here.md",
@@ -287,17 +288,22 @@ class PublicQualityTests(unittest.TestCase):
         for guide_name in GUIDES:
             with self.subTest(guide=guide_name):
                 lines = (DOCS / guide_name).read_text(encoding="utf-8").splitlines()
-                expected_navigation = (
-                    LEGACY_PRIMARY_NAVIGATION
-                    if guide_name in PROTECTED_LEGACY_NAVIGATION_GUIDES
-                    else PRIMARY_NAVIGATION
-                )
-                self.assertIn(expected_navigation, lines[:5])
+                self.assertIn(PRIMARY_NAVIGATION, lines[:5])
 
-        readme_navigation = PRIMARY_NAVIGATION.replace("](", "](docs/").replace(
-            "](docs/README.md)", "](docs/README.md)"
-        )
-        self.assertIn(readme_navigation, README.read_text(encoding="utf-8"))
+        self.assertIn(README_NAVIGATION, README.read_text(encoding="utf-8"))
+
+    def test_current_public_guidance_calls_workspace_stable(self) -> None:
+        runtime_sources = tuple(sorted((ROOT / "src" / "opencntx").rglob("*.py")))
+        current_guidance = (README, *sorted(DOCS.glob("*.md")), *runtime_sources)
+        for document in current_guidance:
+            with self.subTest(document=document.relative_to(ROOT)):
+                text = document.read_text(encoding="utf-8")
+                self.assertNotIn("Advanced / Alpha", text)
+                self.assertNotIn("Alpha workspace", text)
+
+        help_text = build_parser().format_help()
+        self.assertIn("Stable workspace", help_text)
+        self.assertNotIn("Advanced / Alpha", help_text)
 
     def test_community_and_security_routes_are_bounded(self) -> None:
         required = {
@@ -628,7 +634,7 @@ class PublicQualityTests(unittest.TestCase):
             f"git clone --branch v{version} --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
             readme,
         )
-        self.assertIn("The optional workspace layer", workspace)
+        self.assertIn("The workspace is a **Stable, optional** route", workspace)
         self.assertIn("installed --version output differs", release_tool)
         self.assertIn("expected_version", release_tool)
         self.assertNotRegex(workflow, r'expected_version\s*=\s*["\']\d')
@@ -677,6 +683,7 @@ class PublicQualityTests(unittest.TestCase):
         active_surfaces = {
             ".github/workflows/ci.yml": WORKFLOW,
             "requirements-quality.txt": ROOT / "requirements-quality.txt",
+            "CONTRIBUTING.md": ROOT / "CONTRIBUTING.md",
             "docs/release-artifacts.md": DOCS / "release-artifacts.md",
             "docs/platforms.md": DOCS / "platforms.md",
             "tools/release_artifacts.py": ROOT / "tools" / "release_artifacts.py",
@@ -686,6 +693,7 @@ class PublicQualityTests(unittest.TestCase):
                 text = surface.read_text(encoding="utf-8")
                 self.assertIn("build==1.3.0", text)
                 self.assertIn("setuptools==83.0.0", text)
+                self.assertNotIn("setuptools==80.9.0", text)
 
         with (ROOT / "tests/fixtures/hardening/dependency-findings-v1.json").open(
             encoding="utf-8"

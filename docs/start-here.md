@@ -1,6 +1,6 @@
 # Start here
 
-[Start here](start-here.md) · [How it works](how-it-works.md) · [Advanced / Alpha workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All docs](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This page covers installation and your first useful result in one continuous
 path. Start with a small test project that contains only files you are allowed
@@ -21,11 +21,11 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
-## 2. Install the Stable release after publication
+## 2. Install the Stable release
 
-The package line is `v1.0.0` and is Production/Stable. It is publicly
-installable only after both the live `v1.0.0` tag and the `OPENCNTX v1.0.0`
-GitHub Release exist. OPENCNTX is not published on PyPI or TestPyPI.
+The immutable `v1.0.0` Production/Stable release is available from its exact
+Git tag and matching GitHub Release. OPENCNTX is not published on PyPI or
+TestPyPI.
 
 With `pipx` and Git available, install the exact tag in one command:
 
@@ -171,11 +171,11 @@ you provide `CONTEXT.md` or selected contents yourself.
   <img src="../assets/docs/core-flow.svg" alt="Initialize, preview and pack, inspect, verify, and only then decide whether to share">
 </picture>
 
-## Advanced / Alpha workspace
+## Stable workspace for longer projects
 
 The complete core route ends above. If a longer project needs supplied source
 storage, chapters, task gates, playbooks, roles, or executor packages, continue
-with [Advanced / Alpha workspace](workspace.md). Those concepts are optional
+with [Workspace](workspace.md). Those concepts are optional
 and are not prerequisites for a first package.
 
 ## Upgrade or remove OPENCNTX
@@ -198,11 +198,9 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The `v1.0.0` release exists publicly only when its live tag and GitHub Release
-both exist. That Release must contain exactly
+The immutable `v1.0.0` GitHub Release contains exactly
 `opencntx-1.0.0-py3-none-any.whl`, `opencntx-1.0.0.tar.gz`, `SHA256SUMS`,
-and `BUILD-RECORD.json`. Until then, all v1.0.0 builds are unpublished candidates.
-OPENCNTX has no PyPI or TestPyPI package. Contributors can read
+and `BUILD-RECORD.json`. OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local candidate builds,
 checksums, reproducibility limits, and the separate publication gate.
 
