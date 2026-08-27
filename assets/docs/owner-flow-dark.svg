@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="472" viewBox="0 0 1200 472" role="img" aria-labelledby="title desc">
   <title id="title">OWNER approval flow for dark screens</title>
   <desc id="desc">Six checkpoints preserve explicit authority from the OWNER goal to the OWNER decision.</desc>
-  <rect width="1200" height="472" fill="#0B1020"/>
   <rect x="60" y="42" width="148" height="32" rx="16" fill="#1E293B"/>
   <text x="134.0" y="64" text-anchor="middle" fill="#DDA0DD" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="750" letter-spacing="1.6">AUTHORITY CHAIN</text>
   <text x="60" y="124" text-anchor="start" fill="#F8FAFC" font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="40" font-weight="750" letter-spacing="-1.1">Every authority change is explicit</text>

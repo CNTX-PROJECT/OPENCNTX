@@ -4,7 +4,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/brand/opencntx-wordmark-dark.svg">
-  <img src="assets/brand/opencntx-wordmark-light.svg" width="640" alt="OPENCNTX — lowercase open in white and cntx in Plum on deep navy">
+  <img src="assets/brand/opencntx-wordmark-light.svg" width="640" alt="OPENCNTX — lowercase open and Plum cntx on a transparent theme-aware canvas">
 </picture>
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**

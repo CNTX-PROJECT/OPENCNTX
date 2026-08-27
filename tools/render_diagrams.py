@@ -11,7 +11,6 @@ FONT = "Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-
 
 THEMES = {
     "light": {
-        "bg": "#F8FAFC",
         "surface": "#FFFFFF",
         "surface_alt": "#F1F5F9",
         "ink": "#0F172A",
@@ -31,7 +30,6 @@ THEMES = {
         "red_soft": "#FEE2E2",
     },
     "dark": {
-        "bg": "#0B1020",
         "surface": "#111827",
         "surface_alt": "#1E293B",
         "ink": "#F8FAFC",
@@ -573,7 +571,6 @@ def render(name: str, theme_name: str) -> bytes:
         f'<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="{height}" viewBox="0 0 1200 {height}" role="img" aria-labelledby="title desc">',
         f'  <title id="title">{esc(title_value + title_suffix)}</title>',
         f'  <desc id="desc">{esc(description)}</desc>',
-        f'  <rect width="1200" height="{height}" fill="{theme["bg"]}"/>',
     ]
     lines.extend(f"  {item.format(**theme)}" for item in body)
     lines.append("</svg>")

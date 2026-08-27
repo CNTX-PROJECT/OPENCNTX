@@ -403,8 +403,19 @@ class PublicQualityTests(unittest.TestCase):
                 dark = ElementTree.parse(diagram_root / dark_name).getroot()
                 self.assertEqual("1200", light.attrib["width"])
                 self.assertEqual(light.attrib["viewBox"], dark.attrib["viewBox"])
-                self.assertEqual("#F8FAFC", list(light)[2].attrib["fill"])
-                self.assertEqual("#0B1020", list(dark)[2].attrib["fill"])
+                height = light.attrib["height"]
+                for root in (light, dark):
+                    self.assertFalse(
+                        any(
+                            element.tag.rsplit("}", 1)[-1] == "rect"
+                            and element.attrib.get("width") == "1200"
+                            and element.attrib.get("height") == height
+                            and element.attrib.get("x", "0") == "0"
+                            and element.attrib.get("y", "0") == "0"
+                            for element in root
+                        ),
+                        f"embedded diagram must have a transparent canvas: {light_name}",
+                    )
 
                 def geometry(root):
                     result = []

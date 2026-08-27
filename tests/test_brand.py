@@ -35,6 +35,7 @@ PNG_DIMENSIONS = {
 PALETTE = {
     "#FFFFFF",
     "#F8FAFC",
+    "#0F172A",
     "#0B1020",
     "#111827",
     "#171E32",
@@ -181,15 +182,26 @@ class BrandTests(unittest.TestCase):
                         self.assertIn(fill, PALETTE)
 
     def test_wordmarks_use_one_rounded_text_run_and_exact_plum(self) -> None:
-        for name in ("opencntx-wordmark-light.svg", "opencntx-wordmark-dark.svg"):
+        expected_open = {
+            "opencntx-wordmark-light.svg": "#0F172A",
+            "opencntx-wordmark-dark.svg": "#FFFFFF",
+        }
+        for name, open_fill in expected_open.items():
             root = ElementTree.parse(BRAND / name).getroot()
             groups = {
                 element.attrib.get("id"): element
                 for element in root
                 if _local_name(element.tag) == "g"
             }
-            background = next(element for element in root if _local_name(element.tag) == "rect")
-            self.assertEqual("#0B1020", background.attrib["fill"])
+            self.assertFalse(
+                any(
+                    _local_name(element.tag) == "rect"
+                    and element.attrib.get("width") == "800"
+                    and element.attrib.get("height") == "160"
+                    for element in root
+                ),
+                f"embedded wordmark must have a transparent canvas: {name}",
+            )
             self.assertEqual("OPENCNTX", groups["wordmark"].attrib["aria-label"])
             wordmark = next(iter(groups["wordmark"]))
             self.assertEqual("text", _local_name(wordmark.tag))
@@ -201,7 +213,18 @@ class BrandTests(unittest.TestCase):
             self.assertEqual("spacing", wordmark.attrib["lengthAdjust"])
             spans = list(wordmark)
             self.assertEqual(["open", "cntx"], [span.text for span in spans])
-            self.assertEqual(["#FFFFFF", "#DDA0DD"], [span.attrib["fill"] for span in spans])
+            self.assertEqual(
+                [open_fill, "#DDA0DD"],
+                [span.attrib["fill"] for span in spans],
+            )
+
+    def test_standalone_social_preview_keeps_its_owned_canvas(self) -> None:
+        root = ElementTree.parse(BRAND / "opencntx-social-preview.svg").getroot()
+        background = next(element for element in root if _local_name(element.tag) == "rect")
+        self.assertEqual(
+            {"x": "0", "y": "0", "width": "1280", "height": "640", "fill": "#0B1020"},
+            background.attrib,
+        )
 
     def test_wordmark_and_social_geometry_is_centered(self) -> None:
         for name in ("opencntx-wordmark-light.svg", "opencntx-wordmark-dark.svg"):
@@ -272,6 +295,7 @@ class BrandTests(unittest.TestCase):
     def test_text_and_graphic_contrasts_meet_the_contract(self) -> None:
         text_pairs = (
             ("#111827", "#FFFFFF"),
+            ("#0F172A", "#F8FAFC"),
             ("#F8FAFC", "#0B1020"),
             ("#94A3B8", "#0B1020"),
         )
