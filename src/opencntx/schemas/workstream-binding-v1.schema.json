@@ -1,0 +1,23 @@
+{
+  "$id": "urn:uuid:b7fcf627-4841-559b-8efc-7e02fed9390f",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {"type": "string"},
+    "current_leaf_id": {"type": "string"},
+    "format": {"const": "opencntx-workstream-binding"},
+    "format_version": {"const": 1},
+    "max_parallelism": {"maximum": 16, "minimum": 1, "type": "integer"},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "resource_claim_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "revision": {"minimum": 1, "type": "integer"},
+    "roadmap_id": {"type": "string"},
+    "schema_id": {"const": "urn:uuid:b7fcf627-4841-559b-8efc-7e02fed9390f"},
+    "workstream_id": {"type": "string"}
+  },
+  "required": ["actor_id", "current_leaf_id", "format", "format_version", "max_parallelism", "project_id", "record_id", "resource_claim_ids", "revision", "roadmap_id", "schema_id", "workstream_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-workstream-binding",
+  "x-opencntx-format-version": 1
+}

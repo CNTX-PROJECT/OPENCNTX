@@ -1,0 +1,31 @@
+{
+  "$id": "urn:uuid:7a48df00-b392-5692-ad3e-1e5289acefd1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {"type": "string"},
+    "allowed_actions": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "allowed_paths": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "budgets": {"additionalProperties": false, "properties": {"max_actions": {"minimum": 1, "type": "integer"}, "max_attempts": {"minimum": 1, "type": "integer"}, "max_bytes": {"minimum": 1, "type": "integer"}, "max_files": {"minimum": 1, "type": "integer"}, "max_minutes": {"minimum": 1, "type": "integer"}}, "required": ["max_actions", "max_attempts", "max_bytes", "max_files", "max_minutes"], "type": "object"},
+    "current_leaf_id": {"type": "string"},
+    "envelope_id": {"type": "string"},
+    "evidence_requirements": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "exact_stop": {"type": "string"},
+    "format": {"const": "opencntx-action-envelope"},
+    "format_version": {"const": 1},
+    "input_digests": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "project_id": {"type": "string"},
+    "proposal_digest": {"type": "string"},
+    "protected_paths": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "roadmap_stack_digest": {"type": "string"},
+    "rollback_boundary": {"type": "string"},
+    "schema_id": {"const": "urn:uuid:7a48df00-b392-5692-ad3e-1e5289acefd1"},
+    "workstream_id": {"type": "string"}
+  },
+  "required": ["actor_id", "allowed_actions", "allowed_paths", "budgets", "current_leaf_id", "envelope_id", "evidence_requirements", "exact_stop", "format", "format_version", "input_digests", "project_id", "proposal_digest", "protected_paths", "record_id", "revision", "roadmap_stack_digest", "rollback_boundary", "schema_id", "workstream_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-action-envelope",
+  "x-opencntx-format-version": 1
+}

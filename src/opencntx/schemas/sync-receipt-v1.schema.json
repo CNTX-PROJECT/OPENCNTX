@@ -1,0 +1,27 @@
+{
+  "$id": "urn:uuid:f41cdee6-5f90-5448-8261-db1659ceae74",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_commit": {"type": ["string", "null"]},
+    "byte_count": {"maximum": 52428800, "minimum": 0, "type": "integer"},
+    "commit": {"type": ["string", "null"]},
+    "conflicts": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "file_count": {"maximum": 100, "minimum": 0, "type": "integer"},
+    "format": {"const": "opencntx-sync-receipt"},
+    "format_version": {"const": 1},
+    "policy_digest": {"type": "string"},
+    "preview_digest": {"type": "string"},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "remote_readback_digest": {"type": ["string", "null"]},
+    "result": {"enum": ["APPLIED", "ALREADY_PRESENT_SAME_BYTES", "CONFLICT", "NOT_FOUND", "POLICY_BLOCKED", "UNAVAILABLE", "UNSUPPORTED"]},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_id": {"const": "urn:uuid:f41cdee6-5f90-5448-8261-db1659ceae74"},
+    "sync_id": {"type": "string"}
+  },
+  "required": ["base_commit", "byte_count", "commit", "conflicts", "file_count", "format", "format_version", "policy_digest", "preview_digest", "project_id", "record_id", "remote_readback_digest", "result", "revision", "schema_id", "sync_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-sync-receipt",
+  "x-opencntx-format-version": 1
+}

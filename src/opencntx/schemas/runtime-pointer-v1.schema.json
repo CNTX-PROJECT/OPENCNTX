@@ -1,0 +1,27 @@
+{
+  "$id": "urn:uuid:8c1d644a-34bb-5234-aa36-050ba5283d1e",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "current_leaf_id": {"type": "string"},
+    "event_head": {"type": "string"},
+    "expected_previous_digest": {"type": "string"},
+    "format": {"const": "opencntx-runtime-pointer"},
+    "format_version": {"const": 1},
+    "main_roadmap_id": {"type": "string"},
+    "mode": {"enum": ["INTAKE_PLANNING", "LOCKED_EXECUTION", "RETURN_TO_PARENT"]},
+    "pointer_id": {"type": "string"},
+    "policy_digest": {"type": "string"},
+    "project_id": {"type": "string"},
+    "projected_state_digest": {"type": "string"},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "roadmap_stack": {"items": {"additionalProperties": false, "properties": {"active_node_id": {"type": "string"}, "event_head": {"type": "string"}, "policy_digest": {"type": "string"}, "projection_digest": {"type": "string"}, "return_node_id": {"type": ["string", "null"]}, "roadmap_id": {"type": "string"}, "roadmap_revision": {"minimum": 1, "type": "integer"}, "schema_digest": {"type": "string"}}, "required": ["active_node_id", "event_head", "policy_digest", "projection_digest", "return_node_id", "roadmap_id", "roadmap_revision", "schema_digest"], "type": "object"}, "maxItems": 8, "minItems": 1, "type": "array"},
+    "schema_digest": {"type": "string"},
+    "schema_id": {"const": "urn:uuid:8c1d644a-34bb-5234-aa36-050ba5283d1e"}
+  },
+  "required": ["current_leaf_id", "event_head", "expected_previous_digest", "format", "format_version", "main_roadmap_id", "mode", "pointer_id", "policy_digest", "project_id", "projected_state_digest", "record_id", "revision", "roadmap_stack", "schema_digest", "schema_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-runtime-pointer",
+  "x-opencntx-format-version": 1
+}

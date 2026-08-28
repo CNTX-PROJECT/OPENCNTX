@@ -1,0 +1,26 @@
+{
+  "$id": "urn:uuid:7297bc27-f79e-5256-9e7e-b6cf71f97390",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {"type": "string"},
+    "actor_role": {"type": "string"},
+    "created_at": {"type": "string"},
+    "event_id": {"type": "string"},
+    "event_number": {"minimum": 1, "type": "integer"},
+    "event_type": {"type": "string"},
+    "format": {"const": "opencntx-runtime-event"},
+    "format_version": {"const": 1},
+    "payload": {"type": "object"},
+    "previous_record_digest": {"type": "string"},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_id": {"const": "urn:uuid:7297bc27-f79e-5256-9e7e-b6cf71f97390"},
+    "to_status": {"type": "string"}
+  },
+  "required": ["actor_id", "actor_role", "created_at", "event_id", "event_number", "event_type", "format", "format_version", "payload", "previous_record_digest", "project_id", "record_id", "revision", "schema_id", "to_status"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-runtime-event",
+  "x-opencntx-format-version": 1
+}
