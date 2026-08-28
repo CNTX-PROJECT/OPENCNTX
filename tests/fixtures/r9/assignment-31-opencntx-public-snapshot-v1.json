@@ -1,0 +1,13 @@
+{
+  "format": "opencntx-r9-public-snapshot",
+  "format_version": 1,
+  "commit": "54f2718934d807d66f448804eae7cc644ccbc00e",
+  "tree": "b8423fcf15f4c63119f845f592d28a6ee6cfa8c4",
+  "file_count": 193,
+  "total_blob_bytes": 3743441,
+  "source_files": 27,
+  "schema_files": 18,
+  "test_files": 26,
+  "relevant_path_count": 29,
+  "relevant_manifest_digest": "4059e7c5c818a2ad5582fd21d5fd287c46ecbd03381b65f3b07e5e6105cc059a"
+}
