@@ -34,7 +34,13 @@ ROOT = Path(__file__).resolve().parents[1]
 CORPUS = ROOT / "tests" / "fixtures" / "r9" / "assignment-31-intake-scenarios-v1.json"
 SNAPSHOT = ROOT / "tests" / "fixtures" / "r9" / "assignment-31-opencntx-public-snapshot-v1.json"
 FROZEN_72 = ROOT / "tests" / "fixtures" / "r9" / "assignment-29-scenarios-v1.json"
-FROZEN_72_SHA256 = "40ffc9d553b02798c6dc625434687bebc585a5ab4f9f791d41183dd3f53ec21f"
+# Git stores LF; core.autocrlf uses CRLF in Windows worktrees.
+FROZEN_72_ALLOWED_SHA256 = frozenset(
+    {
+        "1d89046fcf8a6ef81724a7a2f3ef7754babe4d684fbff5050b599d0343134088",
+        "40ffc9d553b02798c6dc625434687bebc585a5ab4f9f791d41183dd3f53ec21f",
+    }
+)
 
 
 def actor(actor_id: str, role: str, *, availability: str = "AVAILABLE") -> dict[str, object]:
@@ -76,7 +82,8 @@ class IntakeAutopilotTests(unittest.TestCase):
     def test_existing_72_scenario_corpus_remains_byte_unchanged(self) -> None:
         value = json.loads(FROZEN_72.read_text(encoding="utf-8"))
         self.assertEqual(len(value["records"]), 72)
-        self.assertEqual(hashlib.sha256(FROZEN_72.read_bytes()).hexdigest(), FROZEN_72_SHA256)
+        raw_sha256 = hashlib.sha256(FROZEN_72.read_bytes()).hexdigest()
+        self.assertIn(raw_sha256, FROZEN_72_ALLOWED_SHA256)
         self.assertEqual(
             value["scenario_table_sha256"],
             "dd9f091f30c996324f1472fc40b369228b0cd7cfb5824059284124b38309f4d6",
