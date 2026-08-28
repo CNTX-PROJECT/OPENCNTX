@@ -9,6 +9,7 @@ from opencntx.project_runtime import (
     compare_and_swap_pointer,
     query_runtime,
     reduce_runtime,
+    roadmap_catalog,
     validate_roadmap_graph,
 )
 from opencntx.runtime_contracts import canonical_digest
@@ -212,6 +213,15 @@ class ProjectRuntimeTests(unittest.TestCase):
             getattr(orphan_error.exception, "code", ""),
             {"runtime_contract_graph_invalid", "runtime_graph_orphan"},
         )
+
+    def test_roadmap_revision_identity_is_immutable(self) -> None:
+        roadmap = samples()["opencntx-roadmap-definition"]
+        duplicate = copy.deepcopy(roadmap)
+        duplicate["record_id"] = "ROADMAP_DEFINITION_MAIN_R1_DUPLICATE"
+        duplicate["nodes"][0]["title"] = "Changed bytes under one revision"
+        with self.assertRaises(ProjectRuntimeError) as drift:
+            roadmap_catalog([roadmap, duplicate], project_id="PROJECT_R9")
+        self.assertEqual(drift.exception.code, "runtime_roadmap_drift")
 
     def test_compare_and_swap_pointer_allows_one_exact_successor(self) -> None:
         current = samples()["opencntx-runtime-pointer"]

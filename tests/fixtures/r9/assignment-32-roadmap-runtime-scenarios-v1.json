@@ -1,0 +1,2297 @@
+{
+  "assignment_32_proposal_sha256": "faa6c5984e411e850389ff1aae6473fed0e15ea018133c157327e590c7dd5819",
+  "format": "opencntx-r9-roadmap-runtime-scenario-corpus",
+  "format_version": 1,
+  "records": [
+    {
+      "scenario_id": "S32-001",
+      "operation": "graph",
+      "scenario": "geldige hoofdroadmaprevisie",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "valid-main",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b834dc65477ad43c7027b89915b578502d4918a9f4e11fa36ea53edb21674df4",
+      "expected_result_code": "MAIN_ROADMAP_VALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "095680c0dbd3acc431a97faea9f9a51f669e06c25f9b8affb5db3c311487c412",
+      "expected_projection_digest": "c4f5ccdea6017dbc2aee3d5e462d116b5836c0130726d03a9d1f6e2e9a57f7dd",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-002",
+      "operation": "graph",
+      "scenario": "geldige onderroadmap met volledige parent- en returnbinding",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "valid-subroadmap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "498c7eca625f177b01ad5f86e450c0e11338a4f405de8f5def2356d8462fcc58",
+      "expected_result_code": "SUBROADMAP_VALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "a068edd140d499a116c9134d83266c7bd135e63a10332ac5d158d311d9c9be97",
+      "expected_projection_digest": "14dc21c44b9ab0dabaa9f405042dabf87d1bb51afe6424c12946b024c4d6da33",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-003",
+      "operation": "graph",
+      "scenario": "onderroadmap zonder parent-roadmap",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "missing-parent-roadmap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "815494a44308352db5b5d335b800cd0eb940040df37ff22b8980898029b56f4a",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "8a9140097cae5ca1da41a21d90b7e0c85e55c3a60eefe3f6672b7a67670db18e",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-004",
+      "operation": "graph",
+      "scenario": "onbekende parent-roadmap",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "unknown-parent-roadmap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "43b7bb72f6f294d31cb297ab7a1e784a773286e5046cae41492bc99cead565ed",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "ebf72544c0c52af6ca68dcfaedd662c63ae0b67d3251ebe080ee782cac5446ea",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-005",
+      "operation": "graph",
+      "scenario": "onbekende parent-node",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "unknown-parent-node",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7cdb489c55350e25202941022d8551d349967e554b7c118ed2485b46d6549558",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "d4bde538bac2a5649fad075b4ace2e1d63d96e3a8ff364f4527bf940f3ae7756",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-006",
+      "operation": "graph",
+      "scenario": "onbekende return-node",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "unknown-return-node",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "a1bc6d5dd2d0d8660fce446dcfe526adde56917fbbda16394687e75d5c61ea8c",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "e1917bb033940c476478c365280cd3769779686accef06e576b8185d6c94d685",
+      "expected_projection_digest": "3cbe7fd3a2c3c2058174cd4900efd19d4cc5393c2db464b666d3ffd90b24d8d6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-007",
+      "operation": "graph",
+      "scenario": "graphcycle",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "graph-cycle",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "c9cf1535f203ca461e4f8e5ff5e79d287dfe34759e706b3d844cc8488c37c42f",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "22d19700708d4f0dac0c748219f68e6b340177e5c595c208be93e9f6306c0625",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-008",
+      "operation": "graph",
+      "scenario": "orphan relation",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "orphan-relation",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "529a446a5df569501e5d8fa3840793e9419d54b3d59312caf98c6b016f8df67d",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "4297002c161be72a6f91e1a3da394bf3e7cd9c0c2d2f1e0058d1ff361d028b3d",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-009",
+      "operation": "graph",
+      "scenario": "node met meerdere parents",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "multiple-parents",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "c0454f373ebcdc4ef7ad36641f566dad74d17936297b972413f65862d4d91eee",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "435aec40660cc6e855b27889f200fd695206871cdcd410b4195de002e73ae644",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-010",
+      "operation": "revision",
+      "scenario": "exact gebonden actuele revisie",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "bound-current-revision",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "81f6fd6bc7ed8b32b65ccf109da447bc224cf60ab6649efae33a56bd70886200",
+      "expected_result_code": "ROADMAP_REVISION_BOUND",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "ddfcde0781b2fffbfdc05d151b6c1bbc01c3b837a1e754bfe55347346452d2f0",
+      "expected_projection_digest": "32023ff29a90d86a7cd85513b68fad06e071a3386dfa0180c08592d3707bd972",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-011",
+      "operation": "revision",
+      "scenario": "stale roadmaprevisie",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stale-roadmap-revision",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "4da95d558ad257b0ed3d7f34ece54b64d272c368d7db5e5e68140247e134057b",
+      "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "862e551eb1f42125a7aea08f3241d3535261b3caa567df1893ec2e9d47279ed0",
+      "expected_projection_digest": "63e312365d9f92fc2f1e2e653df72fff99c28b071d77f8f0a74d8ac5695057b6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-012",
+      "operation": "revision",
+      "scenario": "zelfde roadmap-ID en revisie met gewijzigde bytes",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "mutated-revision-identity",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "8f0491e28b909100ff98d9d384cd608f836f94de34fb7a20eca1d07e8558d7e5",
+      "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "9483d9bedcf912d12282300db8ab7de0cef59021e3e5f9b486961b14e3017a22",
+      "expected_projection_digest": "63e312365d9f92fc2f1e2e653df72fff99c28b071d77f8f0a74d8ac5695057b6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-013",
+      "operation": "stack",
+      "scenario": "geldige hoofdroadmapstack met één frame",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "main-only-stack",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "348890562dc3349247393e21ad1fdca85a190a93b5f3371fafc56fcdbf227c92",
+      "expected_result_code": "ROADMAP_STACK_VALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "655f4f958ffd626e55f32ee83f8034964b6958242780099e26544ff727d2dcc3",
+      "expected_projection_digest": "6ecb0681843ca825bd9468bd874646c0cf2d6cc5fe8339588f5a57e0104341ed",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-014",
+      "operation": "stack",
+      "scenario": "geldige push van één onderroadmap",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "push-one-child",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "391cf809a71da50cdf37002b48916869c19a8652913d1810059666d5b8ff474f",
+      "expected_result_code": "ROADMAP_STACK_PUSHED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "ac83da3274dd5fc268ba4c1c7ce723ca4e3cc8ec29eff23a09f26e533b371400",
+      "expected_projection_digest": "1da3c576cbe7883e9222ff706626d95c16e164d1a362dca5084e1b040675a011",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-015",
+      "operation": "stack",
+      "scenario": "exact acht geneste frames",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stack-depth-eight",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "3aea2f1bbc6d5665f2b562c200c1eef2cb1a8633977bf7714d1d45c36f59028a",
+      "expected_result_code": "ROADMAP_STACK_VALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "e69d487b3723303f3b3bf46d5e6f1a5a0e678fcb15b857a764933a3522bf8a87",
+      "expected_projection_digest": "6ecb0681843ca825bd9468bd874646c0cf2d6cc5fe8339588f5a57e0104341ed",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-016",
+      "operation": "stack",
+      "scenario": "negende frame",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stack-depth-nine",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b8253d4d0c3ca82ea915813625f96fd1891dcf5ce61b619fdf1d9a09ec741f24",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "216a70a9ca466af51417abd9840a93b3c5aa6cf7f52fe1276291ef6269dc5945",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-017",
+      "operation": "stack",
+      "scenario": "eerste frame is geen hoofdroadmap",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "non-main-first-frame",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7eb8e9da53f0243cf30fde3e437ec74be31528d78e76f5621c28e4e6aa2c5d1c",
+      "expected_result_code": "BLOCKED_NO_VALID_MAIN_ROADMAP",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "1cf5e8b837d6695851952507f035b0f46cd476562a75093d689a411c350fcbd8",
+      "expected_projection_digest": "3f3dec7a9f48d13f1c6733b751a0193e085ec5b3c1228bfed0f856454a42857b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-018",
+      "operation": "stack",
+      "scenario": "dubbel roadmap-ID in dezelfde stack",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "duplicate-roadmap-frame",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b1e5625df3c006deb499173221f7734bc2e900d6497f6f34e91d3227e7b47387",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "593d7ea7242253408c52c95d80c186ed60a8a849f48b5a562f6e42458d8021cd",
+      "expected_projection_digest": "45df1e79261a2635decd5aae544bf94c9f42e708bef1334ed9b44a5d9e9602f4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-019",
+      "operation": "stack",
+      "scenario": "zelfde stack ongeacht inputdictvolgorde",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stack-input-order",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "ba59d3445a02a513ed0b379c3a2551ef9ade32336f5dbb6290303640dc633e1e",
+      "expected_result_code": "DETERMINISTIC_ROADMAP_STACK",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "a959ab151a1da15e710bcb156a2f9506e7404e1e9bd2fc187e6b8e0b38c3ea10",
+      "expected_projection_digest": "37dc2678e2494856f74c21f37f5e99b8fc928f84c77ee0abc0ec93f33e25dbb8",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-020",
+      "operation": "stack",
+      "scenario": "stale roadmap-stackdigest",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stale-stack-digest",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "62548acb3d69fd30cbea93b31abeff1c6dc204ed83d473908ccb1a5abdcb1ab3",
+      "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "2930458ce4fe93dcf027e0dfbe144ee05d4847e276a3c19d00878fff7a8989da",
+      "expected_projection_digest": "63e312365d9f92fc2f1e2e653df72fff99c28b071d77f8f0a74d8ac5695057b6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-021",
+      "operation": "sticky",
+      "scenario": "sessieherstart behoudt exact current leaf",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "session-restart",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "6bb330e9d39b6fbd09c69b4d010e539e2c5a75ce00e014366921c17063502fe1",
+      "expected_result_code": "STICKY_LEAF_RESTORED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "25d18a408f655b6e9b9fa5ea7c809a34014b0b2961d8f271d0125d4ed069c0e5",
+      "expected_projection_digest": "9c3ade77a1e473bc3eb49a782798a970d617caead7eb262e65bd0040ce041f0b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-022",
+      "operation": "sticky",
+      "scenario": "modelwissel behoudt exact current leaf",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "model-switch",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "c09f79251e98b92f0fd6c727f6ffa7e6cdb58e3d02939001a9919a6b9982cd26",
+      "expected_result_code": "STICKY_LEAF_RESTORED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "6a54736550ab9e304aec0f2ab616ef7fa7ac4d4809e200eba878706584220061",
+      "expected_projection_digest": "9c3ade77a1e473bc3eb49a782798a970d617caead7eb262e65bd0040ce041f0b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-023",
+      "operation": "sticky",
+      "scenario": "contextcompaction behoudt exact current leaf",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "context-compaction",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "fe67aa51ed2e37a73c16512f932739b02f29e10a895dfc5750986aa71297f2b7",
+      "expected_result_code": "STICKY_LEAF_RESTORED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "cac40f3933d70b98ad328bdf444a3de07689ea1b870206fea6b9ba19ed9a73aa",
+      "expected_projection_digest": "9c3ade77a1e473bc3eb49a782798a970d617caead7eb262e65bd0040ce041f0b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-024",
+      "operation": "sticky",
+      "scenario": "actor gebruikt stack van andere werkstroom",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "foreign-workstream-stack",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "314587c3919cebaca3a1abcfa242dba7cd852d3c80e05df98cd1db302f9f3915",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "f95764697fa175af5a1aa23c0be7247e4ede1cb7c95d7765669a4488e8565daf",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-025",
+      "operation": "workstream",
+      "scenario": "SOLO met één actor en één muterende leaf",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "solo-one-leaf",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "d31bbc3c7140585b9ef3f8f4722cc4dd30eebf7e972ddfa41a90c63401a25f2a",
+      "expected_result_code": "WORKSTREAMS_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "3e03d9afd15a3895bb7db600ca3e139297daff9ec5582458c995f89cadf2a264",
+      "expected_projection_digest": "57fb30d8832a18919ddb7acdbbd07538cb92d1b123cd2bae30a317c156d382cc",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-026",
+      "operation": "workstream",
+      "scenario": "TEAM 2 met disjuncte werkstromen",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "team-two-disjoint",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "35d567b0639521c61932b1a9af1092bece14b71164dd508afa3f64aa363ac61a",
+      "expected_result_code": "WORKSTREAMS_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "d2e441e7cf5f9c791136415da20d763852cfbbc886caa78c2f1754e56123432d",
+      "expected_projection_digest": "57fb30d8832a18919ddb7acdbbd07538cb92d1b123cd2bae30a317c156d382cc",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-027",
+      "operation": "workstream",
+      "scenario": "TEAM 64 contractgrens",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "team-sixty-four",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2f407c2e84702ce1332d2580bbd51a0b9313965f079b53d251133be6a89e0e1a",
+      "expected_result_code": "WORKSTREAMS_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "e51a9df78ad715ab7863975165190d0d1613d11dd16b8cc798aa0d6830f9c57c",
+      "expected_projection_digest": "57fb30d8832a18919ddb7acdbbd07538cb92d1b123cd2bae30a317c156d382cc",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-028",
+      "operation": "workstream",
+      "scenario": "TEAM 65",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "team-sixty-five",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2bd12a6e311f69e6a0d34bdd7d6db11364c16db01b00a63d36ecf64412aea4ea",
+      "expected_result_code": "RUNTIME_CONTRACT_INVALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "9208de75e23c59eafa377724bdda0ccf06d856ba35b4d77760e82f4b901bd3bc",
+      "expected_projection_digest": "f46e131d690e977c31685c3149b775908656f50996e373ede79eda36163190e9",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-029",
+      "operation": "workstream",
+      "scenario": "ontbrekende actorbinding",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "missing-actor",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "23b3e56e834c6db449e50ec44e56bf97127201afe54ae8b705af78c6b97b5be9",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "3a92f829b373e1ce2a2b33184386fab95560cfb4c39338381da68da2c05153b7",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-030",
+      "operation": "workstream",
+      "scenario": "dubbel workstream-ID",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "duplicate-workstream",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "dedc19bda027298207ed00e86d69404f6e46398440577b990701940d38e91c09",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "333dcc3fa28be26a9b022a144ee3d4dc7657a96861af5c8563b86bdf44834928",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-031",
+      "operation": "workstream",
+      "scenario": "zelfde actor op twee muterende leaves",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "actor-multiple-leaves",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "4149046deae433ab768fce08530c50528033f86b578d8f41940bf92ca9ca7b94",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "128e7a1278af3341f5e34a3860fd0bf5123b84c1a67e5c5833b2e333c3d205d9",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-032",
+      "operation": "workstream",
+      "scenario": "actor unavailable zonder overdracht",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "actor-unavailable",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "3cfe8edd79fd7e582e1a6c38f30b0980afe47b745bcbdaa677a45cfb8d40bd86",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "8831dc02cf478a9eddec70664444c047d053a69be7ebecee676ae63c7b993d0a",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-033",
+      "operation": "workstream",
+      "scenario": "geldige reassignment met oude historie intact",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "valid-reassignment",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "98b258b8f02b81ff46573a3a54f8169b1a822601ae4dd402c75d26459b74d81e",
+      "expected_result_code": "WORKSTREAM_REASSIGNED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "9e907ebb20934fdcc14466172324042651a95652cf4fba48b55209cd19ba1e5a",
+      "expected_projection_digest": "fcdc5de5f1db2faf885e54aa8777c5905aa4dfad3c3d4ec29ae83aabe0348f4c",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-034",
+      "operation": "workstream",
+      "scenario": "max parallelism hoger dan actor- of werkstroomcapaciteit",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "parallelism-over-capacity",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "f012546129ca32a5744a09740df0f1f165a88e173ce9e5a8951efe561592927a",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "f38bc039698b33b3b2ef36e3afb7360ce8e79941bede19d8821c3756e043fa85",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-035",
+      "operation": "dependency",
+      "scenario": "dependency nog niet gesloten",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "dependency-pending",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "8d4d0100c5eaf45056e6fd5ec8fa05c2e05a0ca80883529a5bd1e9804ae505fb",
+      "expected_result_code": "BLOCKED_DEPENDENCY_NOT_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "bf71557f5c7351f9abf08c1966f548f7a602c18001a04a05c0d833e08eb90c1b",
+      "expected_projection_digest": "c1e32c70937d3d432ed1d7d90e2b484f17f8d91782fd7ccdda67ff9df6ea6cc2",
+      "expected_conflicts": [
+        "BLOCKED_DEPENDENCY_NOT_READY"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-036",
+      "operation": "dependency",
+      "scenario": "alle dependencies gesloten",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "dependencies-closed",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "ad9d282cb0762d83109dd5f6d4ac4204ea77deb6d8a04ea472a567319093421e",
+      "expected_result_code": "DEPENDENCIES_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "405cfc38d8dfb1ce1d6ded154e814ab93e5806d555338513fcfab9dc3019e8dd",
+      "expected_projection_digest": "2709511f075c7b5ad14c8b821a5187423b64add15d220b74c3f645fa476faab0",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-037",
+      "operation": "resource",
+      "scenario": "disjuncte niet-exclusieve claims",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "resources-disjoint",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "36863f40282d579e38301a3c1513b566d9ddc5d9913017104d71eb7e359dccc2",
+      "expected_result_code": "RESOURCES_READY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "cba07162d59221acf4ff444ec9a6af9a6f793b5681e1e26c0b8b9492a15134e6",
+      "expected_projection_digest": "3fbe394d2e24dc523abfa0c4747429b2268b7ba90bcd065127ec23122fc197d0",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-038",
+      "operation": "resource",
+      "scenario": "overlappende conflictset",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "conflict-set-overlap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7cfc13c75532fe1dc74354bbd6c9798ae1f71ad36d2e9b74eef5db21b3a583d5",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "3211547970cfcaa798d495711140bca87e85dc55217849e4deb214b2c42a2f0a",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-039",
+      "operation": "resource",
+      "scenario": "overlappende exclusieve resource",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "exclusive-resource-overlap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "01f286c59290acd383caf348e19624b60e080d91838f9d7b0760a1988dd330ed",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "edccc24b606d1f25c00aab729eb019e3b2f30f0a16e3eba43f4be86259845fc3",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-040",
+      "operation": "integration",
+      "scenario": "gedeeld integratiepunt",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "shared-integration",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "d2eb1cfc851d41fd2fc4caff15a39cdf1c06179218ea35145242984c46c8af3c",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "c2fe2ea588c3351f588f1f6cf1157078fd5d0966c5263e6de02c3896d568ba41",
+      "expected_projection_digest": "8702d9199806828f0c8ccdfbd24dea1fa58669fad17657b628849c3c5d6d4e8a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-041",
+      "operation": "return",
+      "scenario": "child DONE maar niet OWNER_ACCEPTED",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "done-not-accepted",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "024fe01656651e7b61bcd2b9e66cbd80d266ec672c34ff9edd5effebfc9bde9f",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "186c3f6330ed99ed95c9a7c661d092d34204b531b277a61d15b51be3b33b64bb",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-042",
+      "operation": "return",
+      "scenario": "child OWNER_ACCEPTED maar niet CLOSED",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "accepted-not-closed",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "865e65815cb9ffe50482edf58cf1fd579c14f89739af4ffa21ea3f04c8c12a8b",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "d7dbcd87a184635851c58674dce0acb1ea2aff3bd1dbfac7e2343692e8ddb0b2",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-043",
+      "operation": "return",
+      "scenario": "child CLOSED zonder OWNER_ACCEPTED",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "closed-not-accepted",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "55ace5651fefe1dddfbff7f77613a15bcaa46eeeb9c250510460947a0784cdd1",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "d5586966227df8d3ebbf69ae4dace8d6fd05062b0f8496c7b8051fc7e00484ff",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-044",
+      "operation": "return",
+      "scenario": "geldige childsluiting activeert returnmodus",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "valid-child-close",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "5200632268808826987f489feffff4726eff2102cd2791d87d7aacc59eb0a6d1",
+      "expected_result_code": "RETURN_TO_PARENT_READY",
+      "expected_mode": "RETURN_TO_PARENT",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "48d9a3e1806de39ab52aef780746dc181752f5aa2c695c34fd2c5a67cc7306c3",
+      "expected_projection_digest": "dbccee7c02b553c650b29f6500e8aff357c2a0ca610514655759681a151911d6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-045",
+      "operation": "return",
+      "scenario": "return buiten RETURN_TO_PARENT-modus",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "wrong-return-mode",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "31cb5037a55d893e2fa24ad4d0ebb0c0a36aa9339f638662180128d4d4796ba3",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "45052f805898e14e7770241c191569583ca74758b078b89b7a0f721149785d16",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-046",
+      "operation": "return",
+      "scenario": "closed-roadmap-ID wijkt af van topframe",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "wrong-closed-roadmap",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2a9f2ee5ead60285df9b41ff6c940e0c1d7d3d39faf214f2c8f45034a822f73c",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "f55a82ec174afeed69f84a440f1c042a8d3379fe036d001974b62440a82f782b",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-047",
+      "operation": "return",
+      "scenario": "aangeleverde return-node wijkt af van topframe",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "wrong-return-node",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "fd70ae7983402bf58c49f545b0dfc10408d12c3cfa7b39928266b321e364a8cc",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "e7bbb1b4c17c27cad76d79f93dedc2577a17a404ca5999db014551f948b30abc",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-048",
+      "operation": "return",
+      "scenario": "parentrevisie gewijzigd na childactivatie",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "stale-parent-revision",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b8d58eae1dac08a2c9f15dd250b0a4a2b8e89edd6eb03b60b43bc5a4a588569d",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "abb56b6404826a0dd435b2908dcae8336fb9f715400d3af848f4a751f969eb7d",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-049",
+      "operation": "return",
+      "scenario": "parentframe ontbreekt",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "missing-parent-frame",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "e1f3fbb5727efa3ec7b92f3a0a1e5f52435ba2b712c45c5fc88e0bd1750f47f2",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "e26ca980be6dfac25ecf60856ac583a69cb06cb28eec39238db797230dcc7d7a",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-050",
+      "operation": "return",
+      "scenario": "eventketen of event-head ongeldig",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "invalid-event-chain",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "10acedf68278736ab05a8e4e81bb04193a7b0e4056e315643c2618ec6ce723e7",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "057f4e4c58ec00ae78ee44654510d4a258e90b69c2180674349c1fc0de5b9fd1",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-051",
+      "operation": "return",
+      "scenario": "Definition of Done onvolledig",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "incomplete-definition-of-done",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "270471d952a1404e9ce3cd4e5d842b7f990baef9ec458080ae22ca2e6ca01ef9",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "3d92038452e6292c0c15aca7a3a46e25b6b57110748240f08c2501dbbad7c818",
+      "expected_projection_digest": "4ae2e4e3d96abc5cafa0faf0c210118038effcbbb141959828e0a6e0e2ffd3ab",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-052",
+      "operation": "return",
+      "scenario": "geldige return popt exact één frame",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "valid-one-frame-pop",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b3054fcaf45e3616ac580100c48562e117af23e4e4f22f02405498b29fb3d48f",
+      "expected_result_code": "RETURNED_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_PARENT_RETURN",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "e115ddd97ca73da0215a1149e6efac80ad8e7dbef19c39cb6148ddc97d22febf",
+      "expected_projection_digest": "ab5d0d94bd6345048b874b335e11f1bd673058a8fb6a2a31dcf4d37467088342",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-053",
+      "operation": "return",
+      "scenario": "geneste return popt uitsluitend current child",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "nested-one-frame-pop",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "caa73b4cc2e2c11b387ace5e727b530182a61a5b816686f5013871b874591463",
+      "expected_result_code": "RETURNED_TO_PARENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_PARENT_RETURN",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "48723283058525923fe614e6e1902dbfc90d677a0c6792c9d56b692b9fed1119",
+      "expected_projection_digest": "ab5d0d94bd6345048b874b335e11f1bd673058a8fb6a2a31dcf4d37467088342",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-054",
+      "operation": "return",
+      "scenario": "reeds bestaande volgende node wordt hoogstens READY",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "parent-ready-no-start",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "9cb3667961389f8575d2cbd8b4b48a5cd4274dfbd8823625b12e4449ae4976a3",
+      "expected_result_code": "PARENT_READY_NO_START",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_PARENT_RETURN",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "a95e59d8a9d48e7fdaecf11e3fe443cd36083c54fdbc9b9a0e5736e5ffd01a2c",
+      "expected_projection_digest": "3de0c5ad9afbcafb984b84f07092134beb32563e5b008dd6220ebfd17eb1c074",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-055",
+      "operation": "return",
+      "scenario": "return probeert assignment automatisch te starten",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "automatic-start-attempt",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "d80eb028b8c2fbc86d458735d91848300ea1e31f37136071b5a854076f66eb5e",
+      "expected_result_code": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "7097510d7aa456a86b4829f4a11edc8e511e23d64ffa354da785dc7a9e67766b",
+      "expected_projection_digest": "aee05efdd1b3fb3e643eb1c287887a7a44872043f03fdf61e0ea1479a868c381",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-056",
+      "operation": "return",
+      "scenario": "hoofdroadmapsluiting met actieve child of werkstroom",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "main-close-with-active-child",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "0eccc1f19809396b264c49f4d7eecbbbedbb3c6807147439286162603990fd11",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "44e5119b9b6f15f932e6dce067da59b9b3c0b82987085ddc311d97979236c01a",
+      "expected_status_digest": "d65c4a421d928aa5d597d1593a69f6eb9d5a839f431db7dc4b9d7707fde78240",
+      "expected_projection_digest": "c48f8750647f50ae0229e4c3f50c44c7b025b4c2326b34177fdf57887aed01fb",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-057",
+      "operation": "integration",
+      "scenario": "twee werkstromen claimen gedeelde integratie tegelijk",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "concurrent-shared-integration",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2c73640e51afb417da6afbf3b70a73a6c09612ddec4c8a231aabd75a3edef544",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "3b6469bcf5fbae0852ad2338f80a1275cb52eb4c74071abee5714768693e773a",
+      "expected_projection_digest": "8702d9199806828f0c8ccdfbd24dea1fa58669fad17657b628849c3c5d6d4e8a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-058",
+      "operation": "integration",
+      "scenario": "vaste sorteersleutel bepaalt integratievolgorde",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "deterministic-integration-order",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "30220b7bc457e9b550407fa721893aff1e21291031b59663d5654ed3e948509c",
+      "expected_result_code": "DETERMINISTIC_INTEGRATION_QUEUE",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "d8a55bacb8bbc566ccab9b1091d3abfae890c01b22b0ed83cee5ddfc52495e09",
+      "expected_projection_digest": "daf763d885444142f60293cf9486c80e6494e0be280e8ef2b7af8d79732a46b4",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-059",
+      "operation": "integration",
+      "scenario": "exact één actieve integrator",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "single-active-integrator",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7c284265f485ef851334daa17d139a28f8f822f9e6bdb83452a4ba5469364454",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "33229ad1a4f8788ed7b1c83996d614c23ad63313a177cfb577d16d206a94874b",
+      "expected_projection_digest": "8702d9199806828f0c8ccdfbd24dea1fa58669fad17657b628849c3c5d6d4e8a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-060",
+      "operation": "integration",
+      "scenario": "onafhankelijke disjuncte werkstromen",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "independent-parallel-workstreams",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "c8d7a24273dc9f6e11d420a6f4503cdbf206db5cd080d42e192625ae240f2487",
+      "expected_result_code": "PARALLEL_BOUNDED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "b34ca014ff8513af4f20b1c5afa4463a09046f9bd985964fc5b14f6273d61251",
+      "expected_projection_digest": "21e6064fbad3220f3a1013416e29d95a83f69638336cb01a3feb77e9a8010c5c",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-061",
+      "operation": "integration",
+      "scenario": "overlappende doelpaden ondanks aparte resources",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "overlapping-target-paths",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "181901d23bb0eb5b20f0afec795155a527972ba4e70addbe020ad1b737ee4611",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "c489e7694d904277ed7d155008f6df2bd496b8ddfca7dce2d3b20c1d16ad78ee",
+      "expected_projection_digest": "070e92363f7751a5018588f389aa604efadd966496be048983d20e9baa535e89",
+      "expected_conflicts": [
+        "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+      ],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-062",
+      "operation": "pointer",
+      "scenario": "compare-and-swap met exact previous digest",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "pointer-cas-success",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "ec85ffebe0fc2c729e2cb98799edfc65af88efbd6e19314fc84b474be01b5354",
+      "expected_result_code": "POINTER_ADVANCED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "4152ea65a6df4b417794ba9942faf98b09b8a5c7d031d884c692a9062d63f26f",
+      "expected_projection_digest": "0b1d581c43311bedf54228b3a9397ff875ca4ff853158e062b3e5360e951337c",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-063",
+      "operation": "pointer",
+      "scenario": "compare-and-swap met stale previous digest",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "pointer-cas-stale",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "b0a6c3849aff5b11808b8be2aba8d1cc09f1bb4678328de04e2664ec1a9c96e0",
+      "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "28c51a17e51a5ca6f8af729e34d1afb8a7945be5b6f181cb5444bb18c26469ba",
+      "expected_projection_digest": "63e312365d9f92fc2f1e2e653df72fff99c28b071d77f8f0a74d8ac5695057b6",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-064",
+      "operation": "event",
+      "scenario": "identieke eventreplay",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "identical-event-replay",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "e23a6d433891ba67d9f5dd3d8f82994ee3efbe484c43ab56128f83f76111a272",
+      "expected_result_code": "IDEMPOTENT_EVENT_REPLAY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "fa7d7f2d6a357285465c70204d0e3c314c82670ce50387b24087dfab325991d0",
+      "expected_projection_digest": "deca4f7d9bcf5ca44630874274c848ac526bbe09e8398b8166437da289f346fd",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-065",
+      "operation": "event",
+      "scenario": "event uit volgorde",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "event-out-of-order",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7eff18b98f2a173417df5dd8798cbfe8deb239979dcdc0f6136ce9400227238f",
+      "expected_result_code": "BLOCKED_RUNTIME_EVENT_CHAIN",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "fc761183cae1e873a65f1f1a261651d67a328d8dc0228dc5402684c63afa415e",
+      "expected_projection_digest": "6b7f6b9377845e703d8c3fdbcc16ed25ec5245c4b23cefc345db27cf28d7f04d",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-066",
+      "operation": "event",
+      "scenario": "zelfde event-ID met andere payload",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "duplicate-event-different-payload",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "dff0dec84462ae7025f767c638a12cc04fafffbb18929e6f41d682b5980a4efd",
+      "expected_result_code": "BLOCKED_RUNTIME_EVENT_CHAIN",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "ba40bfc46d4c1daac792fdb92852098d89e78a383f4ef392755ce8ce5477a18f",
+      "expected_projection_digest": "6b7f6b9377845e703d8c3fdbcc16ed25ec5245c4b23cefc345db27cf28d7f04d",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-067",
+      "operation": "event",
+      "scenario": "twee gelijktijdige childsluitingen",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "concurrent-child-closes",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "6235f13eb27bbadc4cc10e9fc603d74eafec4468252438831ab5ae1ec76f554d",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "3939840d2f027c05836d6062698e959b260542598c54e0da2806a51a1f3c1380",
+      "expected_projection_digest": "8702d9199806828f0c8ccdfbd24dea1fa58669fad17657b628849c3c5d6d4e8a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-068",
+      "operation": "event",
+      "scenario": "onbekend eventtype",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "unknown-event-type",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "8c7a1cfb5eff1a24211b2119fa62947edbf678cc58876dcf833cdb6fef4cd1ae",
+      "expected_result_code": "RUNTIME_CONTRACT_INVALID",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "16f3c4cd29c1134d854c26d47dc46c75361217df5b4ccc2bdc0ce67736445a5d",
+      "expected_projection_digest": "f46e131d690e977c31685c3149b775908656f50996e373ede79eda36163190e9",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-069",
+      "operation": "projection",
+      "scenario": "hoofdstatus volledig rebuildable uit records en events",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "rebuild-main-status",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "715dfbdfeab0e49f6d302b82c77db09b86bd7d9d377283525de29c117a30920f",
+      "expected_result_code": "MAIN_STATUS_REBUILT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "a13662a45083f4508175fd8098c93c29390bcbc7392743ce496d8eb30d4754b2",
+      "expected_projection_digest": "fa76dccc0baedef45f27da2a457e9c0dcc177180a81fd13830f6baa6d827aca3",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-070",
+      "operation": "projection",
+      "scenario": "teamstatus volledig rebuildable uit bindings en claims",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "rebuild-team-status",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "e2ca974ec2e492cf20aef3dce5a20c2d09ed8ae0635ec03fa9b16111e5d40857",
+      "expected_result_code": "TEAM_STATUS_REBUILT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "a4f75990f11062b41cfb35fb05040b8e670a1be5fe25b97d26394fa0c1ab3383",
+      "expected_projection_digest": "df215979cf5b11354969514235687cdfaeda54a400263d63958a7525eb899a3b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-071",
+      "operation": "projection",
+      "scenario": "inputvolgorde verandert projectiedigest niet",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "projection-input-order",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2316ebe0f21a529f2e367db9e9fa8b58adc445460df073397451161b9885ad2f",
+      "expected_result_code": "DETERMINISTIC_STATUS_PROJECTION",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "45f9f37aa600bbe161b6c440e831486769fad6495a94e9d8eab0cb326df65e63",
+      "expected_projection_digest": "49a14985fec221c7cd5c4d67ac54c212b6fc1a46075416fd25d22f4692793c0a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-072",
+      "operation": "projection",
+      "scenario": "hoofdstatus bevat alleen IDs status tellingen en digests",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "main-summary-no-leaf-body",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2c9de1be937e2257868b789c86b0cf8da67b79a312129a6fcb2509a60ed58ea4",
+      "expected_result_code": "LEAF_DETAIL_EXCLUDED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "dc3091fe777ad0f7eb6b63f33044bdc7ff3ff5b9a9ce1d6f2b65369826e7c5d8",
+      "expected_projection_digest": "cd846f938becac34ee3de973fd90210af45cd15fee8c4833268ccd037ac7f3e2",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-073",
+      "operation": "projection",
+      "scenario": "teamstatus bevat alleen eigen werkstroomsamenvatting",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "team-summary-own-leaf-only",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "5700f9e6eef8e51499878bbf9eaa6c9155f4bc682e22edc3b18c020e20892d73",
+      "expected_result_code": "LEAF_DETAIL_EXCLUDED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "b4d5a210c4810df7e0d8c5cd04040a6c39a933591d65c6850f900a7da6a08a0c",
+      "expected_projection_digest": "cd846f938becac34ee3de973fd90210af45cd15fee8c4833268ccd037ac7f3e2",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-074",
+      "operation": "projection",
+      "scenario": "sibling-leafdetail wordt aangeboden",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "sibling-leaf-leak",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "451e52bf4e12a104d6f6b34c587367f3a500a76ee439ecffabe8942044fec28e",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "228f4e93f602f0daf62fc3d1425a03de1940c0da1ea087e7b52044e48732f3cf",
+      "expected_projection_digest": "c5c95a9c008e6f95dec15e8394a2fca451853477a4afe7b5ac04ea66a12cc449",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-075",
+      "operation": "projection",
+      "scenario": "toekomst-leafdetail wordt aangeboden",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "future-leaf-leak",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7ded09b6beff1c07d59fa2934a86cef5e186115db3e0e7dedac39a98945da276",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "04086bc51726d93a7102fb44904b120b359ebe682a4f7aedc40c9a783061e23a",
+      "expected_projection_digest": "c5c95a9c008e6f95dec15e8394a2fca451853477a4afe7b5ac04ea66a12cc449",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-076",
+      "operation": "projection",
+      "scenario": "ander teamleafdetail wordt aangeboden",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "other-team-leaf-leak",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "e1dc2a3fd91b6f3f8fa0e407b01f122860b3b25c65533c3694675b6786b874ee",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "39ed3c1d76b91ea62d908d7bae8e2434e701b2c57403cc57e0c1dd6f7019a7cc",
+      "expected_projection_digest": "c5c95a9c008e6f95dec15e8394a2fca451853477a4afe7b5ac04ea66a12cc449",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-077",
+      "operation": "projection",
+      "scenario": "volledige hoofdroadmaptekst wordt aangeboden",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "full-main-roadmap-leak",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "0413c0e89458f11552f5fd8e6bad4deee0404d4c0c507decab86764bc38a0586",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "0214d8b5b35a3851d8eb4e18c7949930586b20065fb796bb5a71734e136ee8d5",
+      "expected_projection_digest": "c5c95a9c008e6f95dec15e8394a2fca451853477a4afe7b5ac04ea66a12cc449",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-078",
+      "operation": "projection",
+      "scenario": "onbekende status wordt niet gegokt",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "unknown-status",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "7e7c944af109f106ec0d9ac5e26e0382248ed782499002dc5f80e5352b789f96",
+      "expected_result_code": "UNKNOWN_PRESERVED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "31f7de394f8b18fd6248c45ba89f7f62fbcca950ea051362f24fe93b3760c2aa",
+      "expected_projection_digest": "78626f7d0ecdc8d5e5fc4616ee335c065843a3122688b34b95b67a7bed8ff36b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-079",
+      "operation": "projection",
+      "scenario": "conflictstatus blijft zichtbaar zonder leafinhoud",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "conflict-summary-no-leaf-body",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "28d326c7e783362f1cf039e4a7eb9d262fce84eaa00d7f6745a5c2ef31ab9691",
+      "expected_result_code": "CONFLICT_SUMMARY_REBUILT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "9c48dff106e5944a0dbe7fa001d36497670f5ba07e8a5ed4fc9ce85c91091eb1",
+      "expected_projection_digest": "899886277415a194968317bdbf5764c1a3d9cb91fda6c5a490151edc62614780",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-080",
+      "operation": "projection",
+      "scenario": "rebuild na geldige return wijst parentpositie aan",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "parent-status-after-return",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "8b14d433baeb05852d1515d485f8a4432c5c14c46e3ad428252f4ff24a9ac285",
+      "expected_result_code": "PARENT_STATUS_REBUILT",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_PARENT_RETURN",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "bea8dc71748f1d217a995eb208d126148e214ad2b3243fb9dc720a39e48978ba",
+      "expected_projection_digest": "5d126d7eb2210eb50bdc012059adf884995995b65c508be582a43f6167c6cdf0",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-081",
+      "operation": "boundary",
+      "scenario": "geen CLI storage sync hook of persistente filesystemwrite",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "pure-runtime-boundary",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "2faa61ebebeb73f711b90f321f3c08576b5910c1c9d8951f2fb58c8b834c1c98",
+      "expected_result_code": "PURE_RUNTIME_ONLY",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "9a83b4378b930d358b16a147625814741dd8420a2a1b32097f7f1974b91ada39",
+      "expected_projection_digest": "fe933880638629907a5b46e31951c9ca5e370d13bbfb4abd397c7efa9d85ccb2",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-082",
+      "operation": "regression",
+      "scenario": "exact 72 Opdracht-29-scenarios byte-ongewijzigd",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "assignment-29-corpus",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "d99794cb84f0246062341c2656f0bd22cdd841aaf3beadee33b301940c1693bd",
+      "expected_result_code": "ASSIGNMENT_29_CORPUS_UNCHANGED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "dc0e32e8f3b5ad61551248ae90b6e63db62c0a45197699031435b30d73ae67d5",
+      "expected_projection_digest": "549929211e4b00c9cd24a5c527cb4279c6a2f1de1746a0edc2bd84bfcca2022a",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-083",
+      "operation": "regression",
+      "scenario": "exact 68 Opdracht-31-scenarios byte-ongewijzigd",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "assignment-31-corpus",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "9a3380eee7da1687b26e062fc654178ed041a8c309ef2f93f12075fb14e27efc",
+      "expected_result_code": "ASSIGNMENT_31_CORPUS_UNCHANGED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "ae08257472bfb175ba10e6dcd4e067b956c57024f506e0dae4a9da3327e984ac",
+      "expected_projection_digest": "e24300cd7aed1dd11d617e6e22ac8109910768f8fadeb512f949c6215e00f45b",
+      "expected_conflicts": [],
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S32-084",
+      "operation": "exclusion",
+      "scenario": "OpenSpec niet gelezen geïmporteerd gemuteerd of genoemd als runtimebron",
+      "input": {
+        "actor": {
+          "actor_id": "ACTOR_ARCHITECT",
+          "availability": "AVAILABLE",
+          "role": "ARCHITECT"
+        },
+        "case": "openspec-excluded",
+        "workstream": {
+          "current_leaf_id": "ASSIGNMENT_32",
+          "roadmap_id": "ROADMAP_CHILD",
+          "workstream_id": "WORKSTREAM_MAIN"
+        }
+      },
+      "input_digest": "f669194eb0b99423865289da828fd39d2cf36ab23a951978351f7567684bc1dc",
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_mode": "LOCKED_EXECUTION",
+      "expected_current_leaf_id": "ASSIGNMENT_32",
+      "expected_stack_digest": "830de5f6dbce77b6ae2b0b324f3f67889cb316b601dd29d6605fa922715f3120",
+      "expected_status_digest": "b3cf15a46f09c14719c80a1dc35e13c697de29bd263c29f3da4d6c658a48f99f",
+      "expected_projection_digest": "c7fd9b45a6f1ceb5f1fb18e94bbc8f6238cc70731ffdcc2766fb79b0d955b587",
+      "expected_conflicts": [],
+      "expected_writes": []
+    }
+  ]
+}
