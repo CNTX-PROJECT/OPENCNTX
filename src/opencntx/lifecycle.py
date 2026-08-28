@@ -50,6 +50,20 @@ SCHEMA_FILES = (
     "lifecycle-state-v1.schema.json",
     "public-contract-v1.json",
 )
+R9_SCHEMA_FILES = (
+    "project-definition-v1.schema.json",
+    "actor-binding-v1.schema.json",
+    "roadmap-definition-v1.schema.json",
+    "workstream-binding-v1.schema.json",
+    "resource-claim-v1.schema.json",
+    "action-envelope-v1.schema.json",
+    "runtime-event-v1.schema.json",
+    "evidence-v1.schema.json",
+    "storage-policy-v1.schema.json",
+    "runtime-pointer-v1.schema.json",
+    "context-projection-v1.schema.json",
+    "sync-receipt-v1.schema.json",
+)
 SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
 TRANSACTION_ID_RE = re.compile(r"TXN-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
 RECOVERY_ID_RE = re.compile(r"RECOVERY-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
@@ -189,6 +203,27 @@ def schema_assets() -> dict[str, bytes]:
 def schema_bundle_digest() -> str:
     records = [
         {"name": name, "sha256": _sha256(content)} for name, content in schema_assets().items()
+    ]
+    return _sha256(_canonical(records))
+
+
+def r9_schema_assets() -> dict[str, bytes]:
+    """Return the opt-in R9 schema assets without changing the Stable bundle."""
+    try:
+        return {
+            name: resources.files("opencntx").joinpath("schemas", name).read_bytes()
+            for name in R9_SCHEMA_FILES
+        }
+    except (FileNotFoundError, OSError) as exc:
+        raise LifecycleError(
+            "R9 schema asset is unavailable.", code="lifecycle_schema_missing"
+        ) from exc
+
+
+def r9_schema_bundle_digest() -> str:
+    """Return one deterministic digest for the isolated R9 schema family."""
+    records = [
+        {"name": name, "sha256": _sha256(content)} for name, content in r9_schema_assets().items()
     ]
     return _sha256(_canonical(records))
 

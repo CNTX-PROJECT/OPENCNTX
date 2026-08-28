@@ -1,0 +1,29 @@
+{
+  "$id": "urn:uuid:974f08f1-672a-59c4-a521-55ea852c0cc6",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "default_storage": {"enum": ["LOCAL_CANONICAL", "PRIVATE_GIT_SYNC", "LOCAL_ONLY_MEDIA", "EXCLUDED_SECRET", "FUTURE_CENTRAL_OWNER_STORE"]},
+    "excluded_classes": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "format": {"const": "opencntx-storage-policy"},
+    "format_version": {"const": 1},
+    "local_only_media": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "max_batch_bytes": {"maximum": 52428800, "minimum": 1, "type": "integer"},
+    "max_batch_files": {"maximum": 100, "minimum": 1, "type": "integer"},
+    "max_file_bytes": {"maximum": 10485760, "minimum": 1, "type": "integer"},
+    "max_repository_bytes": {"maximum": 1073741824, "minimum": 1, "type": "integer"},
+    "policy_id": {"type": "string"},
+    "private_branch": {"type": ["string", "null"]},
+    "private_git_sync_enabled": {"type": "boolean"},
+    "private_remote": {"type": ["string", "null"]},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_id": {"const": "urn:uuid:974f08f1-672a-59c4-a521-55ea852c0cc6"},
+    "sync_types": {"items": {"type": "string"}, "type": "array", "uniqueItems": true}
+  },
+  "required": ["default_storage", "excluded_classes", "format", "format_version", "local_only_media", "max_batch_bytes", "max_batch_files", "max_file_bytes", "max_repository_bytes", "policy_id", "private_branch", "private_git_sync_enabled", "private_remote", "project_id", "record_id", "revision", "schema_id", "sync_types"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-storage-policy",
+  "x-opencntx-format-version": 1
+}

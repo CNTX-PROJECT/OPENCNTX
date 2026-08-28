@@ -1,0 +1,31 @@
+{
+  "$id": "urn:uuid:62b061fa-c607-55fe-bf05-f954b17cc1b9",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assignment_count": {"minimum": 0, "type": "integer"},
+    "collaboration_mode": {"enum": ["SOLO", "TEAM"]},
+    "declared_ai_worker_slots": {"maximum": 64, "minimum": 0, "type": "integer"},
+    "declared_human_count": {"maximum": 64, "minimum": 1, "type": "integer"},
+    "dependency_depth": {"minimum": 0, "type": "integer"},
+    "format": {"const": "opencntx-project-definition"},
+    "format_version": {"const": 1},
+    "goal": {"maxLength": 1000, "minLength": 1, "type": "string"},
+    "non_goals": {"items": {"type": "string"}, "maxItems": 64, "type": "array", "uniqueItems": true},
+    "owner_actor_id": {"type": "string"},
+    "parent_project_id": {"type": ["string", "null"]},
+    "project_id": {"type": "string"},
+    "project_mode": {"enum": ["NEW_PROJECT", "EXISTING_TAKEOVER", "EXISTING_ASSIST", "MIGRATION", "READ_ONLY_RESEARCH", "UNRESOLVED"]},
+    "project_scope": {"enum": ["FULL_PROJECT", "SUBPROJECT", "COMPONENT", "ONE_ASSIGNMENT", "READ_ONLY_SLICE", "UNRESOLVED"]},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "scale": {"enum": ["TINY_TASK", "SMALL_PROJECT", "MEDIUM_PROJECT", "LARGE_PROJECT", "MEGA_PROJECT", "UNRESOLVED"]},
+    "schema_id": {"const": "urn:uuid:62b061fa-c607-55fe-bf05-f954b17cc1b9"},
+    "source_count": {"minimum": 0, "type": "integer"},
+    "system_count": {"minimum": 0, "type": "integer"}
+  },
+  "required": ["assignment_count", "collaboration_mode", "declared_ai_worker_slots", "declared_human_count", "dependency_depth", "format", "format_version", "goal", "non_goals", "owner_actor_id", "parent_project_id", "project_id", "project_mode", "project_scope", "record_id", "revision", "scale", "schema_id", "source_count", "system_count"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-project-definition",
+  "x-opencntx-format-version": 1
+}

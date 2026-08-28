@@ -1,0 +1,26 @@
+{
+  "$id": "urn:uuid:6450f2c3-8a78-5de2-a068-7a5c4bd04d4b",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "definition_of_done": {"items": {"type": "string"}, "maxItems": 64, "type": "array"},
+    "event_head": {"type": "string"},
+    "format": {"const": "opencntx-roadmap-definition"},
+    "format_version": {"const": 1},
+    "nodes": {"items": {"additionalProperties": false, "properties": {"node_id": {"type": "string"}, "node_type": {"type": "string"}, "status": {"type": "string"}, "title": {"type": "string"}}, "required": ["node_id", "node_type", "status", "title"], "type": "object"}, "maxItems": 500, "minItems": 1, "type": "array"},
+    "parent_node_id": {"type": ["string", "null"]},
+    "parent_roadmap_id": {"type": ["string", "null"]},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "relations": {"items": {"additionalProperties": false, "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "type": {"type": "string"}}, "required": ["from", "to", "type"], "type": "object"}, "maxItems": 20000, "type": "array"},
+    "return_node_id": {"type": ["string", "null"]},
+    "revision": {"minimum": 1, "type": "integer"},
+    "roadmap_id": {"type": "string"},
+    "roadmap_type": {"enum": ["MAIN_ROADMAP", "SUBROADMAP"]},
+    "schema_id": {"const": "urn:uuid:6450f2c3-8a78-5de2-a068-7a5c4bd04d4b"}
+  },
+  "required": ["definition_of_done", "event_head", "format", "format_version", "nodes", "parent_node_id", "parent_roadmap_id", "project_id", "record_id", "relations", "return_node_id", "revision", "roadmap_id", "roadmap_type", "schema_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-roadmap-definition",
+  "x-opencntx-format-version": 1
+}

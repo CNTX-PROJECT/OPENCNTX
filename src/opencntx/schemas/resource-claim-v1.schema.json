@@ -1,0 +1,21 @@
+{
+  "$id": "urn:uuid:f6918b04-0a8e-5a90-8b74-b76e0286a500",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {"type": "string"},
+    "conflict_set_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "exclusive": {"type": "boolean"},
+    "format": {"const": "opencntx-resource-claim"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "resource_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_id": {"const": "urn:uuid:f6918b04-0a8e-5a90-8b74-b76e0286a500"}
+  },
+  "required": ["claim_id", "conflict_set_ids", "exclusive", "format", "format_version", "project_id", "record_id", "resource_ids", "revision", "schema_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-resource-claim",
+  "x-opencntx-format-version": 1
+}

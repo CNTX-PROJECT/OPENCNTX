@@ -1,0 +1,31 @@
+{
+  "$id": "urn:uuid:ac7b4a1a-0ea5-5460-b5fb-08590a1a2ff6",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bytes": {"minimum": 0, "type": "integer"},
+    "captured_at": {"type": "string"},
+    "evidence_id": {"type": "string"},
+    "evidence_type": {"type": "string"},
+    "format": {"const": "opencntx-evidence"},
+    "format_version": {"const": 1},
+    "freshness": {"type": "string"},
+    "input_digests": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "limitations": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "locator": {"type": "string"},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "result": {"enum": ["PASS", "FAIL", "UNKNOWN", "UNAVAILABLE", "UNSUPPORTED"]},
+    "revision": {"minimum": 1, "type": "integer"},
+    "schema_id": {"const": "urn:uuid:ac7b4a1a-0ea5-5460-b5fb-08590a1a2ff6"},
+    "sha256": {"type": "string"},
+    "source_class": {"type": "string"},
+    "state_digest": {"type": "string"},
+    "validator": {"type": "string"},
+    "validator_version": {"type": "string"}
+  },
+  "required": ["bytes", "captured_at", "evidence_id", "evidence_type", "format", "format_version", "freshness", "input_digests", "limitations", "locator", "project_id", "record_id", "result", "revision", "schema_id", "sha256", "source_class", "state_digest", "validator", "validator_version"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-evidence",
+  "x-opencntx-format-version": 1
+}

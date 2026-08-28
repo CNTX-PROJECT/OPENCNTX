@@ -1,0 +1,22 @@
+{
+  "$id": "urn:uuid:09529199-4eaa-5e62-a009-3e868c81c7c7",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {"type": "string"},
+    "availability": {"enum": ["AVAILABLE", "UNAVAILABLE", "PAUSED"]},
+    "capacity": {"maximum": 100, "minimum": 0, "type": "integer"},
+    "format": {"const": "opencntx-actor-binding"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "role": {"enum": ["OWNER", "ARCHITECT", "WORKSTREAM_LEAD", "EXECUTOR", "REVIEWER", "OBSERVER"]},
+    "schema_id": {"const": "urn:uuid:09529199-4eaa-5e62-a009-3e868c81c7c7"},
+    "workstream_id": {"type": ["string", "null"]}
+  },
+  "required": ["actor_id", "availability", "capacity", "format", "format_version", "project_id", "record_id", "revision", "role", "schema_id", "workstream_id"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-actor-binding",
+  "x-opencntx-format-version": 1
+}

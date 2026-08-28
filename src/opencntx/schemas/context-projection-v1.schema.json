@@ -1,0 +1,32 @@
+{
+  "$id": "urn:uuid:e8ba876f-9064-54c7-9127-461adf8d3428",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocked": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "breadcrumb": {"maxLength": 8192, "type": "string"},
+    "current_leaf_id": {"type": "string"},
+    "excluded": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "format": {"const": "opencntx-context-projection"},
+    "format_version": {"const": 1},
+    "included": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "justified_parent_fragment": {"type": ["object", "null"]},
+    "max_bytes": {"maximum": 1048576, "minimum": 1, "type": "integer"},
+    "max_files": {"maximum": 80, "minimum": 1, "type": "integer"},
+    "project_id": {"type": "string"},
+    "projection_digest": {"type": "string"},
+    "projection_id": {"type": "string"},
+    "record_id": {"type": "string"},
+    "revision": {"minimum": 1, "type": "integer"},
+    "roadmap_stack_digest": {"type": "string"},
+    "schema_id": {"const": "urn:uuid:e8ba876f-9064-54c7-9127-461adf8d3428"},
+    "source_state_digest": {"type": "string"},
+    "total_bytes": {"minimum": 0, "type": "integer"},
+    "total_files": {"minimum": 0, "type": "integer"},
+    "unread": {"items": {"type": "string"}, "type": "array", "uniqueItems": true}
+  },
+  "required": ["blocked", "breadcrumb", "current_leaf_id", "excluded", "format", "format_version", "included", "justified_parent_fragment", "max_bytes", "max_files", "project_id", "projection_digest", "projection_id", "record_id", "revision", "roadmap_stack_digest", "schema_id", "source_state_digest", "total_bytes", "total_files", "unread"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-context-projection",
+  "x-opencntx-format-version": 1
+}
