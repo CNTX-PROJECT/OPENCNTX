@@ -1,0 +1,2257 @@
+{
+  "assignment_31_proposal_sha256": "edb27e38af4df1fbff63c31b29942f7b63817ade411de2c977c6ccd614a4a704",
+  "format": "opencntx-r9-intake-scenario-corpus",
+  "format_version": 1,
+  "records": [
+    {
+      "scenario_id": "S31-001",
+      "operation": "inspection",
+      "scenario": "toegestane metadataread",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "pyproject.toml",
+        "allowed_paths": [
+          "pyproject.toml"
+        ],
+        "protected_paths": [],
+        "path_state": "SAFE"
+      },
+      "input_digest": "c8ad8b2de6f6bd2c2ed31c61310ecbff770f359537e255e53e431440972841ee",
+      "expected_result_code": "READ_ONLY_ONLY",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "READ_ONLY_ONLY",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "81cd20ee86066b2480f25939f5bd4cdc6a0790b46e801f7e239d73d9e07cae57",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-002",
+      "operation": "inspection",
+      "scenario": "pad buiten read-allowlist",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "README.md",
+        "allowed_paths": [
+          "pyproject.toml"
+        ],
+        "protected_paths": [],
+        "path_state": "SAFE"
+      },
+      "input_digest": "f2bfbea2d2330583bc7bfc3e03e1ddc48ee26897590eb619ece40fc1eb37f4b5",
+      "expected_result_code": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f6af8859a3e9104c66e062384225e490743ab64e8197efcf354d5e6e4a56b64b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-003",
+      "operation": "inspection",
+      "scenario": "parent-traversal",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "../outside",
+        "allowed_paths": [
+          "pyproject.toml"
+        ],
+        "protected_paths": [],
+        "path_state": "TRAVERSAL"
+      },
+      "input_digest": "accaca2f868d540e23ada5029ab8c21d15ae56271273e482136bf7b7cc863290",
+      "expected_result_code": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f6af8859a3e9104c66e062384225e490743ab64e8197efcf354d5e6e4a56b64b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-004",
+      "operation": "inspection",
+      "scenario": "absolute of niet-portabel pad",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "/outside",
+        "allowed_paths": [
+          "pyproject.toml"
+        ],
+        "protected_paths": [],
+        "path_state": "NON_PORTABLE"
+      },
+      "input_digest": "ae642c584e6fd89ee4ccb0f25fc9834d8c86565c7ab766e3da2686e0eb649fa5",
+      "expected_result_code": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f6af8859a3e9104c66e062384225e490743ab64e8197efcf354d5e6e4a56b64b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-005",
+      "operation": "inspection",
+      "scenario": "symlink ontsnapt uit projectroot",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "linked/outside",
+        "allowed_paths": [
+          "linked/**"
+        ],
+        "protected_paths": [],
+        "path_state": "SYMLINK_ESCAPE"
+      },
+      "input_digest": "759fa31fa088659f555bc53b3121ddf50ea2d626b3db19b2240c11d9e3783f28",
+      "expected_result_code": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f6af8859a3e9104c66e062384225e490743ab64e8197efcf354d5e6e4a56b64b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-006",
+      "operation": "inspection",
+      "scenario": "muterende intakeactie",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "write-file",
+        "target_path": "pyproject.toml",
+        "allowed_paths": [
+          "pyproject.toml"
+        ],
+        "protected_paths": [],
+        "path_state": "SAFE"
+      },
+      "input_digest": "a84bcb7b52cf7faa64341b194dd27df44507933de0e9cd402e056094f0e7deed",
+      "expected_result_code": "BLOCKED_INTAKE_MUTATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_MUTATION",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "c56f59156b05c75793c04ca439eacdfcffaecac985fb14f658746847863e94e0",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-007",
+      "operation": "inspection",
+      "scenario": "OpenSpec-pad of alias",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": ".openspec-store/spec.md",
+        "allowed_paths": [
+          ".openspec-store/**"
+        ],
+        "protected_paths": [],
+        "path_state": "SAFE"
+      },
+      "input_digest": "2aad225980a022777004999743b0da879b9d55c9cd8882e276e53767853d143f",
+      "expected_result_code": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f6af8859a3e9104c66e062384225e490743ab64e8197efcf354d5e6e4a56b64b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-008",
+      "operation": "budget",
+      "scenario": "exact 40 inspectieacties",
+      "input": {
+        "kind": "inspection",
+        "counts": {
+          "actions": 40,
+          "inventory_records": 0,
+          "metadata_bytes": 0,
+          "minutes": 0
+        }
+      },
+      "input_digest": "f408be1eb1929f59234c6b05b3d9dcf2e6331b523800b58638459e276d1be5c3",
+      "expected_result_code": "INSPECTION_BUDGET_VALID",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "394399b600978eee8e41f0cdacdacc348c31ab4f6917ef733752a48292cb96cd",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-009",
+      "operation": "budget",
+      "scenario": "41 inspectieacties",
+      "input": {
+        "kind": "inspection",
+        "counts": {
+          "actions": 41,
+          "inventory_records": 0,
+          "metadata_bytes": 0,
+          "minutes": 0
+        }
+      },
+      "input_digest": "69b450d1840df36ccb9f4648bfbb9e87647ce517a091720c27725031ca24c451",
+      "expected_result_code": "BLOCKED_INTAKE_BUDGET_EXCEEDED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "dc5b884c929cb153c0e80c38778ce8c08737c3ab0f653adf260fd1461bed9a7e",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-010",
+      "operation": "budget",
+      "scenario": "exact 3 rondes 8 totaal 5 per ronde",
+      "input": {
+        "kind": "questions",
+        "counts": {
+          "rounds": 3,
+          "total": 8,
+          "per_round": 5
+        }
+      },
+      "input_digest": "d4bb1b84a0a39ae25d13824f21b64aeb7b17164b969a8a697aeb3fd4a1792852",
+      "expected_result_code": "QUESTION_BUDGET_VALID",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "bb49e056dcd0bd953478aa508f5cb8b30aa4785aadffa2caabec346d070e6e85",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-011",
+      "operation": "budget",
+      "scenario": "vraagbudget overschreden",
+      "input": {
+        "kind": "questions",
+        "counts": {
+          "rounds": 3,
+          "total": 8,
+          "per_round": 6
+        }
+      },
+      "input_digest": "7255598c5c763ef94ea0d717b52d2500741a73a935fb5d68cbfcc219dddf7b61",
+      "expected_result_code": "BLOCKED_INTAKE_BUDGET_EXCEEDED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "dc5b884c929cb153c0e80c38778ce8c08737c3ab0f653adf260fd1461bed9a7e",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-012",
+      "operation": "budget",
+      "scenario": "exact 1000 records 4MiB metadata 30 minuten",
+      "input": {
+        "kind": "inspection",
+        "counts": {
+          "actions": 40,
+          "inventory_records": 1000,
+          "metadata_bytes": 4194304,
+          "minutes": 30
+        }
+      },
+      "input_digest": "e14ad75d4ade4ff8dd917bde62058effa0c612d3dc550be9867cf8029072fe3e",
+      "expected_result_code": "INSPECTION_BUDGET_VALID",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "394399b600978eee8e41f0cdacdacc348c31ab4f6917ef733752a48292cb96cd",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-013",
+      "operation": "budget",
+      "scenario": "inventory- byte- of tijdgrens overschreden",
+      "input": {
+        "kind": "inspection",
+        "counts": {
+          "actions": 40,
+          "inventory_records": 1001,
+          "metadata_bytes": 4194304,
+          "minutes": 30
+        }
+      },
+      "input_digest": "27ce599bad6e2ca9ce4d9e2aac6c3036f587c00c4a4f6866cf59e27f7c57443c",
+      "expected_result_code": "BLOCKED_INTAKE_BUDGET_EXCEEDED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "dc5b884c929cb153c0e80c38778ce8c08737c3ab0f653adf260fd1461bed9a7e",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-014",
+      "operation": "evidence",
+      "scenario": "OWNER_CONFIRMED",
+      "input": {
+        "status": "OWNER_CONFIRMED"
+      },
+      "input_digest": "2dbc2407b05bfccbea014fed945eeff77174fbccbe6dd0a0fc08ecf236d00f62",
+      "expected_result_code": "EVIDENCE_ACCEPTED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "9c3eee63be7eec9c4f4d7aa63930cf2bf4f80e9307a74b622515576e377e5b2f",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-015",
+      "operation": "evidence",
+      "scenario": "LIVE_VERIFIED",
+      "input": {
+        "status": "LIVE_VERIFIED"
+      },
+      "input_digest": "9c9be6426a9abcda121b7fa768e6a97df158f7638d9ba151d1890e6bedf90040",
+      "expected_result_code": "EVIDENCE_ACCEPTED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "9c3eee63be7eec9c4f4d7aa63930cf2bf4f80e9307a74b622515576e377e5b2f",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-016",
+      "operation": "evidence",
+      "scenario": "CURRENT_DOCUMENT",
+      "input": {
+        "status": "CURRENT_DOCUMENT"
+      },
+      "input_digest": "cc154d77b9948bae9917871b3932c9472eeda1245f8896b3d72f3698d9046b0c",
+      "expected_result_code": "EVIDENCE_ACCEPTED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "9c3eee63be7eec9c4f4d7aa63930cf2bf4f80e9307a74b622515576e377e5b2f",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-017",
+      "operation": "evidence",
+      "scenario": "HISTORICAL",
+      "input": {
+        "status": "HISTORICAL"
+      },
+      "input_digest": "ee07e8c38ae5177c748733b8776a70af812d5b5bbab6aed043a79e61f09e25f1",
+      "expected_result_code": "EVIDENCE_ACCEPTED_WITH_LIMITATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "86d2f82b90e2d45926990f213d433bc9b9d5372b81d8a85dfb558fc83c02dd61",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-018",
+      "operation": "evidence",
+      "scenario": "INFERRED",
+      "input": {
+        "status": "INFERRED"
+      },
+      "input_digest": "21393894529dca15be0305dabb509ba32dbbb07e01d6b00266ecbd4a9ae13bf1",
+      "expected_result_code": "EVIDENCE_ACCEPTED_WITH_LIMITATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "86d2f82b90e2d45926990f213d433bc9b9d5372b81d8a85dfb558fc83c02dd61",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-019",
+      "operation": "evidence",
+      "scenario": "UNKNOWN",
+      "input": {
+        "status": "UNKNOWN"
+      },
+      "input_digest": "6ab9fe06bc36d0b3d5335a0b6cb347c4967d0d40aba4682dbc7b86142645db00",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "642eff4f7f8582e215375667f072dd91884623f5a034562e53bdaf46511fc522",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-020",
+      "operation": "evidence",
+      "scenario": "UNAVAILABLE",
+      "input": {
+        "status": "UNAVAILABLE"
+      },
+      "input_digest": "69cdf8984a060a9027df02919ecd1c04a3e28d188f5528aad4dd096376448db7",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "642eff4f7f8582e215375667f072dd91884623f5a034562e53bdaf46511fc522",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-021",
+      "operation": "evidence",
+      "scenario": "UNSUPPORTED",
+      "input": {
+        "status": "UNSUPPORTED"
+      },
+      "input_digest": "e39dc3f0e228f990b17f2f91b8d0172201fb9fd99a6ff22899382baec76b8161",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "642eff4f7f8582e215375667f072dd91884623f5a034562e53bdaf46511fc522",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-022",
+      "operation": "evidence",
+      "scenario": "CONFLICTING",
+      "input": {
+        "status": "CONFLICTING"
+      },
+      "input_digest": "6bb994594128b6cbf574a11473838a176740c94bc6c8398e335c9653555a233e",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "642eff4f7f8582e215375667f072dd91884623f5a034562e53bdaf46511fc522",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-023",
+      "operation": "evidence",
+      "scenario": "onbekende bewijsstatus",
+      "input": {
+        "status": "UNKNOWN_STATUS"
+      },
+      "input_digest": "5e6913d1527a626eeb0f28709def22f93b73e338414f537952caba728d5b4355",
+      "expected_result_code": "INTAKE_CONTRACT_INVALID",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "a3979d746598133f26460a6f3518538727527e67aca6e2d965da912c7546ac46",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-024",
+      "operation": "readiness",
+      "scenario": "alle verplichte velden bewezen",
+      "input": {
+        "required_fields": [
+          "project_root",
+          "owner",
+          "scope"
+        ],
+        "observations": {
+          "project_root": "LIVE_VERIFIED",
+          "owner": "OWNER_CONFIRMED",
+          "scope": "CURRENT_DOCUMENT"
+        },
+        "uncertainty": "LOW"
+      },
+      "input_digest": "d8295b2fdc9bac256409e9904978c8dea336ed9a9636ae1d62c370c40e36b31a",
+      "expected_result_code": "ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "ENOUGH_INFORMATION",
+      "expected_proposal_digest": "037d530510753754ffb03ef055c388ff5ac74101080d1f9e8641c83d98ec420a",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-025",
+      "operation": "readiness",
+      "scenario": "verplicht veld ontbreekt",
+      "input": {
+        "required_fields": [
+          "project_root",
+          "owner",
+          "scope"
+        ],
+        "observations": {
+          "project_root": "LIVE_VERIFIED",
+          "owner": "OWNER_CONFIRMED"
+        },
+        "uncertainty": "LOW"
+      },
+      "input_digest": "eb1f9f8194d1b85375bff2330db62bdad3942dd0283e139095f591ece283404a",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_ENOUGH_INFORMATION",
+      "expected_proposal_digest": "2fbfe40626c44ee72953f541091d0ff09ed48f8045afa42e00d05fb45afefdb1",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-026",
+      "operation": "readiness",
+      "scenario": "blokkerend conflict",
+      "input": {
+        "required_fields": [
+          "project_root",
+          "owner",
+          "scope"
+        ],
+        "observations": {
+          "project_root": "LIVE_VERIFIED",
+          "owner": "OWNER_CONFIRMED",
+          "scope": "CONFLICTING"
+        },
+        "uncertainty": "LOW"
+      },
+      "input_digest": "ae6f4568cadaccd032034c676fe9fda6b34929d94dd3fd5941394e2764ebc086",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_ENOUGH_INFORMATION",
+      "expected_proposal_digest": "2fbfe40626c44ee72953f541091d0ff09ed48f8045afa42e00d05fb45afefdb1",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-027",
+      "operation": "readiness",
+      "scenario": "hoge onzekerheid raakt beschermde grens",
+      "input": {
+        "required_fields": [
+          "project_root",
+          "owner",
+          "scope"
+        ],
+        "observations": {
+          "project_root": "LIVE_VERIFIED",
+          "owner": "OWNER_CONFIRMED",
+          "scope": "CURRENT_DOCUMENT"
+        },
+        "uncertainty": "HIGH"
+      },
+      "input_digest": "c0578af5325471848b9b09611d217271b942b6f027f172757375d1ab69e57099",
+      "expected_result_code": "NOT_ENOUGH_INFORMATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_ENOUGH_INFORMATION",
+      "expected_proposal_digest": "2fbfe40626c44ee72953f541091d0ff09ed48f8045afa42e00d05fb45afefdb1",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-028",
+      "operation": "questions",
+      "scenario": "uitsluitend irreducibele vragen gesorteerd en uniek",
+      "input": {
+        "required_fields": [
+          "scope",
+          "owner",
+          "goal",
+          "scope"
+        ],
+        "observations": {
+          "owner": "OWNER_CONFIRMED"
+        },
+        "live_facts": [
+          "owner"
+        ]
+      },
+      "input_digest": "65a390150236a37fedbc4be431acf411f6860e3e1369e10b4323d37fb357781b",
+      "expected_result_code": "QUESTION_REQUIRED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b9b9fe4dfffed43348291e1a455676c45ab787148012e6fb1b79079de0446617",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-029",
+      "operation": "questions",
+      "scenario": "live bewezen feit veroorzaakt geen vraag",
+      "input": {
+        "required_fields": [
+          "owner"
+        ],
+        "observations": {
+          "owner": "LIVE_VERIFIED"
+        },
+        "live_facts": [
+          "owner"
+        ]
+      },
+      "input_digest": "9663856667573b7eb60c2a958b3c2a781d062cad5b2de13aa646ee6cfe130608",
+      "expected_result_code": "NO_QUESTION_REQUIRED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "131e02f39c756ee38787668624e821c4bcd1e6369846c9f56ba9139581d1359d",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-030",
+      "operation": "mode",
+      "scenario": "nieuw project",
+      "input": {
+        "facts": {
+          "new_project": true
+        }
+      },
+      "input_digest": "8053afee1ea25fe3726fef3526bb1dd38b0b7155b668916b2ab0274057951d92",
+      "expected_result_code": "NEW_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "eb84694b8ad69a80cb16fad519fcd6b8b6490226c4a1df91501ce2231d42197c",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-031",
+      "operation": "mode",
+      "scenario": "bestaand gezond project",
+      "input": {
+        "facts": {
+          "healthy_existing": true
+        }
+      },
+      "input_digest": "9e85b01f0df52615c6280fc53e613a9eb251657613d8348e1b1f7b2989074483",
+      "expected_result_code": "EXISTING_TAKEOVER",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "750c7c3ccc0440290712f4c7151dff6e1e97d56eb7577f26a83840632b7f4931",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-032",
+      "operation": "mode",
+      "scenario": "bestaand legacyproject zonder roadmap",
+      "input": {
+        "facts": {
+          "legacy_without_roadmap": true
+        }
+      },
+      "input_digest": "099c0976d3177d53d9965368374b5a830eba7c8e3a0da40f5e8b881f0ae983a7",
+      "expected_result_code": "EXISTING_ASSIST",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "154aeff5729394a1f3e409d3fe6c2483d39c789ce345a2776b0d87cbcefa30cb",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-033",
+      "operation": "mode",
+      "scenario": "migratieverzoek",
+      "input": {
+        "facts": {
+          "migration": true
+        }
+      },
+      "input_digest": "3035dd1a112b96e15622db0344faaa842ede5d84d15a660650833282ecafd450",
+      "expected_result_code": "MIGRATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "1e5f1b9e22d96b12bda0c61e82ab75f908e182eb0268bef291d6cae98eccdf96",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-034",
+      "operation": "mode",
+      "scenario": "read-only onderzoek",
+      "input": {
+        "facts": {
+          "read_only": true
+        }
+      },
+      "input_digest": "8d3bd6091a1e597ed25a7dd32f132b4f8ff09a833b210122c1692252aa1bd51c",
+      "expected_result_code": "READ_ONLY_RESEARCH",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "a529e375071c47df6e145c8c6fc1eb256a3d25f0fe33d1a0537aedffb7221ee4",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-035",
+      "operation": "mode",
+      "scenario": "onvoldoende modusbewijs",
+      "input": {
+        "facts": {}
+      },
+      "input_digest": "69a5a5c3d4a916b9ca4a56f468daac9848ecb661cf2496a3d422ab79cac086da",
+      "expected_result_code": "UNRESOLVED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b2f9ffef7fc055dcb7efc0336e686cb7573a729b3cd5f437ea8f98ebbc168679",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-036",
+      "operation": "scope",
+      "scenario": "volledig project",
+      "input": {
+        "requested_scope": "FULL_PROJECT",
+        "parent_project_id": null,
+        "no_parent_project": false
+      },
+      "input_digest": "ff8ca475737ac35ec110ff0d900d48f429bf6b782ac48e03a93a255554006a6a",
+      "expected_result_code": "FULL_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "976c73bdd92329d70a88259676005d6c6f6153f28954787a7133c37c98085d89",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-037",
+      "operation": "scope",
+      "scenario": "subproject met geldige parent",
+      "input": {
+        "requested_scope": "SUBPROJECT",
+        "parent_project_id": "PROJECT_PARENT",
+        "no_parent_project": false
+      },
+      "input_digest": "fa410884751cfa6978be307b7e00e9683cf388c4fc9e8e57391381c259cae9e2",
+      "expected_result_code": "SUBPROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "40a28cdebe5c94f9f7294d5603b792401e74b3c6a78c9878b294f27612f08eb4",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-038",
+      "operation": "scope",
+      "scenario": "component met geldige parent",
+      "input": {
+        "requested_scope": "COMPONENT",
+        "parent_project_id": "PROJECT_PARENT",
+        "no_parent_project": false
+      },
+      "input_digest": "5756fe1a89d319b35ca2295530d227eb39e26b243ef5f5feeb982c67f575db46",
+      "expected_result_code": "COMPONENT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "ed6ccbeb35a403283b5ebb8ce0fa0b6c38b50d3179dd10a1dbaa26e3c7d822ff",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-039",
+      "operation": "scope",
+      "scenario": "deelproject zonder parent of NO_PARENT_PROJECT",
+      "input": {
+        "requested_scope": "SUBPROJECT",
+        "parent_project_id": null,
+        "no_parent_project": false
+      },
+      "input_digest": "0e6478c88a3828a2d6e89bbf11e965e5e3451a03ca1a13b36bf28ae66f519e97",
+      "expected_result_code": "BLOCKED_NO_PROJECT_BINDING",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "9646db5653deaaf9d29ab7a584380cd4acb955c00c13ba3979599b3a35943c5b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-040",
+      "operation": "scope",
+      "scenario": "expliciet NO_PARENT_PROJECT",
+      "input": {
+        "requested_scope": "COMPONENT",
+        "parent_project_id": null,
+        "no_parent_project": true
+      },
+      "input_digest": "9df19f54e9083e0921e947c189a82652b10632cb635bf5f474b8e99292da3d08",
+      "expected_result_code": "PARTIAL_SCOPE_NO_PARENT_CONFIRMED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "4a98f7cbbbdf7c072ac8d685146a2d9f2c4c5fd685cd9e130a53e6f9e207f857",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-041",
+      "operation": "scope",
+      "scenario": "\u00e9\u00e9n opdracht zonder verbreding",
+      "input": {
+        "requested_scope": "ONE_ASSIGNMENT",
+        "parent_project_id": null,
+        "no_parent_project": false
+      },
+      "input_digest": "772c9fa534675157724899b7cba2ca23383df267da91541ad309a9dd201258be",
+      "expected_result_code": "ONE_ASSIGNMENT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "cd62b9c152e16193ddae0ba8d7a6b96b3353f021b862bc5580f730e26d3623ee",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-042",
+      "operation": "scope",
+      "scenario": "read-only slice zonder mutatie",
+      "input": {
+        "requested_scope": "READ_ONLY_SLICE",
+        "parent_project_id": null,
+        "no_parent_project": false
+      },
+      "input_digest": "ac738e992cabe465613bd24ae47602e965671ec1012ff0664ef4bf72f55bc605",
+      "expected_result_code": "READ_ONLY_SLICE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "3210bd2fa97e2c149ab5be93522feea6a74d23d506038a06c063d955d0dee3e1",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-043",
+      "operation": "scale",
+      "scenario": "exact tiny",
+      "input": {
+        "counts": {
+          "assignment_count": 1,
+          "source_count": 5,
+          "dependency_depth": 0,
+          "system_count": 1
+        }
+      },
+      "input_digest": "0ac2b0288c19e8457c3d2eaed21be6cd5abb7deaf96b414347f3b3f67eedad51",
+      "expected_result_code": "TINY_TASK",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "dbd63ff3cbd701c29f86a97cc12ea92f3e30b017229a0ea7364cbe2ec6f52bd9",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-044",
+      "operation": "scale",
+      "scenario": "hoogste as maakt small",
+      "input": {
+        "counts": {
+          "assignment_count": 1,
+          "source_count": 6,
+          "dependency_depth": 0,
+          "system_count": 1
+        }
+      },
+      "input_digest": "e1d669bc3746cd7893e9a51b5afbb2371f34c6a4d3655030e8cc4429e3effaf9",
+      "expected_result_code": "SMALL_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "144ca7d260577fdbd089032e12f9f0446f9b296e660f94e0001b086f6ba2adf7",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-045",
+      "operation": "scale",
+      "scenario": "hoogste as maakt medium",
+      "input": {
+        "counts": {
+          "assignment_count": 9,
+          "source_count": 25,
+          "dependency_depth": 2,
+          "system_count": 2
+        }
+      },
+      "input_digest": "59e61bbfe39c8078fe2b3f29b4f40f11ff4675f9157a060f64cd327369a46121",
+      "expected_result_code": "MEDIUM_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "1776ffa47ee947ee9f2ccb208689454578222efe9ea20077a361fbc4a12b593f",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-046",
+      "operation": "scale",
+      "scenario": "hoogste as maakt large",
+      "input": {
+        "counts": {
+          "assignment_count": 31,
+          "source_count": 100,
+          "dependency_depth": 4,
+          "system_count": 4
+        }
+      },
+      "input_digest": "2d053568f456ce720357bb8756e19c638490642d4596b234855e6bda75b26ff5",
+      "expected_result_code": "LARGE_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "682cc2a5d6232b3544eecee0a1d2c0b4d45b1e499eebbd68cdb6dc67bfbc6a53",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-047",
+      "operation": "scale",
+      "scenario": "hoogste as maakt mega",
+      "input": {
+        "counts": {
+          "assignment_count": 121,
+          "source_count": 500,
+          "dependency_depth": 8,
+          "system_count": 8
+        }
+      },
+      "input_digest": "946f18f18787475df4756c01b6faaa69c7b987d42b0e3e97e5db122ceefddd30",
+      "expected_result_code": "MEGA_PROJECT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "0f125e7b82453e9fd66f665aecb3fcbde5f886ee648d7af4c8959f1c0b753900",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-048",
+      "operation": "scale",
+      "scenario": "onbekende telling",
+      "input": {
+        "counts": {
+          "assignment_count": null,
+          "source_count": 5,
+          "dependency_depth": 0,
+          "system_count": 1
+        }
+      },
+      "input_digest": "7587aaf504174173c0c9199e32a723f75405bb7d609caa86d20990fddcfbf308",
+      "expected_result_code": "UNRESOLVED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b2f9ffef7fc055dcb7efc0336e686cb7573a729b3cd5f437ea8f98ebbc168679",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-049",
+      "operation": "risk",
+      "scenario": "HIGH verhoogt proceszwaarte maar niet omvang",
+      "input": {
+        "complexity": "HIGH",
+        "governance": "LOW",
+        "uncertainty": "MODERATE"
+      },
+      "input_digest": "a2b9000d7d9c59cd01130b89fe29dae987662ea399546d2eab1f38aac4b00c08",
+      "expected_result_code": "PROCESS_WEIGHT_PLUS_ONE",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "3ee31e43e42421972d7dff94d08b03c92d3fb13b2c8651bdf33923dda6723d3d",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-050",
+      "operation": "risk",
+      "scenario": "CRITICAL complexiteit of risico",
+      "input": {
+        "complexity": "CRITICAL",
+        "governance": "LOW",
+        "uncertainty": "LOW"
+      },
+      "input_digest": "62485717b26afa5af268b1d103f913eff7c4de12f0c456d0adfe7108315c5b2c",
+      "expected_result_code": "BLOCKED_CRITICAL_RISK_OWNER_DECISION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b653d0b8896f1d7db40c685947478cadc23d2851d4c5693d345769ce4394702b",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-051",
+      "operation": "team",
+      "scenario": "\u00e9\u00e9n mens",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 1,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "1929ecd8222df0bc468b23be50ccc49122fc12e5c132508f7378da1a06883d40",
+      "expected_result_code": "SOLO",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f4fc3eaae56dabc066840e81a952780427b6d39d01b19f164621d29bf46f9785",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-052",
+      "operation": "team",
+      "scenario": "twee mensen",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "77767797804ee4e5fd38faf5740c5d57f18358b3030adfa869a1b0a3883e1ef6",
+      "expected_result_code": "TEAM_2",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "fa7f96a2d1cd46beb246b9642043a2d1d0109842859798e44271b224c24519af",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-053",
+      "operation": "team",
+      "scenario": "64 mensen grens",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_03",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_04",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_05",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_06",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_07",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_08",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_09",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_10",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_11",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_12",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_13",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_14",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_15",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_16",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_17",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_18",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_19",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_20",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_21",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_22",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_23",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_24",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_25",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_26",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_27",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_28",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_29",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_30",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_31",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_32",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_33",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_34",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_35",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_36",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_37",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_38",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_39",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_40",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_41",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_42",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_43",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_44",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_45",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_46",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_47",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_48",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_49",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_50",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_51",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_52",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_53",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_54",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_55",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_56",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_57",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_58",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_59",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_60",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_61",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_62",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_63",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_64",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 64,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "86acd321e788ca78a6db7cc8cd71435ea37879c72f204345c879d530d53fa983",
+      "expected_result_code": "TEAM_64",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "84a95db0ad978a63cd975d04975833c26b777f95829588570821cd98e6645fb8",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-054",
+      "operation": "team",
+      "scenario": "65 mensen",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_03",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_04",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_05",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_06",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_07",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_08",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_09",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_10",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_11",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_12",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_13",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_14",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_15",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_16",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_17",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_18",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_19",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_20",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_21",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_22",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_23",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_24",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_25",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_26",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_27",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_28",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_29",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_30",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_31",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_32",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_33",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_34",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_35",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_36",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_37",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_38",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_39",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_40",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_41",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_42",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_43",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_44",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_45",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_46",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_47",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_48",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_49",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_50",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_51",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_52",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_53",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_54",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_55",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_56",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_57",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_58",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_59",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_60",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_61",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_62",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_63",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_64",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          },
+          {
+            "actor_id": "ACTOR_65",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 65,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "c5dcb1511223edbb2fa34398f0c2bf750ed1f41111ea37a1c5a47e5e8d84f079",
+      "expected_result_code": "INTAKE_CONTRACT_INVALID",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "a3979d746598133f26460a6f3518538727527e67aca6e2d965da912c7546ac46",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-055",
+      "operation": "team",
+      "scenario": "ontbrekende actor of verzonnen rol",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "INVENTED"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "9431f9921d509c9b0bc173bd03837778bab4b49f03990605fcdeb5b0526fe91f",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f1ef53315729baf3f13a956d1b08e08f887e69dcd6e9f22ac865bc4ca56aeaf9",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-056",
+      "operation": "team",
+      "scenario": "unavailable zonder overdracht",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "UNAVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 1,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "37ff9a7991a4dc572d5a3bfa59af4d1ba8c46ee66d2ffd2b830a17662516ff46",
+      "expected_result_code": "PAUSED_PREVIEW",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "e25f5e98c0595c063e6340e7a053ecb8eb677fab734f9e0781239a02898cabc1",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-057",
+      "operation": "team",
+      "scenario": "geldige reassignment",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "UNAVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": "ACTOR_02",
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "75194226c99aacd315e137523a5795adde9498365deeeeb01eae2fd4c3ae7ce8",
+      "expected_result_code": "REASSIGNMENT_PREVIEW",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "ff052090677cd0598e5f293a8dfbef3d9015f7c58c6363b66c0feda73e659f19",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-058",
+      "operation": "team",
+      "scenario": "dependency groen maar resourceconflict",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": true,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "a797a0d7029fb6570588ab45d61747c09a44a6f2a6db7ce2938fa9985879706c",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "f1ef53315729baf3f13a956d1b08e08f887e69dcd6e9f22ac865bc4ca56aeaf9",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-059",
+      "operation": "team",
+      "scenario": "gedeeld integratiepunt",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": true,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "1a02802f8fc480a9f8c976c4e65417fedf3552650e32f30e720398e202e098a5",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "e665bcbe60ce7a111ba62fcc3cef113c5f9f8e0c0bbc0d4d69274b663b3cb53c",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-060",
+      "operation": "team",
+      "scenario": "rollen capaciteit en paralleliteit geldig",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 0,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": true,
+        "requested_parallelism": 2
+      },
+      "input_digest": "fdc5c8430edf20f2906c2f0f57dab8e80ee0ce5c618488a6a4b8eb23c3e2f146",
+      "expected_result_code": "PARALLEL_BOUNDED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "8a254e22190996c7c16eed686dc6c3f19b6be8bde7ef98f08ea284ce37de165d",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-061",
+      "operation": "team",
+      "scenario": "AI-slots tellen niet als mensen of OWNER",
+      "input": {
+        "actors": [
+          {
+            "actor_id": "ACTOR_OWNER",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "OWNER"
+          },
+          {
+            "actor_id": "ACTOR_02",
+            "availability": "AVAILABLE",
+            "capacity": 1,
+            "role": "EXECUTOR"
+          }
+        ],
+        "ai_slots": 64,
+        "human_count": 2,
+        "reassignment_to": null,
+        "resource_conflict": false,
+        "shared_integration": false,
+        "disjoint_workstreams": false,
+        "requested_parallelism": 1
+      },
+      "input_digest": "6f1edc01e00ffd10ed95e2fd81610b971fe13cba72492651fb16eede470794fd",
+      "expected_result_code": "TEAM_COUNT_UNCHANGED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "28bb21a4ed409838e02a7ae7b7fbf4a1db39222075ec13c4d01ffedded1550e9",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-062",
+      "operation": "preview",
+      "scenario": "zelfde input ongeacht volgorde",
+      "input": {
+        "assertion": "DETERMINISTIC_PROPOSAL",
+        "proposal_input": {
+          "scale": "MEDIUM_PROJECT",
+          "goal": "bounded",
+          "scope": "FULL_PROJECT"
+        }
+      },
+      "input_digest": "c80c11d6d59dd654bb538675abcad9cbf0d5a6aebe22a3040877c166ffade7e2",
+      "expected_result_code": "DETERMINISTIC_PROPOSAL",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b6c0431649fe38a33e9ca605d3f79088edddde607191add37dd07382d35d4128",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-063",
+      "operation": "preview",
+      "scenario": "voorstel bindt project roadmap of team niet",
+      "input": {
+        "assertion": "ZERO_BINDINGS",
+        "proposal_input": {
+          "scale": "SMALL_PROJECT",
+          "scope": "FULL_PROJECT"
+        }
+      },
+      "input_digest": "008b3c0032b57243028ba43d64a02af4af4368ec9502c323689502187d470cb9",
+      "expected_result_code": "ZERO_BINDINGS",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "544e62be7e1e9266f38aacbb1ebdd90b85f6d9a004191430a9d9a0fde2acaf39",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-064",
+      "operation": "preview",
+      "scenario": "voorstel activeert geen assignment of werkstroom",
+      "input": {
+        "assertion": "ZERO_ACTIVATIONS",
+        "proposal_input": {
+          "scale": "LARGE_PROJECT",
+          "scope": "FULL_PROJECT"
+        }
+      },
+      "input_digest": "45be53b6f76d95fe9267cc6a3ab52252546e7ffaf9023fc4274c07aeb779752d",
+      "expected_result_code": "ZERO_ACTIVATIONS",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "6af6f41592f73c0b956bae0bb89371eb81b2400b24d2a69a6000f036df518323",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-065",
+      "operation": "snapshot",
+      "scenario": "OPENCNTX-PUBLIC commit en tree exact",
+      "input": {
+        "expected": {
+          "format": "opencntx-r9-public-snapshot",
+          "format_version": 1,
+          "commit": "54f2718934d807d66f448804eae7cc644ccbc00e",
+          "tree": "b8423fcf15f4c63119f845f592d28a6ee6cfa8c4",
+          "file_count": 193,
+          "total_blob_bytes": 3743441,
+          "source_files": 27,
+          "schema_files": 18,
+          "test_files": 26,
+          "relevant_path_count": 29,
+          "relevant_manifest_digest": "4059e7c5c818a2ad5582fd21d5fd287c46ecbd03381b65f3b07e5e6105cc059a"
+        },
+        "observed": {
+          "format": "opencntx-r9-public-snapshot",
+          "format_version": 1,
+          "commit": "54f2718934d807d66f448804eae7cc644ccbc00e",
+          "tree": "b8423fcf15f4c63119f845f592d28a6ee6cfa8c4",
+          "file_count": 193,
+          "total_blob_bytes": 3743441,
+          "source_files": 27,
+          "schema_files": 18,
+          "test_files": 26,
+          "relevant_path_count": 29,
+          "relevant_manifest_digest": "4059e7c5c818a2ad5582fd21d5fd287c46ecbd03381b65f3b07e5e6105cc059a"
+        }
+      },
+      "input_digest": "2e2e99d5f604069ab83e5dff371174fbb80c613d211f690fdddf6c2bf6ca4268",
+      "expected_result_code": "SNAPSHOT_VERIFIED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "6712295e5d36f2146115cf5f28c2e462cbd8cd3e3a55042055bc92c4db72215d",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-066",
+      "operation": "snapshot",
+      "scenario": "snapshotdigest of tree wijkt af",
+      "input": {
+        "expected": {
+          "format": "opencntx-r9-public-snapshot",
+          "format_version": 1,
+          "commit": "54f2718934d807d66f448804eae7cc644ccbc00e",
+          "tree": "b8423fcf15f4c63119f845f592d28a6ee6cfa8c4",
+          "file_count": 193,
+          "total_blob_bytes": 3743441,
+          "source_files": 27,
+          "schema_files": 18,
+          "test_files": 26,
+          "relevant_path_count": 29,
+          "relevant_manifest_digest": "4059e7c5c818a2ad5582fd21d5fd287c46ecbd03381b65f3b07e5e6105cc059a"
+        },
+        "observed": {
+          "format": "opencntx-r9-public-snapshot",
+          "format_version": 1,
+          "commit": "54f2718934d807d66f448804eae7cc644ccbc00e",
+          "tree": "0000000000000000000000000000000000000000",
+          "file_count": 193,
+          "total_blob_bytes": 3743441,
+          "source_files": 27,
+          "schema_files": 18,
+          "test_files": 26,
+          "relevant_path_count": 29,
+          "relevant_manifest_digest": "4059e7c5c818a2ad5582fd21d5fd287c46ecbd03381b65f3b07e5e6105cc059a"
+        }
+      },
+      "input_digest": "a24ed5f50b5030efc9730920a19e346a10f45ec57a8bb31ad8b9416fe33e4ffc",
+      "expected_result_code": "BLOCKED_SNAPSHOT_DRIFT",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "b7385343140563afe6219adea9503aa6aceef0e840d12caa90706628ea069a7e",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-067",
+      "operation": "exclusion",
+      "scenario": "OpenSpec nergens geladen en geen placeholder",
+      "input": {
+        "trigger": "BEFORE_ACTION",
+        "action": "read-metadata",
+        "target_path": "openspec/placeholder.md",
+        "allowed_paths": [
+          "openspec/**"
+        ],
+        "protected_paths": [],
+        "path_state": "SAFE"
+      },
+      "input_digest": "0085052d820ffa9e55bf7e5b19c9fb7722866c5c850d8636b228d79b59fc829d",
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "BLOCKED_INTAKE_READ_SCOPE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "8dde6db8a899c7bf5636bfffb9c92f9ca8a1b3f7f52a94d1db5f7c5458804ab3",
+      "expected_writes": []
+    },
+    {
+      "scenario_id": "S31-068",
+      "operation": "writes",
+      "scenario": "volledige Opdracht-31-corpus",
+      "input": {
+        "corpus": "assignment-31",
+        "write_targets": []
+      },
+      "input_digest": "c98de295e2ee4f698785d38854d44a5d8a51bfe586f738bf1a6e02b54519eb12",
+      "expected_result_code": "ZERO_CANONICAL_WRITES",
+      "expected_business_state": "INTAKE_PLANNING",
+      "expected_guard_status": "NOT_APPLICABLE",
+      "expected_readiness": "NOT_EVALUATED",
+      "expected_proposal_digest": "35d798f3df2c4277e9a37423208764421a6f130ae032ce0adf7271263d8d6f24",
+      "expected_writes": []
+    }
+  ],
+  "scenario_count": 68,
+  "scenario_table_sha256": "7b207dad374cddcd67d7fc403d6b7117a63a58cecc75ad26fc962449ceef6f2b"
+}

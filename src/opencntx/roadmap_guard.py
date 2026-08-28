@@ -26,6 +26,20 @@ GUARD_TRIGGERS = {
     "DRIFT_DETECTED",
 }
 
+INTAKE_GUARD_TRIGGERS = {
+    "SESSION_OPEN",
+    "MESSAGE_RECEIVED",
+    "BEFORE_CONTEXT_BUILD",
+    "BEFORE_ACTION",
+    "AFTER_ACTION",
+    "DRIFT_DETECTED",
+}
+INTAKE_READ_ACTIONS = {
+    "read-control",
+    "read-metadata",
+    "read-owner-approved-text",
+}
+
 ALLOW_EXACT_ACTION = "ALLOW_EXACT_ACTION"
 READ_ONLY_ONLY = "READ_ONLY_ONLY"
 
@@ -46,6 +60,19 @@ class GuardDecision:
     checks: tuple[str, ...]
     state_digest: str
     envelope_digest: str
+    decision_digest: str
+
+
+@dataclass(frozen=True)
+class IntakeGuardDecision:
+    """A pre-binding guard decision that can authorize read-only inspection only."""
+
+    status: str
+    trigger: str
+    action: str
+    target_path: str
+    checks: tuple[str, ...]
+    policy_digest: str
     decision_digest: str
 
 
@@ -100,7 +127,8 @@ def _blocked(
 
 
 def _portable_path(value: str) -> str:
-    if not value or "\\" in value:
+    windows_absolute = len(value) >= 3 and value[1:3] == ":/"
+    if not value or "\\" in value or windows_absolute:
         raise RoadmapGuardError(
             "Action target is not portable.", reason="roadmap_guard_path_invalid"
         )
@@ -110,6 +138,168 @@ def _portable_path(value: str) -> str:
             "Action target is not portable.", reason="roadmap_guard_path_invalid"
         )
     return pure.as_posix()
+
+
+def _intake_path_matches(path: str, pattern: str) -> bool:
+    if pattern.endswith("/**"):
+        prefix = pattern[:-3].rstrip("/")
+        return path == prefix or path.startswith(f"{prefix}/")
+    return path == pattern
+
+
+def _openspec_path(path: str) -> bool:
+    return any(
+        "openspec" in part.lower().replace("-", "").replace("_", "")
+        for part in PurePosixPath(path).parts
+    )
+
+
+def _intake_decision(
+    *,
+    status: str,
+    trigger: str,
+    action: str,
+    target_path: str,
+    checks: list[str],
+    policy_digest: str,
+) -> IntakeGuardDecision:
+    if not checks:
+        raise RoadmapGuardError(
+            "Intake guard checkset may not be empty.", reason="roadmap_guard_empty"
+        )
+    value: dict[str, Any] = {
+        "action": action,
+        "checks": checks,
+        "policy_digest": policy_digest,
+        "status": status,
+        "target_path": target_path,
+        "trigger": trigger,
+    }
+    return IntakeGuardDecision(
+        status=status,
+        trigger=trigger,
+        action=action,
+        target_path=target_path,
+        checks=tuple(checks),
+        policy_digest=policy_digest,
+        decision_digest=canonical_digest(value),
+    )
+
+
+def evaluate_intake_guard(
+    *,
+    trigger: str,
+    action: str,
+    target_path: str,
+    allowed_paths: list[str],
+    protected_paths: list[str] | None = None,
+    inspection_actions: int = 0,
+    inventory_records: int = 0,
+    metadata_bytes: int = 0,
+    elapsed_minutes: int = 0,
+) -> IntakeGuardDecision:
+    """Evaluate an unbound intake request without granting execution authority."""
+    if trigger not in INTAKE_GUARD_TRIGGERS:
+        raise RoadmapGuardError(
+            "Unknown intake guard trigger.", reason="roadmap_guard_trigger_unknown"
+        )
+    if not isinstance(allowed_paths, list) or not allowed_paths:
+        raise RoadmapGuardError(
+            "Intake read allowlist must not be empty.", reason="roadmap_guard_envelope_invalid"
+        )
+    if any(
+        type(value) is not int or value < 0
+        for value in (
+            inspection_actions,
+            inventory_records,
+            metadata_bytes,
+            elapsed_minutes,
+        )
+    ):
+        raise RoadmapGuardError(
+            "Intake budget values must be non-negative integers.",
+            reason="roadmap_guard_envelope_invalid",
+        )
+    target = _portable_path(target_path)
+    allowed = sorted({_portable_path(value) for value in allowed_paths})
+    protected = sorted({_portable_path(value) for value in (protected_paths or [])})
+    policy = {
+        "allowed_paths": allowed,
+        "budgets": {
+            "max_inspection_actions": 40,
+            "max_inventory_records": 1_000,
+            "max_metadata_bytes": 4 * 1024**2,
+            "max_minutes": 30,
+        },
+        "mode": "INTAKE_PLANNING",
+        "protected_paths": protected,
+        "read_actions": sorted(INTAKE_READ_ACTIONS),
+    }
+    policy_digest = canonical_digest(policy)
+    checks = ["INTAKE_TRIGGER_VALID", "INTAKE_POLICY_VALID"]
+    if trigger == "DRIFT_DETECTED":
+        return _intake_decision(
+            status="BLOCKED_SNAPSHOT_DRIFT",
+            trigger=trigger,
+            action=action,
+            target_path=target,
+            checks=checks,
+            policy_digest=policy_digest,
+        )
+    if action not in INTAKE_READ_ACTIONS:
+        return _intake_decision(
+            status="BLOCKED_INTAKE_MUTATION",
+            trigger=trigger,
+            action=action,
+            target_path=target,
+            checks=checks,
+            policy_digest=policy_digest,
+        )
+    checks.append("INTAKE_ACTION_READ_ONLY")
+    if (
+        inspection_actions > 40
+        or inventory_records > 1_000
+        or metadata_bytes > 4 * 1024**2
+        or elapsed_minutes > 30
+    ):
+        return _intake_decision(
+            status="BLOCKED_INTAKE_BUDGET_EXCEEDED",
+            trigger=trigger,
+            action=action,
+            target_path=target,
+            checks=checks,
+            policy_digest=policy_digest,
+        )
+    checks.append("INTAKE_BUDGET_VALID")
+    if _openspec_path(target):
+        return _intake_decision(
+            status="BLOCKED_INTAKE_READ_SCOPE",
+            trigger=trigger,
+            action=action,
+            target_path=target,
+            checks=checks,
+            policy_digest=policy_digest,
+        )
+    if any(_intake_path_matches(target, pattern) for pattern in protected) or not any(
+        _intake_path_matches(target, pattern) for pattern in allowed
+    ):
+        return _intake_decision(
+            status="BLOCKED_INTAKE_READ_SCOPE",
+            trigger=trigger,
+            action=action,
+            target_path=target,
+            checks=checks,
+            policy_digest=policy_digest,
+        )
+    checks.extend(("INTAKE_TARGET_ALLOWED", "INTAKE_ZERO_MUTATION"))
+    return _intake_decision(
+        status=READ_ONLY_ONLY,
+        trigger=trigger,
+        action=action,
+        target_path=target,
+        checks=checks,
+        policy_digest=policy_digest,
+    )
 
 
 def _check_context_projection(

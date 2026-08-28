@@ -10,9 +10,11 @@ from opencntx.project_runtime import reduce_runtime
 from opencntx.roadmap_guard import (
     ALLOW_EXACT_ACTION,
     GUARD_TRIGGERS,
+    INTAKE_GUARD_TRIGGERS,
     READ_ONLY_ONLY,
     RoadmapGuardError,
     evaluate_guard,
+    evaluate_intake_guard,
 )
 from opencntx.runtime_contracts import canonical_digest
 from opencntx.runtime_simulator import (
@@ -61,6 +63,73 @@ def active_state():
 
 
 class RoadmapGuardTests(unittest.TestCase):
+    def test_intake_guard_allows_only_allowlisted_read_only_targets(self) -> None:
+        decision = evaluate_intake_guard(
+            trigger="BEFORE_ACTION",
+            action="read-metadata",
+            target_path="docs/runtime.md",
+            allowed_paths=["docs/**", "pyproject.toml"],
+            protected_paths=["docs/private/**"],
+        )
+        self.assertEqual(decision.status, READ_ONLY_ONLY)
+        self.assertIn("INTAKE_ZERO_MUTATION", decision.checks)
+        self.assertRegex(decision.policy_digest, r"^[0-9a-f]{64}$")
+        self.assertRegex(decision.decision_digest, r"^[0-9a-f]{64}$")
+
+    def test_intake_guard_blocks_scope_mutation_budget_and_drift(self) -> None:
+        base = {
+            "trigger": "BEFORE_ACTION",
+            "action": "read-control",
+            "target_path": "README.md",
+            "allowed_paths": ["README.md"],
+        }
+        cases = (
+            ({"target_path": "outside.md"}, "BLOCKED_INTAKE_READ_SCOPE"),
+            (
+                {"target_path": "Open_Spec/plan.md", "allowed_paths": ["Open_Spec/**"]},
+                "BLOCKED_INTAKE_READ_SCOPE",
+            ),
+            ({"action": "write-file"}, "BLOCKED_INTAKE_MUTATION"),
+            ({"inspection_actions": 41}, "BLOCKED_INTAKE_BUDGET_EXCEEDED"),
+            ({"inventory_records": 1_001}, "BLOCKED_INTAKE_BUDGET_EXCEEDED"),
+            ({"metadata_bytes": 4 * 1024**2 + 1}, "BLOCKED_INTAKE_BUDGET_EXCEEDED"),
+            ({"elapsed_minutes": 31}, "BLOCKED_INTAKE_BUDGET_EXCEEDED"),
+            ({"trigger": "DRIFT_DETECTED"}, "BLOCKED_SNAPSHOT_DRIFT"),
+        )
+        for override, expected in cases:
+            with self.subTest(expected=expected):
+                self.assertEqual(evaluate_intake_guard(**(base | override)).status, expected)
+
+    def test_intake_guard_rejects_malformed_requests(self) -> None:
+        base = {
+            "trigger": "BEFORE_ACTION",
+            "action": "read-control",
+            "target_path": "README.md",
+            "allowed_paths": ["README.md"],
+        }
+        cases = (
+            {"trigger": "BEFORE_STORAGE_WRITE"},
+            {"target_path": "../outside"},
+            {"target_path": "C:/outside"},
+            {"target_path": "docs\\outside"},
+            {"allowed_paths": []},
+            {"inspection_actions": -1},
+        )
+        for override in cases:
+            with self.subTest(override=override), self.assertRaises(RoadmapGuardError):
+                evaluate_intake_guard(**(base | override))
+        self.assertEqual(
+            INTAKE_GUARD_TRIGGERS,
+            {
+                "SESSION_OPEN",
+                "MESSAGE_RECEIVED",
+                "BEFORE_CONTEXT_BUILD",
+                "BEFORE_ACTION",
+                "AFTER_ACTION",
+                "DRIFT_DETECTED",
+            },
+        )
+
     def test_exact_action_and_read_only_decisions_are_digest_bound(self) -> None:
         state, envelope = active_state()
         write = evaluate_guard(
