@@ -1,0 +1,17 @@
+{
+  "format": "opencntx-r9-storage-sync-public-snapshot",
+  "format_version": 1,
+  "commit": "0b28c1702cfb09b0641ab7ad44af311fdf26574f",
+  "tree": "c0b26c4960d2812454a4c394f69d72e0e242b94e",
+  "file_count": 205,
+  "total_blob_bytes": 4177882,
+  "relevant_path_count": 28,
+  "relevant_manifest_digest": "7de6e5c382279c355fd3e162b9fc0a2738348d1c65efc9ea4b31f233189ca3c3",
+  "assignment_29_scenario_blob": "220d6ea7f3c0fbd0d84ee054e2f904bbfa0f21dc",
+  "assignment_31_scenario_blob": "e25c3ccec031e3ff938d0dcaa1eb7ec0bcb3991b",
+  "assignment_31_snapshot_blob": "9bf13af2caf13697a5549f9c8a34391f8f20a03c",
+  "assignment_32_scenario_blob": "c6474f90cb0b1869d83130469417e4287ddf57eb",
+  "assignment_32_snapshot_blob": "53fe93ac779f6573572f8d53b99c9591e05c39ee",
+  "assignment_33_scenario_blob": "e712be822cb8633fc5078d8edb5367e387f9304f",
+  "assignment_33_snapshot_blob": "35a2a7ebfea9d204982f52064a18e3764fc3ff2f"
+}
