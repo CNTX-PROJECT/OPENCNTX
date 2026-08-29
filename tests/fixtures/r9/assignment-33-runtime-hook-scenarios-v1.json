@@ -1,0 +1,1849 @@
+{
+    "assignment_33_proposal_sha256": "e5f476d2af3d65c600e4f0d49b04eaf3a8424beb685011dfc3268257ec2f2b8a",
+    "format": "opencntx-r9-runtime-hook-scenario-corpus",
+    "format_version": 1,
+    "table_digest": "f0ce7bdd0092cfb27ebae24237f5b7373e41f60b75b29e9972be2516c2fa7c48",
+    "bindings": {
+        "actor": {
+            "actor_id": "ACTOR_ARCHITECT",
+            "availability": "AVAILABLE",
+            "role": "ARCHITECT"
+        },
+        "current_leaf_id": "ASSIGNMENT_33",
+        "input_digests": [
+            "1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "mode": "LOCKED_EXECUTION",
+        "policy_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+        "proposal_digest": "e5f476d2af3d65c600e4f0d49b04eaf3a8424beb685011dfc3268257ec2f2b8a",
+        "schema_digest": "3333333333333333333333333333333333333333333333333333333333333333",
+        "stack_digest": "4444444444444444444444444444444444444444444444444444444444444444",
+        "state_digest": "5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    "records": [
+        {
+            "scenario_id": "S33-001",
+            "operation": "hook",
+            "scenario": "geldige SESSION_OPEN",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-001",
+                "operation": "hook",
+                "scenario_id": "S33-001"
+            },
+            "input_digest": "2cea62b633346bd174e432a0ba696b06d27845820336a5947b267eba1e864e70",
+            "expected_result_code": "READ_ONLY_ONLY",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "40c1440dba14ae10c68697dbbc2a539bf274e9c8d45b28aad31014e4bdf7bb4a",
+            "expected_breadcrumb_digest": "cb717ae1aca50b18e913393c5ec9abd8c8f835343a26d0663060cbdc99ed30a8",
+            "expected_package_digest": "c1698ece7f9f7abfe2781a60d0558827554000a8819fa88b6bacd76f8a36a696",
+            "expected_projection_digest": "31160d89f314a55171c9fea90f56e6327e12dc7ed57c5e38ad772d42d4461ec0",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-002",
+            "operation": "hook",
+            "scenario": "geldige MESSAGE_RECEIVED",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-002",
+                "operation": "hook",
+                "scenario_id": "S33-002"
+            },
+            "input_digest": "a147d09c8aa835a1f8d45f85775ddc173b01599fcab1b04fcf548d82615f7273",
+            "expected_result_code": "READ_ONLY_ONLY",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "ad80d8e46468d866a00f818f1791dd6b7594e2fa08697859154d1d8e3a1448aa",
+            "expected_breadcrumb_digest": "1061749e12971db1f88e79365c4c89918cf272487ccc04dce1ddd20c989443cc",
+            "expected_package_digest": "c1bf80f3de67f319cf662c6aa0e950e8552f79f791b03bb4bd0686d6bbb63783",
+            "expected_projection_digest": "0002e3f75ab083e47694aa33b110f16169b348a78080957bba442d6e0308273f",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-003",
+            "operation": "hook",
+            "scenario": "geldige BEFORE_CONTEXT_BUILD",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-003",
+                "operation": "hook",
+                "scenario_id": "S33-003"
+            },
+            "input_digest": "ea5caf4d4d96d9b6c5ea9aa23e3e46837dbf8e0a426ddad7330854cf906ddd48",
+            "expected_result_code": "READ_ONLY_ONLY",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "3264f2ffc31cd6621e472037665615a7ba31f4b13854a506af5a1fe5cccc8c83",
+            "expected_breadcrumb_digest": "c0d857bd7de8668a16e7b52c3ef76bd727d2bd2c9a6191fb2961b325d61dfed5",
+            "expected_package_digest": "d36213b8f86929e653b1651595afbc924840550f65635524744fabda4241a67e",
+            "expected_projection_digest": "48a88d13d3d3ba7cc8e3f2a9c0c515e3fff344a8e7614f9355ad4226f223ee2e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-004",
+            "operation": "hook",
+            "scenario": "geldige BEFORE_ACTION",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-004",
+                "operation": "hook",
+                "scenario_id": "S33-004"
+            },
+            "input_digest": "0da3978255dece1f251a0fafa43dcfb9971d272c566e82b4e65d6cb8ca271bfd",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "ca00589056bec1886b02a09804909c50d6e136ac64bf428ee4d566b838acac4c",
+            "expected_breadcrumb_digest": "a5c3d94e2add5d0b4e47dc70b676d58d7f597958878e77abaf02397b7a31ed12",
+            "expected_package_digest": "786d73d290fe53759c0e7be648dec8c78dd6684184e8c828874eabba53eaf6b6",
+            "expected_projection_digest": "8dcb1aff2b98c3195d3045db516c37cc50cd1776a35b4b4dc722fe5ec88c933d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-005",
+            "operation": "hook",
+            "scenario": "geldige AFTER_ACTION",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-005",
+                "operation": "hook",
+                "scenario_id": "S33-005"
+            },
+            "input_digest": "510fa2ff14ee6748d212736474262ff863e5cb38d68eed5ca53e690b3ff96f58",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "ee151441211535db63d7c9151a1ae080e5719b7c3b2f42eadae1e0968058f405",
+            "expected_breadcrumb_digest": "3e4f9444f60a97be9dde836e1a3dcacf8ffbaf2a19fae38fa3e86bcbbf4b2a40",
+            "expected_package_digest": "3def3479e7468f03d42e054ed49f16722587af1bd200ad13a3bbf6e03333e3f4",
+            "expected_projection_digest": "cbeced22225aa746be35112e1eec5054e67c4ca7c9d1d88afe84994d37f9424f",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-006",
+            "operation": "hook",
+            "scenario": "geldige BEFORE_STORAGE_WRITE",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-006",
+                "operation": "hook",
+                "scenario_id": "S33-006"
+            },
+            "input_digest": "d888cafe997525633ca58fcb5a14465f402ccdf12f77efedf0e26f6a58b5ccb3",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "f56542059ddb681e5bf93ec04c180a06724edda388a186f8b3f5e4ac8f48fa65",
+            "expected_breadcrumb_digest": "e7c22d796d98af65a8f386c6269fa129821b6b6e5e3e608d1c049b6ea53c439e",
+            "expected_package_digest": "6988c7e01049faae139ec01b31a0e2e9aec48e08e6cbe152a1bee9631383d217",
+            "expected_projection_digest": "229ad752837dcc6078efea6fdae4c4145cd58e12b07ce31023081b91c354cc5c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-007",
+            "operation": "hook",
+            "scenario": "geldige BEFORE_SYNC met ingeschakelde private syncpolicy",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-007",
+                "operation": "hook",
+                "scenario_id": "S33-007"
+            },
+            "input_digest": "b1fc9d082d98909e10c91492ac3190a285341e6e0f1bb30ecd473bbf901f9655",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "d92406fd27e1d0e4473f89e210a7b989dd21050a5701715869010274888a5b95",
+            "expected_breadcrumb_digest": "c36d95070fccafd51e0b7dff7e2c0e83e1fe26b29709c2c84ce4f540a4bf8361",
+            "expected_package_digest": "8ef60b15be2d87e676a2b8b80820d8cb8dfda6a1f21cb511296479010bf1a9d3",
+            "expected_projection_digest": "02a5029b8952ed59ade33f3115f15406e185b7e1911b0f66e50e38e1cbbc4fac",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-008",
+            "operation": "hook",
+            "scenario": "geldige AFTER_SYNC met ingeschakelde private syncpolicy",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-008",
+                "operation": "hook",
+                "scenario_id": "S33-008"
+            },
+            "input_digest": "0fae3961e295ae7b693b14fe24fed5aa714cdabff2a329284bdf00046e0a555c",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "03005f5a03c504471c5cdbb53dc0ea38c081209c166685e194bf959c370339c9",
+            "expected_breadcrumb_digest": "061f8d4a9cfa283a6428161639fbbe7c127e00b667404997ab312ed3363b1d41",
+            "expected_package_digest": "4b5ffdbdf9b6ab8ea1a42582eb3600b50196e95b44e4a89a676300b91a970ad3",
+            "expected_projection_digest": "4875b7cfa25505bba4d1ee944c9c7b0566b656bd96ebde76ca9f298d33c0995d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-009",
+            "operation": "hook",
+            "scenario": "geldige DONE_CANDIDATE",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-009",
+                "operation": "hook",
+                "scenario_id": "S33-009"
+            },
+            "input_digest": "57aeca103c609f2fb40df4cc809b196606d3a0ed5cfd48774459ecaf5ce778e8",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "6499569fbaca8ebf159779645b25b25778e9bd778e08cafc3ca43e09608a4a90",
+            "expected_breadcrumb_digest": "2896cd07c8201ee0ac8f121a71a3d2d1094ff4951607d80789138fad1af804d3",
+            "expected_package_digest": "91e18311c0e652387c68dd834ea820e8cf3e6ba3f008f7d78b19ff006a7f6391",
+            "expected_projection_digest": "70b946610083471ae42aba1a19e6b6128570b3a44ad9d542c699738a051faf90",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-010",
+            "operation": "hook",
+            "scenario": "geldige OWNER_ACCEPTED",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-010",
+                "operation": "hook",
+                "scenario_id": "S33-010"
+            },
+            "input_digest": "016eb4c5c7b430f53980a67a630b687b8443797e1ecfbb6ca56462e637b8153b",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "36e5a05c87fe33c7448789fbb072248751d0d69468d50257018b851f8e6248e6",
+            "expected_breadcrumb_digest": "0dd4626c6f4a29540d0b45e3ffa3ea6fc9d82076e47e80e6bf7f0a5beaa3085a",
+            "expected_package_digest": "38f2f117e96bb34b732397ff9f26ec9cba85381c05aadce7c373a285d42dce72",
+            "expected_projection_digest": "9aac347e8b6e68049688cc3c636cb5865df03e486df5837b0d8061534a1ab5ef",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-011",
+            "operation": "hook",
+            "scenario": "geldige NODE_CLOSED",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-011",
+                "operation": "hook",
+                "scenario_id": "S33-011"
+            },
+            "input_digest": "6d62f683e22e0c77db4769840f29aab07d0273853339a119116ce699868d4685",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "84a2feb551e7f008154d46b493f2e06185353a982eed1d93bf25b6d8b6d17973",
+            "expected_breadcrumb_digest": "6a6612a45203c9ca2f66e057d413807c0b9b4a534984c777a2dc18298cc62499",
+            "expected_package_digest": "600486ecdc0d62e89ce687c38761ec1e0aed711cf86eb812c67d2ae69e0a8e25",
+            "expected_projection_digest": "32552163f3097585d596d00f0a642cff828e18931696745dc3ce15bacc61b85c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-012",
+            "operation": "hook",
+            "scenario": "geldige SUBROADMAP_CLOSED",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-012",
+                "operation": "hook",
+                "scenario_id": "S33-012"
+            },
+            "input_digest": "41954686ce5a7ea38c77d4058cd0b7b9e9be233f382201a7cf1d6a92bfbea18c",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "19cc31a13b99682eca4f884a7df06b973c9ac8a65e50d3d90338e8255f0f7806",
+            "expected_breadcrumb_digest": "bdc991382a1e10037a528dde481944724c18bb320423991d24021d91aceb6f7a",
+            "expected_package_digest": "9707d3174cfdbf5ddd6119a78f482bef6ba23ebf045289fc28f5607ec99bc2dd",
+            "expected_projection_digest": "2de5b001e79a808b3c6139660df8768902feb27fa606ea46e49c8b7a1d56b52c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-013",
+            "operation": "hook",
+            "scenario": "geldige RETURN_TO_PARENT in returnmodus",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-013",
+                "operation": "hook",
+                "scenario_id": "S33-013"
+            },
+            "input_digest": "d1bb1f3d3b0f15cc4619e5a2e76e50efc7f7174e5dbbbb3b3f0f7b1f8ee89a5d",
+            "expected_result_code": "ALLOW_EXACT_ACTION",
+            "expected_guard_status": "ALLOW_EXACT_ACTION",
+            "expected_hook_trace_digest": "2ea84c774358d06be37d7c566b36b82a20577ad4bfabf7bec026280b8649e7a3",
+            "expected_breadcrumb_digest": "0843a5c535f5d80aa87c45ff10496fc010e10b537c24c5e68a69d06cd62e4de7",
+            "expected_package_digest": "f7aa5adcf44b31b5bff3433c12bf0aa7f4d9d210ecb03c969b7ff59720a5b812",
+            "expected_projection_digest": "8175703266f5c917eb212530ad30b741c2cbdf72849031edaa0eb7303bc7c413",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-014",
+            "operation": "hook",
+            "scenario": "DRIFT_DETECTED faalt altijd gesloten",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-014",
+                "operation": "hook",
+                "scenario_id": "S33-014"
+            },
+            "input_digest": "4ee2f0b55de40eaa118de67026d2fe778fa3e271f0459817cb691d45abff452b",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "b19c7563d28611626c89f0baa1cf7b60e1ddc36e575f754c383caf6c258064ad",
+            "expected_breadcrumb_digest": "1a7f38f5ed23c4ede2b6a25e033afa7f3a3825eb83a2257e196153fc6c88095d",
+            "expected_package_digest": "1fd16655e50e028cd4b0cf9862ee4e363c49804569b9e140afb1ab81f4444253",
+            "expected_projection_digest": "0f01e7e6098db882657059792998f669cec0cc051ea351bd8cb19cdfab022975",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-015",
+            "operation": "bypass",
+            "scenario": "onbekende runtimehook",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-015",
+                "operation": "bypass",
+                "scenario_id": "S33-015"
+            },
+            "input_digest": "ef5660324bee9b4659837b843f9d37b2bba0f57fc644cce2136f949389a6d142",
+            "expected_result_code": "RUNTIME_HOOK_INVALID",
+            "expected_guard_status": "RUNTIME_HOOK_INVALID",
+            "expected_hook_trace_digest": "57d2fe44e8ad08e5ea8dd1e3cbc18d9dd66f5cd07fe7783b5a09d24e9e5643e3",
+            "expected_breadcrumb_digest": "8725fca612b0f47886bbde77f0fe12d5854b1aff732d56e057a2845d1cac25db",
+            "expected_package_digest": "22934cc6ae9d4a86fcf85280af131134d8c8d91b11f2e8f35a69c968364e88b3",
+            "expected_projection_digest": "b75eee8d86128e2b7277805d178423156d84bcd0a8007439b2d06472e9a0be71",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-016",
+            "operation": "bypass",
+            "scenario": "SESSION_OPEN ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-016",
+                "operation": "bypass",
+                "scenario_id": "S33-016"
+            },
+            "input_digest": "b89e49c3a02bd92ce666bc52d1fe60634be0ad64ccdc71d3481ba38585b18223",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "cc8836e82099f588c2354d9eef7794438d7e1efb9fbd40185ab39a737f7bbbf4",
+            "expected_breadcrumb_digest": "8190a9a8ea39c6a364d198de4c6f29fe06c6e4e355f308ec9215440c7559974a",
+            "expected_package_digest": "5ce982e0676b56d3801dcd1ea677555b0257877a49ea994ae56b5929b1ebd3f9",
+            "expected_projection_digest": "dbecb301a34d884ab4b34cefce437fd41b90f9c2b9b1e0f6f87d535a66a21e49",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-017",
+            "operation": "bypass",
+            "scenario": "MESSAGE_RECEIVED ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-017",
+                "operation": "bypass",
+                "scenario_id": "S33-017"
+            },
+            "input_digest": "c1c6326fdb6fdc3bcd91e9c89e0f5c1c5b32f55141f623de6fe1171505a9b179",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "e92468d095e09da3dd46e7d0ed34b4a7257cec661aaed3288f29d438e7ca1cf0",
+            "expected_breadcrumb_digest": "715a3f44775ae559c6671628d2a84175ae8056c48129221f74cdae8eab069048",
+            "expected_package_digest": "21c74cd10cd72a0f6135050599cde368b21202539c47fcc190f0bdbb196362bc",
+            "expected_projection_digest": "27069486e1c93e039ff445f58293225f0bec166e10161e165c80a4fc5d8e6d06",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-018",
+            "operation": "bypass",
+            "scenario": "BEFORE_ACTION vóór BEFORE_CONTEXT_BUILD",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-018",
+                "operation": "bypass",
+                "scenario_id": "S33-018"
+            },
+            "input_digest": "403623fb81183e805bdaf375d3a0b0fcf505dc8079222aca4b4389be7de5d7d2",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "b4df691fbfc4f3198295bdc96617cce1072cfac146882b87848e5380fdf91cfb",
+            "expected_breadcrumb_digest": "81ed61b2d6598b76a64c5f10205f09304886982b7c87ee96da30a78855dc0b77",
+            "expected_package_digest": "bc7bbd7e36479ea382a07b941958dee8029556e523fc0d7f66b20f57e119399e",
+            "expected_projection_digest": "6457b1114ed8b398f8f5313875c8b78262a3d4ecbad2fe695a07d637df122652",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-019",
+            "operation": "bypass",
+            "scenario": "AFTER_ACTION zonder BEFORE_ACTION",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-019",
+                "operation": "bypass",
+                "scenario_id": "S33-019"
+            },
+            "input_digest": "b4b72268b2daf05ac36edb01a918556ae5bb96bb30ef56a47039a740fb80c07c",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "e97aa8919d6a84f4c5039d04245af421d4273ccca157468b5e415a4e8b062dd9",
+            "expected_breadcrumb_digest": "9ef39eb413738c96a681ab1a1d44572c8d05bdab4c18aefffe463160b853ab53",
+            "expected_package_digest": "9dbbdfa8ff8da69a7b58dcebd366847cdc6d525ad2980466961c079abf68df4c",
+            "expected_projection_digest": "102210073b58135dd8331b13c1dd1b1d71eaefd5477d008cce100c7c72ba6e0a",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-020",
+            "operation": "bypass",
+            "scenario": "storagewrite zonder BEFORE_STORAGE_WRITE",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-020",
+                "operation": "bypass",
+                "scenario_id": "S33-020"
+            },
+            "input_digest": "aeea62a00dbdf533b5bc1a628dba3c5ee92522affe93df583dfdefab0e6df516",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "ca4267ab1df27b08d2c3f1cb7123dbd56d315400edf9c72e368da01785a8bdd5",
+            "expected_breadcrumb_digest": "c1d4b733cc72221f8ebf07bf0cfc0e11ce24868a24db7b7e4b4c852ce3eae916",
+            "expected_package_digest": "97f953deee6a0ab782752d91a7a6fff3c123d13c43bef63f647ba898846194c9",
+            "expected_projection_digest": "95ac13472ebfa9ae03c3b0364faa0705dcf9814d24b83504626e7f452d509c03",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-021",
+            "operation": "bypass",
+            "scenario": "AFTER_SYNC zonder BEFORE_SYNC",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-021",
+                "operation": "bypass",
+                "scenario_id": "S33-021"
+            },
+            "input_digest": "1de22e71d212539a982208ee6012c1b05e8637d0faeb9a9eec6001524d49ee3f",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "efa8c1c708c0bb6949381f20c696be7d74ec82dab31e4ddbcacac6753934b6c4",
+            "expected_breadcrumb_digest": "164f8c478c381cf7c8ba543f5cc904d72caf5cef69902dc4c17465176f6f83c4",
+            "expected_package_digest": "5c7224795779f912505fede0216b4c434359435e7ae99937983eb0ec5e43393f",
+            "expected_projection_digest": "31b4684642df1057eb9a4d6f030fe442fe1f46112c7eb68301483513c9f7ab24",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-022",
+            "operation": "bypass",
+            "scenario": "dubbele muterende hook zonder nieuwe boodschap",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-022",
+                "operation": "bypass",
+                "scenario_id": "S33-022"
+            },
+            "input_digest": "84fd55487b1e07631d8f2f15bc4f06c64e71732196dba896a60e58ea1827bdbc",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "489db8b919c4e1ca241fb8d6c6bccd165b44e237e110fcc614ba11e5a1ab965e",
+            "expected_breadcrumb_digest": "0eb28ba017a0e82b2ba36bf043dfd3465898599ffead53f02587b253e2567907",
+            "expected_package_digest": "c6e7da7bc97679930f4895b820b93ef3c9c5f7df5c039ac73e7f9f695fa397cd",
+            "expected_projection_digest": "993cb1c8d0cddb506b6c9d6b89c0ef06991de3990bd6dc99e7fd47681ae06bdd",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-023",
+            "operation": "bypass",
+            "scenario": "hookvolgorde verwisseld",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-023",
+                "operation": "bypass",
+                "scenario_id": "S33-023"
+            },
+            "input_digest": "f640cc3b2434220d70dbcd185a201a7228bda28b146b674101fb97f446fd2156",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "fa6b7438a071e96a5114fa7ce820275332b5626210f6e2e1f0e51aa0cc5e0369",
+            "expected_breadcrumb_digest": "c043ac279847c6cf123083731167f3b50dd3bf319323e2b31e9c54f078315d7d",
+            "expected_package_digest": "8c49810fa998f32eaba8b97e8e9fb9393e268609e4c7a38d07b2f975d1d66bbd",
+            "expected_projection_digest": "377eac7d6c27f612675653af213dba4ffca02c394dae71e4450dbdf72ba74825",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-024",
+            "operation": "bypass",
+            "scenario": "lege hooktrace",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-024",
+                "operation": "bypass",
+                "scenario_id": "S33-024"
+            },
+            "input_digest": "d8bee768e759854e54fd79432d1873b68353ef3952d978d8ffc45c9deaedcc94",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "f752515ccd9fb176c1be89fa39b2d4c35e51b5a40fcb0b369b50bad4e0c19687",
+            "expected_breadcrumb_digest": "295f6b457e97ecf9435672c4a20b764a6dfd4fea90693f49c50ec6cc28187128",
+            "expected_package_digest": "2de27a80c63259d259757dcea505b92e38c8882d3c6ce2fe0bbf1d430bc4ebf8",
+            "expected_projection_digest": "8b24fa031cf26230470d6a633bb692425982b5e2f028dc05df9e1bd6bcef83c2",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-025",
+            "operation": "bypass",
+            "scenario": "state digest gewijzigd tussen hooks",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-025",
+                "operation": "bypass",
+                "scenario_id": "S33-025"
+            },
+            "input_digest": "e50e38b2c34e60063689bc75f7cad254987f37ee619ec6e2de814a7fa4555a82",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "7d31302b033a05b08e0ea36489f2de728e8db0a6aad319f576d0e8c02d1fc0e4",
+            "expected_breadcrumb_digest": "2e9fab0b99fb4ad9a6564464c3484c4d61d6dc94ed4cc6589d9b48fc1920fe33",
+            "expected_package_digest": "89910048e96612cea4724affca771ca952f0f17347a4fe3336dbdb65273847a1",
+            "expected_projection_digest": "18908ed3470c57852a30dd95326cba535fbe91d01594ed2b8762750b8f7c3f2e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-026",
+            "operation": "bypass",
+            "scenario": "action-envelope digest gewijzigd tussen hooks",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-026",
+                "operation": "bypass",
+                "scenario_id": "S33-026"
+            },
+            "input_digest": "2647daa76db3800a99ae688609dc108b0035708ce27b1ede40498ae0c386b967",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "a09360d286d165f262be9a0026a5b1b9fe5c678f5ec524e868bd3eab700ce99c",
+            "expected_breadcrumb_digest": "0ffc8ca4fedec21cfd48baa83c7bd11ce8b3495cad8955a8a29949aa8d25e460",
+            "expected_package_digest": "21667ef6432b863402847b10b73a72fc7a235d56a5f355cdc5402ca40ead37d2",
+            "expected_projection_digest": "301f8bd6a01c0031c5b8ad2ade365e3bdc23596dd4c7ea89334859faa96c85d3",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-027",
+            "operation": "bypass",
+            "scenario": "roadmap-stack digest gewijzigd tussen hooks",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-027",
+                "operation": "bypass",
+                "scenario_id": "S33-027"
+            },
+            "input_digest": "a5df26e84a1be43b257d8d52dc5d00ff57405c35b47b70220f0edcf401d466d7",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "ffed057508f0def32451d10255bf50b57a7596fed48ece9fe8b15fd48df1e94e",
+            "expected_breadcrumb_digest": "c747a1d2090e1d03cf27352bf27fcc695fddfb22328615757676fcb098936d8d",
+            "expected_package_digest": "7eaa244aed1083f15e2a1fb636086eed66b94363ad3ae5e73d22eda53df8b6f7",
+            "expected_projection_digest": "793344844117c276b9419e53603f33723d6d5dfe543ba573356c1762d1eeed11",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-028",
+            "operation": "bypass",
+            "scenario": "aangeleverde guarddecision-digest gemanipuleerd",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-028",
+                "operation": "bypass",
+                "scenario_id": "S33-028"
+            },
+            "input_digest": "61a5b41bb35947b77705c77fda4f0ad6f2f928d012f6099316c47b0df955c912",
+            "expected_result_code": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_guard_status": "BLOCKED_RUNTIME_HOOK_BYPASS",
+            "expected_hook_trace_digest": "5515b7fc89b162389d9828b371375173540756444af06e076e1dad94f58f9e41",
+            "expected_breadcrumb_digest": "aae31a67b5ac2949cf317892de70aa5b448ecb300b1aa2a7445b76c3dbc63fe0",
+            "expected_package_digest": "a7e5cc56b3e8caaae072734fd321e43beae8debec6a719c72c17735245f6c552",
+            "expected_projection_digest": "e4bc577fd6bbd3aebadd398c15a3a532e186e4ad2b750110df4077800e465be7",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-029",
+            "operation": "breadcrumb",
+            "scenario": "geldig SOLO-breadcrumb",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-029",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-029"
+            },
+            "input_digest": "4bd21a38646cf66af1f893131c24febb1d43d3ef8be2d249a5e0e3b787c3d3c9",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "efb795fcdc2e97b9b980f8ed5e6ac481365c0b8728e3a292f44cfcb6609da32f",
+            "expected_breadcrumb_digest": "1f78480ed350fb4a7e85f29efd90100b5be00a018e25b963ed1c014079146ebb",
+            "expected_package_digest": "5624bef66754038e09bb7561a702c8b0d3fc15bc69eecd4f022eba3a4ee4b02e",
+            "expected_projection_digest": "fdf79951119bdc7b5f7319cc6cb7693b52a550dbf0b2683670effab5582f2ddb",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-030",
+            "operation": "breadcrumb",
+            "scenario": "geldig TEAM 2 personen-breadcrumb",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-030",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-030"
+            },
+            "input_digest": "e62be641f1c2aa9b0b48f7bc151c8bcf9c62b76a070afe70a7667f522354d4b3",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "bbc356a9b9916247985335f5380d2e4f3cb2bd4b817421597faa2f5f5be00100",
+            "expected_breadcrumb_digest": "af9a45ee6a97388df0e6a6c8fa6a885bfa3af3dccb1ade1d2b4f02a8dcb38ea4",
+            "expected_package_digest": "b3d459d305178b75ed11ca8b36d708dae399005c2d1f0164269041722805f818",
+            "expected_projection_digest": "72a12c44afc624b4ff658481b65cc62c5c57d784c2eab008abfd9d4c2b1987d5",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-031",
+            "operation": "breadcrumb",
+            "scenario": "geldig TEAM 64 personen-breadcrumb",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-031",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-031"
+            },
+            "input_digest": "df9000756de1e2f8955d42dc8f1cd770a65e96ac660f4e683888a1f985004917",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "c054a60cb75a95e72c8f3a0792ff0e4242a40c5ddee46b1ffb2f435c6db9e030",
+            "expected_breadcrumb_digest": "a6c83fedf5f02c858f0e387ce665b13ec213439deed98d20ad49d4a12c0d29e9",
+            "expected_package_digest": "6c103fa5c812a124d9a72e18a4b57bb08ee580c361217fd2508b6e7bc6c41702",
+            "expected_projection_digest": "a0844285704b5aac3eb86a5d97fee6d5453c8191c2bb68bbd7645588ec917f48",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-032",
+            "operation": "breadcrumb",
+            "scenario": "TEAM zonder exact mensenaantal",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-032",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-032"
+            },
+            "input_digest": "4b3b2aeb64e6eef70d0a6be33cffc21dc45568049e9d530460eb7b849e6c5d1a",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "75660ff1dad7166a3883efdbe167894c7d2f500b6f083bd8bfc96e2eeb97128f",
+            "expected_breadcrumb_digest": "ce97764d4a19fdb15712bd3e6ec29cc61c1ecfee14c0306749affc5538482f32",
+            "expected_package_digest": "2ecc2d133afc0e88a83c91ee544aaba71b8c76b412d82d82ae23e1ecdbdcfd7a",
+            "expected_projection_digest": "da8e204083dbfda071eb9d46a5dc5488847949e256aef7a98d595033089b1c44",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-033",
+            "operation": "breadcrumb",
+            "scenario": "project-ID exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-033",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-033"
+            },
+            "input_digest": "998e5bbf88c4983c8aec7d70c853209cb084f06e8feed233aea6d274d30a53e5",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "956307ad59aac597fd7e467c9c5e7c11f72882b4b7ef55c4844610301db03272",
+            "expected_breadcrumb_digest": "61362544f8592d0e9ccd11f75aa5aa4f84d568948abd537e5df68a2f7454f1e2",
+            "expected_package_digest": "4f2f06a065453191e65bd75563e2369c7405508b17a0e814e6df2ad3958589ab",
+            "expected_projection_digest": "baeca2f3ebf203333daf88518c274850d5ceaa52a1e147352dcc98d02f1aec40",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-034",
+            "operation": "breadcrumb",
+            "scenario": "actor en werkstroom exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-034",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-034"
+            },
+            "input_digest": "1006ba3f0bc20b928b6408cf8368c257dc600e8016fef2fd5a451883d997d808",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "5e0c88ce0e2d94d71af1a31ea0eb48a4cc93102136cb4411481385937ae5a229",
+            "expected_breadcrumb_digest": "8a77e3c070387b5fc077039dc7290e3590cfae7ce77e0112bd7b0600a47fce4a",
+            "expected_package_digest": "88e8695345f56f8d6d6f2c5e4f4db0350a6745f2cd9d20a239b3449582ea66ab",
+            "expected_projection_digest": "60f39f50e31153531ca2d2162cccd82b286d175d5b79cd0f1df8562dcd016d8e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-035",
+            "operation": "breadcrumb",
+            "scenario": "main-roadmap-ID en revision exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-035",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-035"
+            },
+            "input_digest": "db56465d3d986bcce33f591fee06762739cd61b54dca0321272771b0081534ff",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "471d1cd0b42e9e947f1896c001febabeda929444d39746a4ee85a301487bef77",
+            "expected_breadcrumb_digest": "1f7a7a4a2a3b390ea700c148adf823de6a6d30eb1cd5bed682d72980c1fa6e0e",
+            "expected_package_digest": "29940adb5766971dc7797873ae27573be06055cd096a6df4b134dbcb58e3eece",
+            "expected_projection_digest": "85decfd389e2809c716b054c48d39ec9bf70553879ce76ba1a35e73df48ce77f",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-036",
+            "operation": "breadcrumb",
+            "scenario": "genest subroadmappad zonder leafdetail",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-036",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-036"
+            },
+            "input_digest": "38c81cb2b1dcb5939742853cc31824cbf2398e4c393bff83fff8b01938944de3",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "0b663df0223deed18c0158baeaff629fdf10f30d96f33c38684df2ba0fbb2c8b",
+            "expected_breadcrumb_digest": "2c547d6b8d3a8e831a37718290d22727b7915e4c25f1916c0e7eba0dea29bac5",
+            "expected_package_digest": "f786ed1abaf7dd37aba01b7e81fe304862a25a561b71d8bb21314805acc37647",
+            "expected_projection_digest": "b0ffb04b220c7d6c45268f38a34fbb04da2468514c442ac4b57afed5a2816254",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-037",
+            "operation": "breadcrumb",
+            "scenario": "current leaf exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-037",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-037"
+            },
+            "input_digest": "ff44fc2450ea01e40e0f54e4a89b78049798f631acd27ba4f34fff5120f73837",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "3c43d7bbe013b15de54389b2ded824414e34ed6b0c751a6f3bc6322147f74dba",
+            "expected_breadcrumb_digest": "0eeaeacc4ebd4353f470bceba99c9040549973d3869c325e3c7cdd2b68c06ff4",
+            "expected_package_digest": "3d6541879dc9166fac6f9baf08a4d2187d301f814c529420e3d1bbbed7af136b",
+            "expected_projection_digest": "8343fee8889e5128ac6f3c3b93b02e2a8e87ee5b7618c940d6bea18baa4306a1",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-038",
+            "operation": "breadcrumb",
+            "scenario": "return-node exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-038",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-038"
+            },
+            "input_digest": "a4e28bf6af2a2a7d6e18168dfb0c95e72c5cf9734d3b8f779643bdfcce6ce3e5",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "ccfae7bb4fac9593378470399bed4edf03e302a132781e5ff99c9b4660ad72e8",
+            "expected_breadcrumb_digest": "77bc8b607dc00d3e29a6b1650449c51d298ae936d4f809c0bb0f72d55e0736dd",
+            "expected_package_digest": "0a2b73a20ef145683507a073e020e4393bcf1e6232551f744920bacfd1f36104",
+            "expected_projection_digest": "707a5d23e862322f285c7ba5e3854044f514ae0ea7215f5f159df23ec69d50d6",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-039",
+            "operation": "breadcrumb",
+            "scenario": "stackdigest exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-039",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-039"
+            },
+            "input_digest": "f7543a6e347361a89d328ecc4fa7131f4461f73ced6b88e5f7c6305af726f21f",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "02b390a852c99440c34901812ea5eb73bd71834f4eb1b7818ed6a6c37c1b80be",
+            "expected_breadcrumb_digest": "e3822307594512ace3ccc3cb8ad11cb8423947d30945e68c8a94ed65c758b6d8",
+            "expected_package_digest": "1337c27f3170d85033202ee617ad43f0fdb8c3106bab515e568b0a4ed25ca233",
+            "expected_projection_digest": "351306aa46afb7f7bbc8ebd28a74fdaaf7ab47ddf268051d2d74a97e576f581d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-040",
+            "operation": "breadcrumb",
+            "scenario": "exacte stop exact opgenomen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-040",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-040"
+            },
+            "input_digest": "f93e260b88d45fa7d07cad26ad1103cfcdb4bfd929bcfa220506c5c8c26f468d",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "486201b0b2889e628efaeadfb3854c4a46b1d31a06c940636637b23630b1b90b",
+            "expected_breadcrumb_digest": "165d869dc09c7473121a64a8d2f0fb86275b3ecb87ae1ce4eaafae8a8052c262",
+            "expected_package_digest": "af2d2f514e4ddef0c8ad998db76c0bae88bc6f693b675faf0bc15ddae627c89e",
+            "expected_projection_digest": "9f1d690dfdac82b2045439187d9bf4104ce06e95637a20b152ab27d40634b4fa",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-041",
+            "operation": "breadcrumb",
+            "scenario": "breadcrumb exact 8192 UTF-8-bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-041",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-041"
+            },
+            "input_digest": "002119302d2396d85fd6fb88cb278855ab7195ed15e91d8f44efaccd32a60d61",
+            "expected_result_code": "BREADCRUMB_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "da6bb3a181d05dd8979982451a77c190f1cee041a2384f909d1a5a57720b637b",
+            "expected_breadcrumb_digest": "2809da1742733b89cfe9ae4922df158099ac39fdd35dbf58d0e8acddece10001",
+            "expected_package_digest": "a2d9de6a7fdcc7c0b88162dded489dc6e73a99033dd769ea9e7a224e2c06b34f",
+            "expected_projection_digest": "0c04facd8de04d262d6121a91764838a09c54e59afc50873853bb4e647e31a36",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-042",
+            "operation": "breadcrumb",
+            "scenario": "breadcrumb 8193 UTF-8-bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-042",
+                "operation": "breadcrumb",
+                "scenario_id": "S33-042"
+            },
+            "input_digest": "dd65cfc2e641168ce3c48fb8919cb29d6e46bdd81ff695a9c6ed96316a6f59ae",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "5fab5b173d9d41c4f874a53a3d74dfaf0aa0dac2a56ab83cb9733c509b2965ed",
+            "expected_breadcrumb_digest": "52cdf3e873161ef0cbd7fa06f541a1e0551cc4f8a80c009f5ae8d38d6d037454",
+            "expected_package_digest": "952c6780f812800f2c70c7a2c17888ca80ba57785102ac775daa1a9e00b42290",
+            "expected_projection_digest": "66792d40eadc3bb7df7a62c1b900b9e294095874fccd036c5d39159997202c5e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-043",
+            "operation": "leaf-package",
+            "scenario": "volledig geldig huidige-opdrachtpackage",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-043",
+                "operation": "leaf-package",
+                "scenario_id": "S33-043"
+            },
+            "input_digest": "3ee55735a311157485a1824ffec67c0fefc4fe4cf6a6a65cede319c02d10ac05",
+            "expected_result_code": "CURRENT_ASSIGNMENT_PACKAGE_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "f94ed5648e5a48b53d1b3b219d78c90c459636f8056c3a166c564445f0c3d85c",
+            "expected_breadcrumb_digest": "7e0314dae5376b649ab67006afefdc8a0bbaeef9703e6e22c1f681eac35bf59b",
+            "expected_package_digest": "86e2985142d08adabf701cd61ee4e2abd7b4d6ed077e805ef434f87855021330",
+            "expected_projection_digest": "61ad7e2d7ffcb6d764d1344d4c86dd2867d1a9e4ba1a734c0d56eae182c2a142",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-044",
+            "operation": "leaf-package",
+            "scenario": "opdracht-ID of revision ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-044",
+                "operation": "leaf-package",
+                "scenario_id": "S33-044"
+            },
+            "input_digest": "c6fa20f9337b1afbc1a2b988f0ee71c3016b8480ddca38af6cd1ba9028584d7b",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "53b5199126c7f3143f9c29247ed93c3618f7dd5ca9193db4465ee193f3660650",
+            "expected_breadcrumb_digest": "204888c61560d94bd44eba20fd6fe4266b6052005db044116fd507f6de2102bf",
+            "expected_package_digest": "7d9c79b52840ab175ef72000f897a8bc0f33f133ac688ef1e5fdb6cea6f74c84",
+            "expected_projection_digest": "51193cf8e773b86be9697f87f0c3caded16b85a5f30de12db160caf1593c6dfe",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-045",
+            "operation": "leaf-package",
+            "scenario": "doel ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-045",
+                "operation": "leaf-package",
+                "scenario_id": "S33-045"
+            },
+            "input_digest": "ed4e9179ece3684fde878ae882a6499c2d259b9309af45c27896e4b9346b09cb",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "a45fba3629ba9120d3d6eea08629b8d7a45a7e9c763c37c132b4850991aee19e",
+            "expected_breadcrumb_digest": "84cd8f96154bacbd3c002e7eae2e40881548ce53ea638adcba02c013089e364c",
+            "expected_package_digest": "50c7a099e5e477d64a73f2dcbf693c19685a65ecc070b29b23761c707cb297d2",
+            "expected_projection_digest": "69d80ba5055b03a84aa2c8a5e51b0ec15159f10888acfa1a3e35ad2881d56ca8",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-046",
+            "operation": "leaf-package",
+            "scenario": "Definition of Done ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-046",
+                "operation": "leaf-package",
+                "scenario_id": "S33-046"
+            },
+            "input_digest": "1d55b693fb2a4587366ebc2de59044df2b4b5da9e368a3ed920a0230c477d0f0",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "9869a1a69a0ea207f0bac2d2bac3f2ab68faef62a5adad353d416517ce975822",
+            "expected_breadcrumb_digest": "c779452dd24504000122337c94449ec0db10f3ea01dd503829def0a43ada40d4",
+            "expected_package_digest": "b156fa8550bc6f6df6002c799c8229483967562601028cebbc0b7073d332033f",
+            "expected_projection_digest": "1e99036a89562c1ff696749c7f9f2ce55291e466a197686134aee38fb6e22e3e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-047",
+            "operation": "leaf-package",
+            "scenario": "acceptatiecriteria ontbreken",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-047",
+                "operation": "leaf-package",
+                "scenario_id": "S33-047"
+            },
+            "input_digest": "dc2e14f243d8e4b6472c312e7f7f369a544eca7437340da429f4c4929cad77c9",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "92ce6ad511e8ce23f2698cb2c91d94a05393d272bd63ff5398e59ec9a61682ab",
+            "expected_breadcrumb_digest": "02810cd33e1f28285eb6979d99af04bd8565f21b0b4f0f5375e808ea9af23c8b",
+            "expected_package_digest": "1156c4f2b9395b0966dadd0dbb8711537ac19cf0bd81d865931237bf440576d6",
+            "expected_projection_digest": "02df4ae3bcde0dafd7a28bd0bee75b6006b6c159a37e595a9f30fa5bfa4ef405",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-048",
+            "operation": "leaf-package",
+            "scenario": "inputdigest wijkt af",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-048",
+                "operation": "leaf-package",
+                "scenario_id": "S33-048"
+            },
+            "input_digest": "6b8dc85ab5e57d48206bba089cd5cf99e2e0a381e685cfcc6e35327917cd462e",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "26445da05f6401406370e7a8134cfc78dec1fec6fd059e1cacefb92be9722b94",
+            "expected_breadcrumb_digest": "bed1fe1738d0d9b2d8a74e91e9b9a99d0aebfa0a897f0a44695e68f578ebd01e",
+            "expected_package_digest": "579b88973c31fbf25239b7f8163b0dac8005f4d9e270a6d181571a4e22c2a544",
+            "expected_projection_digest": "80dd3d351c43dea9f2463ff328b443024b5b493765dd9373a14ac4cf39b4cf8c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-049",
+            "operation": "leaf-package",
+            "scenario": "allowlist ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-049",
+                "operation": "leaf-package",
+                "scenario_id": "S33-049"
+            },
+            "input_digest": "7c6d560c63d4ae9e737be6e5120b8b639e15e4b70f28679c6a5c242de2850d73",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "f21540762f2fcc6b851edf1e46f90b6ceb139f14465bf2622bb602c148e4518b",
+            "expected_breadcrumb_digest": "c58ab2362b03ad55b0b97d1ae90b4b93c090d0f3e99384ebe44e7a2de3d26e09",
+            "expected_package_digest": "4d94fa889cfe1583a169c5047b1880e870426540bd708363d093c8277be1ec38",
+            "expected_projection_digest": "2af2330e3daf2473168d71fef32dec8ba288d6507b9c96b61f6238713b6509e1",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-050",
+            "operation": "leaf-package",
+            "scenario": "protected list ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-050",
+                "operation": "leaf-package",
+                "scenario_id": "S33-050"
+            },
+            "input_digest": "141cdfcead5ecf882eac91c659d0fc31cf4d552150013a0b9d6bc49a6fb146d9",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "7e332d8b1ae9764c7bc17cf4bee66cab7460d61573fd1e900215ca663983358b",
+            "expected_breadcrumb_digest": "43e85e0d2db9aded5866b5aedcb5f0dccdc0550f2bd568b0877423338882fec4",
+            "expected_package_digest": "4bab1cd46339917e7e44a6e72b4f7c69f7559595a73f3c4d8f3508d764c61369",
+            "expected_projection_digest": "3efb1d4893d804607051d652a8272659365a317c0fb0f29e3f015960a2c5abf0",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-051",
+            "operation": "leaf-package",
+            "scenario": "allowlist en protected list overlappen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-051",
+                "operation": "leaf-package",
+                "scenario_id": "S33-051"
+            },
+            "input_digest": "fa9375c4f40d9bd2c1cbba85a7c2489e6a910424b1e1ddf2b475a71c477f19fa",
+            "expected_result_code": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+            "expected_guard_status": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+            "expected_hook_trace_digest": "a5c3c8aec07738878db9d4f400597bcb99100d8bcae34eb800e9a2d17747e4d6",
+            "expected_breadcrumb_digest": "f30e33ab96ff1f0796943ea0f76ea18abdb517d80271338c4e136828f313cd57",
+            "expected_package_digest": "2366f0dee62a9a8a999e5d0e28e0cabe66aedb3d161921fc29a85c84db45ddf5",
+            "expected_projection_digest": "2ef8ccd3c784132621454825a92516c6f2e30e45f7e81b8bf441b6d79ec79866",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-052",
+            "operation": "leaf-package",
+            "scenario": "actie buiten toegestane acties",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-052",
+                "operation": "leaf-package",
+                "scenario_id": "S33-052"
+            },
+            "input_digest": "3dcb55f8bcbaa5cd7d0a41d495957aeae64210c70fb4ebcefb9d0c9ba2723815",
+            "expected_result_code": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+            "expected_guard_status": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+            "expected_hook_trace_digest": "a05f8e00c3b99c3cc3fe4a07579759b799bff4fe42795de1756fbd83430627d3",
+            "expected_breadcrumb_digest": "25c4b19ff40c2087c442c27fd2920c96204a6eccc689ba2c91f78fa0225434ca",
+            "expected_package_digest": "e5e7fa79e4bd0391122914602ce8204062c7035ea38f568fa7737b7532efb041",
+            "expected_projection_digest": "8860a2001f93949d6beb8344ebba7c92eabbba5fb7852915a325f817a5c0ff3d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-053",
+            "operation": "leaf-package",
+            "scenario": "toegestane tools ontbreken",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-053",
+                "operation": "leaf-package",
+                "scenario_id": "S33-053"
+            },
+            "input_digest": "90b45ab22723d0eb23a1975b394f84f1c4d1441c6dff4b4ba8d423d573132ff6",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "411f5c3c6bf45ee7f2a1a9edc99c4f9636a4b8e3662f0c838de6d861054ad1c1",
+            "expected_breadcrumb_digest": "bedd7297349b4e54755e53c0a265ea73726bd37283b12efe85f905f55e8e6dd6",
+            "expected_package_digest": "641732ca56dbb79eb7781ca32b0e8ce31f5f90549786823b539b310ff1017cff",
+            "expected_projection_digest": "ba116d57976f8a6e1e7d52945c702b2548fb703cedfc7c29afb3e9d9f9381541",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-054",
+            "operation": "leaf-package",
+            "scenario": "relevant interfacecontract ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-054",
+                "operation": "leaf-package",
+                "scenario_id": "S33-054"
+            },
+            "input_digest": "e436c6a80e0e1d0b5f6673a1ce49f4843d6fbd648cd1b088a7164ff0168eaaed",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "a8be995623ac94b82927c9781617acc50dd80b9fabe487520c55d053e6e47799",
+            "expected_breadcrumb_digest": "4b97ed99b07389b28f0fab655caeb71f57a3ca6c361c4c2ac714283ae624d0ad",
+            "expected_package_digest": "6fa5359d7452ee3b458ba060a4545aebd0fdfc5db02dfa6ab83428ebdb6969a3",
+            "expected_projection_digest": "8c3b7b3247078444de5b020549ee87b0251f43b0cb8b2d4d08430e7c3bdf4741",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-055",
+            "operation": "leaf-package",
+            "scenario": "vereiste evidence ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-055",
+                "operation": "leaf-package",
+                "scenario_id": "S33-055"
+            },
+            "input_digest": "befbdf2bf5a8d984df91f460517946c2e1ec158bd7f4fbdae8691ba8b9c429eb",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "634326c246bdbf03713abe0c2617b8ce1b296cf750cb0450d045be53db5ba8f5",
+            "expected_breadcrumb_digest": "df36bc53630a6d2bd9fa4315b59e2fb2ddecc00b7f054cc233792e37d4661f7e",
+            "expected_package_digest": "6f9e088aca05466b883f0e667590675df09bb1cca4f0683e0cb47b41ae143d6f",
+            "expected_projection_digest": "b7d508c9f27dcbdcfd7ba2ceb13246a8ca015cba20777e7d6ea4c37cc3c3c6c1",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-056",
+            "operation": "leaf-package",
+            "scenario": "blockers ontbreken",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-056",
+                "operation": "leaf-package",
+                "scenario_id": "S33-056"
+            },
+            "input_digest": "ff2a2f5d2eab2a9b52ac702bf8316edeacb9700844530857ac4d97b5acc80a4f",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "fdd62fe88de01b246459213bbfff0bcfe55b1f8b37e787dd34d043a7c9a7dddf",
+            "expected_breadcrumb_digest": "471fc27dfda44fd75d77289540a778a13442534ce0eb47a2e244c40516491eae",
+            "expected_package_digest": "86c0548f847ba1f12310f7b72cf133c8c28704334a273ff1fa248d394138a84f",
+            "expected_projection_digest": "a2d3b14d759da30790fc8945f23f6b1aeeb44d216748fab74da2bcffdc3800a7",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-057",
+            "operation": "leaf-package",
+            "scenario": "budgetten ontbreken",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-057",
+                "operation": "leaf-package",
+                "scenario_id": "S33-057"
+            },
+            "input_digest": "7272c40f83582b08a58703c49204d699ad210db58103c2909deb9e33d0853e96",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "86204363839979514e5ba34a01b9ad24324dbe9c9bc49be08403f59104c5c100",
+            "expected_breadcrumb_digest": "207e17ff572403a58fed7ce3e76c464f28a1b5d35c80d24679d35b3d52a33295",
+            "expected_package_digest": "da90d600ed50193ee5c4b74219f2482651807ff30d22c8cacef0b64a2c49f26e",
+            "expected_projection_digest": "db7a5c3e4e82d3ab7511de700d7f15fd289225413b910e196534ca7d584d601f",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-058",
+            "operation": "leaf-package",
+            "scenario": "exacte stop ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-058",
+                "operation": "leaf-package",
+                "scenario_id": "S33-058"
+            },
+            "input_digest": "ab264a8bbeb694ba88c27b9432ea4ee31bfa999abfb442518a14c0f1027074b7",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "4d060a602588aabe7c87bbc3607ff28b77c6137f736704863366ac563b3fa2a4",
+            "expected_breadcrumb_digest": "1be619c9eb37eca3ccfb87ef8c3d7bc03cc3b1858b6176574966e201a17eaa69",
+            "expected_package_digest": "0da998f56ac1b00887fa9fe1ea8f594dcafaca9559001b16096b78d350d4e1c6",
+            "expected_projection_digest": "3948044cd7a117f68bc72111d186b0889cd29100be3fb9fb57bbc8c88c3a4080",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-059",
+            "operation": "leaf-package",
+            "scenario": "rollbackgrens ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-059",
+                "operation": "leaf-package",
+                "scenario_id": "S33-059"
+            },
+            "input_digest": "f47a5e5a1a428953672dabdfe0d820e780276e53a44ae903b2a7e8e08ac5f0c2",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "cb7690b52c9c9fceb5fc27b83df206885f0baaafd10a9103e049c0f3845d3e93",
+            "expected_breadcrumb_digest": "9a6431944984986a80c5c3202084acbc8662b4685b84c7e91c045c216a54b4a8",
+            "expected_package_digest": "22b53df0dc54a8bcec928edafbf8b22d0c73e880cdf9f0af42382d7043c8ffa5",
+            "expected_projection_digest": "2f088f7d7ea423934a89a8beffcd7cba7316bbe848d35d20ace8ca3f8f676f2d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-060",
+            "operation": "leaf-package",
+            "scenario": "package-current-leaf wijkt af",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-060",
+                "operation": "leaf-package",
+                "scenario_id": "S33-060"
+            },
+            "input_digest": "008930aa252f494f74a11c69689a4e983a43bba4e551520078a5a0f1875feae2",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "5a68387502797c5c16e3133152fdde1261aa8186bb5bc4de4d3e582534b65091",
+            "expected_breadcrumb_digest": "a1069c5e2ef4244e10500d73b337939ec5d587f114937de46e58a629a8a12620",
+            "expected_package_digest": "89040e4baf2d4b70d875ad2bb3a23d7a33429e100882db9f302af1bd135a6d10",
+            "expected_projection_digest": "6f042d877759f125f131e739b383be75d51ab5f85ce1ca8d2d88b2963fba6fb1",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-061",
+            "operation": "leaf-package",
+            "scenario": "siblingdetail aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-061",
+                "operation": "leaf-package",
+                "scenario_id": "S33-061"
+            },
+            "input_digest": "6db0bc0266b43070d1fc46bf11c8af9e6e5a5c1485d99c524368066694e677cb",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "55986db264f87cd175bef80afcdc2f50f21c9aa5a0e372f3ff4068dc714936a0",
+            "expected_breadcrumb_digest": "186c7da6de09e9eb40528d0e225239f9889928e7479d267f94c0af3e8aa6e261",
+            "expected_package_digest": "8eade72ac02b73912b0b0fbe140e6d97d9564dfa99ec0cba1e5414ea87c68807",
+            "expected_projection_digest": "e381817192794ed8776f5d233e2b8f9e39c586513748007e286ab2a23b076ad0",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-062",
+            "operation": "leaf-package",
+            "scenario": "toekomstdetail aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-062",
+                "operation": "leaf-package",
+                "scenario_id": "S33-062"
+            },
+            "input_digest": "20e477aad90095390813cdb54bddf1db7ee4f39095ab8e7655574de835f3a2b3",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "94ef19314a9f069301feef9f816494b7f13ee8b5350cedef508c9f050fbd261a",
+            "expected_breadcrumb_digest": "e63f3867194647e21f856b837d94e5ab713f10142f324775ed90a07d0dceb854",
+            "expected_package_digest": "566a0eb82d50d2e65ecf2414bbccd94fa448acf9d2ef8974508c35ac88810f52",
+            "expected_projection_digest": "72c7bc232a1d1663aa976f25447562a1ed21a6a7815e65147b798ddb54233436",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-063",
+            "operation": "leaf-package",
+            "scenario": "ander teamleafdetail aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-063",
+                "operation": "leaf-package",
+                "scenario_id": "S33-063"
+            },
+            "input_digest": "a65c63c1ad3c227d581f3a373c2988220ebccf046e50b2ac366795a4b0bb954e",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "fe8b2138f4b576333472898dc959efb943ee5108d7f9ce4810712dcd8a1632a9",
+            "expected_breadcrumb_digest": "ddccb5f6a08d488bb2c332f28cfd8998fdf0f8a65ce17225f46b31b36dac5b0e",
+            "expected_package_digest": "30b30de45d00d41288adc3337a88829c390d31d60fed93d3e4dd2b1705f7afd5",
+            "expected_projection_digest": "adc30dda34ed4e5f2320c3b234f171ccdfd5047b22853494bcdfe2b1a3e4922b",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-064",
+            "operation": "leaf-package",
+            "scenario": "volledige hoofdroadmap aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-064",
+                "operation": "leaf-package",
+                "scenario_id": "S33-064"
+            },
+            "input_digest": "e304e217ee46aa49440d99d7b42aef418a3e98d65402be8bfd9224019b2bd464",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "b325df45f6aebef2aeee6443ea39a0c9b29858f24805991f6dd5383cf2c36e72",
+            "expected_breadcrumb_digest": "fb72b3d7e18f3cae2950e4e66dd69d763dffe3ea9c3db148b5b46f6dadf932d4",
+            "expected_package_digest": "f415d810ec9bd60eb266388af1e6aa7bf8dbcbbc4fb63c0675b9afc844e0eabd",
+            "expected_projection_digest": "7a8df64e9e0cc80520a8aef133b80618978b75dbfe8d0f38cfef237b8131f8f3",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-065",
+            "operation": "leaf-package",
+            "scenario": "oude chat of volledige MEM- of Obsidianmap aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-065",
+                "operation": "leaf-package",
+                "scenario_id": "S33-065"
+            },
+            "input_digest": "d0da178be57b9b2fef02bba22e7b15811a88ef7383846b593ea3196aa869e62e",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "22c184fece526389b81b43ed13d973ffb461fb897b9b4a500929897e985de75e",
+            "expected_breadcrumb_digest": "fee5944409d0b098ce45a07c6cb4940ae614aadd6053bcaa6f8726941473d1f4",
+            "expected_package_digest": "60000d7deb932eca3045ff336163a1e69b9dc6d8051f49bd4a5de0fc6ddab6c0",
+            "expected_projection_digest": "9f896c75d8cf28f859e7317cfee89dc2dac8e0fdc43b56b2930b5805d531c9a8",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-066",
+            "operation": "leaf-package",
+            "scenario": "out-of-scope idee zonder OWNER-parkingbesluit aanwezig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-066",
+                "operation": "leaf-package",
+                "scenario_id": "S33-066"
+            },
+            "input_digest": "be91c9f2855574f24d619ce28d6f98c6da8fc0a21946d915787a5228f6170c94",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "332efb96eeeb67003fb6e1783675667015a767c936cd2c7601898125747872a2",
+            "expected_breadcrumb_digest": "40cb55eabb8eadca9643ef0791a17d65aa2db4fbee06f1c3db61a85d3db6df30",
+            "expected_package_digest": "3d97ea200bc936581335d2b9554b85bf7e564c194bf789a4d9429c7492539e96",
+            "expected_projection_digest": "f6b774d8dd8401031cbf245eb6565880eecd1406026c952e0ce41ac48cfdd341",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-067",
+            "operation": "projection",
+            "scenario": "included excluded unread en blocked zijn expliciet",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-067",
+                "operation": "projection",
+                "scenario_id": "S33-067"
+            },
+            "input_digest": "4d19eb037423765ef7f42d849a5068be3d428ac40865f796f08aa7a0647456a3",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "ad9d7119bcee8d36ddd8ea4b8eeaf5107cbb346e58e0928384319072d247f8a7",
+            "expected_breadcrumb_digest": "bf0c99cede63bf4580b71f438f543a7021b17cf540845bd5582a489a7426748e",
+            "expected_package_digest": "ee3d2460af1d3dd9b22f6b432548aa9412b8f16bf8205abb3a76c96be8468442",
+            "expected_projection_digest": "c4a4f801a159b4bbda66bf5d375a2ec8affaf66d28ce4ac911d127c16074254a",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-068",
+            "operation": "projection",
+            "scenario": "stille truncatie of ontbrekende uitsluitingsreden",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-068",
+                "operation": "projection",
+                "scenario_id": "S33-068"
+            },
+            "input_digest": "fa3bbec247e2d668437c73801212eb2641602c41b6dc86c163eee0f6943a6e58",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "b14b6fec91625b49e840ae3cc6497dc45805488547ca7a94fdb6ecdfddcf462f",
+            "expected_breadcrumb_digest": "de2c85b40771d2fe4d3089500040ff8476c7b91f37283627cf2435c86342699c",
+            "expected_package_digest": "b147997d1a19b1d8c5914adfcd071c2d4555897f4a34e6fffcde2a4067cf7dc6",
+            "expected_projection_digest": "084e5842f1b34a0f10dbab375650c0e51bf5dd3eda5058958bedb99f922deeb0",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-069",
+            "operation": "projection",
+            "scenario": "TINY_TASK exact 15 bestanden en 65536 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-069",
+                "operation": "projection",
+                "scenario_id": "S33-069"
+            },
+            "input_digest": "9b2c6f10d0470d19da5e64ec0db7353716eee12492ebe4e5c740552ba293a67f",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "13146223feea5a910e58240a100a91f0efd941acafd803d8663d12667953d4cd",
+            "expected_breadcrumb_digest": "c82209226e54a293e0792698237d23183e05e1972bd886e4d26ccf6477672495",
+            "expected_package_digest": "dc19ad34ccde9719d7be50e50ba3b6af9c24fe93cd6a96ff971ef5c855769bb4",
+            "expected_projection_digest": "3168cc870f5e7f4a862b6e4f7adfa79187b7dc5f618f24056e9aa5217d162e75",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-070",
+            "operation": "projection",
+            "scenario": "SMALL_PROJECT exact 25 bestanden en 131072 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-070",
+                "operation": "projection",
+                "scenario_id": "S33-070"
+            },
+            "input_digest": "7fd26450fb4c30b66a3e2c4ee3d3364f990f8ba847ada381ef24a36890861aad",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "8b5d944874cf63a0d0e87641976c04ee5d9ff31adcddadc04932af3c6647d4e1",
+            "expected_breadcrumb_digest": "6868534e6a7493db0833d7509784ebe042a6bf3546c9e1c04d146e077d227a3b",
+            "expected_package_digest": "db868c1f8a7d89963e850b762ae820b2ff2f1fb197386d9431616a209d681a1b",
+            "expected_projection_digest": "0d83f9771346f09a7d2d5dd0950e710dd7ed6daf3171aac36a331219e4e76ab1",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-071",
+            "operation": "projection",
+            "scenario": "MEDIUM_PROJECT exact 40 bestanden en 262144 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-071",
+                "operation": "projection",
+                "scenario_id": "S33-071"
+            },
+            "input_digest": "3244881104a21a2609f138ec6760a7fd002376b48021886c6d49d3ac8ababb22",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "fd29c56793105bb287e2e9571b90c008ce2c271ccbdf4cb29362c587f48e748c",
+            "expected_breadcrumb_digest": "0bada729866c8fdef31529a7bf737bd3e1eb52ca1b864a6cf04226d7e543fbf4",
+            "expected_package_digest": "99e098da24c70e9ab61296e6978165a7e1c9215b5164fe4b3c0cbf6c4b1923bd",
+            "expected_projection_digest": "7d9179768caa0b359924718a027704a6e7f00da03b48846b7964fad14270b42a",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-072",
+            "operation": "projection",
+            "scenario": "LARGE_PROJECT exact 60 bestanden en 524288 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-072",
+                "operation": "projection",
+                "scenario_id": "S33-072"
+            },
+            "input_digest": "c72b72ed8ba814507267c24c0fefd3a344c9c20424d0a36c31af0228a84d55a4",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "60955174ae44d2158b3358bb99f53c64831fb54acae66ed052eebab4b508559b",
+            "expected_breadcrumb_digest": "41d5e7f3e36a9040dec1828939df52dce41b2d4652b3c73226a8bd7cc500bc48",
+            "expected_package_digest": "a0f237683bd7088e73238e4ad193710a8721676174be4d2fbaacbc8ecf552227",
+            "expected_projection_digest": "83b175d25dab51e25bbcda0e36372a703747359427837fcd8d26bdca831285d3",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-073",
+            "operation": "projection",
+            "scenario": "MEGA_PROJECT exact 80 bestanden en 1048576 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-073",
+                "operation": "projection",
+                "scenario_id": "S33-073"
+            },
+            "input_digest": "ca1104b65ab5dd61979d3e3988962e35f3b181694fe8d30c04c3d739cae33f24",
+            "expected_result_code": "CONTEXT_PROJECTION_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "39cbd57b1e109d375163e5606d031826880950c3098c4afed8ddd5198cb802e9",
+            "expected_breadcrumb_digest": "951e304140c78fc02c8bebbf40ce949b872e2757e123079cd6a4d7cf35a45732",
+            "expected_package_digest": "4f96f11dc456a2f7cc5f255373fc06d8949a10694c57bff9e3330f370d37186a",
+            "expected_projection_digest": "8da73fcc04e5253f2e237f3a1481dccd66a93e0e529ff685c4b334a5489ed9ba",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-074",
+            "operation": "projection",
+            "scenario": "bestandsbudget met één overschreden",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-074",
+                "operation": "projection",
+                "scenario_id": "S33-074"
+            },
+            "input_digest": "18064327dc672dc2bd26aaddc27b50f2c13ee8a4a6c4857ab54f641db9ee2454",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "98cef501b5dd4f47c3363a42ac5fc18f1cbfe39a80466bfc673bf21a000abb70",
+            "expected_breadcrumb_digest": "14ae1abb0c4e25b08b8745da7b9f62cb82d8f306d95ca38134470730c64fa35f",
+            "expected_package_digest": "a4ba0e737e7bf4a5bd04b8a03252d7dabd3c5f6eb83877d98171380413a80205",
+            "expected_projection_digest": "0c0912e44a4b5a7e3143a20e298d51d253ec16cbc7fa0058fb9bc6055aac319b",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-075",
+            "operation": "projection",
+            "scenario": "bytebudget met één overschreden",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-075",
+                "operation": "projection",
+                "scenario_id": "S33-075"
+            },
+            "input_digest": "b16e3f0d714b15ca30bea6a8dd354d9a3148c794e9fc1eed53dc336345ea80c1",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "96ac66c38643f99011ce102496f89b36b105f1c2a01a16054155e5d75b069cd7",
+            "expected_breadcrumb_digest": "025ae9184050b72f5cfcbd9821c7651a1e13178b9146274773d11b5de963b5a2",
+            "expected_package_digest": "38593ab693fcafb0b2b51297c8c2128f1234125792d6fbfbbe2ff2e92c0af126",
+            "expected_projection_digest": "a4a91655d99082963484389a81c53ef9bdfdadd6093b179103b2b17612eab0f0",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-076",
+            "operation": "projection",
+            "scenario": "zelfde canonieke input geeft dezelfde package- en projectiedigests",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-076",
+                "operation": "projection",
+                "scenario_id": "S33-076"
+            },
+            "input_digest": "60de5df2bb43a858342ec7ebd90f3b0c5106bd56a7672138fbaa5085ab15fa45",
+            "expected_result_code": "CONTEXT_PROJECTION_DETERMINISTIC",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "26283f97cdcd1ccc71109498a395e3c826e3bda72b76c81c281b0bd92221370d",
+            "expected_breadcrumb_digest": "8fad62b846401d8b41bb3ae2c9bab39056590ae4d58b738e3967a12de172d80e",
+            "expected_package_digest": "dada145053ef553c465d73e80c92c71e64229ab312c9a61bc98d45874bfa473e",
+            "expected_projection_digest": "1d974a591c99854cdccb34c759c375cc4d3d69a15e931c55417feefa7510e748",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-077",
+            "operation": "parent-fragment",
+            "scenario": "geen ouderfragment is geldig",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-077",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-077"
+            },
+            "input_digest": "725ec36207fc67ba0443a2f906d1e249874000cdf8a7e8ad7ab82c7a44da43af",
+            "expected_result_code": "PARENT_FRAGMENT_NOT_REQUIRED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "563f813aa589690c2ef3145768e119f99db355fec44fc041fd78878849ccb67c",
+            "expected_breadcrumb_digest": "5ef4c2f2e4ff77f83b4ccb8e0f4c58b1dc4aa45e3d9e4e3bc7020a5aea93ef4e",
+            "expected_package_digest": "337b8934dd30f394fa5cb834276dfa79069e71f33bad33f0945779e76093eac6",
+            "expected_projection_digest": "8bdfc1c51478729bfb1aa41b42e4fe1f46f800694c1123011b8c3dd156996dea",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-078",
+            "operation": "parent-fragment",
+            "scenario": "één gerechtvaardigd ouderfragment binnen 32768 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-078",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-078"
+            },
+            "input_digest": "1eef5ce91cd61b096ec61ffdb22d1d288201e6afaa841e192439feb21b60224a",
+            "expected_result_code": "JUSTIFIED_PARENT_FRAGMENT_VALID",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "ec0414e47e812d47c423c7cb460f65db17f17f1b875568f31c016b3508a8773c",
+            "expected_breadcrumb_digest": "df7e3a624ae7f9c234c2f037c3d47021e57585925def7917bbc195332fa2d9d0",
+            "expected_package_digest": "2e8fb41a98ab6d15c26f24b1699e0a8269202d9616ef01ea51689c3546a16b2f",
+            "expected_projection_digest": "223a7bba0f892afade945e806118471f94ea226efd008b37a8d97efe8c2dc23c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-079",
+            "operation": "parent-fragment",
+            "scenario": "ouderfragment 32769 bytes",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-079",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-079"
+            },
+            "input_digest": "c56b1d373787683092c033d61a17391936fe624c76235991430a10e55c653749",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "354d3d4431fa9e890b1e3cfb16bfcc4331b61013d5190c2a178c943684003e86",
+            "expected_breadcrumb_digest": "f4b919e358b27a1d7ae28a1632ae0dc4ccb1d8b80d08416623cbd8d241ee49f3",
+            "expected_package_digest": "6f4433f11ae4270eb1e521a3e8a62ddf040b054d335d5880685df66de6e5002d",
+            "expected_projection_digest": "1c9aaa44e891a7e820f8b1c115e9b89f01b7066c858c19140e4f08c57fb92d8e",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-080",
+            "operation": "parent-fragment",
+            "scenario": "ouderfragmentdigest wijkt af",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-080",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-080"
+            },
+            "input_digest": "daa54579c224c56006a3f35b1263f7e2ba569dffcbb66c6e45f615c340a37e3e",
+            "expected_result_code": "BLOCKED_ROADMAP_DRIFT",
+            "expected_guard_status": "BLOCKED_ROADMAP_DRIFT",
+            "expected_hook_trace_digest": "2f63e0ee92adf64712e227c09fb74267266dfa723a04adbb446b1dcb7ba4a01a",
+            "expected_breadcrumb_digest": "3e940a273b9daa85dc41828a63d5c3b00198271607dde823d330ccc8361ed92b",
+            "expected_package_digest": "f3160dce5139bf724d0b989710800e2ec082c218b7933ff07c84a5223cb7d92d",
+            "expected_projection_digest": "e79de50c4f2b1f7064dd20c0339bd7580915686bfac3b9ec3aa3b63cdda07792",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-081",
+            "operation": "parent-fragment",
+            "scenario": "reden ontbreekt",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-081",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-081"
+            },
+            "input_digest": "3e0316467467b970a398e97154145aeed552a7707e3381a1b8af47496351d31a",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "d1fc780e51ea25670ee22b1534aeebfd622224383d5a3eaf0a17caa293f3eb26",
+            "expected_breadcrumb_digest": "22d6b5d0c58eba834e045a88285c758c20275bc222e8bfce04886362cf329e1c",
+            "expected_package_digest": "ccad3c9100f4bc15b1d0a0722999ac72c5787cf0bea62df95ecf24747f6d0d3a",
+            "expected_projection_digest": "d73b2467f393bf46d1f5d73d5718abac115cc0f635d152f8f54c374eee6b6bc2",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-082",
+            "operation": "parent-fragment",
+            "scenario": "vervaldrempel overschreden",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-082",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-082"
+            },
+            "input_digest": "20231b17c5183e3ae4ce16164725096dab9ebfba7bd8c24f4ba0c7f2ce165e80",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "6455be90faac83f17ad0553e89c26a0ce2e8b968e7c2798020e95f5a23876995",
+            "expected_breadcrumb_digest": "60be8c9dd8f9ffacb5810139a151dbba2e7e92d7d6c75ed7268778f14a7f843e",
+            "expected_package_digest": "419755d95b16921934ca1fbd257a922d60fa926518b148ae22cfabe53dd56885",
+            "expected_projection_digest": "330565638c8a68bdf6604f1d90eff6544d7b419440588fec571d5574e178ac27",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-083",
+            "operation": "parent-fragment",
+            "scenario": "twee ouderfragmenten gevraagd",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-083",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-083"
+            },
+            "input_digest": "e6d7ef2e3282e8184e150696da25e6618618c9d7237a6616d6fc997ccfdb96f0",
+            "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+            "expected_guard_status": "BLOCKED_CONTEXT_BUDGET",
+            "expected_hook_trace_digest": "ac527aca2a01ab735b4daefbd3b3d9fa0b53c7e1d75dd220528f504267ccb6f1",
+            "expected_breadcrumb_digest": "30e7613df0c5434953efe3bc4444bbb471d515e868403a00249a6fbfae2fa5a1",
+            "expected_package_digest": "93bf5db824e8a310400ea6669dcdcd14c34c734bce87b2a853162fc37b125dcf",
+            "expected_projection_digest": "f3e4b6abecd74a8777f1f54aca7298721efa7c9e3e3a3cbc1bba7e99def9dd6b",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-084",
+            "operation": "parent-fragment",
+            "scenario": "pad ligt niet in gebonden ouderrelatie of bevat volledig ouderdetail",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-084",
+                "operation": "parent-fragment",
+                "scenario_id": "S33-084"
+            },
+            "input_digest": "89fbf25bec0c4931cd76c4339e49fe73a276d178bbdcedc91941949252cc8d31",
+            "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_guard_status": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+            "expected_hook_trace_digest": "0142f968235960630569972ee47e4335e04663889b04abaccb1577ded16f2925",
+            "expected_breadcrumb_digest": "20bc0ed5a71fbcae6716ba110a24439bc94e139102963f198b6248f8a2616388",
+            "expected_package_digest": "26933eeeac293e972c7e679c76b291bf67c06011dfbbce7d85e93a25c9aa0f08",
+            "expected_projection_digest": "bd0314f488ba15074acf7e8c1e4a1aa086755d4fbebe6769ac22f7b44705d4c9",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-085",
+            "operation": "parking-lot",
+            "scenario": "expliciete OWNER-parkinginstructie maakt alleen een in-memory voorstel",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-085",
+                "operation": "parking-lot",
+                "scenario_id": "S33-085"
+            },
+            "input_digest": "eedfcb8fd53421d8ad00aaea346689a32c9795a87341f103bcbfc3c3aafdb4f3",
+            "expected_result_code": "PARKING_LOT_OWNER_AUTHORIZED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "c4543988492be9579a05d4516f78dec284784bf4dec82e67a341cc585b19ea3c",
+            "expected_breadcrumb_digest": "cc6d4335bfc54c999766fc48794ff83f65635a9a6afad58aea850ac3fbccc72f",
+            "expected_package_digest": "71335f4cd8472229536ef9dc78415ef1a935517c4d55f1fd12c2af0af1c50725",
+            "expected_projection_digest": "58d820faae12a8383da21fe56d7ed2d0e618b5e8bb05049e242c616e5f25b40f",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-086",
+            "operation": "parking-lot",
+            "scenario": "ARCHITECT probeert zelf item toe te voegen",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-086",
+                "operation": "parking-lot",
+                "scenario_id": "S33-086"
+            },
+            "input_digest": "a1dbaa65ce21e04883c51823ea8dd21393654471742397ffea5ce349b6a2e593",
+            "expected_result_code": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_guard_status": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_hook_trace_digest": "63d7a3c5b10bc14b45f4b9f149cf9a1bdfce7149714a5e43728cea1fa200678f",
+            "expected_breadcrumb_digest": "b12b7e609b6c2d185197c265a4d75ee358ab068631912b680fe8953334b4f4d5",
+            "expected_package_digest": "96d8ac518dd51a5213edbcc0089b6c1e173c1d1992d296a2938191a8e7b6d423",
+            "expected_projection_digest": "08af1edaa447d39af95bf28a1f1e4887dddd8de6cd6fd410319e87c4f229ce9d",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-087",
+            "operation": "parking-lot",
+            "scenario": "AI leidt parkingitem af uit out-of-scope tekst",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-087",
+                "operation": "parking-lot",
+                "scenario_id": "S33-087"
+            },
+            "input_digest": "b12baa4f6e36d02df23825e4ea251bb4d2057dbacbaaf379a62acb7a2405aa78",
+            "expected_result_code": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_guard_status": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_hook_trace_digest": "bdb88b7e50660c10e7426684f64e168f1be5f9be77142bb24fd54ed95b6eb138",
+            "expected_breadcrumb_digest": "020ae9dc70f3fce55e64f071bb11b9936da41d0b8ecdf43424c4647fa2ae055f",
+            "expected_package_digest": "55bd2f5197ef32396cea760c0fa37f30e58320cbcdcf069f5618009d3714cfb0",
+            "expected_projection_digest": "c12a375fc64a5937f803e8eec9da642a9b4a254e948c475107b993e3dd1b2a0c",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-088",
+            "operation": "parking-lot",
+            "scenario": "teamhandoff zonder OWNER-parkinginstructie bevat parkingitem",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-088",
+                "operation": "parking-lot",
+                "scenario_id": "S33-088"
+            },
+            "input_digest": "52470e59ddd265da827949aef8380e50353a7700eb5d33c5a71fdd5cf5e95f8d",
+            "expected_result_code": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_guard_status": "BLOCKED_OWNER_ONLY_PARKING_LOT",
+            "expected_hook_trace_digest": "fa2f3261f41e25ceef948944b307218eec1ae1329eea6f2c0f2b4d0246e6ffa5",
+            "expected_breadcrumb_digest": "c74e5b833a81f82cc0e9cbf0a909804931e7d46b46f96ad5202ebc5904420f49",
+            "expected_package_digest": "fd3612a42ea1d0fe96ebb60d854cbbeac48d54646c5a6eda3ca34b58ff7b6330",
+            "expected_projection_digest": "a766f6deb11cfd79c39c6b66f3fccc127b37fd06eaa25da3b7356502a46ecd42",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-089",
+            "operation": "parking-lot",
+            "scenario": "parkingvoorstel wijzigt current leaf of roadmapstate niet",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-089",
+                "operation": "parking-lot",
+                "scenario_id": "S33-089"
+            },
+            "input_digest": "c1fce3d29cd06861468d1c67af3b4c383bf5555992b12afdf10ff27bd4a33322",
+            "expected_result_code": "PARKING_LOT_ZERO_STATE_CHANGE",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "3bb263b4bd580fee3011c55bced0c7e6525c9ecbf4d2d38096667879b421e290",
+            "expected_breadcrumb_digest": "b12538b3517d4730ec4dc841e05ac87bd5444e9b947956598f6eba55a63b3ea7",
+            "expected_package_digest": "53786fd933c0dc645fab54bf5a35a81273188b1f6008df40e155dc0d9cc0f72c",
+            "expected_projection_digest": "1132945feb01c6856e3d08b3fc69a0d1fc3d08bed4f5f64ce18edbc097289512",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-090",
+            "operation": "continuity",
+            "scenario": "sessieherstart herstelt exact dezelfde sticky leaf",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-090",
+                "operation": "continuity",
+                "scenario_id": "S33-090"
+            },
+            "input_digest": "eeaf1f2adb6130f970e1f4d05952fc6569ef71cecbb3a9b366e5ad21b877ac35",
+            "expected_result_code": "STICKY_LEAF_RESTORED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "473418277608ce60959bb70177f7ba5592c63b0a655cf826191fa5c3229e0f99",
+            "expected_breadcrumb_digest": "3799f42627009ec76e6d3b0aca67a53630436baf75b1e3eb97b9915c4faa4019",
+            "expected_package_digest": "549842a868c404f2541dc58873ce640f72e3e99d81b30c50ec0c0f5d03c060fa",
+            "expected_projection_digest": "603b0960627dbc52a0e19649d1f34ae3cf6c5ba14da3e7a4484560dc42425500",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-091",
+            "operation": "continuity",
+            "scenario": "modelwissel herstelt exact dezelfde sticky leaf",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-091",
+                "operation": "continuity",
+                "scenario_id": "S33-091"
+            },
+            "input_digest": "8e834fd8d683791a86535a9e4d8d6b58e1dd8ed8f148cb7cc9c16e0a0a7874e7",
+            "expected_result_code": "STICKY_LEAF_RESTORED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "bb40397b7a470ab1b150a51970830512891d549cd39923b50ecfe718397b2174",
+            "expected_breadcrumb_digest": "87476ad2b63acdf1c8b8b92959ee77f1e30208a6b562f048f23a4578ca9e9cec",
+            "expected_package_digest": "8032537c005b15e08cf65cbce64d5b1c47229a21a1d8fe941081e432fdeb00c0",
+            "expected_projection_digest": "b9cbe41c88d32bd8af01e34d7e7d2471860331807087fcc3442f0212aec30222",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-092",
+            "operation": "continuity",
+            "scenario": "contextcompaction herstelt exact dezelfde sticky leaf",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-092",
+                "operation": "continuity",
+                "scenario_id": "S33-092"
+            },
+            "input_digest": "74c3d9483e678e8113c4e04b95ed581774f89a4f02c3c1cefc76f5add3901c63",
+            "expected_result_code": "STICKY_LEAF_RESTORED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "b649f46ae1b4e54c1c91879473ac75d3194b14f9a0ce8e299bdd6e54c8c7ad16",
+            "expected_breadcrumb_digest": "da89cd8510d1fc9d88ef1c2d9501e9e998ca3c4a3484001f788bd707bad76704",
+            "expected_package_digest": "63daa3c99c6611c151d2ff217b965699961963f81ec3e42cf95f28b2eb99ef4c",
+            "expected_projection_digest": "7865aafbd885f75ed7b5c5310f18344b76ae2eb33bb88512a07a53b149be5201",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-093",
+            "operation": "continuity",
+            "scenario": "geldige teamhandoff bindt bestaand doelactor en dezelfde leaf",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-093",
+                "operation": "continuity",
+                "scenario_id": "S33-093"
+            },
+            "input_digest": "acea13e36a1d69970b22e4a622d2af2f4c5d9561e3317ccf997d18677ffd6c99",
+            "expected_result_code": "TEAM_HANDOFF_CONTEXT_RESTORED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "4d093a1341426a1197de48927efc02029053512e30d1b9ec9501a693aa72e6ef",
+            "expected_breadcrumb_digest": "ba951c385f613c4e7cb60c0db567698b00c120ab4e6be55af7571c6c3502ff02",
+            "expected_package_digest": "2ae23a49c0fdcbec3c8fbd1ba4030b73f3192a70522d743f963e526845fec3bd",
+            "expected_projection_digest": "a4d4a346b5e67525dad868cfb8b130fe821f5a34748f2e6b0fe2e05f6d19d0e9",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-094",
+            "operation": "continuity",
+            "scenario": "teamhandoff naar onbekende of onbeschikbare actor of werkstroom",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-094",
+                "operation": "continuity",
+                "scenario_id": "S33-094"
+            },
+            "input_digest": "54f33938cc2b2e60771fc5a264206dd45fdb8bcad5230fc437d0bf30ecf5d4b5",
+            "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+            "expected_guard_status": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+            "expected_hook_trace_digest": "3853d4bc17d8abe3cb7b60b9c9cda9189b460140ad799030e2cd7ccc13d3d420",
+            "expected_breadcrumb_digest": "2fb6af3f8bb056dc0ded828d7ba3f2f8bfcf72bb49ea57470ac9b93bb62d97e8",
+            "expected_package_digest": "daf48df5cbb61171de9e783bda211a7b4caf1c0f0214efad316745a94ecff72e",
+            "expected_projection_digest": "ac1180f9c92c01aa34451413b3ea1273f6b0b511add66cd095401dab82c9ec46",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-095",
+            "operation": "exclusion",
+            "scenario": "OpenSpec-pad import adapter contextbron of placeholder aangeboden",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-095",
+                "operation": "exclusion",
+                "scenario_id": "S33-095"
+            },
+            "input_digest": "93699c119344ba7790e6f2edf23f47f8fba989e7d3ab2fed2184df5f8f19ccb3",
+            "expected_result_code": "OPENSPEC_EXCLUDED",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "03cb7a7c00de6e3ef18c524333e5501af5207ed0428a8d489a63c6543479a83a",
+            "expected_breadcrumb_digest": "7daa4fca5d267cdfbc0439a799e564d417388b1dbbdb9971fcbd2886dd50332d",
+            "expected_package_digest": "aa57f4a909a1c57759f57a8dd6cbac2aa0825c2b9dd47380ff7b91e7747508aa",
+            "expected_projection_digest": "e287adb2c0def75b91688151d1704db0115b44ef98ea879833146e5f3744a970",
+            "expected_writes": []
+        },
+        {
+            "scenario_id": "S33-096",
+            "operation": "purity",
+            "scenario": "runtimehooklaag voert geen filesystem netwerk Git CLI storage sync modelcall of agentstart uit",
+            "input": {
+                "bindings_digest": "edc00bc840c987f4a1ba6a52be027089976200bc5dc6cb7a21bb9368b91dc55a",
+                "case": "S33-096",
+                "operation": "purity",
+                "scenario_id": "S33-096"
+            },
+            "input_digest": "3868c6b8658c9514caa21ec6cab79bbff1bfca44b899e29d763d5406a4a0e1a9",
+            "expected_result_code": "PURE_RUNTIME_HOOKS_NO_IO",
+            "expected_guard_status": "READ_ONLY_ONLY",
+            "expected_hook_trace_digest": "aa53fe427e778f44c27337b2b4709490a3b74dabb983009f529e138ec4710044",
+            "expected_breadcrumb_digest": "e9e2b992316428e1f467978c895f91f2e23c594e97393f906e3b04d58b74a2f9",
+            "expected_package_digest": "fbc55a73f9a2bad33923dde50c7762adf973ec14f23bdb6203ccbb9d77c0ed0e",
+            "expected_projection_digest": "2eb8eaed891d15e7ee1b75d17aaf274691d5a697325dcb0ae9cb64762e982a65",
+            "expected_writes": []
+        }
+    ]
+}
