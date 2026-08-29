@@ -163,6 +163,328 @@ def _validate_records(records: Sequence[dict[str, Any]], format_name: str) -> li
     return result
 
 
+def roadmap_catalog(
+    roadmaps: Sequence[dict[str, Any]], *, project_id: str
+) -> dict[str, dict[int, dict[str, Any]]]:
+    """Validate and index immutable roadmap revisions for one project."""
+    records = _validate_records(roadmaps, "opencntx-roadmap-definition")
+    catalog: dict[str, dict[int, dict[str, Any]]] = {}
+    identities: dict[tuple[str, int], str] = {}
+    for record in records:
+        validate_roadmap_graph(record)
+        if record["project_id"] != project_id:
+            raise ProjectRuntimeError(
+                "Roadmap belongs to another project.", reason="runtime_definition_invalid"
+            )
+        identity = (record["roadmap_id"], record["revision"])
+        digest = canonical_digest(record)
+        previous = identities.get(identity)
+        if previous is not None and previous != digest:
+            raise ProjectRuntimeError(
+                "Roadmap revision identity changed bytes.", reason="runtime_roadmap_drift"
+            )
+        identities[identity] = digest
+        catalog.setdefault(record["roadmap_id"], {})[record["revision"]] = deepcopy(record)
+    return catalog
+
+
+def validate_roadmap_stack(
+    *,
+    stack: Sequence[dict[str, Any]],
+    roadmaps: Sequence[dict[str, Any]],
+    project_id: str,
+    main_roadmap_id: str,
+    current_leaf_id: str,
+) -> tuple[tuple[dict[str, Any], ...], str]:
+    """Validate a complete nested stack and return its canonical digest."""
+    if not 1 <= len(stack) <= 8:
+        raise ProjectRuntimeError(
+            "Roadmap stack depth is invalid.", reason="runtime_stack_invalid"
+        )
+    catalog = roadmap_catalog(roadmaps, project_id=project_id)
+    normalized = [deepcopy(frame) for frame in stack]
+    roadmap_ids = [frame.get("roadmap_id") for frame in normalized]
+    if len(set(roadmap_ids)) != len(roadmap_ids):
+        raise ProjectRuntimeError(
+            "Roadmap stack repeats a roadmap.", reason="runtime_stack_invalid"
+        )
+    bound: list[dict[str, Any]] = []
+    required_frame_fields = {
+        "active_node_id",
+        "event_head",
+        "policy_digest",
+        "projection_digest",
+        "return_node_id",
+        "roadmap_id",
+        "roadmap_revision",
+        "schema_digest",
+    }
+    for index, frame in enumerate(normalized):
+        if set(frame) != required_frame_fields:
+            raise ProjectRuntimeError(
+                "Roadmap stack frame differs from the contract.", reason="runtime_stack_invalid"
+            )
+        roadmap_id = frame["roadmap_id"]
+        revision = frame["roadmap_revision"]
+        record = catalog.get(roadmap_id, {}).get(revision)
+        if record is None:
+            raise ProjectRuntimeError(
+                "Roadmap stack binds an unavailable revision.", reason="runtime_roadmap_drift"
+            )
+        node_ids = {node["node_id"] for node in record["nodes"]}
+        if frame["active_node_id"] not in node_ids or frame["event_head"] != record["event_head"]:
+            raise ProjectRuntimeError(
+                "Roadmap stack frame differs from its revision.", reason="runtime_roadmap_drift"
+            )
+        if index == 0:
+            if (
+                roadmap_id != main_roadmap_id
+                or record["roadmap_type"] != "MAIN_ROADMAP"
+                or frame["return_node_id"] is not None
+            ):
+                raise ProjectRuntimeError(
+                    "First stack frame is not the bound main roadmap.",
+                    reason="runtime_main_roadmap_invalid",
+                )
+        else:
+            parent = bound[-1]
+            parent_nodes = {node["node_id"] for node in parent["nodes"]}
+            if (
+                record["roadmap_type"] != "SUBROADMAP"
+                or record["parent_roadmap_id"] != parent["roadmap_id"]
+                or record["parent_node_id"] not in parent_nodes
+                or record["return_node_id"] not in parent_nodes
+                or frame["return_node_id"] != record["return_node_id"]
+            ):
+                raise ProjectRuntimeError(
+                    "Child frame has an invalid parent or return binding.",
+                    reason="runtime_return_invalid",
+                )
+        bound.append(record)
+    if normalized[-1]["active_node_id"] != current_leaf_id:
+        raise ProjectRuntimeError(
+            "Current leaf differs from the top stack frame.", reason="runtime_stack_invalid"
+        )
+    return tuple(normalized), canonical_digest(normalized)
+
+
+def evaluate_workstream_state(
+    *,
+    project: dict[str, Any],
+    actors: Sequence[dict[str, Any]],
+    roadmaps: Sequence[dict[str, Any]],
+    workstreams: Sequence[dict[str, Any]],
+    resources: Sequence[dict[str, Any]],
+    dependencies: dict[str, str] | None = None,
+    target_paths: dict[str, Sequence[str]] | None = None,
+    shared_integration: bool = False,
+) -> dict[str, Any]:
+    """Evaluate dependency, actor, resource, and bounded parallelism readiness."""
+    validate_runtime_record(project)
+    actor_records = _validate_records(actors, "opencntx-actor-binding")
+    workstream_records = _validate_records(workstreams, "opencntx-workstream-binding")
+    resource_records = _validate_records(resources, "opencntx-resource-claim")
+    catalog = roadmap_catalog(roadmaps, project_id=project["project_id"])
+    actor_map = {record["actor_id"]: record for record in actor_records}
+    claim_map: dict[str, dict[str, Any]] = {}
+    conflicts: set[str] = set()
+    for claim in resource_records:
+        if claim["claim_id"] in claim_map:
+            conflicts.add(f"DUPLICATE_CLAIM:{claim['claim_id']}")
+        claim_map[claim["claim_id"]] = claim
+    actor_owners: dict[str, str] = {}
+    workstream_map: dict[str, dict[str, Any]] = {}
+    for workstream in workstream_records:
+        workstream_id = workstream["workstream_id"]
+        actor_id = workstream["actor_id"]
+        if workstream_id in workstream_map:
+            conflicts.add(f"DUPLICATE_WORKSTREAM:{workstream_id}")
+        workstream_map[workstream_id] = workstream
+        actor = actor_map.get(actor_id)
+        if actor is None or actor["availability"] != "AVAILABLE":
+            conflicts.add(f"ACTOR_UNAVAILABLE:{actor_id}")
+        if actor_id in actor_owners:
+            conflicts.add(f"ACTOR_MULTI_LEAF:{actor_id}")
+        actor_owners[actor_id] = workstream_id
+        roadmap_revisions = catalog.get(workstream["roadmap_id"], {})
+        if not roadmap_revisions:
+            conflicts.add(f"ROADMAP_UNKNOWN:{workstream['roadmap_id']}")
+        else:
+            latest = roadmap_revisions[max(roadmap_revisions)]
+            node_ids = {node["node_id"] for node in latest["nodes"]}
+            if workstream["current_leaf_id"] not in node_ids:
+                conflicts.add(f"LEAF_UNKNOWN:{workstream['current_leaf_id']}")
+        for claim_id in workstream["resource_claim_ids"]:
+            if claim_id not in claim_map:
+                conflicts.add(f"CLAIM_UNKNOWN:{claim_id}")
+    dependency_values = dependencies or {}
+    pending = sorted(key for key, value in dependency_values.items() if value != "CLOSED")
+    claims_by_workstream = {
+        item["workstream_id"]: [
+            claim_map[claim_id]
+            for claim_id in item["resource_claim_ids"]
+            if claim_id in claim_map
+        ]
+        for item in workstream_records
+    }
+    ids = sorted(claims_by_workstream)
+    for left_index, left_id in enumerate(ids):
+        for right_id in ids[left_index + 1 :]:
+            for left in claims_by_workstream[left_id]:
+                for right in claims_by_workstream[right_id]:
+                    resources_overlap = set(left["resource_ids"]) & set(right["resource_ids"])
+                    conflict_sets_overlap = set(left["conflict_set_ids"]) & set(
+                        right["conflict_set_ids"]
+                    )
+                    if conflict_sets_overlap or (
+                        resources_overlap and (left["exclusive"] or right["exclusive"])
+                    ):
+                        conflicts.add(f"RESOURCE_CONFLICT:{left_id}:{right_id}")
+    paths = target_paths or {}
+    for left_index, left_id in enumerate(sorted(paths)):
+        for right_id in sorted(paths)[left_index + 1 :]:
+            if set(paths[left_id]) & set(paths[right_id]):
+                conflicts.add(f"TARGET_PATH_CONFLICT:{left_id}:{right_id}")
+    available = sum(record["availability"] == "AVAILABLE" for record in actor_records)
+    parallel_limit = min(16, available, len(workstream_records))
+    if any(record["max_parallelism"] > parallel_limit for record in workstream_records):
+        conflicts.add("PARALLELISM_EXCEEDS_CAPACITY")
+    if pending:
+        result_code = "BLOCKED_DEPENDENCY_NOT_READY"
+    elif conflicts:
+        result_code = "BLOCKED_TEAM_OR_RESOURCE_CONFLICT"
+    elif shared_integration:
+        result_code = "SERIALIZED_SHARED_INTEGRATION"
+    else:
+        result_code = "WORKSTREAMS_READY"
+    value = {
+        "active_workstreams": len(workstream_records),
+        "conflicts": sorted(conflicts),
+        "integration_queue": sorted(workstream_map) if shared_integration else [],
+        "parallel_limit": parallel_limit,
+        "pending_dependencies": pending,
+        "result_code": result_code,
+    }
+    return value | {"state_digest": canonical_digest(value)}
+
+
+def serialize_integration_queue(items: Sequence[dict[str, str]]) -> tuple[dict[str, str], ...]:
+    """Return the one deterministic shared-integration order."""
+    required = {"event_digest", "node_id", "roadmap_id", "workstream_id"}
+    normalized: list[dict[str, str]] = []
+    for item in items:
+        if set(item) != required or any(not isinstance(value, str) for value in item.values()):
+            raise ProjectRuntimeError(
+                "Integration queue item is invalid.", reason="runtime_integration_invalid"
+            )
+        normalized.append(dict(item))
+    return tuple(
+        sorted(
+            normalized,
+            key=lambda item: (
+                item["roadmap_id"],
+                item["node_id"],
+                item["workstream_id"],
+                item["event_digest"],
+            ),
+        )
+    )
+
+
+def prepare_return_to_parent(
+    *,
+    pointer: dict[str, Any],
+    roadmaps: Sequence[dict[str, Any]],
+    owner_accepted: bool,
+    child_closed: bool,
+    definition_of_done_complete: bool,
+    event_chain_valid: bool,
+    conflicts: Sequence[str] = (),
+) -> dict[str, Any]:
+    """Build but never persist the exact one-frame return pointer candidate."""
+    validate_runtime_record(pointer)
+    if pointer["format"] != "opencntx-runtime-pointer":
+        raise ProjectRuntimeError(
+            "Return requires a runtime pointer.", reason="runtime_pointer_invalid"
+        )
+    validate_roadmap_stack(
+        stack=pointer["roadmap_stack"],
+        roadmaps=roadmaps,
+        project_id=pointer["project_id"],
+        main_roadmap_id=pointer["main_roadmap_id"],
+        current_leaf_id=pointer["current_leaf_id"],
+    )
+    if (
+        pointer["mode"] != "RETURN_TO_PARENT"
+        or len(pointer["roadmap_stack"]) < 2
+        or not owner_accepted
+        or not child_closed
+        or not definition_of_done_complete
+        or not event_chain_valid
+        or conflicts
+    ):
+        raise ProjectRuntimeError(
+            "Return-to-parent gate is not fully satisfied.", reason="runtime_return_invalid"
+        )
+    child = pointer["roadmap_stack"][-1]
+    return_node = child["return_node_id"]
+    if return_node is None:
+        raise ProjectRuntimeError(
+            "Child frame has no return node.", reason="runtime_return_invalid"
+        )
+    candidate = deepcopy(pointer)
+    candidate["roadmap_stack"] = candidate["roadmap_stack"][:-1]
+    candidate["current_leaf_id"] = return_node
+    candidate["mode"] = "LOCKED_EXECUTION"
+    candidate["revision"] += 1
+    candidate["record_id"] = f"{pointer['pointer_id']}_R{candidate['revision']}"
+    candidate["expected_previous_digest"] = canonical_digest(pointer)
+    projection_value = {
+        "current_leaf_id": return_node,
+        "mode": candidate["mode"],
+        "roadmap_stack": candidate["roadmap_stack"],
+    }
+    candidate["projected_state_digest"] = canonical_digest(projection_value)
+    validate_runtime_record(candidate)
+    return compare_and_swap_pointer(pointer, candidate)
+
+
+def rebuild_runtime_status(
+    *,
+    pointer: dict[str, Any],
+    roadmaps: Sequence[dict[str, Any]],
+    workstream_state: dict[str, Any],
+) -> dict[str, Any]:
+    """Build a deterministic summary without titles or any leaf body text."""
+    stack, stack_digest = validate_roadmap_stack(
+        stack=pointer["roadmap_stack"],
+        roadmaps=roadmaps,
+        project_id=pointer["project_id"],
+        main_roadmap_id=pointer["main_roadmap_id"],
+        current_leaf_id=pointer["current_leaf_id"],
+    )
+    frames = [
+        {
+            "active_node_id": frame["active_node_id"],
+            "roadmap_id": frame["roadmap_id"],
+            "roadmap_revision": frame["roadmap_revision"],
+        }
+        for frame in stack
+    ]
+    value = {
+        "conflicts": list(workstream_state["conflicts"]),
+        "current_leaf_id": pointer["current_leaf_id"],
+        "main_roadmap_id": pointer["main_roadmap_id"],
+        "mode": pointer["mode"],
+        "parallel_limit": workstream_state["parallel_limit"],
+        "pending_dependency_count": len(workstream_state["pending_dependencies"]),
+        "roadmap_stack": frames,
+        "roadmap_stack_digest": stack_digest,
+        "workstream_count": workstream_state["active_workstreams"],
+    }
+    return value | {"projection_digest": canonical_digest(value)}
+
+
 def _payload(event: dict[str, Any]) -> dict[str, Any]:
     payload = event["payload"]
     expected = EVENT_PAYLOAD_FIELDS[event["event_type"]]
