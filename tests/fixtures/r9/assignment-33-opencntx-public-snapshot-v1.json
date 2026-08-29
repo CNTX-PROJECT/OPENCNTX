@@ -1,0 +1,20 @@
+{
+  "format": "opencntx-r9-runtime-hooks-public-snapshot",
+  "format_version": 1,
+  "commit": "02e14a23d28c1a9b0795f48e3056962f2f094f85",
+  "tree": "e61c5de10ad38e4a9a1df5775687cedce7a83a38",
+  "file_count": 201,
+  "total_blob_bytes": 4003027,
+  "relevant_path_count": 25,
+  "relevant_manifest_digest": "ba0ee43ce5b51040a285fa71e044f8468455b1550da7e68dc8dba1d3ec66566b",
+  "assignment_29_scenario_blob": "220d6ea7f3c0fbd0d84ee054e2f904bbfa0f21dc",
+  "assignment_29_scenario_raw_sha256": "1d89046fcf8a6ef81724a7a2f3ef7754babe4d684fbff5050b599d0343134088",
+  "assignment_31_scenario_blob": "e25c3ccec031e3ff938d0dcaa1eb7ec0bcb3991b",
+  "assignment_31_scenario_raw_sha256": "24d8ef89418a093882af7ff42dee00315d21ee90613ce87a76c5d924ab62e5a4",
+  "assignment_31_snapshot_blob": "9bf13af2caf13697a5549f9c8a34391f8f20a03c",
+  "assignment_31_snapshot_raw_sha256": "62ce3ca3d16fe4e5999624fbd405693ce8e7fa38cee0c12c461c1d935901e117",
+  "assignment_32_scenario_blob": "c6474f90cb0b1869d83130469417e4287ddf57eb",
+  "assignment_32_scenario_raw_sha256": "3a5d78058bee403f53bf9babc038fe30e94e9e0d9300fde11927283d2b606f34",
+  "assignment_32_snapshot_blob": "53fe93ac779f6573572f8d53b99c9591e05c39ee",
+  "assignment_32_snapshot_raw_sha256": "1e0f05c7b09999d6497aa821bd47bcd69cfddf0fd83f8e5bab966be93b6d8bc4"
+}
