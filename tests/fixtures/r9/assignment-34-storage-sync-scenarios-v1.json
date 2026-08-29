@@ -1,0 +1,1701 @@
+{
+  "assignment_34_proposal_sha256": "aa1ca0d62dd67fe24b53d8f47e0828b2177852a604239fa289f9e3927edecae3",
+  "bindings": {
+    "actor_id": "ACTOR_ARCHITECT",
+    "current_leaf_id": "ASSIGNMENT_34",
+    "input_digests": [
+      "1111111111111111111111111111111111111111111111111111111111111111"
+    ],
+    "mode": "LOCKED_EXECUTION",
+    "policy_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+    "proposal_digest": "aa1ca0d62dd67fe24b53d8f47e0828b2177852a604239fa289f9e3927edecae3",
+    "schema_digest": "3333333333333333333333333333333333333333333333333333333333333333",
+    "stack_digest": "4444444444444444444444444444444444444444444444444444444444444444",
+    "state_digest": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "format": "opencntx-r9-storage-sync-scenario-corpus",
+  "format_version": 1,
+  "records": [
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-001",
+        "operation": "object-id",
+        "scenario_id": "S34-001"
+      },
+      "input_digest": "007b75dc9fdfeb622f711228fcb2c2a49e0b2b4ebdd946039a186d9c653f8158",
+      "operation": "object-id",
+      "scenario": "zelfde project klasse en logische sleutel",
+      "scenario_id": "S34-001"
+    },
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-002",
+        "operation": "object-id",
+        "scenario_id": "S34-002"
+      },
+      "input_digest": "18d609ea082f645c8cd5cf81526420d92dc82050e5d64925d67d2321468f4c0f",
+      "operation": "object-id",
+      "scenario": "zelfde identiteit met andere content of revision",
+      "scenario_id": "S34-002"
+    },
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-003",
+        "operation": "object-id",
+        "scenario_id": "S34-003"
+      },
+      "input_digest": "78c040ec4b21a752a0384dab5f0d43591086254826a08ee21cd073ed0883c782",
+      "operation": "object-id",
+      "scenario": "ander project geeft andere object-ID",
+      "scenario_id": "S34-003"
+    },
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-004",
+        "operation": "object-id",
+        "scenario_id": "S34-004"
+      },
+      "input_digest": "b913d2d40ed57d5357a426b4a48b4b7cc32b6e67e2d883096e50d3e98af80209",
+      "operation": "object-id",
+      "scenario": "andere objectklasse geeft andere object-ID",
+      "scenario_id": "S34-004"
+    },
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-005",
+        "operation": "object-id",
+        "scenario_id": "S34-005"
+      },
+      "input_digest": "5c9a008b56809a4747bed652164c164be398a7a8b3325ed028a0f0d0d51087a9",
+      "operation": "object-id",
+      "scenario": "andere logische sleutel geeft andere object-ID",
+      "scenario_id": "S34-005"
+    },
+    {
+      "expected_result_code": "STORAGE_OBJECT_ID_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-006",
+        "operation": "object-id",
+        "scenario_id": "S34-006"
+      },
+      "input_digest": "4ba61c3e48e76b750afcb8e8a422a22d4ab0597fbd1efff3edc6758d3f384079",
+      "operation": "object-id",
+      "scenario": "NFC-invoer is deterministisch",
+      "scenario_id": "S34-006"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-007",
+        "operation": "object-id",
+        "scenario_id": "S34-007"
+      },
+      "input_digest": "d33e7c16735400ec0763ea2f9fb955aa9d56cf798270c530813d0e3318ea678d",
+      "operation": "object-id",
+      "scenario": "lege project-ID klasse of sleutel",
+      "scenario_id": "S34-007"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-008",
+        "operation": "object-id",
+        "scenario_id": "S34-008"
+      },
+      "input_digest": "36294647a61451560293dacb8aa95af7812eef11a02aa5da59c4979fc55f8b29",
+      "operation": "object-id",
+      "scenario": "absolute drive- of traversalkey",
+      "scenario_id": "S34-008"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-009",
+        "operation": "object-id",
+        "scenario_id": "S34-009"
+      },
+      "input_digest": "c0ed4165583e34ab895dcda6a10f810b1347c421d84128c36092972d43847abb",
+      "operation": "object-id",
+      "scenario": "NUL of niet-NFC-key",
+      "scenario_id": "S34-009"
+    },
+    {
+      "expected_result_code": "BACKEND_CONTRACT_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-010",
+        "operation": "object-id",
+        "scenario_id": "S34-010"
+      },
+      "input_digest": "38b1ae07eaf11d1444653b5243a8403e0155a536e1265f087c76e5dba0da5f98",
+      "operation": "object-id",
+      "scenario": "backendwissel verandert object-ID niet",
+      "scenario_id": "S34-010"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_PLAN_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-011",
+        "operation": "policy",
+        "scenario_id": "S34-011"
+      },
+      "input_digest": "4ca853dcc37479e1644fccc5d6a0ab0d7258653d2406393b82751c07878aaf98",
+      "operation": "policy",
+      "scenario": "LOCAL_CANONICAL is standaard zonder sync",
+      "scenario_id": "S34-011"
+    },
+    {
+      "expected_result_code": "SYNC_DISABLED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-012",
+        "operation": "policy",
+        "scenario_id": "S34-012"
+      },
+      "input_digest": "e04cc52e3f2b9b9b11c7a697fb64b5b6eb9a3945f864a262a3ff222eccab0363",
+      "operation": "policy",
+      "scenario": "PRIVATE_GIT_SYNC staat standaard uit",
+      "scenario_id": "S34-012"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-013",
+        "operation": "policy",
+        "scenario_id": "S34-013"
+      },
+      "input_digest": "f2b0d3a4578875a0c015d533960b1959215ea5276ccece40036144efedd88c7f",
+      "operation": "policy",
+      "scenario": "LOCAL_ONLY_MEDIA kiest lokale mediaopslag",
+      "scenario_id": "S34-013"
+    },
+    {
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-014",
+        "operation": "policy",
+        "scenario_id": "S34-014"
+      },
+      "input_digest": "164588d083ed024095d9c2333c800fb5a1fddcdaec09202aa6fa5a65be5f019c",
+      "operation": "policy",
+      "scenario": "EXCLUDED_SECRET bewaart geen inhoud",
+      "scenario_id": "S34-014"
+    },
+    {
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-015",
+        "operation": "policy",
+        "scenario_id": "S34-015"
+      },
+      "input_digest": "c244c7d2c4f3a71dc745afe31f5241ef91b5da32fc1a9714b57005b18338d9dd",
+      "operation": "policy",
+      "scenario": "FUTURE_CENTRAL zonder backend",
+      "scenario_id": "S34-015"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-016",
+        "operation": "policy",
+        "scenario_id": "S34-016"
+      },
+      "input_digest": "86a816c3748f2dc9df446e244810e565a3494917d4bdafad755a4398ef101c87",
+      "operation": "policy",
+      "scenario": "onbekende storageklasse",
+      "scenario_id": "S34-016"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-017",
+        "operation": "policy",
+        "scenario_id": "S34-017"
+      },
+      "input_digest": "ce24843c023fb217747841a232d13ad850633f51db3d1bf9dc47b2c5bcd0949b",
+      "operation": "policy",
+      "scenario": "policyproject wijkt af van objectproject",
+      "scenario_id": "S34-017"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-018",
+        "operation": "policy",
+        "scenario_id": "S34-018"
+      },
+      "input_digest": "44a6ce09be0056d09be5081e1f6840c95b2dad67e318130bbfb7a40f1616c254",
+      "operation": "policy",
+      "scenario": "policydigest wijkt af tussen plan en apply",
+      "scenario_id": "S34-018"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-019",
+        "operation": "policy",
+        "scenario_id": "S34-019"
+      },
+      "input_digest": "0de31f3dced079c7b26565475b054ad7543f9d5b0344e49442bf07748dec428c",
+      "operation": "policy",
+      "scenario": "lege policycheckset",
+      "scenario_id": "S34-019"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-020",
+        "operation": "policy",
+        "scenario_id": "S34-020"
+      },
+      "input_digest": "c3540b7a2ec51842377d694751edea93564a005c689175aa4928f8abdec4a008",
+      "operation": "policy",
+      "scenario": "storagewrite zonder BEFORE_STORAGE_WRITE",
+      "scenario_id": "S34-020"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-021",
+        "operation": "local-record",
+        "scenario_id": "S34-021"
+      },
+      "input_digest": "77d6fe68fdf839043258525ed537b2de04937a84775f22a1f045e5275af1ee74",
+      "operation": "local-record",
+      "scenario": "geldig nieuw record revision 1",
+      "scenario_id": "S34-021"
+    },
+    {
+      "expected_result_code": "ALREADY_PRESENT_SAME_BYTES",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-022",
+        "operation": "local-record",
+        "scenario_id": "S34-022"
+      },
+      "input_digest": "99378f08313c2498d80506f0e9063eb4d9653cd30b2230cdde2fbb7cf206ea56",
+      "operation": "local-record",
+      "scenario": "dezelfde recordbytes opnieuw",
+      "scenario_id": "S34-022"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-023",
+        "operation": "local-record",
+        "scenario_id": "S34-023"
+      },
+      "input_digest": "09d83f0cf6412e4210116f17d4810e33b78e362c75588f8c4eabec5beadb3c34",
+      "operation": "local-record",
+      "scenario": "geldig revision 2 met juiste previous head",
+      "scenario_id": "S34-023"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-024",
+        "operation": "local-record",
+        "scenario_id": "S34-024"
+      },
+      "input_digest": "0afd71e753440fcd66f8116d4c71ef79e64b6bb743b8721b67d65551a4f8f40b",
+      "operation": "local-record",
+      "scenario": "revision 2 met stale previous head",
+      "scenario_id": "S34-024"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-025",
+        "operation": "local-record",
+        "scenario_id": "S34-025"
+      },
+      "input_digest": "05e7ac70f83649852455b0dd83d15208f96d0715932d865be63771f027ae3b96",
+      "operation": "local-record",
+      "scenario": "zelfde object en revision met andere bytes",
+      "scenario_id": "S34-025"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-026",
+        "operation": "local-record",
+        "scenario_id": "S34-026"
+      },
+      "input_digest": "80a695eee68dd2f90e40501f08e9a2594d2a0afc105accece483e40f85b08ae1",
+      "operation": "local-record",
+      "scenario": "object-ID past niet bij logische identiteit",
+      "scenario_id": "S34-026"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-027",
+        "operation": "local-record",
+        "scenario_id": "S34-027"
+      },
+      "input_digest": "08079013ffd04287c8c35ab654f75ed593443f774864bd9f46e65dd4a08e01b4",
+      "operation": "local-record",
+      "scenario": "contentdigest past niet bij canonical bytes",
+      "scenario_id": "S34-027"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-028",
+        "operation": "local-record",
+        "scenario_id": "S34-028"
+      },
+      "input_digest": "240209c698f337a85aae4cd90ba1157286d94e8e173d0e27e0ba03c7bb777a76",
+      "operation": "local-record",
+      "scenario": "schema-invalid R9-record",
+      "scenario_id": "S34-028"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-029",
+        "operation": "local-record",
+        "scenario_id": "S34-029"
+      },
+      "input_digest": "628357bab2b6de31536655a139435604674dcd25864e588cac0ef59b953a81a0",
+      "operation": "local-record",
+      "scenario": "canonical JSON met gesorteerde keys en LF",
+      "scenario_id": "S34-029"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-030",
+        "operation": "local-record",
+        "scenario_id": "S34-030"
+      },
+      "input_digest": "5521d77bfd3819ffc87cd03211c4ba12309bdf1b8f6aabd89a166ff3b1229726",
+      "operation": "local-record",
+      "scenario": "duplicate JSON-key of NaN infinity",
+      "scenario_id": "S34-030"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-031",
+        "operation": "local-record",
+        "scenario_id": "S34-031"
+      },
+      "input_digest": "52e1782fdf9ed50ae78f38429e893f7c565a5798dd91015c52d4489336a6b565",
+      "operation": "local-record",
+      "scenario": "niet-NFC-string",
+      "scenario_id": "S34-031"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-032",
+        "operation": "local-record",
+        "scenario_id": "S34-032"
+      },
+      "input_digest": "9c0e30857d3cf1befad85a005036223bf4c14414725c8d008a0ef5c6da88c326",
+      "operation": "local-record",
+      "scenario": "projectisolatie voorkomt cross-project head",
+      "scenario_id": "S34-032"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-033",
+        "operation": "local-record",
+        "scenario_id": "S34-033"
+      },
+      "input_digest": "28454d615a3cc50a042f9569c5e65ef2a1e02c2e26e48a1453bfec3311e322a0",
+      "operation": "local-record",
+      "scenario": "symlink of reparsepunt in storepad",
+      "scenario_id": "S34-033"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-034",
+        "operation": "local-record",
+        "scenario_id": "S34-034"
+      },
+      "input_digest": "3c5a073cd4907f06b5bc1202249207f0f0ebf67b17a99bbd74e9c3f114ecb237",
+      "operation": "local-record",
+      "scenario": "pad verlaat store-root",
+      "scenario_id": "S34-034"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-035",
+        "operation": "local-record",
+        "scenario_id": "S34-035"
+      },
+      "input_digest": "7f5c1a48807eaad99cf6ea6a6dd70e8de307639a04c3e94fb975b72f8bb48134",
+      "operation": "local-record",
+      "scenario": "exact één writer en geldige CAS",
+      "scenario_id": "S34-035"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-036",
+        "operation": "local-record",
+        "scenario_id": "S34-036"
+      },
+      "input_digest": "d86711ac13eb2c91c6015c2ceb57af42d96ae1fdb4617c4990bf7f478f06c435",
+      "operation": "local-record",
+      "scenario": "tweede gelijktijdige writer",
+      "scenario_id": "S34-036"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-037",
+        "operation": "local-record",
+        "scenario_id": "S34-037"
+      },
+      "input_digest": "f06e5aaa1ab70a177e88a113316a9242f6f41bcd34f747bcb594493bfd506e4a",
+      "operation": "local-record",
+      "scenario": "pointer verwijst uitsluitend naar bestaand object",
+      "scenario_id": "S34-037"
+    },
+    {
+      "expected_result_code": "RECOVERY_REQUIRED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-038",
+        "operation": "local-record",
+        "scenario_id": "S34-038"
+      },
+      "input_digest": "8f09b313cff54fd686ba75871808cea6f75b2be8319981bdac8fe354e3e3366f",
+      "operation": "local-record",
+      "scenario": "objectreadback wijkt af",
+      "scenario_id": "S34-038"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-039",
+        "operation": "local-record",
+        "scenario_id": "S34-039"
+      },
+      "input_digest": "155d6d170f88142ed2a4863b3b152129a76a5494c732b1e5dc69de3388b7b26e",
+      "operation": "local-record",
+      "scenario": "receipt bevat digests maar geen broninhoud",
+      "scenario_id": "S34-039"
+    },
+    {
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-040",
+        "operation": "local-record",
+        "scenario_id": "S34-040"
+      },
+      "input_digest": "48fec1c2a3eebe86da9aa1d2b746f42f0117f92d36f72c9408199c3500025728",
+      "operation": "local-record",
+      "scenario": "netwerk ontbreekt tijdens lokale write en read",
+      "scenario_id": "S34-040"
+    },
+    {
+      "expected_result_code": "LOCAL_MEDIA_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-041",
+        "operation": "media",
+        "scenario_id": "S34-041"
+      },
+      "input_digest": "70c1d18ec0f3a2942e7fe20f1d568a6c36a87505ac1fc96e235e51614ba99d3e",
+      "operation": "media",
+      "scenario": "geldige kleine niet-syncbare afbeelding",
+      "scenario_id": "S34-041"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-042",
+        "operation": "media",
+        "scenario_id": "S34-042"
+      },
+      "input_digest": "e8a9e684320c9171dcb5d9729c229fba64daed8f9c30d37b08db4d1b0fd5e66a",
+      "operation": "media",
+      "scenario": "grote afbeelding blijft local-only",
+      "scenario_id": "S34-042"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-043",
+        "operation": "media",
+        "scenario_id": "S34-043"
+      },
+      "input_digest": "0bc23ed4b807ff22c34c427de99658b08272ce3826cb69aa029d05881ed3fae9",
+      "operation": "media",
+      "scenario": "gevoelige media blijft local-only",
+      "scenario_id": "S34-043"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-044",
+        "operation": "media",
+        "scenario_id": "S34-044"
+      },
+      "input_digest": "caa4c240bca544a5551210f4fcc3db51b496f4312cab2f17b1b4aa8c18513399",
+      "operation": "media",
+      "scenario": "gelicentieerde media blijft local-only",
+      "scenario_id": "S34-044"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-045",
+        "operation": "media",
+        "scenario_id": "S34-045"
+      },
+      "input_digest": "989548b992c087b34b7f0b47e741e540f3662a26c97fc827fe459574b22e8e97",
+      "operation": "media",
+      "scenario": "binaire onbekende media blijft local-only",
+      "scenario_id": "S34-045"
+    },
+    {
+      "expected_result_code": "ALREADY_PRESENT_SAME_BYTES",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-046",
+        "operation": "media",
+        "scenario_id": "S34-046"
+      },
+      "input_digest": "004ff89a12c363c4761fc4a1c769980f87648ddacb0ceed72885114ea258e5ba",
+      "operation": "media",
+      "scenario": "dezelfde mediabytes zijn content-addressed idempotent",
+      "scenario_id": "S34-046"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-047",
+        "operation": "media",
+        "scenario_id": "S34-047"
+      },
+      "input_digest": "86650e229c0fe3e153117b571dd5939bca43394c3e9450cf72e21a7d4b8af04e",
+      "operation": "media",
+      "scenario": "mediahash wijkt af vóór publicatie",
+      "scenario_id": "S34-047"
+    },
+    {
+      "expected_result_code": "RECOVERY_REQUIRED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-048",
+        "operation": "media",
+        "scenario_id": "S34-048"
+      },
+      "input_digest": "91d0d400873c2ecac18b86ac8bba8f4995cc60480c0ada8b0ae35bbc9f0c2e72",
+      "operation": "media",
+      "scenario": "mediagrootte wijkt af bij readback",
+      "scenario_id": "S34-048"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-049",
+        "operation": "media",
+        "scenario_id": "S34-049"
+      },
+      "input_digest": "97e4704f721726eb501d60d6341cc254517972ccaa57e96b0bf251ff4f914e9e",
+      "operation": "media",
+      "scenario": "pointer bevat stabiele object-ID en SHA-256",
+      "scenario_id": "S34-049"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-050",
+        "operation": "media",
+        "scenario_id": "S34-050"
+      },
+      "input_digest": "5628f1054540b38528dd71f2e53a35d28cf084acb541d8915e0cb7a28c39c2cc",
+      "operation": "media",
+      "scenario": "pointer gebruikt abstracte local-store locator",
+      "scenario_id": "S34-050"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-051",
+        "operation": "media",
+        "scenario_id": "S34-051"
+      },
+      "input_digest": "569bf981457996d23e6efec1edcf7bf7b522e7f109f3e08a4cbc067a585fc1be",
+      "operation": "media",
+      "scenario": "pointer met absoluut bronpad",
+      "scenario_id": "S34-051"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-052",
+        "operation": "media",
+        "scenario_id": "S34-052"
+      },
+      "input_digest": "a6097f3d5b9053d06ef2f831dea15f0f269b391866423fad1061b07f8e2f8c4b",
+      "operation": "media",
+      "scenario": "pointer met ruwe EXIF of vrije persoonsgegevens",
+      "scenario_id": "S34-052"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-053",
+        "operation": "media",
+        "scenario_id": "S34-053"
+      },
+      "input_digest": "eff9c3a5bf2ee38e64360264bd9aacde3640b0b66726f31eb89dae9f67bb92db",
+      "operation": "media",
+      "scenario": "onveilige bestandsnaam wordt geredigeerd",
+      "scenario_id": "S34-053"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-054",
+        "operation": "media",
+        "scenario_id": "S34-054"
+      },
+      "input_digest": "4c3e99ae4019c0c026d119463fbe8c6974e06f07ecfc46c16970bb18b80bd8b7",
+      "operation": "media",
+      "scenario": "MIME en extensie spreken elkaar tegen",
+      "scenario_id": "S34-054"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-055",
+        "operation": "media",
+        "scenario_id": "S34-055"
+      },
+      "input_digest": "4afec726ad43fa842b32aa20e0cd4fd6291e15d34c65a9c43f775873a1bc5a8a",
+      "operation": "media",
+      "scenario": "privacyklasse ontbreekt of UNKNOWN",
+      "scenario_id": "S34-055"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-056",
+        "operation": "media",
+        "scenario_id": "S34-056"
+      },
+      "input_digest": "0bfce54a08ef0582cd4bf6764e80f48d0ef06aba5a02216de3d2f75dc2ae9b62",
+      "operation": "media",
+      "scenario": "licentieklasse ontbreekt of UNKNOWN",
+      "scenario_id": "S34-056"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-057",
+        "operation": "media",
+        "scenario_id": "S34-057"
+      },
+      "input_digest": "b65ea8f4a79fd7d6de5c39024f38a62a59f48a60877f51a3d8d9dca9584b6013",
+      "operation": "media",
+      "scenario": "freshness of availability ontbreekt",
+      "scenario_id": "S34-057"
+    },
+    {
+      "expected_result_code": "LOCAL_ONLY_MEDIA_POINTER",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-058",
+        "operation": "media",
+        "scenario_id": "S34-058"
+      },
+      "input_digest": "473affc9dd765dcd8255a75d586a4b1dac9a445e29ec61d290a202f583d0e2db",
+      "operation": "media",
+      "scenario": "Git LFS wordt niet geactiveerd",
+      "scenario_id": "S34-058"
+    },
+    {
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-059",
+        "operation": "filter",
+        "scenario_id": "S34-059"
+      },
+      "input_digest": "37bf0a6ce21631040ac6dfc40ad3f9f1ae49b0a741d92fa7fa8a3f0d564dad30",
+      "operation": "filter",
+      "scenario": "high-confidence private key finding",
+      "scenario_id": "S34-059"
+    },
+    {
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-060",
+        "operation": "filter",
+        "scenario_id": "S34-060"
+      },
+      "input_digest": "6d29696ab66266ccdc1061e98617e4520ff02c70b3bc59d2a827cb545cd17f5b",
+      "operation": "filter",
+      "scenario": "GitHub-tokenfinding",
+      "scenario_id": "S34-060"
+    },
+    {
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-061",
+        "operation": "filter",
+        "scenario_id": "S34-061"
+      },
+      "input_digest": "0e911451eef2954c9c9ac8d4bc425e108580d3761b187df282f4500f301917c3",
+      "operation": "filter",
+      "scenario": "AWS-secretfinding",
+      "scenario_id": "S34-061"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-062",
+        "operation": "filter",
+        "scenario_id": "S34-062"
+      },
+      "input_digest": "deb0b24c1ecc657fae9b6dfe449b7d0783820e87b187bea472ab95d49b524444",
+      "operation": "filter",
+      "scenario": "credentialachtige waarschuwing voor sync",
+      "scenario_id": "S34-062"
+    },
+    {
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-063",
+        "operation": "filter",
+        "scenario_id": "S34-063"
+      },
+      "input_digest": "a2c1b4c133a93f336cbff87aeb85843a9d82b7493892950b61b88415da580d8d",
+      "operation": "filter",
+      "scenario": "secretwaarde ontbreekt uit fout en receipt",
+      "scenario_id": "S34-063"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-064",
+        "operation": "filter",
+        "scenario_id": "S34-064"
+      },
+      "input_digest": "1a4a03e6389e3535beb27e361afbab7bd43f72e3f62ff2a2a3203e35e057f840",
+      "operation": "filter",
+      "scenario": "onnodige persoonsgegevens voor sync",
+      "scenario_id": "S34-064"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-065",
+        "operation": "filter",
+        "scenario_id": "S34-065"
+      },
+      "input_digest": "f4d684bbed1794f26508ab3628cf57f31c78b2458c700b762379d345489a9fb2",
+      "operation": "filter",
+      "scenario": "toegestane UTF-8 tekst en extensie",
+      "scenario_id": "S34-065"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-066",
+        "operation": "filter",
+        "scenario_id": "S34-066"
+      },
+      "input_digest": "390349aeaa4dd1e5bb7a0694eb452b349e7846d832f705c626e45cebed41ac52",
+      "operation": "filter",
+      "scenario": "toegestane code en metadata",
+      "scenario_id": "S34-066"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-067",
+        "operation": "filter",
+        "scenario_id": "S34-067"
+      },
+      "input_digest": "f3120373d5bc7a410ea4e8e9b0fc3f1620aa913fe9fe10ed0b62ee89c7c07f6a",
+      "operation": "filter",
+      "scenario": "nieuw niet-geallowlist type",
+      "scenario_id": "S34-067"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-068",
+        "operation": "filter",
+        "scenario_id": "S34-068"
+      },
+      "input_digest": "358a79cced393627d3d8176a4cb0bfbe9e88dc9892077358592e0d8d673f191d",
+      "operation": "filter",
+      "scenario": "binary bytes vermomd als tekst",
+      "scenario_id": "S34-068"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-069",
+        "operation": "filter",
+        "scenario_id": "S34-069"
+      },
+      "input_digest": "c7c9e63d10600ee4aa6dcf686e496bcc5f0c165afddec0ef86c1093608a0e980",
+      "operation": "filter",
+      "scenario": "MIME extensie en inhoud zijn consistent",
+      "scenario_id": "S34-069"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-070",
+        "operation": "filter",
+        "scenario_id": "S34-070"
+      },
+      "input_digest": "2f8a6cc0c133da70e60cf4d920293cdd9da46cf465a85d42b53fdf928f2088ff",
+      "operation": "filter",
+      "scenario": "bestand exact max_file_bytes",
+      "scenario_id": "S34-070"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-071",
+        "operation": "filter",
+        "scenario_id": "S34-071"
+      },
+      "input_digest": "ea9baee29fdfa550239780d61d657994b470372e035a87adef09b0c768e68c1a",
+      "operation": "filter",
+      "scenario": "bestand één byte boven max_file_bytes",
+      "scenario_id": "S34-071"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-072",
+        "operation": "filter",
+        "scenario_id": "S34-072"
+      },
+      "input_digest": "0fa7ee4e101c32934c997d881aafa4f99f83c7ee20de7ee8e958a708f6bea2d9",
+      "operation": "filter",
+      "scenario": "batch exact max_batch_files",
+      "scenario_id": "S34-072"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-073",
+        "operation": "filter",
+        "scenario_id": "S34-073"
+      },
+      "input_digest": "345013bb557ba94c6d1a8c5cf0d599a9ea7952d3a11b30dad7671e98d9d5b51d",
+      "operation": "filter",
+      "scenario": "batch één bestand boven max_batch_files",
+      "scenario_id": "S34-073"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-074",
+        "operation": "filter",
+        "scenario_id": "S34-074"
+      },
+      "input_digest": "e12b6ad04b3d9b3d5dac93c6b318e11d8adad20a5dfbb6e878c7d9c099f136bb",
+      "operation": "filter",
+      "scenario": "batch exact max_batch_bytes",
+      "scenario_id": "S34-074"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-075",
+        "operation": "filter",
+        "scenario_id": "S34-075"
+      },
+      "input_digest": "0269033158e89779ec59314443b33dd811385110285d7cca3f3691c5013274a6",
+      "operation": "filter",
+      "scenario": "batch één byte boven max_batch_bytes",
+      "scenario_id": "S34-075"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-076",
+        "operation": "filter",
+        "scenario_id": "S34-076"
+      },
+      "input_digest": "2c228c7ce2eaccff19256eefb0042c55e876b774cbaeb89f70c77f478b59d878",
+      "operation": "filter",
+      "scenario": "repository exact max_repository_bytes",
+      "scenario_id": "S34-076"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-077",
+        "operation": "filter",
+        "scenario_id": "S34-077"
+      },
+      "input_digest": "3d540c546274b0b4a2f5326eaf5e37a71d0ef2862379b2585729f95a93dfa181",
+      "operation": "filter",
+      "scenario": "repository één byte boven max_repository_bytes",
+      "scenario_id": "S34-077"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-078",
+        "operation": "filter",
+        "scenario_id": "S34-078"
+      },
+      "input_digest": "c81238e575eec6f0687c14f3bd003512b0dbea655b51c0d4f8a191154021b49b",
+      "operation": "filter",
+      "scenario": "strengere projectlimiet wint van providerlimiet",
+      "scenario_id": "S34-078"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-079",
+        "operation": "filter",
+        "scenario_id": "S34-079"
+      },
+      "input_digest": "710a1ba5e1620180e14ebcd9cf459138ded18682559fd4af529b28899aff8191",
+      "operation": "filter",
+      "scenario": "providerlimiet wijzigt na preview",
+      "scenario_id": "S34-079"
+    },
+    {
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-080",
+        "operation": "filter",
+        "scenario_id": "S34-080"
+      },
+      "input_digest": "fafecf68cae8b9b8325ae158b44852485b02fbde477f00a4dedadef98a8fe2f7",
+      "operation": "filter",
+      "scenario": "OpenSpec-pad of storebytes aangeboden",
+      "scenario_id": "S34-080"
+    },
+    {
+      "expected_result_code": "SYNC_DISABLED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-081",
+        "operation": "sync-preview",
+        "scenario_id": "S34-081"
+      },
+      "input_digest": "9c1654fba4b11e0fcbcc95af379ca273a397bc3a7acda7923657a354488a25e8",
+      "operation": "sync-preview",
+      "scenario": "syncpolicy uit",
+      "scenario_id": "S34-081"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-082",
+        "operation": "sync-preview",
+        "scenario_id": "S34-082"
+      },
+      "input_digest": "b040d71982c4f0cc17b174a78891952ae4de2e26acbb5182bd060039cc629333",
+      "operation": "sync-preview",
+      "scenario": "OWNER-policybinding ontbreekt",
+      "scenario_id": "S34-082"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-083",
+        "operation": "sync-preview",
+        "scenario_id": "S34-083"
+      },
+      "input_digest": "6c9437f699abd404f4cb585f98d1dd55a9359a3c7df469ef22f882816c518d20",
+      "operation": "sync-preview",
+      "scenario": "OWNER-policybindingdigest wijkt af",
+      "scenario_id": "S34-083"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-084",
+        "operation": "sync-preview",
+        "scenario_id": "S34-084"
+      },
+      "input_digest": "94c0b81e989dd34d25bc9c06ead462a5e8487995e8b0d13a14f9846301b74647",
+      "operation": "sync-preview",
+      "scenario": "private visibilityproof ontbreekt",
+      "scenario_id": "S34-084"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-085",
+        "operation": "sync-preview",
+        "scenario_id": "S34-085"
+      },
+      "input_digest": "7ae090df378026433aef3b13c304e33545efe0d65043ce50580a5ffa6a6e9e29",
+      "operation": "sync-preview",
+      "scenario": "visibilityproof zegt public",
+      "scenario_id": "S34-085"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-086",
+        "operation": "sync-preview",
+        "scenario_id": "S34-086"
+      },
+      "input_digest": "ebed344425ff4045906175bb9aef4bde7ccf59f57161584176ef296ab8c295eb",
+      "operation": "sync-preview",
+      "scenario": "visibilityproof is stale of ambigu",
+      "scenario_id": "S34-086"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-087",
+        "operation": "sync-preview",
+        "scenario_id": "S34-087"
+      },
+      "input_digest": "971ee2c466e514058981ad2fbf795bafb86849751c5ade880161de9c1b6da239",
+      "operation": "sync-preview",
+      "scenario": "repository-ID wijkt af",
+      "scenario_id": "S34-087"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-088",
+        "operation": "sync-preview",
+        "scenario_id": "S34-088"
+      },
+      "input_digest": "3411ee8cb967bbc4ecc17811669d827e209f159e19c7b5b5a1b6cdbf556d5428",
+      "operation": "sync-preview",
+      "scenario": "remote-alias of URL-digest wijkt af",
+      "scenario_id": "S34-088"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-089",
+        "operation": "sync-preview",
+        "scenario_id": "S34-089"
+      },
+      "input_digest": "952836f005c4c6e9ba6d0b0beaa7125d3cddb1cf706c69d112e6ab83acf76668",
+      "operation": "sync-preview",
+      "scenario": "credentialhoudende remote-URL",
+      "scenario_id": "S34-089"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-090",
+        "operation": "sync-preview",
+        "scenario_id": "S34-090"
+      },
+      "input_digest": "34867f53f5f38c42a77c7a29088d4dbf71a82319ad8424ee8fb3e613e14b7944",
+      "operation": "sync-preview",
+      "scenario": "gebonden branch bestaat niet remote",
+      "scenario_id": "S34-090"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-091",
+        "operation": "sync-preview",
+        "scenario_id": "S34-091"
+      },
+      "input_digest": "14bb73aeee14b40c2efd0f4f7fada08a445ad39dcafdb43f1688e3fdaeebfc10",
+      "operation": "sync-preview",
+      "scenario": "dedicated mirror is dirty",
+      "scenario_id": "S34-091"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-092",
+        "operation": "sync-preview",
+        "scenario_id": "S34-092"
+      },
+      "input_digest": "f7352e44131001abd70db96127644856fe68703f7e182a1380d3d6e05057111c",
+      "operation": "sync-preview",
+      "scenario": "lokale en remote basis gelijk",
+      "scenario_id": "S34-092"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-093",
+        "operation": "sync-preview",
+        "scenario_id": "S34-093"
+      },
+      "input_digest": "8e001462f91c52cd696218d8384166a3b372626a98db58d87a2abf3910b7a906",
+      "operation": "sync-preview",
+      "scenario": "lokale basis wijkt af van remote basis",
+      "scenario_id": "S34-093"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-094",
+        "operation": "sync-preview",
+        "scenario_id": "S34-094"
+      },
+      "input_digest": "7d8c59221cfb2b670565a29c1d97a58f79f513fa9f06a6ca8acf66e6621208bd",
+      "operation": "sync-preview",
+      "scenario": "zelfde input geeft zelfde previewdigest",
+      "scenario_id": "S34-094"
+    },
+    {
+      "expected_result_code": "SYNC_PREVIEW_GREEN",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-095",
+        "operation": "sync-preview",
+        "scenario_id": "S34-095"
+      },
+      "input_digest": "5e4c4399d0b2a8c1e0c1d8fae41fe608609765e94fdf3f00ffaaf4b261449071",
+      "operation": "sync-preview",
+      "scenario": "preview heeft exacte gesorteerde objectset en lege writeset",
+      "scenario_id": "S34-095"
+    },
+    {
+      "expected_result_code": "SYNC_APPLIED_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-096",
+        "operation": "sync-apply",
+        "scenario_id": "S34-096"
+      },
+      "input_digest": "28faee2d68032cc03d623022dc19fefe8fc584c88d056d44cd73255efd6440a6",
+      "operation": "sync-apply",
+      "scenario": "geldige preview opnieuw volledig herlezen",
+      "scenario_id": "S34-096"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-097",
+        "operation": "sync-apply",
+        "scenario_id": "S34-097"
+      },
+      "input_digest": "5c86e2cd2006bcb3533b07d4e4f8a9a0c67beae6080ffec44d00bbef10691ca7",
+      "operation": "sync-apply",
+      "scenario": "objectset wijzigt na preview",
+      "scenario_id": "S34-097"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-098",
+        "operation": "sync-apply",
+        "scenario_id": "S34-098"
+      },
+      "input_digest": "bface1617a95d9c2d54f6dcd70963e70b0f0d6cd650a6f74b033305168a7145c",
+      "operation": "sync-apply",
+      "scenario": "extra staged of untracked mirrorpad",
+      "scenario_id": "S34-098"
+    },
+    {
+      "expected_result_code": "SYNC_APPLIED_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-099",
+        "operation": "sync-apply",
+        "scenario_id": "S34-099"
+      },
+      "input_digest": "c4854a3c1a7cf7d6185a240508e9d6543dec2157dca088f53093eb9e5afffc41",
+      "operation": "sync-apply",
+      "scenario": "exact één gewone commit",
+      "scenario_id": "S34-099"
+    },
+    {
+      "expected_result_code": "POLICY_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-100",
+        "operation": "sync-apply",
+        "scenario_id": "S34-100"
+      },
+      "input_digest": "f1120506f61942a977330e3f97af86c0d14784171f04f9d5309c057b65ccba0c",
+      "operation": "sync-apply",
+      "scenario": "amend rebase merge force tag release of branchcreatie gevraagd",
+      "scenario_id": "S34-100"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-101",
+        "operation": "sync-apply",
+        "scenario_id": "S34-101"
+      },
+      "input_digest": "e70f3a2809f8e6fa029b632cfd9c53dfe818d3c71ea55f41e8067f4f7646493d",
+      "operation": "sync-apply",
+      "scenario": "non-fast-forward pushconflict",
+      "scenario_id": "S34-101"
+    },
+    {
+      "expected_result_code": "SYNC_APPLIED_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-102",
+        "operation": "sync-apply",
+        "scenario_id": "S34-102"
+      },
+      "input_digest": "4f1a8a370aa7c1d3308febcdfc2ba75ccc5306e6112965ea92df7fba7bae4206",
+      "operation": "sync-apply",
+      "scenario": "push slaagt en remote readback is exact",
+      "scenario_id": "S34-102"
+    },
+    {
+      "expected_result_code": "SYNC_ALREADY_PRESENT_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-103",
+        "operation": "sync-apply",
+        "scenario_id": "S34-103"
+      },
+      "input_digest": "8a4e3d54243ebe1cc8c92b3334b73522b0248ae71c89b2e7277ca6e0766d632c",
+      "operation": "sync-apply",
+      "scenario": "pushantwoord verloren maar remote bevat exacte commit",
+      "scenario_id": "S34-103"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-104",
+        "operation": "sync-apply",
+        "scenario_id": "S34-104"
+      },
+      "input_digest": "077f930fc087a9c876df5c78278bb94978d61aad09794018bd46350ef028f7af",
+      "operation": "sync-apply",
+      "scenario": "pushantwoord verloren en remote bevat andere commit",
+      "scenario_id": "S34-104"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-105",
+        "operation": "sync-apply",
+        "scenario_id": "S34-105"
+      },
+      "input_digest": "6c999d363be83c1f96ca5a8b8943c9a48a848d92d922436b6f369d6843da71e9",
+      "operation": "sync-apply",
+      "scenario": "remote readback ontbreekt of is ambigu",
+      "scenario_id": "S34-105"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-106",
+        "operation": "sync-apply",
+        "scenario_id": "S34-106"
+      },
+      "input_digest": "ca638aab85fdd51a878005ec064f2e8a24bd524019786bad1d10a22b55b3649f",
+      "operation": "sync-apply",
+      "scenario": "readback tree of objectsetdigest wijkt af",
+      "scenario_id": "S34-106"
+    },
+    {
+      "expected_result_code": "SYNC_APPLIED_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-107",
+        "operation": "sync-apply",
+        "scenario_id": "S34-107"
+      },
+      "input_digest": "0a39c6a49d81085625451ac7ec09a94cc2963c858040a427698a54ada78100a1",
+      "operation": "sync-apply",
+      "scenario": "sync-receipt bindt base commit preview commit en readback",
+      "scenario_id": "S34-107"
+    },
+    {
+      "expected_result_code": "SYNC_APPLIED_READBACK_VERIFIED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-108",
+        "operation": "sync-apply",
+        "scenario_id": "S34-108"
+      },
+      "input_digest": "3c1cbbd0203a38ba1d9915ee9490b47eb1a423a5d0f260c09887b4c6e4a0cbc3",
+      "operation": "sync-apply",
+      "scenario": "receipt of fout bevat geen credential of objectinhoud",
+      "scenario_id": "S34-108"
+    },
+    {
+      "expected_result_code": "RECOVERED_ROLLED_BACK",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-109",
+        "operation": "recovery",
+        "scenario_id": "S34-109"
+      },
+      "input_digest": "7ec0f378d0d71b8e17ec1d340e1ef851c2f8b23081d17ae4a6717823fc8ac053",
+      "operation": "recovery",
+      "scenario": "crash vóór immutable objectpublicatie",
+      "scenario_id": "S34-109"
+    },
+    {
+      "expected_result_code": "RECOVERED_ROLLED_BACK",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-110",
+        "operation": "recovery",
+        "scenario_id": "S34-110"
+      },
+      "input_digest": "ecb732b29d15a8e00b9939a0c818c5e4a054f083c6c4d01e4e34f0a299badd54",
+      "operation": "recovery",
+      "scenario": "crash na object maar vóór headpointer",
+      "scenario_id": "S34-110"
+    },
+    {
+      "expected_result_code": "LOCAL_RECORD_STORED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-111",
+        "operation": "recovery",
+        "scenario_id": "S34-111"
+      },
+      "input_digest": "8ea80285aebb8b6cf0977256ee1308e965c6dd207c3aefb59dec68c4200b12d0",
+      "operation": "recovery",
+      "scenario": "crash na headpointer maar vóór receipt met exacte bytes",
+      "scenario_id": "S34-111"
+    },
+    {
+      "expected_result_code": "RECOVERY_REQUIRED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-112",
+        "operation": "recovery",
+        "scenario_id": "S34-112"
+      },
+      "input_digest": "23fa86e2e363f3163827a77e7082825b1ef5c1e9798476b4be1f5707974b4ffd",
+      "operation": "recovery",
+      "scenario": "recoverytarget is gewijzigd of onbekend",
+      "scenario_id": "S34-112"
+    },
+    {
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-113",
+        "operation": "recovery",
+        "scenario_id": "S34-113"
+      },
+      "input_digest": "587f691078138b03ddcb91afaf7ee13fcf813256e83d7d541c48cf7ff3daf688",
+      "operation": "recovery",
+      "scenario": "offline sync laat lokale canonical state leesbaar",
+      "scenario_id": "S34-113"
+    },
+    {
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-114",
+        "operation": "recovery",
+        "scenario_id": "S34-114"
+      },
+      "input_digest": "df7aaaddabd1ab557154ed8fdbeb07b5de82248299a8a0daf37ecdad78740a49",
+      "operation": "recovery",
+      "scenario": "syncfout wijzigt geen lokale roadmapstate",
+      "scenario_id": "S34-114"
+    },
+    {
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-115",
+        "operation": "recovery",
+        "scenario_id": "S34-115"
+      },
+      "input_digest": "cd67b881dcbc3f813096e6d65371c6183f279155ef5a22ca449d6d92be3f8889",
+      "operation": "recovery",
+      "scenario": "drie gelijke foutfingerprints stoppen zonder blinde retry",
+      "scenario_id": "S34-115"
+    },
+    {
+      "expected_result_code": "BACKEND_CONTRACT_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-116",
+        "operation": "backend",
+        "scenario_id": "S34-116"
+      },
+      "input_digest": "ca627cd1dec60d114e72a3e9c6f69825347e741457df0350f9b6d359157f97fe",
+      "operation": "backend",
+      "scenario": "local private mirror en future central delen IDs en digests",
+      "scenario_id": "S34-116"
+    },
+    {
+      "expected_result_code": "BACKEND_CONTRACT_VALID",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-117",
+        "operation": "backend",
+        "scenario_id": "S34-117"
+      },
+      "input_digest": "65b5c9972cc4e4ee63e6093877a1b1a8033bf44dd2a2e645ce66d6ef519828f8",
+      "operation": "backend",
+      "scenario": "future central adapter zonder service of endpoint",
+      "scenario_id": "S34-117"
+    },
+    {
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-118",
+        "operation": "backend",
+        "scenario_id": "S34-118"
+      },
+      "input_digest": "074eedc17e5400713fe6a4c39fdcf5670d0c3374ec07256952c2e80d6746ebf5",
+      "operation": "backend",
+      "scenario": "centrale backend unavailable bewaart project- en privacygrens lokaal",
+      "scenario_id": "S34-118"
+    },
+    {
+      "expected_result_code": "PURE_PROTECTED_TARGETS_UNCHANGED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-119",
+        "operation": "exclusion",
+        "scenario_id": "S34-119"
+      },
+      "input_digest": "a59915b6b27832102a55a4c69687924eff798d9045df863a4399ede044a6bcd2",
+      "operation": "exclusion",
+      "scenario": "publieke checkout SKYRIM Home Assistant en gebruikersbronnen blijven buiten writeset",
+      "scenario_id": "S34-119"
+    },
+    {
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_writes": [],
+      "input": {
+        "bindings_digest": "b4600e3fefef0658f4ed106c5b6634843f8275c5ed1c9c2ee11c1b334f0995f3",
+        "case": "S34-120",
+        "operation": "exclusion",
+        "scenario_id": "S34-120"
+      },
+      "input_digest": "deb03805139eea7fca82bf26da684c09ce1eaa85b9a6bb3b5e08909a06f9d032",
+      "operation": "exclusion",
+      "scenario": "OpenSpec ruwe chat modelcontext centrale service teamproject en Opdracht 35 blijven uitgesloten",
+      "scenario_id": "S34-120"
+    }
+  ],
+  "table_digest": "4287515f247abe835e03359897db18fb9e34c1cbd6415f4bac4faf3c35d2fa4d"
+}
