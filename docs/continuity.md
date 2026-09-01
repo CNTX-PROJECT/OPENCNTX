@@ -107,6 +107,50 @@ through the previous handoff and then the new assignment detail. The chat is no
 longer the only place that holds decisions, results, changed paths, evidence
 meaning, remaining risks and the next route.
 
+## Provider-neutral host trigger protocol
+
+A host can receive the current detail without executing it:
+
+```powershell
+opencntx flow host status --host HOST-A
+```
+
+The response contains exactly one `current_assignment`, its detail path and
+digest, the previous handoff when one exists, the roadmap-bound `AUTO PILOT`
+authority, and `execution: NOT_PERFORMED`. Bind that exact delivery once:
+
+```powershell
+opencntx flow host claim `
+  --host HOST-A `
+  --delivery-digest SHA256
+```
+
+Repeating the same host, delivery digest, and assignment returns the same claim
+without adding another event. A competing host or concurrent writer stops
+fail-closed. Resume is also read-only:
+
+```powershell
+opencntx flow host resume `
+  --host HOST-A `
+  --claim-digest SHA256
+```
+
+While active, resume returns `EXECUTE`. After a claim-bound PASS, it returns
+`NEXT` and routes the host back to `status` for the new assignment. Bind the
+claim when recording PASS or FAIL:
+
+```powershell
+opencntx flow advance --outcome PASS `
+  --evidence reports/task.json `
+  --host HOST-A `
+  --claim-digest SHA256
+```
+
+Once an assignment is claimed, an unclaimed or differently claimed `advance`
+is rejected. The protocol only records and verifies transitions; it imports no
+AI SDK, starts no model, executes no detail, and exposes no arbitrary shell
+route.
+
 ## Portable capsule
 
 ```powershell

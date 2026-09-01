@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/host-claim-v1.schema.json",
+  "title": "OPENCNTX host claim v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "roadmap_id", "assignment_id", "host_id", "authority", "delivery_digest", "detail_path", "detail_sha256", "context_digest", "claimed_event_previous_head", "claim_digest"],
+  "properties": {
+    "format": {"const": "opencntx-host-claim"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "roadmap_id": {"type": "string"},
+    "assignment_id": {"type": "string"},
+    "host_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9._-]{1,79}$"},
+    "authority": {"const": "AUTO PILOT"},
+    "delivery_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "detail_path": {"type": "string"},
+    "detail_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "context_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claimed_event_previous_head": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claim_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

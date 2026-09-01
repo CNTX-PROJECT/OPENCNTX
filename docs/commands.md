@@ -5,8 +5,8 @@
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
 
-This navigation table documents 65 public CLI paths: five orientation and
-version routes plus all 60 executable routes from the real parser. It does not invent options or grant
+This navigation table documents 68 public CLI paths: five orientation and
+version routes plus all 63 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -75,8 +75,11 @@ required arguments and repeatable options.
 | 61 | `opencntx flow sync configure` | enable one optional automatic checkpoint replica |
 | 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
 | 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
-| 64 | `opencntx layout audit` | report deterministic order findings without changing paths |
-| 65 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 64 | `opencntx flow host status` | deliver exactly one current assignment without writes |
+| 65 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
+| 66 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
+| 67 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 68 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
 
 ## Roadmap flow
 
@@ -92,6 +95,11 @@ opencntx flow advance --outcome PASS --evidence reports/task.json
 Add `--handoff reports/task-handoff.json` when the host has explicit decisions,
 result wording, changed paths, evidence explanation, and remaining risks. A
 minimal bound handoff is generated automatically when the option is omitted.
+
+For a non-executing host loop, call `flow host status`, bind its delivery with
+`flow host claim`, and use `flow host resume` after interruption. Once claimed,
+pass the same `--host` and `--claim-digest` to `flow advance`. See
+[Roadmap continuity and AUTO PILOT](continuity.md#provider-neutral-host-trigger-protocol).
 
 Each successful `advance` stores a receipt, returns to the roadmap and selects
 the next dependency-ready detail. The approval is not requested again. Read

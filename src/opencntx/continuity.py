@@ -67,6 +67,21 @@ HANDOFF_FIELDS = {
     "risks",
     "roadmap_id",
 }
+CLAIM_FIELDS = {
+    "assignment_id",
+    "authority",
+    "claim_digest",
+    "claimed_event_previous_head",
+    "context_digest",
+    "delivery_digest",
+    "detail_path",
+    "detail_sha256",
+    "format",
+    "format_version",
+    "host_id",
+    "project_id",
+    "roadmap_id",
+}
 STORE_DIRECTORIES = (
     "roadmaps",
     "details",
@@ -491,6 +506,7 @@ def _validate_store_bindings(
     roadmap_digest = _value_digest(roadmap)
     if (
         first.get("type") != "FLOW_STARTED"
+        or first.get("payload", {}).get("authority") != AUTHORITY
         or first.get("payload", {}).get("roadmap_digest") != roadmap_digest
         or first.get("payload", {}).get("roadmap_id") != roadmap["roadmap_id"]
     ):
@@ -543,6 +559,7 @@ def _validate_store_bindings(
         selections[str(identifier)] = payload
 
     _validate_handoffs(store, roadmap, events)
+    _validate_claims(store, roadmap, events)
     current = state["current_assignment"]
     current_path = store / "context" / "current.json"
     if current is None:
@@ -648,6 +665,105 @@ def _validate_handoffs(
     )
     if actual_paths != bound_paths:
         raise _fail("continuity_store_invalid", "Handoff inventory differs from event history.")
+
+
+def _selection_for(events: Sequence[dict[str, Any]], identifier: str) -> Mapping[str, Any]:
+    for event in events:
+        if (
+            event["type"] == "ASSIGNMENT_SELECTED"
+            and event["payload"].get("assignment_id") == identifier
+        ):
+            return event["payload"]
+    raise _fail("continuity_store_invalid", "Claim has no assignment selection binding.")
+
+
+def _claim_for_assignment(
+    store: Path, events: Sequence[dict[str, Any]], identifier: str
+) -> dict[str, Any] | None:
+    matches = [
+        event
+        for event in events
+        if event["type"] == "ASSIGNMENT_CLAIMED"
+        and event["payload"].get("assignment_id") == identifier
+    ]
+    if not matches:
+        return None
+    if len(matches) != 1:
+        raise _fail("continuity_store_invalid", "Assignment has duplicate host claims.")
+    path = store / "claims" / f"{identifier}.json"
+    return _read_json(path, failure_kind="continuity_store_invalid")
+
+
+def _validate_claims(
+    store: Path, roadmap: dict[str, Any], events: Sequence[dict[str, Any]]
+) -> None:
+    assignments = {item["id"] for item in roadmap["assignments"]}
+    bound_paths: set[str] = set()
+    seen: set[str] = set()
+    for index, event in enumerate(events):
+        if event["type"] != "ASSIGNMENT_CLAIMED":
+            continue
+        payload = event["payload"]
+        identifier = str(payload.get("assignment_id"))
+        expected_path = f"claims/{identifier}.json"
+        if identifier in seen or identifier not in assignments or payload.get("claim_path") != expected_path:
+            raise _fail("continuity_store_invalid", "Host claim event binding is invalid.")
+        record = _read_json(store / expected_path, failure_kind="continuity_store_invalid")
+        if set(record) != CLAIM_FIELDS:
+            raise _fail("continuity_store_invalid", "Host claim fields are invalid.")
+        basis = {key: value for key, value in record.items() if key != "claim_digest"}
+        selection = _selection_for(events, identifier)
+        try:
+            detail = (store / record["detail_path"]).read_bytes()
+        except (OSError, TypeError) as exc:
+            raise _fail("continuity_store_invalid", "Claimed detail is unavailable.") from exc
+        if (
+            record["format"] != "opencntx-host-claim"
+            or record["format_version"] != 1
+            or record["project_id"] != roadmap["project_id"]
+            or record["roadmap_id"] != roadmap["roadmap_id"]
+            or record["assignment_id"] != identifier
+            or record["authority"] != AUTHORITY
+            or record["detail_path"] != f"details/{identifier}.md"
+            or record["detail_sha256"] != _digest(detail)
+            or record["context_digest"] != selection.get("context_digest")
+            or record["claimed_event_previous_head"] != event["previous_digest"]
+            or record["claim_digest"] != _value_digest(basis)
+            or payload.get("claim_digest") != record["claim_digest"]
+            or payload.get("delivery_digest") != record["delivery_digest"]
+            or payload.get("host_id") != record["host_id"]
+        ):
+            raise _fail("continuity_store_invalid", "Host claim differs from its event binding.")
+        for later in events[index + 1 :]:
+            if later["type"] == "ASSIGNMENT_COMPLETED" and later["payload"].get(
+                "assignment_id"
+            ) == identifier:
+                if (
+                    later["payload"].get("claim_digest") != record["claim_digest"]
+                    or later["payload"].get("host_id") != record["host_id"]
+                ):
+                    raise _fail(
+                        "continuity_store_invalid", "Completion is not bound to its host claim."
+                    )
+                break
+        seen.add(identifier)
+        bound_paths.add(expected_path)
+    claim_root = store / "claims"
+    if claim_root.exists() and (claim_root.is_symlink() or not claim_root.is_dir()):
+        raise _fail("continuity_store_invalid", "Host claim directory is unsafe.")
+    if claim_root.is_dir() and any(path.is_symlink() for path in claim_root.rglob("*")):
+        raise _fail("continuity_store_invalid", "Host claim inventory contains a link.")
+    actual_paths = (
+        {
+            path.relative_to(store).as_posix()
+            for path in claim_root.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        if claim_root.is_dir()
+        else set()
+    )
+    if actual_paths != bound_paths:
+        raise _fail("continuity_store_invalid", "Host claim inventory differs from event history.")
 
 
 def _load_store(
@@ -967,6 +1083,28 @@ def _write_handoff(
     return {"handoff_digest": record["handoff_digest"], "handoff_path": relative}
 
 
+def _advance_claim_binding(
+    store: Path,
+    events: Sequence[dict[str, Any]],
+    identifier: str,
+    host_id: str | None,
+    claim_digest: str | None,
+) -> dict[str, str]:
+    record = _claim_for_assignment(store, events, identifier)
+    if record is None:
+        if host_id is not None or claim_digest is not None:
+            raise _fail("continuity_claim_invalid", "No host claim exists for this assignment.")
+        return {}
+    if (
+        not isinstance(host_id, str)
+        or not isinstance(claim_digest, str)
+        or host_id != record["host_id"]
+        or claim_digest != record["claim_digest"]
+    ):
+        raise _fail("continuity_claim_required", "The active host claim must bind advance.")
+    return {"host_id": host_id, "claim_digest": claim_digest}
+
+
 def _advance_local(
     project_root: Path,
     *,
@@ -974,13 +1112,16 @@ def _advance_local(
     evidence_paths: Sequence[str],
     reason: str = "",
     handoff_path: str | None = None,
+    host_id: str | None = None,
+    claim_digest: str | None = None,
 ) -> FlowResult:
     """Record one bounded result and trigger the next dependency-ready detail."""
     root = _root(project_root)
-    store, roadmap, _, state = _load_store(root)
+    store, roadmap, events, state = _load_store(root)
     if state["status"] in {"COMPLETE", "BLOCKED"} or state["current_assignment"] is None:
         raise _fail("continuity_not_active", "Continuity has no active assignment.")
     identifier = str(state["current_assignment"])
+    claim_binding = _advance_claim_binding(store, events, identifier, host_id, claim_digest)
     evidence = _evidence(root, evidence_paths)
     normalized = outcome.strip().upper()
     if normalized == "FAIL":
@@ -1012,6 +1153,7 @@ def _advance_local(
                     "fingerprint": fingerprint,
                     "reason": explanation,
                     "recovery_round": round_number,
+                    **claim_binding,
                 },
             )
         ]
@@ -1059,6 +1201,7 @@ def _advance_local(
                 "assignment_id": identifier,
                 "receipt_digest": receipt["receipt_digest"],
                 **handoff,
+                **claim_binding,
             },
         ),
         ("ROADMAP_RETURNED", {"completed_assignment_id": identifier}),
@@ -1096,6 +1239,8 @@ def advance_flow(
     evidence_paths: Sequence[str],
     reason: str = "",
     handoff_path: str | None = None,
+    host_id: str | None = None,
+    claim_digest: str | None = None,
 ) -> FlowResult:
     """Record one result atomically and trigger the next dependency-ready detail."""
     root = _root(project_root)
@@ -1107,6 +1252,8 @@ def advance_flow(
             evidence_paths=evidence_paths,
             reason=reason,
             handoff_path=handoff_path,
+            host_id=host_id,
+            claim_digest=claim_digest,
         )
     try:
         from .continuity_sync import sync_configured
