@@ -633,22 +633,22 @@ def _detail_bytes(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
             f"- `{item['path']}` — {item['bytes']} bytes — `{item['sha256']}`"
             for item in check["included"]
         )
-        or "- Geen bestaand geraakt bestand gevonden."
+        or "- No existing touched file was found."
     )
     done = "\n".join(f"- [ ] {item}" for item in assignment["definition_of_done"])
-    migration = assignment["migration"] or "Niet nodig."
+    migration = assignment["migration"] or "Not required."
     text = f"""# {assignment["id"]} — {assignment["title"]}
 
 ## Detail
 
 {assignment["detail"]}
 
-## Korte bestaande-check
+## Short existing check
 
-- Conflictklasse: `{assignment["conflict"]}`
-- Rev4-uitkomst: het doel in dit detail wint binnen de gebonden scope.
-- Migratie/compatibility: {migration}
-- Bestanden: {check["file_count"]}
+- Conflict class: `{assignment["conflict"]}`
+- Rev4 result: the objective in this detail wins within the bound scope.
+- Migration/compatibility: {migration}
+- Files: {check["file_count"]}
 - Bytes: {check["byte_count"]}
 
 {paths}

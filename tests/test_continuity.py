@@ -429,6 +429,33 @@ class ContinuityTests(unittest.TestCase):
         )
         self.assertIsNone(sync_status(project)["last_error"])
 
+    def test_git_replica_blocks_structured_password_signals(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        _, mirror = self._private_replica("secret-filter")
+        store = project / ".opencntx" / "continuity"
+        samples = {
+            "information/password.json": '{"password": "correct-horse-battery-staple"}\n',
+            "documentation/database.md": (
+                "DATABASE_URL=postgres://app:correct-horse-battery-staple@"
+                "db.example.invalid:5432/app\n"
+            ),
+            "information/environment.json": "DB_PASSWORD=correct-horse-battery-staple\n",
+        }
+        for relative, value in samples.items():
+            with self.subTest(relative=relative):
+                path = store / relative
+                path.write_text(value, encoding="utf-8")
+                with self.assertRaisesRegex(ContinuityError, "secret filter"):
+                    build_sync_preview(
+                        project,
+                        mirror,
+                        remote="origin",
+                        branch="main",
+                        private_repository_confirmed=False,
+                    )
+                path.unlink()
+
     def test_cli_and_contract_catalog_are_machine_readable(self) -> None:
         project, roadmap_path = self._project()
         environment = os.environ.copy()

@@ -70,7 +70,8 @@ _WARNING_RULES = (
         rule_id="credential-like-assignment",
         confidence=CONFIDENCE_WARNING,
         expression=re.compile(
-            r"\b(?:password|passwd|token|api[_-]?key|client[_-]?secret|authorization)\b"
+            r"\b(?:password|passwd|db[_-]?password|token|api[_-]?key|"
+            r"client[_-]?secret|authorization)\b[\"']?"
             r"[ \t]*[:=][ \t]*[\"']?"
             r"(?![A-Za-z_][A-Za-z0-9_]*\()[^\s\"'#]{8,}",
             re.IGNORECASE | re.MULTILINE,
@@ -79,7 +80,10 @@ _WARNING_RULES = (
     _Rule(
         rule_id="basic-auth-url",
         confidence=CONFIDENCE_WARNING,
-        expression=re.compile(r"https?://[^/\s:@]+:[^@\s/]+@", re.IGNORECASE),
+        expression=re.compile(
+            r"(?:https?|postgres(?:ql)?)://[^/\s:@]+:[^@\s/]+@",
+            re.IGNORECASE,
+        ),
     ),
     _Rule(
         rule_id="bearer-credential",
