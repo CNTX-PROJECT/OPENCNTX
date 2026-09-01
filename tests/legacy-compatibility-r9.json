@@ -1,0 +1,26 @@
+{
+  "format": "opencntx-immutable-legacy-test-corpus",
+  "format_version": 1,
+  "history": "R9",
+  "policy": "READ_ONLY_COMPATIBILITY_INPUT_NEVER_CURRENT_PRODUCT_OUTPUT",
+  "files": [
+    {"path": "tests/fixtures/r9/assignment-29-scenarios-v1.json", "sha256": "40ffc9d553b02798c6dc625434687bebc585a5ab4f9f791d41183dd3f53ec21f"},
+    {"path": "tests/fixtures/r9/assignment-31-intake-scenarios-v1.json", "sha256": "92589bfb1cd6b5e376a5f215fa4bb5bd0497983ac2f65691803a3aaf60c9dfc8"},
+    {"path": "tests/fixtures/r9/assignment-31-opencntx-public-snapshot-v1.json", "sha256": "e2af0952c1960dcb188bcfc567c159a63ce437f19472ecd81eb7999992a1b8ca"},
+    {"path": "tests/fixtures/r9/assignment-32-opencntx-public-snapshot-v1.json", "sha256": "a6c09161536b4c1079f1df772d02a2bce6cfe210e4e5bd69b02d3f8b97b8e56a"},
+    {"path": "tests/fixtures/r9/assignment-32-roadmap-runtime-scenarios-v1.json", "sha256": "90d631782c457a287d6707ccc10630b63b1166d47fc5ed39d4f8f164e6f1103b"},
+    {"path": "tests/fixtures/r9/assignment-33-opencntx-public-snapshot-v1.json", "sha256": "73a7077616bfa594954a99f9b4c012f9e20b5f83af6d33c8495cca918e4ac247"},
+    {"path": "tests/fixtures/r9/assignment-33-runtime-hook-scenarios-v1.json", "sha256": "8a51c8c6a49853ca0ebcba01a8ebe8f370a73b10b99988877801ff01f8073800"},
+    {"path": "tests/fixtures/r9/assignment-34-opencntx-public-snapshot-v1.json", "sha256": "b231753b7610048a67229c27d6298e5b8c8f826e480007eaf42fc8bfa5c9142e"},
+    {"path": "tests/fixtures/r9/assignment-34-storage-sync-scenarios-v1.json", "sha256": "05bb2b9fa389ea711a8dd2968941bc0ba0da16ef3b2ff878d4cfe928aec360f1"},
+    {"path": "tests/r9_conformance/__init__.py", "sha256": "e7322bb962b6439ac5706a1ea94c92a5c76146c82d1581407025b3a8f61af157"},
+    {"path": "tests/r9_conformance/intake_autopilot.py", "sha256": "05d169e5292dd18a52e56cd6d57a24a97282a66bd892058f0ef03e501254b339"},
+    {"path": "tests/r9_conformance/project_runtime.py", "sha256": "d3893783335edfc7815b29c5a8e436aa8b9f88ae361fc8f24fd3d170c63d1d0c"},
+    {"path": "tests/r9_conformance/roadmap_guard.py", "sha256": "f1442f5180944d45d1ca8152b8d34404e6afcf858ffac9a4b87a580b3b88161d"},
+    {"path": "tests/r9_conformance/roadmap_runtime.py", "sha256": "3573b0b09d9905cbd7499ad97a386cea94fc708f37568b1df0fba49221d3df6d"},
+    {"path": "tests/r9_conformance/runtime_contracts.py", "sha256": "bdf5506729582d49ed54c50fbd9da5a74a52972f0b94d218641b3d53d599fbde"},
+    {"path": "tests/r9_conformance/runtime_hooks.py", "sha256": "38efa567ca42e196696eff4ca7df406f8a0403eeae8615ac82dbbc3d2eb432ff"},
+    {"path": "tests/r9_conformance/storage_runtime.py", "sha256": "0f298925b68aad0bb7ef6237ed050f1c62da526362fa55183bb9b5f1bd7faec5"},
+    {"path": "tests/r9_runtime_simulator.py", "sha256": "9263281d4d90c78524b2a841571b4a32b7aaf0148f29f29b5dc3d6b08dd0744a"}
+  ]
+}

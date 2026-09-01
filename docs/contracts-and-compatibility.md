@@ -69,6 +69,12 @@ The shared compatibility matrix maps each format and supported major to that
 same schema identifier. Package builds include all six JSON contract and schema
 assets.
 
+Historical R9 conformance modules and fixtures are test-only, immutable
+read-compatibility inputs. `tests/legacy-compatibility-r9.json` binds their exact
+paths and SHA-256 digests. Those bytes may contain obsolete language or example
+names; they are never templates, current examples, packaged product data, or
+newly generated output.
+
 ## Fail-closed major versions
 
 Readers accept only a format and major pair listed in the compatibility matrix.

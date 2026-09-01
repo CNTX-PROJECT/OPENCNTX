@@ -565,7 +565,13 @@ class ContinuityTests(unittest.TestCase):
         public_files = [ROOT / "README.md", *sorted((ROOT / "docs").glob("*.md"))]
         for directory in (SOURCE / "opencntx", ROOT / "examples"):
             public_files.extend(path for path in directory.rglob("*") if path.is_file())
-        forbidden = ("skyrim", "nanopc", "onedrive", "c:\\users\\", "d:\\codex\\")
+        forbidden = (
+            "sky" + "rim",
+            "nano" + "pc",
+            "one" + "drive",
+            "c:" + "\\users\\",
+            "d:" + "\\codex\\",
+        )
         for path in public_files:
             if path.suffix.lower() in {".pyc", ".png", ".jpg", ".ico"}:
                 continue

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -50,6 +51,54 @@ def all_parsers(parser: argparse.ArgumentParser) -> tuple[argparse.ArgumentParse
 
 
 class LanguageContractTests(unittest.TestCase):
+    def test_r9_legacy_corpus_is_explicit_immutable_and_not_an_active_template(self) -> None:
+        manifest_path = REPOSITORY_ROOT / "tests" / "legacy-compatibility-r9.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        self.assertEqual(manifest["format"], "opencntx-immutable-legacy-test-corpus")
+        self.assertEqual(
+            manifest["policy"],
+            "READ_ONLY_COMPATIBILITY_INPUT_NEVER_CURRENT_PRODUCT_OUTPUT",
+        )
+        legacy_paths = {item["path"] for item in manifest["files"]}
+        self.assertEqual(len(legacy_paths), len(manifest["files"]))
+        for item in manifest["files"]:
+            path = REPOSITORY_ROOT / item["path"]
+            self.assertTrue(path.is_file(), item["path"])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), item["sha256"])
+
+        active_files = [REPOSITORY_ROOT / "README.md"]
+        for relative_root in ("src", "docs", "examples", "tests"):
+            active_files.extend(
+                path
+                for path in (REPOSITORY_ROOT / relative_root).rglob("*")
+                if path.is_file()
+            )
+        forbidden = (
+            "sky" + "rim",
+            "nano" + "pc",
+            "one" + "drive",
+            "home" + " assistant",
+            "mod" + " organizer",
+            "c:" + "\\users\\",
+            "d:" + "\\codex\\",
+        )
+        for path in active_files:
+            relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+            if relative in legacy_paths or path.suffix.lower() in {
+                ".gz",
+                ".ico",
+                ".jpg",
+                ".png",
+                ".pyc",
+            }:
+                continue
+            try:
+                text = path.read_text(encoding="utf-8").lower()
+            except UnicodeDecodeError:
+                continue
+            for marker in forbidden:
+                self.assertNotIn(marker, text, relative)
+
     def test_every_reachable_help_route_is_ascii_english(self) -> None:
         from opencntx.cli import build_parser
 
@@ -216,6 +265,85 @@ class LanguageContractTests(unittest.TestCase):
                 re.IGNORECASE,
             )
             self.assertIsNone(forbidden.search(detail), detail)
+
+    def test_generated_task_status_and_executor_fixed_text_are_english(self) -> None:
+        from opencntx.workflow import propose_task
+        from opencntx.workspace import init_workspace
+        from tests.test_playbook import prepare_ready_executor
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            parent = Path(temporary_directory)
+            workspace = parent / "task-workspace"
+            init_workspace(workspace)
+            proposed = propose_task(
+                workspace,
+                "TASK-20260901-0001",
+                title="Inspect one bounded plan",
+                goal="Inspect only the pinned plan.",
+                definition_of_done="The evidence identifies every checked input.",
+                executor_role="ROLE-REVIEWER",
+                input_paths=["CONTROL/ROADMAP.md"],
+                allowed_actions=["inspect-pinned-input"],
+                forbidden_actions=["external-send"],
+                expected_output="One local evidence report.",
+                acceptance_criteria=["Every claim points to evidence."],
+                architect="ARCHITECT",
+            )
+            task_text = proposed.task_path.read_text(encoding="utf-8")
+            status = run_cli_bytes(
+                "workspace",
+                "task",
+                "status",
+                "TASK-20260901-0001",
+                "--root",
+                str(workspace),
+                cwd=parent,
+            )
+            self.assertEqual(status.returncode, 0, status.stderr)
+
+            _workspace, _playbook, _role, _proposal, _context, executor = (
+                prepare_ready_executor(parent / "executor")
+            )
+            executor_text = executor.assignment_path.read_text(encoding="utf-8")
+            for text in (task_text, status.stdout.decode("utf-8"), executor_text):
+                for phrase in (
+                    "Gegenereerde taakkaart",
+                    "Actuele staat",
+                    "Toegestane acties",
+                    "Verboden acties",
+                    "Uitvoerderpakket",
+                    "Doel en Definition of Done",
+                    "Overdracht en authority",
+                ):
+                    self.assertNotIn(phrase, text)
+            self.assertIn("Generated task card", task_text)
+            self.assertIn("TASK_STATUS_VALID", status.stdout.decode("utf-8"))
+            self.assertIn("Executor package", executor_text)
+            self.assertIn("This package starts nothing", executor_text)
+
+    def test_active_error_families_emit_only_short_english(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            cases = (
+                ("verify",),
+                ("workspace", "doctor", "--root", str(root)),
+                ("flow", "status", "--root", str(root)),
+                ("layout", "audit", "--contract", str(root / "missing.json")),
+            )
+            forbidden = re.compile(
+                r"\b(?:fout|waarschuwing|bestand|map|werkruimte|taak|opdracht|"
+                r"ontbreekt|ongeldig|geen|niet|moet|controleer)\b",
+                re.IGNORECASE,
+            )
+            for arguments in cases:
+                with self.subTest(arguments=arguments):
+                    result = run_cli_bytes(*arguments, cwd=root)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertEqual(result.stdout, b"")
+                    rendered = result.stderr.decode("ascii")
+                    self.assertTrue(rendered.startswith("Error:"), rendered)
+                    self.assertIsNone(forbidden.search(rendered), rendered)
+                    self.assertNotIn("Traceback", rendered)
 
 
 if __name__ == "__main__":
