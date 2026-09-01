@@ -23,9 +23,9 @@ opencntx flow start roadmap.json --approval "AUTO PILOT"
 ```
 
 OPENCNTX creates `.opencntx/continuity/` automatically. The canonical local
-store separates roadmaps, details, information, documentation, context,
-receipts, history and optional sync state. The first short assignment detail
-is immediately selected.
+store separates roadmaps, details, handoffs, information, documentation,
+context, receipts, history and optional sync state. The first short assignment
+detail is immediately selected.
 
 One writer lock and a compare-before-commit event head protect every lifecycle
 transition. Its events are committed as one atomic batch, so a restart sees
@@ -40,6 +40,20 @@ opencntx flow advance --outcome PASS --evidence reports/task-1.json
 The same approval remains active. OPENCNTX writes the receipt, returns to the
 roadmap and immediately selects the next dependency-ready detail. No new
 approval is requested inside the same roadmap.
+
+For a richer durable handoff, supply one bounded relative JSON file:
+
+```powershell
+opencntx flow advance --outcome PASS `
+  --evidence reports/task-1.json `
+  --handoff reports/task-1-handoff.json
+```
+
+The handoff input has exactly five fields: `decisions`, `result`,
+`changed_paths`, `evidence_explanation`, and `risks`. OPENCNTX derives the
+assignment, dependencies, evidence hashes, receipt binding and next assignment.
+If `--handoff` is omitted, it still creates a truthful minimal handoff with no
+declared decisions, changed paths, or risks.
 
 For a failed attempt:
 
@@ -82,9 +96,16 @@ Status is rebuilt from the hash-chained event ledger. It always reports the
 current assignment, progress, next action and minimum action. Every read binds
 the stored roadmap back to the digest in `FLOW_STARTED`. It also reconstructs
 every generated detail from the bound roadmap and existing-check receipt, and
-binds the current context to its selection event. Roadmap, detail or context
-drift therefore stops status, advance, health, export and sync fail-closed.
+binds the current context to its selection event. Every new completion handoff
+is bound to its receipt, previous event head, completion event and next trigger.
+Roadmap, detail, handoff or context drift therefore stops status, advance,
+health, export and sync fail-closed.
 Health additionally checks the derived state cache and required directories.
+
+After the first completion, `minimum_action` explicitly routes a fresh session
+through the previous handoff and then the new assignment detail. The chat is no
+longer the only place that holds decisions, results, changed paths, evidence
+meaning, remaining risks and the next route.
 
 ## Portable capsule
 
@@ -97,7 +118,7 @@ opencntx flow capsule import project.ocx --root restored-project
 The ZIP-based capsule uses safe relative names, exact byte counts and SHA-256
 for every file. Export is deterministic. Import refuses an existing store and
 then runs the normal health verification. Machine-specific sync configuration
-and sync errors are excluded.
+and sync errors are excluded. Bound handoffs are included and verified exactly.
 
 ## Read-only adapters
 
@@ -123,7 +144,9 @@ opencntx flow sync preview private-context-repo `
 ```
 
 The preview filters to UTF-8 Markdown and JSON, runs the local secret filter,
-binds the current remote head and writes nothing. Apply its exact digest once:
+binds the current remote head and writes nothing. Safe handoff JSON is included;
+a secret signal in handoff input or generated sync content stops fail-closed.
+Apply its exact digest once:
 
 ```powershell
 opencntx flow sync apply private-context-repo `

@@ -89,6 +89,10 @@ opencntx flow status
 opencntx flow advance --outcome PASS --evidence reports/task.json
 ```
 
+Add `--handoff reports/task-handoff.json` when the host has explicit decisions,
+result wording, changed paths, evidence explanation, and remaining risks. A
+minimal bound handoff is generated automatically when the option is omitted.
+
 Each successful `advance` stores a receipt, returns to the roadmap and selects
 the next dependency-ready detail. The approval is not requested again. Read
 [Roadmap continuity and AUTO PILOT](continuity.md) for the roadmap format,

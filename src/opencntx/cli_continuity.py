@@ -57,6 +57,10 @@ def register_continuity_commands(
         "--evidence", action="append", required=True, help="relative evidence file"
     )
     advance.add_argument("--reason", default="", help="required one-line reason for FAIL")
+    advance.add_argument(
+        "--handoff",
+        help="optional relative JSON with decisions, result, changed paths, explanation, and risks",
+    )
     advance.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     health = commands.add_parser("health", help="verify store, roadmap, detail and event chain")
@@ -210,6 +214,7 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
             outcome=args.outcome,
             evidence_paths=args.evidence,
             reason=args.reason,
+            handoff_path=args.handoff,
         )
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
