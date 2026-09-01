@@ -51,6 +51,7 @@ target-version = "py311"
 "src/opencntx/cli_workspace.py" = ["S101"] # Assert narrows an internal optional dispatch result.
 "src/opencntx/continuity.py" = ["S603"] # Read-only Git adapters execute only the discovered Git binary with bounded arguments.
 "src/opencntx/continuity_sync.py" = ["S603"] # Private sync executes only bounded Git commands and never invokes a shell.
+"src/opencntx/layout_plan.py" = ["S603"] # Planning executes only fixed read-only Git identity queries.
 "src/opencntx/integrity.py" = ["BLE001"] # Transaction rollback must cover every process-termination exception class.
 "src/opencntx/primitives.py" = ["TRY004"] # Preserve the established ValueError contract.
 "tests/*.py" = ["S101", "S603"] # Tests use assertions and only fixed local executables.

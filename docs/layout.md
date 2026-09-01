@@ -45,6 +45,37 @@ reports disorder. `verify` exits with code 1 unless the result is `GREEN` with
 zero findings. Invalid input exits with code 2. A reached scan bound returns
 `STOPPED`, never partial success.
 
+## Digest-bound migration planning
+
+A separate `opencntx-layout-migration` manifest can declare explicit source and
+destination paths, protected paths, scan budgets, a path-length boundary, and a
+minimum free-space reserve. Paths containing variables, home shortcuts, or
+wildcards are rejected.
+
+Preview it without writing a plan or changing a path:
+
+```text
+opencntx layout plan preview --manifest layout-migration.json --base .
+```
+
+The JSON result binds source tree hashes, portable mode/ACL evidence, links,
+best-effort process-lock checks, credential-safe Git identity, collision and
+disk predicates, projected path length, and an exact rollback route. It is
+`READY` only with zero findings. Save those exact JSON bytes if a later bounded
+assignment needs them.
+
+Before any separately authorized apply step, verify the saved plan again:
+
+```text
+opencntx layout plan verify --plan saved-layout-plan.json
+```
+
+Verification recomputes every source state and refuses source drift, a new
+destination, a protected-path overlap, new links or locks, changed Git state,
+or insufficient disk space. Both routes are read-only. OPENCNTX provides no
+general layout apply command; real movement remains separately authorized and
+bound to one exact verified plan and rollback boundary.
+
 ## BOUNDED PERFECTION
 
 Perfection is objective here: the versioned policy has zero findings inside its

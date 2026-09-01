@@ -5,8 +5,8 @@
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
 
-This navigation table documents 68 public CLI paths: five orientation and
-version routes plus all 63 executable routes from the real parser. It does not invent options or grant
+This navigation table documents 70 public CLI paths: five orientation and
+version routes plus all 65 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -80,6 +80,8 @@ required arguments and repeatable options.
 | 66 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
 | 67 | `opencntx layout audit` | report deterministic order findings without changing paths |
 | 68 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 69 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
+| 70 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
 
 ## Roadmap flow
 
