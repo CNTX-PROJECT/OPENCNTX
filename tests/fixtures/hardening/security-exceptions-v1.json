@@ -33,6 +33,11 @@
       "reason": "The artifact verifier runs only controlled local build, install, and smoke commands."
     },
     {
+      "path": "tools/release_version_gate.py",
+      "codes": ["S603"],
+      "reason": "The release gate invokes only the discovered Git executable with closed read-only arguments and no shell."
+    },
+    {
       "path": "tools/render_brand.py",
       "codes": ["S314"],
       "reason": "The renderer parses only SVG bytes generated and stored inside this repository."
