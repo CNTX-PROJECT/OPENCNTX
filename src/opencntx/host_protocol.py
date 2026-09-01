@@ -151,7 +151,7 @@ def claim_host(project_root: Path, host_id: str, delivery_digest: str) -> dict[s
         record["claim_digest"] = _value_digest(record)
         relative = f"claims/{identifier}.json"
         _write_atomic(store / relative, _pretty(record))
-        _append_events(
+        appended = _append_events(
             store,
             (
                 (
@@ -166,8 +166,9 @@ def claim_host(project_root: Path, host_id: str, delivery_digest: str) -> dict[s
                 ),
             ),
             expected_head=state["event_head"],
+            existing_events=events,
         )
-        _cache_state(store, roadmap)
+        _cache_state(store, roadmap, [*events, *appended])
     _load_store(project_root)
     return _claim_transition(record)
 

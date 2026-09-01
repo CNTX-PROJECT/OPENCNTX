@@ -9,17 +9,19 @@ remain available.
 
 ## Fast route
 
-Copy [the example roadmap](../examples/continuity-roadmap.json), edit its
-generic tasks, and preview only the existing paths those tasks touch:
+Use [the existing example roadmap](../examples/continuity-roadmap.json) for one
+complete loop. Run these steps in order from an OPENCNTX source checkout.
+
+1. Preview only the existing paths the example tasks touch:
 
 ```powershell
-opencntx flow preview roadmap.json --json
+opencntx flow preview examples/continuity-roadmap.json --json
 ```
 
-Start the complete bounded roadmap with one approval:
+2. Start the bounded roadmap with one approval:
 
 ```powershell
-opencntx flow start roadmap.json --approval "AUTO PILOT"
+opencntx flow start examples/continuity-roadmap.json --approval "AUTO PILOT"
 ```
 
 OPENCNTX creates `.opencntx/continuity/` automatically. The canonical local
@@ -27,19 +29,45 @@ store separates roadmaps, details, handoffs, information, documentation,
 context, receipts, history and optional sync state. The first short assignment
 detail is immediately selected.
 
+3. Read that exact generated detail before doing the task:
+
+```powershell
+Get-Content .opencntx\continuity\details\TASK-1.md
+```
+
 One writer lock and a compare-before-commit event head protect every lifecycle
 transition. Its events are committed as one atomic batch, so a restart sees
 either the previous assignment or the complete next state.
 
-After the host finishes that assignment, bind one or more local evidence files:
+4. After the host finishes that assignment, bind one or more local evidence
+files with exactly one outcome. Use PASS when the declared checks are green:
 
 ```powershell
 opencntx flow advance --outcome PASS --evidence reports/task-1.json
 ```
 
+Or use FAIL for a bounded failed attempt:
+
+```powershell
+opencntx flow advance --outcome FAIL `
+  --evidence reports/task-1-failure.json `
+  --reason "The declared check did not pass"
+```
+
 The same approval remains active. OPENCNTX writes the receipt, returns to the
 roadmap and immediately selects the next dependency-ready detail. No new
 approval is requested inside the same roadmap.
+
+5. Read the returned status. After PASS, it points to TASK-2; read that next
+detail before continuing the same loop:
+
+```powershell
+opencntx flow status --json
+Get-Content .opencntx\continuity\details\TASK-2.md
+```
+
+After FAIL, status still points to TASK-1 and the recovery counter is visible;
+reread the TASK-1 detail before the next bounded recovery attempt.
 
 For a richer durable handoff, supply one bounded relative JSON file:
 
@@ -55,7 +83,7 @@ assignment, dependencies, evidence hashes, receipt binding and next assignment.
 If `--handoff` is omitted, it still creates a truthful minimal handoff with no
 declared decisions, changed paths, or risks.
 
-For a failed attempt:
+The same standalone FAIL form is:
 
 ```powershell
 opencntx flow advance --outcome FAIL `

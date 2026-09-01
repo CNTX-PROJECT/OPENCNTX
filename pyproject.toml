@@ -73,5 +73,5 @@ branch = true
 source = ["opencntx"]
 
 [tool.coverage.report]
-fail_under = 75
+fail_under = 78
 show_missing = true

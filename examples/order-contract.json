@@ -1,0 +1,59 @@
+{
+  "contract_id": "GENERIC-PROJECT",
+  "duplicate_ownership": {
+    "allowed_sha256": [],
+    "enabled": true,
+    "minimum_bytes": 4096
+  },
+  "folder_roles": [
+    {
+      "id": "SOURCES",
+      "owner": "PROJECT",
+      "path": "src",
+      "required": true,
+      "root": "PROJECT"
+    },
+    {
+      "id": "DOCUMENTATION",
+      "owner": "PROJECT",
+      "path": "docs",
+      "required": false,
+      "root": "PROJECT"
+    }
+  ],
+  "format": "opencntx-order-contract",
+  "format_version": 1,
+  "naming": {
+    "directory_pattern": "[A-Za-z0-9][A-Za-z0-9._-]*",
+    "exempt": [
+      ".git",
+      ".git/**",
+      ".opencntx",
+      ".opencntx/**"
+    ],
+    "file_pattern": "[A-Za-z0-9][A-Za-z0-9._-]*"
+  },
+  "path_allowlist": [
+    {
+      "owner": "PROJECT",
+      "pattern": "**",
+      "root": "PROJECT"
+    }
+  ],
+  "revision": 1,
+  "roots": [
+    {
+      "id": "PROJECT",
+      "path": "PROJECT",
+      "required": true,
+      "role": "PROJECT_CONTAINER"
+    }
+  ],
+  "schema_id": "urn:uuid:4e8bb8a8-3b29-5bf9-afac-dbdb27fb7ce1",
+  "stop_rule": {
+    "acceptance": "ZERO_FINDINGS",
+    "maximum_bytes": 1073741824,
+    "maximum_files": 10000,
+    "maximum_findings": 1000
+  }
+}

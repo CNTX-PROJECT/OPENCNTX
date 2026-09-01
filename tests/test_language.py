@@ -325,9 +325,41 @@ class LanguageContractTests(unittest.TestCase):
     def test_active_error_families_emit_only_short_english(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
+            digest = "0" * 64
             cases = (
                 ("verify",),
                 ("workspace", "doctor", "--root", str(root)),
+                ("workspace", "control", "refresh", "--root", str(root)),
+                ("workspace", "catalog", "rebuild", "--root", str(root)),
+                ("workspace", "media", "status", "SRC-20260901-000000000000", "--root", str(root)),
+                (
+                    "workspace",
+                    "playbook",
+                    "status",
+                    "PLAYBOOK-EXAMPLE",
+                    "--revision",
+                    "1",
+                    "--root",
+                    str(root),
+                ),
+                (
+                    "workspace",
+                    "context",
+                    "verify",
+                    "TASK-20260901-0001",
+                    "--proposal-digest",
+                    digest,
+                    "--root",
+                    str(root),
+                ),
+                (
+                    "workspace",
+                    "task",
+                    "status",
+                    "TASK-20260901-0001",
+                    "--root",
+                    str(root),
+                ),
                 ("flow", "status", "--root", str(root)),
                 ("layout", "audit", "--contract", str(root / "missing.json")),
             )

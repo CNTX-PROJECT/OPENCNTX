@@ -38,23 +38,24 @@ excluded, or ignored and why. It also shows file and byte budgets. Preview
 writes no package, manifest, receipt, temporary publication state, or source.
 
 A small dependency-free local scanner checks only the already selected,
-bounded UTF-8 text. Narrow high-confidence credential structures block pack
-before publication. Broader credential-like text—including quoted passwords
-(also when the value contains spaces), `DB_PASSWORD`, `DATABASE_PASSWORD`, and
-`APP_SECRET` assignments, and credential-bearing HTTP, PostgreSQL, MySQL,
-MariaDB, MongoDB, or Redis URLs—produces a warning. Optional continuity sync
-and portable continuity capsules reject both warning and high-confidence
-findings. Safe diagnostics contain finding metadata, never the matched value or
-snippet.
+bounded UTF-8 text. Narrow high-confidence credential structures and selected
+provider credential shapes block pack before publication. Broader
+credential-like assignments—including prefixed password, secret, token, API
+key, private-key and passphrase names—and any credential-bearing URL produce a
+warning. Optional continuity sync and portable continuity capsules reject both
+warning and high-confidence findings. Safe diagnostics contain finding
+metadata, never the matched value or snippet.
 
 An apparent false positive can be overridden only by supplying its exact
 current finding ID to `pack --allow-secret`. The ID changes with the source
 bytes. There is no wildcard or permanent bypass, and an applied override is
 visible as safe metadata in the manifest.
 
-This scanner recognizes only known signals. It can miss secrets and can warn
-on harmless examples. A green preview is not a guarantee that content is
-secret-free.
+This scanner recognizes only known signals. It deliberately does not classify
+generic JWT-shaped text because that shape is common in harmless examples. It
+can also miss encoded, encrypted, split, dynamically assembled or unfamiliar
+credentials, and it can warn on harmless examples. A green preview is not a
+guarantee that content is secret-free.
 
 Never place passwords, tokens, private keys, personal data, production secrets,
 or content you are not allowed to share in a package or public issue.

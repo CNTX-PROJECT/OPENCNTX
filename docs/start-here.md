@@ -4,7 +4,9 @@
 
 This page covers installation and your first useful result in one continuous
 path. Start with a small test project that contains only files you are allowed
-to read and share.
+to read and share. This `init` → `pack --preview` → `pack` → inspect → `verify`
+path is the default route; the workspace, layout, and continuity routes are
+optional.
 
 ## 1. Check the requirements
 

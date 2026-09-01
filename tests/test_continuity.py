@@ -6,9 +6,12 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
 import zipfile
 from pathlib import Path
+from typing import Any
 
 from opencntx.continuity import (
     ContinuityError,
@@ -20,6 +23,7 @@ from opencntx.continuity import (
     inspect_adapter,
     preview_roadmap,
     start_flow,
+    validate_roadmap,
     verify_capsule,
 )
 from opencntx.continuity_sync import (
@@ -124,6 +128,58 @@ class ContinuityTests(unittest.TestCase):
         subprocess.run(["git", "-C", str(mirror), "remote", "add", "origin", str(bare)], check=True)
         subprocess.run(["git", "-C", str(mirror), "push", "-qu", "origin", "main"], check=True)
         return bare, mirror
+
+    @staticmethod
+    def _graph_roadmap(count: int, *, reverse_dependencies: bool = False) -> dict[str, Any]:
+        identifiers = [f"TASK-{number:04d}" for number in range(1, count + 1)]
+        assignments = []
+        for index, identifier in enumerate(identifiers):
+            if reverse_dependencies:
+                dependencies = [] if index == count - 1 else [identifiers[index + 1]]
+            else:
+                dependencies = [] if index == 0 else [identifiers[index - 1]]
+            assignments.append(
+                {
+                    "id": identifier,
+                    "title": f"Task {index + 1}",
+                    "detail": f"Complete bounded task {index + 1}.",
+                    "depends_on": dependencies,
+                    "touches": ["input.txt"],
+                    "conflict": "NO_CONFLICT",
+                    "migration": "",
+                    "definition_of_done": [f"Evidence {index + 1} exists"],
+                }
+            )
+        return {
+            "format": "opencntx-continuity-roadmap",
+            "format_version": 1,
+            "project_id": "PROJECT-A",
+            "roadmap_id": f"ROADMAP-{count}",
+            "title": f"Roadmap with {count} assignments",
+            "assignments": assignments,
+        }
+
+    def test_supported_graph_depths_validate_in_both_dependency_orders(self) -> None:
+        for count in (1, 995, 998, 999, 1000):
+            with self.subTest(count=count, direction="forward"):
+                normalized = validate_roadmap(self._graph_roadmap(count))
+                self.assertEqual(len(normalized["assignments"]), count)
+            with self.subTest(count=count, direction="reverse"):
+                normalized = validate_roadmap(self._graph_roadmap(count, reverse_dependencies=True))
+                self.assertEqual(len(normalized["assignments"]), count)
+
+    def test_graph_validation_keeps_unknown_dependency_and_cycle_error_contract(self) -> None:
+        unknown = self._graph_roadmap(2)
+        unknown["assignments"][1]["depends_on"] = ["TASK-MISSING"]
+        with self.assertRaises(ContinuityError) as unknown_error:
+            validate_roadmap(unknown)
+        self.assertEqual(unknown_error.exception.code, "continuity_roadmap_invalid")
+
+        cycle = self._graph_roadmap(2)
+        cycle["assignments"][0]["depends_on"] = ["TASK-0002"]
+        with self.assertRaises(ContinuityError) as cycle_error:
+            validate_roadmap(cycle)
+        self.assertEqual(cycle_error.exception.code, "continuity_roadmap_invalid")
 
     def test_preview_is_read_only_and_one_approval_triggers_the_complete_cycle(self) -> None:
         project, roadmap_path = self._project()
@@ -262,6 +318,54 @@ class ContinuityTests(unittest.TestCase):
             self.assertEqual(flow_status(project).state_digest, result.state_digest)
         self.assertEqual(result.status, "COMPLETE")
         self.assertEqual(len(result.completed), 10)
+
+    def test_four_bounded_readers_do_not_starve_one_writer(self) -> None:
+        project = self.root / "bounded-reader-writer"
+        project.mkdir()
+        (project / "input.txt").write_text("existing\n", encoding="utf-8")
+        evidence = project / "evidence.txt"
+        evidence.write_text("green\n", encoding="utf-8")
+        roadmap_path = long_roadmap(project / "roadmap.json", count=12)
+        start_flow(project, roadmap_path, "AUTO PILOT")
+
+        stop = threading.Event()
+        errors: list[str] = []
+        read_counts = [0, 0, 0, 0]
+
+        def reader(index: int) -> None:
+            while not stop.is_set():
+                try:
+                    flow_status(project)
+                    if read_counts[index] % 4 == 0:
+                        health_report(project)
+                    read_counts[index] += 1
+                except ContinuityError as exc:
+                    errors.append(exc.code)
+                time.sleep(0.005)
+
+        readers = [threading.Thread(target=reader, args=(index,)) for index in range(4)]
+        for thread in readers:
+            thread.start()
+        started = time.perf_counter()
+        result = flow_status(project)
+        try:
+            for _ in range(12):
+                result = advance_flow(
+                    project,
+                    outcome="PASS",
+                    evidence_paths=[evidence.name],
+                )
+        finally:
+            stop.set()
+            for thread in readers:
+                thread.join(5)
+
+        self.assertLess(time.perf_counter() - started, 10)
+        self.assertEqual(errors, [])
+        self.assertTrue(all(not thread.is_alive() for thread in readers))
+        self.assertTrue(all(count > 0 for count in read_counts))
+        self.assertEqual(result.status, "COMPLETE")
+        self.assertEqual(health_report(project)["status"], "HEALTHY")
 
     def test_writer_conflict_and_unsafe_or_future_input_fail_closed(self) -> None:
         project, roadmap_path = self._project()
