@@ -256,12 +256,25 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
             "include README.md",
             "include pyproject.toml",
             "recursive-include docs *.md",
+            "recursive-include examples *.json",
             "recursive-include src *.py",
             "recursive-include src/opencntx/schemas *.json",
             "recursive-include tests *.py",
             "recursive-include tools *.py",
         ):
             self.assertIn(line, manifest)
+        self.assertIn("prune tests/r9_conformance", manifest)
+        for historical_test in (
+            "r9_runtime_simulator.py",
+            "test_intake_autopilot.py",
+            "test_project_runtime.py",
+            "test_roadmap_guard.py",
+            "test_roadmap_runtime.py",
+            "test_runtime_contracts.py",
+            "test_runtime_hooks.py",
+            "test_storage_runtime.py",
+        ):
+            self.assertIn(f"exclude tests/{historical_test}", manifest)
 
     def test_tool_contains_no_network_or_publication_client(self) -> None:
         source = (TOOLS / "release_artifacts.py").read_text(encoding="utf-8")

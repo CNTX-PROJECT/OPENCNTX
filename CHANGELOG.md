@@ -4,7 +4,31 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+No changes yet.
+
+## 1.1.0 - 2026-09-01
+
+### Added
+
+- Added the universal local-first `flow` route: one portable roadmap, one
+  `AUTO PILOT` approval, a short existing-code check before every detail,
+  restart-safe next-assignment triggers and a three-round deadloop boundary.
+- Added automatic canonical local storage for roadmaps, details, information,
+  documentation, compact context, receipts, history and optional sync state.
+- Added deterministic portable capsule export, independent verification and
+  restore into a new store.
+- Added bounded read-only file, Git, Markdown and JSON adapters.
+- Added optional filtered private Git/GitHub replication with a read-only
+  preview, secret filter, remote-head conflict binding, non-force push and
+  remote readback. Local storage remains the canonical offline truth.
+
 ### Changed
+
+- Productized the already integrated R9 runtime foundations behind one small
+  CLI route and moved the historical runtime scenario simulator out of the
+  distribution into test-only conformance.
+- Preserved the immutable v1.0.0 release and existing core/workspace behavior;
+  v1.1.0 is an additive release with zero runtime dependencies.
 
 - Aligned the complete documented CLI with the `1.0.0` Production/Stable
   contract by replacing the remaining current `Advanced / Alpha` workspace

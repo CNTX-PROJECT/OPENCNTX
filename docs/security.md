@@ -12,8 +12,16 @@ safe. You remain responsible for what you select, store, and share.
 
 ## Local trust boundary
 
-The product has no network client and requires no account or API key. It reads
-selected local files and writes local output. It does not upload that output.
+The core, workspace and default roadmap flow require no network, account or API
+key. They read selected local files and write local output. They do not upload
+that output.
+
+The only optional network-capable route is an explicitly configured private
+Git/GitHub continuity replica. It invokes the local Git executable, never
+stores a credential-bearing URL, filters candidates to bounded UTF-8 Markdown
+and JSON, binds the remote head, uses a non-force push and reads the exact head
+back. A failure is recorded once and is never retried automatically. The local
+store remains canonical and works offline.
 
 The boundary changes when you copy or submit the output to another tool.
 

@@ -92,7 +92,7 @@ class CliTests(unittest.TestCase):
         result = run_cli("--help", cwd=REPOSITORY_ROOT)
 
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("{init,pack,verify,workspace}", result.stdout)
+        self.assertIn("{init,pack,verify,workspace,flow}", result.stdout)
         self.assertIn("explicit, and verifiable context package", result.stdout)
         self.assertLess(result.stdout.index("init"), result.stdout.index("workspace"))
         self.assertIn("Stable workspace", result.stdout)

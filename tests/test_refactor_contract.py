@@ -59,6 +59,7 @@ class RefactorContractTests(unittest.TestCase):
         self.assertEqual(
             {
                 "cli_content.py",
+                "cli_continuity.py",
                 "cli_core.py",
                 "cli_definitions.py",
                 "cli_lifecycle.py",

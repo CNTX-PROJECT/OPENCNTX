@@ -1,4 +1,4 @@
-"""Pure reducer and query engine for the isolated R9 runtime foundation."""
+"""Test-only historical reducer for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 

@@ -2,8 +2,8 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This navigation table documents 49 public CLI paths: five orientation and
-version routes plus all 44 executable routes from the real parser. It does not invent options or grant
+This navigation table documents 63 public CLI paths: five orientation and
+version routes plus all 58 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -58,6 +58,36 @@ required arguments and repeatable options.
 | 47 | `opencntx workspace task record-attempt` | append one objective failed-attempt record |
 | 48 | `opencntx workspace task cancel` | terminate a task explicitly as cancelled |
 | 49 | `opencntx workspace task supersede` | terminate a task in favor of a named successor |
+| 50 | `opencntx flow preview` | inspect only existing paths touched by a roadmap |
+| 51 | `opencntx flow start` | bind one complete roadmap to one AUTO PILOT approval |
+| 52 | `opencntx flow status` | rebuild the current pointer from hash-chained history |
+| 53 | `opencntx flow advance` | record PASS or FAIL and trigger the next detail |
+| 54 | `opencntx flow health` | verify local roadmap, state, detail and history |
+| 55 | `opencntx flow capabilities` | discover local storage and Git capabilities read-only |
+| 56 | `opencntx flow inspect` | use the file, Git, Markdown or JSON adapter read-only |
+| 57 | `opencntx flow capsule export` | export a deterministic portable context capsule |
+| 58 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
+| 59 | `opencntx flow capsule import` | restore a capsule only into a new local store |
+| 60 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
+| 61 | `opencntx flow sync configure` | enable one optional automatic checkpoint replica |
+| 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
+| 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
+
+## Roadmap flow
+
+The shortest complete route is:
+
+```powershell
+opencntx flow preview roadmap.json --json
+opencntx flow start roadmap.json --approval "AUTO PILOT"
+opencntx flow status
+opencntx flow advance --outcome PASS --evidence reports/task.json
+```
+
+Each successful `advance` stores a receipt, returns to the roadmap and selects
+the next dependency-ready detail. The approval is not requested again. Read
+[Roadmap continuity and AUTO PILOT](continuity.md) for the roadmap format,
+portable capsule, four read-only adapters and optional Git/GitHub replica.
 
 ## Core pack options
 

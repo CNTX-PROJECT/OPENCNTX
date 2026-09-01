@@ -7,9 +7,9 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from opencntx.project_runtime import RuntimeState
-from opencntx.runtime_contracts import canonical_digest, validate_runtime_record
-from opencntx.runtime_hooks import (
+from tests.r9_conformance.project_runtime import RuntimeState
+from tests.r9_conformance.runtime_contracts import canonical_digest, validate_runtime_record
+from tests.r9_conformance.runtime_hooks import (
     ASSIGNMENT_33_PROPOSAL_SHA256,
     CASE_RESULT_CODES,
     CONTINUITY_EVENTS,
@@ -603,7 +603,9 @@ class RuntimeHookTests(unittest.TestCase):
             self.assertEqual(_git_blob_id(path.read_bytes()), expected_blob)
 
     def test_runtime_hook_module_has_no_external_integration_or_openspec_route(self) -> None:
-        source = (ROOT / "src" / "opencntx" / "runtime_hooks.py").read_text(encoding="utf-8")
+        source = (ROOT / "tests" / "r9_conformance" / "runtime_hooks.py").read_text(
+            encoding="utf-8"
+        )
         lowered = source.lower()
         for marker in (
             "from pathlib",

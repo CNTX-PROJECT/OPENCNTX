@@ -10,7 +10,17 @@ include MANIFEST.in
 recursive-include assets *
 recursive-include docs *.md
 recursive-include examples *.toml
+recursive-include examples *.json
 recursive-include src *.py
 recursive-include src/opencntx/schemas *.json
 recursive-include tests *.py
+prune tests/r9_conformance
+exclude tests/r9_runtime_simulator.py
+exclude tests/test_intake_autopilot.py
+exclude tests/test_project_runtime.py
+exclude tests/test_roadmap_guard.py
+exclude tests/test_roadmap_runtime.py
+exclude tests/test_runtime_contracts.py
+exclude tests/test_runtime_hooks.py
+exclude tests/test_storage_runtime.py
 recursive-include tools *.py

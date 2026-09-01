@@ -1,4 +1,4 @@
-"""Mandatory fail-closed Roadmap Guard for the isolated R9 foundation."""
+"""Test-only historical guard for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-capsule-v1.schema.json",
+  "title": "OPENCNTX continuity capsule manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "roadmap_digest", "state_digest", "files", "capsule_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-capsule"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "roadmap_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": {"type": "string"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

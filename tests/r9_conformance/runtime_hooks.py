@@ -1,4 +1,4 @@
-"""Pure governed runtime hooks and current-assignment projection for R9."""
+"""Test-only historical hooks for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 

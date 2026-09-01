@@ -1,0 +1,35 @@
+{
+  "format": "opencntx-continuity-roadmap",
+  "format_version": 1,
+  "project_id": "PROJECT-A",
+  "roadmap_id": "ROADMAP-1",
+  "title": "Example universal roadmap",
+  "assignments": [
+    {
+      "id": "TASK-1",
+      "title": "Prepare the bounded change",
+      "detail": "Implement the first exact roadmap result without expanding its scope.",
+      "depends_on": [],
+      "touches": ["README.md", "src/**/*.py"],
+      "conflict": "EXTEND",
+      "migration": "Existing documented behavior remains available.",
+      "definition_of_done": [
+        "Relevant tests pass",
+        "The result is stored locally"
+      ]
+    },
+    {
+      "id": "TASK-2",
+      "title": "Verify and finish",
+      "detail": "Verify the integrated result and close the roadmap.",
+      "depends_on": ["TASK-1"],
+      "touches": ["README.md", "tests/**/*.py"],
+      "conflict": "NO_CONFLICT",
+      "migration": "",
+      "definition_of_done": [
+        "Full verification passes",
+        "The roadmap reports complete"
+      ]
+    }
+  ]
+}

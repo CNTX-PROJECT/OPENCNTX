@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 import unittest
 
-from opencntx.project_runtime import (
+from tests.r9_conformance.project_runtime import (
     ProjectRuntimeError,
     classify_scale,
     compare_and_swap_pointer,
@@ -12,7 +12,7 @@ from opencntx.project_runtime import (
     roadmap_catalog,
     validate_roadmap_graph,
 )
-from opencntx.runtime_contracts import canonical_digest
+from tests.r9_conformance.runtime_contracts import canonical_digest
 from tests.test_runtime_contracts import DIGEST, ZERO, samples
 
 
