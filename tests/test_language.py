@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -163,6 +164,58 @@ class LanguageContractTests(unittest.TestCase):
             before = current.read_bytes()
             self.assertEqual(validate_workspace(root), root.resolve())
             self.assertEqual(current.read_bytes(), before)
+
+    def test_generated_flow_detail_template_is_english(self) -> None:
+        from opencntx.continuity import start_flow
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            (root / "input.txt").write_text("existing\n", encoding="utf-8")
+            roadmap = root / "roadmap.json"
+            roadmap.write_text(
+                json.dumps(
+                    {
+                        "format": "opencntx-continuity-roadmap",
+                        "format_version": 1,
+                        "project_id": "LANGUAGE-TEST",
+                        "roadmap_id": "ROADMAP-1",
+                        "title": "English generated detail",
+                        "assignments": [
+                            {
+                                "id": "TASK-1",
+                                "title": "English task",
+                                "detail": "Complete the bounded English task.",
+                                "depends_on": [],
+                                "touches": ["missing.txt"],
+                                "conflict": "EXTEND",
+                                "migration": "",
+                                "definition_of_done": ["English evidence exists"],
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            start_flow(root, roadmap, "AUTO PILOT")
+            detail = (root / ".opencntx" / "continuity" / "details" / "TASK-1.md").read_text(
+                encoding="utf-8"
+            )
+
+            for expected in (
+                "## Short existing check",
+                "Conflict class: `EXTEND`",
+                "Rev4 result: the objective in this detail wins within the bound scope.",
+                "Migration/compatibility: Not required.",
+                "Files: 0",
+                "No existing touched file was found.",
+            ):
+                self.assertIn(expected, detail)
+            forbidden = re.compile(
+                r"\b(?:korte|bestaande|conflictklasse|uitkomst|doel|wint|"
+                r"gebonden|migratie|bestanden|geen|niet|nodig)\b",
+                re.IGNORECASE,
+            )
+            self.assertIsNone(forbidden.search(detail), detail)
 
 
 if __name__ == "__main__":

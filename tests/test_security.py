@@ -55,6 +55,24 @@ class SecretPolicyTests(unittest.TestCase):
                 self.assertEqual(assessment.warnings, findings)
                 self.assertEqual(assessment.blocked, ())
 
+    def test_structured_password_signals_are_detected(self) -> None:
+        corpus = {
+            "json-password": '{"password": "correct-horse-battery-staple"}\n',
+            "postgres-credential-url": (
+                "DATABASE_URL=postgres://app:correct-horse-battery-staple@"
+                "db.example.invalid:5432/app\n"
+            ),
+            "db-password": "DB_PASSWORD=correct-horse-battery-staple\n",
+        }
+        for name, value in corpus.items():
+            with self.subTest(name=name):
+                findings = scan(value, path="config.json")
+                self.assertEqual(len(findings), 1)
+                self.assertEqual(findings[0].confidence, CONFIDENCE_WARNING)
+        self.assertEqual(scan(corpus["json-password"])[0].rule_id, "credential-like-assignment")
+        self.assertEqual(scan(corpus["postgres-credential-url"])[0].rule_id, "basic-auth-url")
+        self.assertEqual(scan(corpus["db-password"])[0].rule_id, "credential-like-assignment")
+
     def test_normal_code_and_secret_documentation_are_bounded(self) -> None:
         quiet_corpus = (
             "token_count = len(parts)\n",

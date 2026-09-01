@@ -411,13 +411,25 @@ def _reduce(
             status = "RUNNING"
         elif event_type == "ASSIGNMENT_SELECTED":
             current = payload["assignment_id"]
+            failures = []
             status = "RUNNING"
         elif event_type == "ASSIGNMENT_FAILED":
+            if payload.get("assignment_id") != current:
+                raise _fail(
+                    "continuity_store_invalid",
+                    "Continuity failure is not bound to the active assignment.",
+                )
             failures.append(payload["fingerprint"])
             status = "RECOVERY_REQUIRED"
         elif event_type == "ASSIGNMENT_COMPLETED":
+            if payload.get("assignment_id") != current:
+                raise _fail(
+                    "continuity_store_invalid",
+                    "Continuity completion is not bound to the active assignment.",
+                )
             completed.append(payload["assignment_id"])
             current = None
+            failures = []
             status = "RUNNING"
         elif event_type == "FLOW_BLOCKED":
             status = "BLOCKED"
@@ -441,6 +453,104 @@ def _reduce(
     return state | {"state_digest": _value_digest(state)}
 
 
+def _validate_store_bindings(
+    store: Path,
+    roadmap: dict[str, Any],
+    events: Sequence[dict[str, Any]],
+    state: Mapping[str, Any],
+) -> None:
+    """Bind roadmap, generated details and current context to the event ledger."""
+    first = events[0]
+    roadmap_digest = _value_digest(roadmap)
+    if (
+        first.get("type") != "FLOW_STARTED"
+        or first.get("payload", {}).get("roadmap_digest") != roadmap_digest
+        or first.get("payload", {}).get("roadmap_id") != roadmap["roadmap_id"]
+    ):
+        raise _fail(
+            "continuity_store_invalid",
+            "Stored roadmap differs from the roadmap bound when the flow started.",
+        )
+
+    assignments = {item["id"]: item for item in roadmap["assignments"]}
+    selections: dict[str, Mapping[str, Any]] = {}
+    for event in events:
+        if event["type"] != "ASSIGNMENT_SELECTED":
+            continue
+        payload = event["payload"]
+        identifier = payload.get("assignment_id")
+        assignment = assignments.get(identifier)
+        if assignment is None:
+            raise _fail(
+                "continuity_store_invalid",
+                "Selected assignment is absent from the bound roadmap.",
+            )
+        check = _read_json(
+            store / "receipts" / f"{identifier}-existing-check.json",
+            failure_kind="continuity_store_invalid",
+        )
+        check_digest = check.get("check_digest")
+        check_basis = {key: value for key, value in check.items() if key != "check_digest"}
+        if (
+            check_digest != _value_digest(check_basis)
+            or payload.get("existing_check_digest") != check_digest
+            or check_basis.get("assignment_id") != identifier
+        ):
+            raise _fail(
+                "continuity_store_invalid",
+                "Existing-check receipt differs from its selected assignment binding.",
+            )
+        try:
+            expected_detail = _detail_bytes(assignment, check_basis["result"])
+            actual_detail = (store / "details" / f"{identifier}.md").read_bytes()
+        except (KeyError, OSError, TypeError) as exc:
+            raise _fail(
+                "continuity_store_invalid",
+                "Bound assignment detail is unavailable or invalid.",
+            ) from exc
+        if actual_detail != expected_detail:
+            raise _fail(
+                "continuity_store_invalid",
+                "Assignment detail differs from its bound roadmap and existing check.",
+            )
+        selections[str(identifier)] = payload
+
+    current = state["current_assignment"]
+    current_path = store / "context" / "current.json"
+    if current is None:
+        if current_path.exists():
+            raise _fail(
+                "continuity_store_invalid",
+                "Current context exists without an active assignment.",
+            )
+        return
+    selection = selections.get(str(current))
+    if selection is None:
+        raise _fail(
+            "continuity_store_invalid",
+            "Active assignment has no bound selection event.",
+        )
+    context = _read_json(current_path, failure_kind="continuity_store_invalid")
+    context_digest = context.get("context_digest")
+    context_basis = {key: value for key, value in context.items() if key != "context_digest"}
+    expected_context = {
+        "format": "opencntx-current-assignment",
+        "format_version": 1,
+        "assignment": assignments[str(current)],
+        "detail_path": f"details/{current}.md",
+        "existing_check_digest": selection.get("existing_check_digest"),
+    }
+    if (
+        context_digest != _value_digest(context_basis)
+        or context_digest != selection.get("context_digest")
+        or context_basis != expected_context
+    ):
+        raise _fail(
+            "continuity_store_invalid",
+            "Current context differs from its bound assignment selection.",
+        )
+
+
 def _load_store(
     project_root: Path,
 ) -> tuple[Path, dict[str, Any], list[dict[str, Any]], dict[str, Any]]:
@@ -452,6 +562,7 @@ def _load_store(
     )
     events = _read_events(store)
     state = _reduce(store, roadmap, events)
+    _validate_store_bindings(store, roadmap, events, state)
     return store, roadmap, events, state
 
 
@@ -522,22 +633,22 @@ def _detail_bytes(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
             f"- `{item['path']}` — {item['bytes']} bytes — `{item['sha256']}`"
             for item in check["included"]
         )
-        or "- Geen bestaand geraakt bestand gevonden."
+        or "- No existing touched file was found."
     )
     done = "\n".join(f"- [ ] {item}" for item in assignment["definition_of_done"])
-    migration = assignment["migration"] or "Niet nodig."
+    migration = assignment["migration"] or "Not required."
     text = f"""# {assignment["id"]} — {assignment["title"]}
 
 ## Detail
 
 {assignment["detail"]}
 
-## Korte bestaande-check
+## Short existing check
 
-- Conflictklasse: `{assignment["conflict"]}`
-- Rev4-uitkomst: het doel in dit detail wint binnen de gebonden scope.
-- Migratie/compatibility: {migration}
-- Bestanden: {check["file_count"]}
+- Conflict class: `{assignment["conflict"]}`
+- Rev4 result: the objective in this detail wins within the bound scope.
+- Migration/compatibility: {migration}
+- Files: {check["file_count"]}
 - Bytes: {check["byte_count"]}
 
 {paths}
