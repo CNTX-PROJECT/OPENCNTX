@@ -445,9 +445,7 @@ class ContinuityTests(unittest.TestCase):
                 "DATABASE_URL=mysql://app:correct-horse-battery-staple@"
                 "db.example.invalid:5432/app\n"
             ),
-            "information/environment.json": (
-                "DATABASE_PASSWORD=correct-horse-battery-staple\n"
-            ),
+            "information/environment.json": ("DATABASE_PASSWORD=correct-horse-battery-staple\n"),
             "documentation/application.md": "APP_SECRET=correct-horse-battery-staple\n",
         }
         for relative, value in samples.items():
@@ -500,8 +498,7 @@ class ContinuityTests(unittest.TestCase):
         )
         basis = {key: value for key, value in manifest.items() if key != "capsule_digest"}
         canonical = (
-            json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-            + "\n"
+            json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
         ).encode("utf-8")
         manifest["capsule_digest"] = hashlib.sha256(canonical).hexdigest()
         payloads["manifest.json"] = (

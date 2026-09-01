@@ -152,10 +152,10 @@ def _load_sync_config(project_root: Path, *, migrate: bool) -> dict[str, Any] | 
         if migrate:
             _write_atomic(path, normalized)
         return normalized
-    if (
-        value.get("checkpoint_policy") != CHECKPOINT_POLICY
-        or value.get("migration") not in {"NONE", "LEGACY_IMPLICIT_EVERY_CHECKPOINT"}
-    ):
+    if value.get("checkpoint_policy") != CHECKPOINT_POLICY or value.get("migration") not in {
+        "NONE",
+        "LEGACY_IMPLICIT_EVERY_CHECKPOINT",
+    }:
         raise _fail("continuity_sync_config_invalid", "Checkpoint sync policy is invalid.")
     return value
 

@@ -63,9 +63,7 @@ def register_continuity_commands(
         help="optional relative JSON with decisions, result, changed paths, explanation, and risks",
     )
     advance.add_argument("--host", help="portable host ID when the assignment was claimed")
-    advance.add_argument(
-        "--claim-digest", help="exact active host claim required after host claim"
-    )
+    advance.add_argument("--claim-digest", help="exact active host claim required after host claim")
     advance.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     health = commands.add_parser("health", help="verify store, roadmap, detail and event chain")

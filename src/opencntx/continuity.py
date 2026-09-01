@@ -680,7 +680,8 @@ def _reject_secret_content(*, relative: str, content: bytes, context: str) -> No
     findings = scan_text(path=relative, text=text, source_sha256=_digest(content))
     if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
         raise _fail(
-            f"continuity_{context}_secret", f"{context.title()} content triggered the secret filter."
+            f"continuity_{context}_secret",
+            f"{context.title()} content triggered the secret filter.",
         )
 
 
@@ -723,7 +724,11 @@ def _validate_claims(
         payload = event["payload"]
         identifier = str(payload.get("assignment_id"))
         expected_path = f"claims/{identifier}.json"
-        if identifier in seen or identifier not in assignments or payload.get("claim_path") != expected_path:
+        if (
+            identifier in seen
+            or identifier not in assignments
+            or payload.get("claim_path") != expected_path
+        ):
             raise _fail("continuity_store_invalid", "Host claim event binding is invalid.")
         record = _read_json(store / expected_path, failure_kind="continuity_store_invalid")
         if set(record) != CLAIM_FIELDS:
@@ -752,9 +757,10 @@ def _validate_claims(
         ):
             raise _fail("continuity_store_invalid", "Host claim differs from its event binding.")
         for later in events[index + 1 :]:
-            if later["type"] == "ASSIGNMENT_COMPLETED" and later["payload"].get(
-                "assignment_id"
-            ) == identifier:
+            if (
+                later["type"] == "ASSIGNMENT_COMPLETED"
+                and later["payload"].get("assignment_id") == identifier
+            ):
                 if (
                     later["payload"].get("claim_digest") != record["claim_digest"]
                     or later["payload"].get("host_id") != record["host_id"]
