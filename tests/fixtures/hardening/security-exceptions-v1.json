@@ -8,6 +8,16 @@
       "reason": "The assertion narrows one internal optional dispatcher result after the parser selected that route."
     },
     {
+      "path": "src/opencntx/continuity.py",
+      "codes": ["S603"],
+      "reason": "The read-only Git adapter invokes only the discovered Git executable with bounded literal arguments and no shell."
+    },
+    {
+      "path": "src/opencntx/continuity_sync.py",
+      "codes": ["S603"],
+      "reason": "The private replica invokes only bounded Git commands with validated aliases and branches and never uses a shell."
+    },
+    {
       "path": "tools/quality_gate.py",
       "codes": ["S603"],
       "reason": "The quality gate runs only the current Python executable and fixed repository-owned arguments."

@@ -1,4 +1,4 @@
-"""Pure nested-roadmap facade and model-free Assignment 32 corpus runner."""
+"""Test-only historical roadmap runner for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 

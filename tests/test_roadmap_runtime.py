@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from opencntx.project_runtime import (
+from tests.r9_conformance.project_runtime import (
     ProjectRuntimeError,
     evaluate_workstream_state,
     prepare_return_to_parent,
@@ -16,7 +16,7 @@ from opencntx.project_runtime import (
     serialize_integration_queue,
     validate_roadmap_stack,
 )
-from opencntx.roadmap_runtime import (
+from tests.r9_conformance.roadmap_runtime import (
     RoadmapRuntimeError,
     evaluate_nested_runtime,
     load_roadmap_corpus,
@@ -25,7 +25,7 @@ from opencntx.roadmap_runtime import (
     run_roadmap_corpus,
     validate_roadmap_corpus,
 )
-from opencntx.runtime_contracts import canonical_digest
+from tests.r9_conformance.runtime_contracts import canonical_digest
 from tests.test_runtime_contracts import DIGEST, ZERO, samples
 
 ROOT = Path(__file__).resolve().parents[1]

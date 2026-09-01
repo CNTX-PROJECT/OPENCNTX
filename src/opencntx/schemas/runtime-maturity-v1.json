@@ -1,0 +1,15 @@
+{
+  "format": "opencntx-runtime-maturity",
+  "format_version": 1,
+  "release": "1.1.0",
+  "modules": [
+    {"module": "intake_autopilot", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by flow preview"},
+    {"module": "project_runtime", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by continuity ledger"},
+    {"module": "roadmap_guard", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by bounded existing-check"},
+    {"module": "roadmap_runtime", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by assignment trigger"},
+    {"module": "runtime_contracts", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by continuity schemas"},
+    {"module": "runtime_hooks", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by current detail"},
+    {"module": "runtime_simulator", "disposition": "REMOVE", "surface": "moved to test-only conformance"},
+    {"module": "storage_runtime", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by local store and optional Git replica"}
+  ]
+}

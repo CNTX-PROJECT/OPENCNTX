@@ -8,8 +8,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from opencntx.runtime_contracts import canonical_digest, validate_runtime_record
-from opencntx.storage_runtime import (
+from tests.r9_conformance.runtime_contracts import canonical_digest, validate_runtime_record
+from tests.r9_conformance.storage_runtime import (
     ASSIGNMENT_34_PROPOSAL_SHA256,
     CASE_RESULT_CODES,
     SCENARIO_COUNT,
@@ -663,7 +663,9 @@ class StorageRuntimeTests(unittest.TestCase):
             self.assertEqual(_git_blob_id(path), expected_blob)
 
     def test_module_has_no_central_service_or_forbidden_git_implementation(self) -> None:
-        source = (ROOT / "src" / "opencntx" / "storage_runtime.py").read_text(encoding="utf-8")
+        source = (ROOT / "tests" / "r9_conformance" / "storage_runtime.py").read_text(
+            encoding="utf-8"
+        )
         lowered = source.lower()
         for marker in (
             "import socket",

@@ -1,4 +1,4 @@
-"""Pure, model-free intake proposal engine for the R9 project runtime."""
+"""Test-only historical intake engine for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 

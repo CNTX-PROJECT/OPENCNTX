@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-state-v1.schema.json",
+  "title": "OPENCNTX continuity state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "roadmap_id", "roadmap_digest", "status", "current_assignment", "completed", "recovery_rounds", "failure_fingerprints", "event_count", "event_head", "state_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-store"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "roadmap_id": {"type": "string"},
+    "roadmap_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["READY", "RUNNING", "RECOVERY_REQUIRED", "BLOCKED", "COMPLETE"]},
+    "current_assignment": {"type": ["string", "null"]},
+    "completed": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "recovery_rounds": {"type": "integer", "minimum": 0, "maximum": 3},
+    "failure_fingerprints": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "event_count": {"type": "integer", "minimum": 1},
+    "event_head": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

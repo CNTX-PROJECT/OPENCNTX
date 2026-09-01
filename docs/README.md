@@ -19,6 +19,7 @@ more detail.
 | understand the product in five minutes | [How it works](how-it-works.md) |
 | learn the three-command core | [Core commands](core.md) |
 | organize a longer project | [Workspace](workspace.md) |
+| keep a complete roadmap moving with one approval | [Roadmap continuity](continuity.md) |
 | look up an exact command | [Command reference](commands.md) |
 | solve a failure | [Troubleshooting](troubleshooting.md) |
 | understand what stays local | [Security in plain language](security.md) |
@@ -49,6 +50,13 @@ context package.
   produced without confusing it with the original file.
 - [Privacy, storage, and format lifecycle](privacy-storage-lifecycle.md) — audit
   local access, compatibility, migration, cleanup, and restore.
+
+## Universal roadmap continuity
+
+- [Roadmap continuity and AUTO PILOT](continuity.md) — keep the roadmap,
+  current detail, evidence and next trigger in a restart-safe local store;
+  export a portable capsule and optionally mirror filtered records to private
+  Git or GitHub.
 
 ## Decisions and bounded work
 

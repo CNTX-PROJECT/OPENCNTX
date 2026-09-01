@@ -1,4 +1,4 @@
-"""Model-free simulator for the frozen R9 Assignment-29 scenario corpus."""
+"""Test-only simulator for the frozen historical R9 Assignment-29 corpus."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .project_runtime import classify_scale
-from .runtime_contracts import canonical_digest
+from tests.r9_conformance.project_runtime import classify_scale
+from tests.r9_conformance.runtime_contracts import canonical_digest
 
 SCENARIO_FORMAT = "opencntx-r9-scenario-corpus"
 SCENARIO_VERSION = 1

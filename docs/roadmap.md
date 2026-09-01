@@ -7,7 +7,7 @@ features or expose private project records.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
-  <img src="../assets/docs/roadmap.svg" alt="OPENCNTX progressed from the three-command core through the workspace foundation to the v1.0.0 Production/Stable line">
+  <img src="../assets/docs/roadmap.svg" alt="OPENCNTX progressed from the three-command core through the workspace foundation to universal local roadmap continuity">
 </picture>
 
 ## Completed foundation
@@ -126,15 +126,34 @@ features or expose private project records.
 - aligned the complete documented CLI, including the optional workspace, with
   the Production/Stable contract.
 
+### v1.1.0 universal roadmap continuity
+
+- added one local-first `flow` route for a complete bounded roadmap under one
+  explicit `AUTO PILOT` approval;
+- added a short check of only assignment-relevant existing files before every
+  detail, with explicit conflict and migration classification;
+- added restart-safe roadmap return and next-assignment triggering from a
+  hash-chained event ledger;
+- added automatic local storage for roadmaps, details, information,
+  documentation, compact context, receipts and history;
+- added deterministic capsule export, independent verification and restore;
+- added read-only file, Git, Markdown and JSON adapters;
+- added an optional filtered private Git/GitHub replica with preview,
+  non-force push, conflict stop and exact remote readback;
+- published exactly `opencntx-1.1.0-py3-none-any.whl`,
+  `opencntx-1.1.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`;
+- kept `v1.0.0` immutable and preserved all existing core and workspace routes.
+
 ## Current state
 
-- Current package line: `v1.0.0`
-- Package version: `1.0.0`
+- Current package line: `v1.1.0`
+- Package version: `1.1.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
-- Product focus: local, explicit, bounded, verifiable context
-- Public release: live exact `v1.0.0` tag plus immutable matching GitHub Release
+- Product focus: local, explicit, bounded, verifiable context and roadmap continuity
+- Public release: live exact `v1.1.0` tag plus immutable matching GitHub Release;
+  the `v1.0.0` release remains immutable
 - Distribution: exact Git tag plus the four verified GitHub Release assets
   named above; no PyPI or TestPyPI package
 

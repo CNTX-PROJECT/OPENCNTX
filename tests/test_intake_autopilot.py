@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from opencntx.intake_autopilot import (
+from tests.r9_conformance.intake_autopilot import (
     EVIDENCE_STATUSES,
     INSPECTION_LIMITS,
     QUESTION_LIMITS,
@@ -28,7 +28,7 @@ from opencntx.intake_autopilot import (
     validate_read_target,
     verify_snapshot,
 )
-from opencntx.runtime_contracts import canonical_digest
+from tests.r9_conformance.runtime_contracts import canonical_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 CORPUS = ROOT / "tests" / "fixtures" / "r9" / "assignment-31-intake-scenarios-v1.json"

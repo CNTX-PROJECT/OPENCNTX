@@ -1,4 +1,4 @@
-"""Governed local canonical storage and optional private Git mirroring for R9."""
+"""Test-only historical storage engine for the frozen R9 conformance corpus."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Protocol, runtime_checkable
 
-from .integrity import (
+from opencntx.integrity import (
     IntegrityError,
     doctor_workspace,
     recover_workspace,
@@ -20,13 +20,14 @@ from .integrity import (
     sync_directory,
     writer_transaction,
 )
+from opencntx.security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
+
 from .runtime_contracts import (
     RuntimeContractError,
     canonical_digest,
     canonical_json_bytes,
     validate_runtime_record,
 )
-from .security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
 
 ASSIGNMENT_34_PROPOSAL_SHA256 = "aa1ca0d62dd67fe24b53d8f47e0828b2177852a604239fa289f9e3927edecae3"
 SCENARIO_TABLE_SHA256 = "4287515f247abe835e03359897db18fb9e34c1cbd6415f4bac4faf3c35d2fa4d"

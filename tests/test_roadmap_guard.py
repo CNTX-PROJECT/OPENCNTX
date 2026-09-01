@@ -6,8 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from opencntx.project_runtime import reduce_runtime
-from opencntx.roadmap_guard import (
+from tests.r9_conformance.project_runtime import reduce_runtime
+from tests.r9_conformance.roadmap_guard import (
     ALLOW_EXACT_ACTION,
     GUARD_TRIGGERS,
     INTAKE_GUARD_TRIGGERS,
@@ -16,8 +16,8 @@ from opencntx.roadmap_guard import (
     evaluate_guard,
     evaluate_intake_guard,
 )
-from opencntx.runtime_contracts import canonical_digest
-from opencntx.runtime_simulator import (
+from tests.r9_conformance.runtime_contracts import canonical_digest
+from tests.r9_runtime_simulator import (
     RuntimeSimulatorError,
     load_corpus,
     run_corpus,

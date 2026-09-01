@@ -49,6 +49,7 @@ GUIDES = {
     "context-packets.md",
     "core.md",
     "commands.md",
+    "continuity.md",
     "contracts-and-compatibility.md",
     "faq.md",
     "glossary.md",
@@ -227,8 +228,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(44, len(executable_paths))
-        self.assertEqual(49, len(documented_paths))
+        self.assertEqual(58, len(executable_paths))
+        self.assertEqual(63, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
@@ -617,7 +618,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.0.0")
+        self.assertEqual(version, "1.1.0")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],
@@ -651,7 +652,7 @@ class PublicQualityTests(unittest.TestCase):
 
         for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
-                self.assertIn("v1.0.0", public_surface)
+                self.assertIn(f"v{version}", public_surface)
                 self.assertIn("Stable", public_surface)
                 self.assertNotIn("v1.0.0rc1", public_surface)
                 self.assertNotIn("Development Status :: 4 - Beta", public_surface)
@@ -667,8 +668,8 @@ class PublicQualityTests(unittest.TestCase):
                 self.assertIn(maintenance_claim, contracts)
 
         for asset_name in (
-            "opencntx-1.0.0-py3-none-any.whl",
-            "opencntx-1.0.0.tar.gz",
+            f"opencntx-{version}-py3-none-any.whl",
+            f"opencntx-{version}.tar.gz",
             "SHA256SUMS",
             "BUILD-RECORD.json",
         ):

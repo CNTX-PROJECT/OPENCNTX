@@ -9,15 +9,16 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**Stable v1.0.0** · **Local only** · **Any model** · **Zero runtime dependencies**
+**v1.1.0** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
 OPENCNTX helps you give an AI tool the context it needs—without handing over an
-entire project. You choose the files, preview the selection, inspect the output,
-and verify the exact bytes before deciding whether to share anything.
+entire project. It can also keep one roadmap, one current detail and one
+restart-safe history outside the chat, so a long assignment does not depend on
+AI memory. You choose the files and roadmap; OPENCNTX keeps the local evidence.
 
 It needs no account, API key, cloud service, database, or built-in AI model.
 OPENCNTX never uploads files and never sends a prompt for you.
@@ -34,17 +35,17 @@ OPENCNTX never uploads files and never sends a prompt for you.
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the immutable Stable release:
+`pipx` installed, install the exact v1.1.0 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.1.0"
 opencntx --version
 ```
 
-Prefer a full Stable source checkout instead:
+Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.0.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.1.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -88,17 +89,24 @@ and common errors.
   <img src="assets/docs/core-flow.svg" alt="Initialize, preview and pack, inspect, verify, and only then decide whether to share">
 </picture>
 
-## Two stable ways to work
+## Three local ways to work
 
 | Route | Best for | Start with |
 |---|---|---|
 | **Core package** | One question or one small task | `init → preview → pack → inspect → verify` |
 | **Structured workspace** | Longer projects that need sources, reviewed knowledge, task gates, and recovery evidence | `opencntx workspace init PROJECT` |
+| **Roadmap flow** | A complete bounded roadmap that must survive restarts with one approval | `opencntx flow start roadmap.json --approval "AUTO PILOT"` |
 
 The workspace is **Stable and optional**. It adds local source capture,
 chapters, a catalog, tasks, playbooks, roles, bounded executor packages,
 transaction diagnosis, and backup-first recovery. It does not start an AI,
 agent, shell process, OCR tool, transcription service, or cloud sync.
+
+The additive [roadmap flow](docs/continuity.md) automatically stores the
+roadmap, current detail, compact context, receipts and history locally. After a
+PASS it returns to the roadmap and triggers the next dependency-ready detail
+without a new approval. Optional private Git/GitHub sync is filtered,
+previewed, non-force and read back; local storage remains canonical.
 
 Read [Workspace](docs/workspace.md) when a single context package is no longer
 enough. Beginners can stay entirely on the core route.
@@ -134,8 +142,8 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Release | `v1.0.0` Production/Stable, immutable GitHub Release |
-| Package | `opencntx 1.0.0` |
+| Release | `v1.1.0` Production/Stable, immutable GitHub Release; `v1.0.0` remains immutable |
+| Package | `opencntx 1.1.0` |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -145,8 +153,8 @@ route—never in a public issue.
 
 The immutable Release contains exactly:
 
-- `opencntx-1.0.0-py3-none-any.whl`
-- `opencntx-1.0.0.tar.gz`
+- `opencntx-1.1.0-py3-none-any.whl`
+- `opencntx-1.1.0.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 

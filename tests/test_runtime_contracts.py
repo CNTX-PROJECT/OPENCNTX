@@ -4,7 +4,7 @@ import copy
 import unittest
 
 from opencntx.lifecycle import r9_schema_assets, r9_schema_bundle_digest, schema_assets
-from opencntx.runtime_contracts import (
+from tests.r9_conformance.runtime_contracts import (
     FORMAT_TO_SCHEMA,
     RuntimeContractError,
     canonical_digest,

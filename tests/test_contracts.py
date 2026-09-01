@@ -149,8 +149,12 @@ class PublicSurfaceContractTests(unittest.TestCase):
             if item["kind"] == "CLI_ARGUMENT"
         }
         routes, arguments = _parser_contract()
-        self.assertEqual(expected_routes, routes)
-        self.assertEqual(set(expected_arguments), set(arguments))
+        self.assertTrue(expected_routes.issubset(routes))
+        self.assertTrue(all(route.startswith("opencntx flow") for route in routes - expected_routes))
+        self.assertTrue(set(expected_arguments).issubset(arguments))
+        self.assertTrue(
+            all(identity[0].startswith("opencntx flow") for identity in set(arguments) - set(expected_arguments))
+        )
         for identity, expected in expected_arguments.items():
             with self.subTest(argument=identity):
                 self.assertEqual(expected, arguments[identity])

@@ -7,6 +7,7 @@ import sys
 from collections.abc import Sequence
 
 from . import __version__
+from .cli_continuity import dispatch_continuity, register_continuity_commands
 from .cli_core import dispatch_core, init_project, register_core_commands
 from .cli_workspace import dispatch_workspace, register_workspace_commands
 from .core import OpenCntxError
@@ -34,6 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     register_core_commands(subparsers)
     register_workspace_commands(subparsers)
+    register_continuity_commands(subparsers)
     return parser
 
 
@@ -53,6 +55,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = dispatch_core(args)
         if result is None:
             result = dispatch_workspace(args)
+        if result is None:
+            result = dispatch_continuity(args)
         return 2 if result is None else result
     except (IntegrityError, OpenCntxError, WorkspaceError) as exc:
         detail = (
