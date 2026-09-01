@@ -256,6 +256,7 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
             "include README.md",
             "include pyproject.toml",
             "recursive-include docs *.md",
+            "recursive-include examples *.json",
             "recursive-include src *.py",
             "recursive-include src/opencntx/schemas *.json",
             "recursive-include tests *.py",
