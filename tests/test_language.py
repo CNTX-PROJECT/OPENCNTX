@@ -59,19 +59,20 @@ class LanguageContractTests(unittest.TestCase):
             manifest["policy"],
             "READ_ONLY_COMPATIBILITY_INPUT_NEVER_CURRENT_PRODUCT_OUTPUT",
         )
+        self.assertEqual(manifest["canonicalization"], "TEXT_CRLF_TO_LF_BEFORE_SHA256")
         legacy_paths = {item["path"] for item in manifest["files"]}
         self.assertEqual(len(legacy_paths), len(manifest["files"]))
         for item in manifest["files"]:
             path = REPOSITORY_ROOT / item["path"]
             self.assertTrue(path.is_file(), item["path"])
-            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), item["sha256"])
+            canonical_bytes = path.read_bytes().replace(b"\r\n", b"\n")
+            self.assertNotIn(b"\r", canonical_bytes, item["path"])
+            self.assertEqual(hashlib.sha256(canonical_bytes).hexdigest(), item["sha256"])
 
         active_files = [REPOSITORY_ROOT / "README.md"]
         for relative_root in ("src", "docs", "examples", "tests"):
             active_files.extend(
-                path
-                for path in (REPOSITORY_ROOT / relative_root).rglob("*")
-                if path.is_file()
+                path for path in (REPOSITORY_ROOT / relative_root).rglob("*") if path.is_file()
             )
         forbidden = (
             "sky" + "rim",
@@ -301,8 +302,8 @@ class LanguageContractTests(unittest.TestCase):
             )
             self.assertEqual(status.returncode, 0, status.stderr)
 
-            _workspace, _playbook, _role, _proposal, _context, executor = (
-                prepare_ready_executor(parent / "executor")
+            _workspace, _playbook, _role, _proposal, _context, executor = prepare_ready_executor(
+                parent / "executor"
             )
             executor_text = executor.assignment_path.read_text(encoding="utf-8")
             for text in (task_text, status.stdout.decode("utf-8"), executor_text):

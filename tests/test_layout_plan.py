@@ -28,9 +28,7 @@ def manifest_value() -> dict[str, object]:
         "maximum_files": 100,
         "maximum_path_length": 240,
         "minimum_free_bytes": 1_000,
-        "operations": [
-            {"destination": "TARGET/PROJECT", "id": "MOVE-PROJECT", "source": "SOURCE"}
-        ],
+        "operations": [{"destination": "TARGET/PROJECT", "id": "MOVE-PROJECT", "source": "SOURCE"}],
         "plan_id": "LAYOUT-TEST",
         "protected_paths": ["PROTECTED"],
         "schema_id": MANIFEST_SCHEMA_ID,
@@ -104,11 +102,17 @@ class LayoutPlanTests(unittest.TestCase):
             base = Path(temporary_directory)
             manifest = self._ready_project(base)
             value = json.loads(manifest.read_text(encoding="utf-8"))
-            (base / "TARGET" / "PROJECT").mkdir(parents=True)
+            destination = f"TARGET/PROJECT-{'X' * 64}"
+            (base / destination).mkdir(parents=True)
             value["maximum_path_length"] = 64
+            value["operations"][0]["destination"] = destination
             value["protected_paths"] = ["SOURCE/DOCS"]
             value["operations"].append(
-                {"destination": "TARGET/PROJECT/CHILD", "id": "MOVE-CHILD", "source": "SOURCE/DOCS"}
+                {
+                    "destination": f"{destination}/CHILD",
+                    "id": "MOVE-CHILD",
+                    "source": "SOURCE/DOCS",
+                }
             )
 
             plan = build_layout_plan(write_json(manifest, value), base)
@@ -166,7 +170,15 @@ class LayoutPlanTests(unittest.TestCase):
             subprocess.run(["git", "-C", str(source), "add", "."], check=True)
             subprocess.run(["git", "-C", str(source), "commit", "-qm", "initial"], check=True)
             subprocess.run(
-                ["git", "-C", str(source), "remote", "add", "origin", "https://example.invalid/repository.git"],
+                [
+                    "git",
+                    "-C",
+                    str(source),
+                    "remote",
+                    "add",
+                    "origin",
+                    "https://example.invalid/repository.git",
+                ],
                 check=True,
             )
 
@@ -270,9 +282,7 @@ class LayoutPlanCliTests(unittest.TestCase):
             plan = json.loads(preview.stdout)
             self.assertEqual(before, snapshot(base))
             plan_path = write_json(base / "plan.json", plan)
-            verify = self._run(
-                "layout", "plan", "verify", "--plan", str(plan_path), cwd=base
-            )
+            verify = self._run("layout", "plan", "verify", "--plan", str(plan_path), cwd=base)
             self.assertEqual(0, verify.returncode, verify.stderr)
             self.assertEqual("VERIFIED", json.loads(verify.stdout)["status"])
 
