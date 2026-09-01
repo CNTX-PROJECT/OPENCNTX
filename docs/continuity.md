@@ -187,9 +187,11 @@ opencntx flow sync preview private-context-repo `
   --private-repository
 ```
 
-The preview filters to UTF-8 Markdown and JSON, runs the local secret filter,
-binds the current remote head and writes nothing. Safe handoff JSON is included;
-a secret signal in handoff input or generated sync content stops fail-closed.
+The preview filters to UTF-8 Markdown and JSON, runs the same local secret
+policy used by pack, handoffs, information, documentation, and capsules, binds
+the current remote head and writes nothing. Safe handoff JSON is included; a
+secret signal in handoff input, capsule content, or generated sync content
+stops fail-closed without retaining or printing the matched value.
 Apply its exact digest once:
 
 ```powershell

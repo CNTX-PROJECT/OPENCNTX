@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -439,12 +440,15 @@ class ContinuityTests(unittest.TestCase):
         _, mirror = self._private_replica("secret-filter")
         store = project / ".opencntx" / "continuity"
         samples = {
-            "information/password.json": '{"password": "correct-horse-battery-staple"}\n',
+            "information/password.json": '{"password": "correct horse battery staple"}\n',
             "documentation/database.md": (
-                "DATABASE_URL=postgres://app:correct-horse-battery-staple@"
+                "DATABASE_URL=mysql://app:correct-horse-battery-staple@"
                 "db.example.invalid:5432/app\n"
             ),
-            "information/environment.json": "DB_PASSWORD=correct-horse-battery-staple\n",
+            "information/environment.json": (
+                "DATABASE_PASSWORD=correct-horse-battery-staple\n"
+            ),
+            "documentation/application.md": "APP_SECRET=correct-horse-battery-staple\n",
         }
         for relative, value in samples.items():
             with self.subTest(relative=relative):
@@ -459,6 +463,61 @@ class ContinuityTests(unittest.TestCase):
                         private_repository_confirmed=False,
                     )
                 path.unlink()
+
+    def test_capsule_rejects_secret_information_without_exposing_value(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        store = project / ".opencntx" / "continuity"
+        secret = "correct horse battery staple"
+        path = store / "information" / "credentials.json"
+        path.write_text(json.dumps({"APP_SECRET": secret}), encoding="utf-8")
+
+        with self.assertRaises(ContinuityError) as caught:
+            export_capsule(project, self.root / "unsafe.ocx")
+
+        self.assertIn("secret filter", str(caught.exception))
+        self.assertNotIn(secret, str(caught.exception))
+        self.assertFalse((self.root / "unsafe.ocx").exists())
+
+    def test_capsule_verify_rejects_internally_bound_secret_content(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        safe_capsule = self.root / "safe.ocx"
+        export_capsule(project, safe_capsule)
+        with zipfile.ZipFile(safe_capsule) as archive:
+            payloads = {name: archive.read(name) for name in archive.namelist()}
+
+        secret = "correct horse battery staple"
+        name = "continuity/information/unsafe.json"
+        content = json.dumps({"DATABASE_PASSWORD": secret}).encode("utf-8")
+        manifest = json.loads(payloads["manifest.json"].decode("utf-8"))
+        manifest["files"].append(
+            {
+                "path": "information/unsafe.json",
+                "bytes": len(content),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        )
+        basis = {key: value for key, value in manifest.items() if key != "capsule_digest"}
+        canonical = (
+            json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            + "\n"
+        ).encode("utf-8")
+        manifest["capsule_digest"] = hashlib.sha256(canonical).hexdigest()
+        payloads["manifest.json"] = (
+            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        payloads[name] = content
+        forged_capsule = self.root / "forged.ocx"
+        with zipfile.ZipFile(forged_capsule, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for entry, payload in payloads.items():
+                archive.writestr(entry, payload)
+
+        with self.assertRaises(ContinuityError) as caught:
+            verify_capsule(forged_capsule)
+
+        self.assertIn("secret filter", str(caught.exception))
+        self.assertNotIn(secret, str(caught.exception))
 
     def test_cli_and_contract_catalog_are_machine_readable(self) -> None:
         project, roadmap_path = self._project()

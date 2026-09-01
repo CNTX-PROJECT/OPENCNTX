@@ -70,10 +70,16 @@ _WARNING_RULES = (
         rule_id="credential-like-assignment",
         confidence=CONFIDENCE_WARNING,
         expression=re.compile(
-            r"\b(?:password|passwd|db[_-]?password|token|api[_-]?key|"
-            r"client[_-]?secret|authorization)\b[\"']?"
-            r"[ \t]*[:=][ \t]*[\"']?"
-            r"(?![A-Za-z_][A-Za-z0-9_]*\()[^\s\"'#]{8,}",
+            r"\b(?:password|passwd|db[_-]?password|database[_-]?password|"
+            r"app[_-]?secret|token|api[_-]?key|client[_-]?secret|authorization)"
+            r"\b[\"']?"
+            r"[ \t]*[:=][ \t]*"
+            r"(?:"
+            r"\\\"[^\"\r\n]{8,}\\\"|"
+            r"\"[^\"\r\n]{8,}\"|"
+            r"'[^'\r\n]{8,}'|"
+            r"(?![A-Za-z_][A-Za-z0-9_]*\()[^\s\"'#]{8,}"
+            r")",
             re.IGNORECASE | re.MULTILINE,
         ),
     ),
@@ -81,7 +87,9 @@ _WARNING_RULES = (
         rule_id="basic-auth-url",
         confidence=CONFIDENCE_WARNING,
         expression=re.compile(
-            r"(?:https?|postgres(?:ql)?)://[^/\s:@]+:[^@\s/]+@",
+            r"(?:https?|postgres(?:ql)?|mysql(?:\+[a-z0-9._-]+)?|"
+            r"mariadb(?:\+[a-z0-9._-]+)?|mongodb(?:\+srv)?|rediss?)://"
+            r"[^/\s:@]+:[^@\s/]+@",
             re.IGNORECASE,
         ),
     ),

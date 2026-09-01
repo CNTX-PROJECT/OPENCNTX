@@ -29,6 +29,7 @@ ZERO_DIGEST = "0" * 64
 CONFLICT_CLASSES = frozenset({"NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "REMOVE"})
 ID_PATTERN = re.compile(r"[A-Z][A-Z0-9_-]{0,79}\Z")
 SAFE_REMOTE = re.compile(r"^(?:https://|ssh://|git@|file://|[A-Za-z]:[\\/]|/)")
+SECRET_TEXT_SUFFIXES = frozenset({".json", ".jsonl", ".md"})
 
 ROADMAP_FIELDS = {"format", "format_version", "project_id", "roadmap_id", "title", "assignments"}
 ASSIGNMENT_FIELDS = {
@@ -665,6 +666,22 @@ def _validate_handoffs(
     )
     if actual_paths != bound_paths:
         raise _fail("continuity_store_invalid", "Handoff inventory differs from event history.")
+
+
+def _reject_secret_content(*, relative: str, content: bytes, context: str) -> None:
+    if PurePosixPath(relative).suffix.lower() not in SECRET_TEXT_SUFFIXES:
+        return
+    try:
+        text = content.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise _fail(
+            f"continuity_{context}_secret", f"{context.title()} text is not valid UTF-8."
+        ) from exc
+    findings = scan_text(path=relative, text=text, source_sha256=_digest(content))
+    if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
+        raise _fail(
+            f"continuity_{context}_secret", f"{context.title()} content triggered the secret filter."
+        )
 
 
 def _selection_for(events: Sequence[dict[str, Any]], identifier: str) -> Mapping[str, Any]:
@@ -1427,6 +1444,7 @@ def export_capsule(project_root: Path, destination: Path) -> dict[str, Any]:
     for path in _store_files(store):
         relative = path.relative_to(store).as_posix()
         content = path.read_bytes()
+        _reject_secret_content(relative=relative, content=content, context="capsule")
         entries.append({"path": relative, "bytes": len(content), "sha256": _digest(content)})
     manifest = {
         "format": CAPSULE_FORMAT,
@@ -1500,6 +1518,9 @@ def verify_capsule(path: Path) -> dict[str, Any]:
                 content = archive.read(name)
                 if len(content) != item["bytes"] or _digest(content) != item["sha256"]:
                     raise _fail("continuity_capsule_invalid", "Capsule file digest differs.")
+                _reject_secret_content(
+                    relative=str(item["path"]), content=content, context="capsule"
+                )
                 expected_names.add(name)
             if set(names) != expected_names:
                 raise _fail("continuity_capsule_invalid", "Capsule contains unexpected files.")

@@ -39,11 +39,13 @@ writes no package, manifest, receipt, temporary publication state, or source.
 
 A small dependency-free local scanner checks only the already selected,
 bounded UTF-8 text. Narrow high-confidence credential structures block pack
-before publication. Broader credential-like text—including quoted JSON
-passwords, `DB_PASSWORD` assignments and credential-bearing HTTP or PostgreSQL
-URLs—produces a warning. Optional continuity sync rejects both warning and
-high-confidence findings. Safe diagnostics contain finding metadata, never the
-matched value or snippet.
+before publication. Broader credential-like text—including quoted passwords
+(also when the value contains spaces), `DB_PASSWORD`, `DATABASE_PASSWORD`, and
+`APP_SECRET` assignments, and credential-bearing HTTP, PostgreSQL, MySQL,
+MariaDB, MongoDB, or Redis URLs—produces a warning. Optional continuity sync
+and portable continuity capsules reject both warning and high-confidence
+findings. Safe diagnostics contain finding metadata, never the matched value or
+snippet.
 
 An apparent false positive can be overridden only by supplying its exact
 current finding ID to `pack --allow-secret`. The ID changes with the source

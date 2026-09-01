@@ -147,6 +147,27 @@ class DurableHandoffTests(unittest.TestCase):
             self.assertFalse((store / "handoffs").exists())
             self.assertEqual("TASK-1", flow_status(project).current_assignment)
 
+    def test_extended_secret_handoff_is_blocked_without_exposing_value(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            project = start_project(Path(temporary_directory), "project")
+            (project / "evidence.txt").write_text("green\n", encoding="utf-8")
+            secret = "correct horse battery staple"
+            handoff_input = write_handoff_input(
+                project,
+                result=f'APP_SECRET="{secret}"',
+            )
+
+            with self.assertRaises(ContinuityError) as caught:
+                advance_flow(
+                    project,
+                    outcome="PASS",
+                    evidence_paths=["evidence.txt"],
+                    handoff_path=handoff_input.name,
+                )
+
+            self.assertIn("secret filter", str(caught.exception))
+            self.assertNotIn(secret, str(caught.exception))
+
     def test_capsule_import_and_sync_candidates_preserve_exact_safe_handoff(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             parent = Path(temporary_directory)

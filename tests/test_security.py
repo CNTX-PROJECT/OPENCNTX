@@ -63,6 +63,11 @@ class SecretPolicyTests(unittest.TestCase):
                 "db.example.invalid:5432/app\n"
             ),
             "db-password": "DB_PASSWORD=correct-horse-battery-staple\n",
+            "database-password": "DATABASE_PASSWORD=correct-horse-battery-staple\n",
+            "app-secret": "APP_SECRET=correct-horse-battery-staple\n",
+            "quoted-password-with-spaces": (
+                '{"password": "correct horse battery staple"}\n'
+            ),
         }
         for name, value in corpus.items():
             with self.subTest(name=name):
@@ -73,6 +78,23 @@ class SecretPolicyTests(unittest.TestCase):
         self.assertEqual(scan(corpus["postgres-credential-url"])[0].rule_id, "basic-auth-url")
         self.assertEqual(scan(corpus["db-password"])[0].rule_id, "credential-like-assignment")
 
+    def test_additional_credential_url_schemes_are_detected(self) -> None:
+        corpus = (
+            "mysql://app:synthetic-password@db.example.invalid/app",
+            "mysql+pymysql://app:synthetic-password@db.example.invalid/app",
+            "mariadb://app:synthetic-password@db.example.invalid/app",
+            "mongodb://app:synthetic-password@db.example.invalid/app",
+            "mongodb+srv://app:synthetic-password@cluster.example.invalid/app",
+            "redis://app:synthetic-password@cache.example.invalid/0",
+            "rediss://app:synthetic-password@cache.example.invalid/0",
+        )
+        for value in corpus:
+            with self.subTest(value=value.split(":", 1)[0]):
+                findings = scan(value)
+                self.assertEqual(len(findings), 1)
+                self.assertEqual(findings[0].rule_id, "basic-auth-url")
+                self.assertEqual(findings[0].confidence, CONFIDENCE_WARNING)
+
     def test_normal_code_and_secret_documentation_are_bounded(self) -> None:
         quiet_corpus = (
             "token_count = len(parts)\n",
@@ -80,6 +102,10 @@ class SecretPolicyTests(unittest.TestCase):
             "The word secret alone is not a credential.\n",
             '{"api_key": "example"}\n',
             "authorization: omitted\n",
+            "DATABASE_PASSWORD = read_secret()\n",
+            "APP_SECRET = load_from_vault()\n",
+            "mongodb://cluster.example.invalid/app\n",
+            "redis://cache.example.invalid/0\n",
         )
         for value in quiet_corpus:
             with self.subTest(value=value):
