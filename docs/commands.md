@@ -2,8 +2,11 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This navigation table documents 63 public CLI paths: five orientation and
-version routes plus all 58 executable routes from the real parser. It does not invent options or grant
+For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
+stop-rule checks, see [Bounded workspace order](layout.md).
+
+This navigation table documents 70 public CLI paths: five orientation and
+version routes plus all 65 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -69,9 +72,16 @@ required arguments and repeatable options.
 | 58 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
 | 59 | `opencntx flow capsule import` | restore a capsule only into a new local store |
 | 60 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
-| 61 | `opencntx flow sync configure` | enable one optional automatic checkpoint replica |
+| 61 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
 | 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
 | 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
+| 64 | `opencntx flow host status` | deliver exactly one current assignment without writes |
+| 65 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
+| 66 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
+| 67 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 68 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 69 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
+| 70 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
 
 ## Roadmap flow
 
@@ -83,6 +93,15 @@ opencntx flow start roadmap.json --approval "AUTO PILOT"
 opencntx flow status
 opencntx flow advance --outcome PASS --evidence reports/task.json
 ```
+
+Add `--handoff reports/task-handoff.json` when the host has explicit decisions,
+result wording, changed paths, evidence explanation, and remaining risks. A
+minimal bound handoff is generated automatically when the option is omitted.
+
+For a non-executing host loop, call `flow host status`, bind its delivery with
+`flow host claim`, and use `flow host resume` after interruption. Once claimed,
+pass the same `--host` and `--claim-digest` to `flow advance`. See
+[Roadmap continuity and AUTO PILOT](continuity.md#provider-neutral-host-trigger-protocol).
 
 Each successful `advance` stores a receipt, returns to the roadmap and selects
 the next dependency-ready detail. The approval is not requested again. Read

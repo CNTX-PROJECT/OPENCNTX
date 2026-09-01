@@ -1,0 +1,36 @@
+{
+  "$id": "https://opencntx.dev/schemas/layout-migration-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-layout-migration"},
+    "format_version": {"const": 1},
+    "maximum_bytes": {"minimum": 1, "type": "integer"},
+    "maximum_files": {"minimum": 1, "type": "integer"},
+    "maximum_path_length": {"maximum": 32767, "minimum": 64, "type": "integer"},
+    "minimum_free_bytes": {"minimum": 0, "type": "integer"},
+    "operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "destination": {"minLength": 1, "type": "string"},
+          "id": {"pattern": "^[A-Z][A-Z0-9_-]{1,79}$", "type": "string"},
+          "source": {"minLength": 1, "type": "string"}
+        },
+        "required": ["destination", "id", "source"],
+        "type": "object"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "plan_id": {"pattern": "^[A-Z][A-Z0-9_-]{1,79}$", "type": "string"},
+    "protected_paths": {"items": {"minLength": 1, "type": "string"}, "maxItems": 1000, "type": "array"},
+    "schema_id": {"const": "urn:uuid:dc7f2bd2-43f3-53f6-a0c0-305efdc8b24b"}
+  },
+  "required": ["format", "format_version", "maximum_bytes", "maximum_files", "maximum_path_length", "minimum_free_bytes", "operations", "plan_id", "protected_paths", "schema_id"],
+  "title": "OPENCNTX layout migration manifest v1",
+  "type": "object",
+  "x-opencntx-format": "opencntx-layout-migration",
+  "x-opencntx-major": 1
+}

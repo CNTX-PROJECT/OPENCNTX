@@ -35,6 +35,12 @@ Version 1.1.1 retains those additive contracts while correcting continuity
 recovery, generated-detail language, and secret filtering. It also adds a
 release-version drift gate without changing an accepted CLI or durable format.
 
+Version 1.2.0 adds the backward-compatible `layout` command family and
+the closed `opencntx-order-contract`, continuity handoff, and host-claim version
+1 schemas. It also adds the non-executing `flow host` family. The immutable
+1.0.0 catalog remains the compatibility floor; additive post-1.0 routes are
+tested as separate minor-line surfaces.
+
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe
 the active assignment, while historical failures remain in that ledger. This
@@ -62,6 +68,12 @@ has:
 The shared compatibility matrix maps each format and supported major to that
 same schema identifier. Package builds include all six JSON contract and schema
 assets.
+
+Historical R9 conformance modules and fixtures are test-only, immutable
+read-compatibility inputs. `tests/legacy-compatibility-r9.json` binds their exact
+paths and SHA-256 digests. Those bytes may contain obsolete language or example
+names; they are never templates, current examples, packaged product data, or
+newly generated output.
 
 ## Fail-closed major versions
 

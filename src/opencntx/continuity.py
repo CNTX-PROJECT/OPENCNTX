@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from .security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
 from .workspace import WorkspaceError
 
 FORMAT = "opencntx-continuity-roadmap"
@@ -28,6 +29,7 @@ ZERO_DIGEST = "0" * 64
 CONFLICT_CLASSES = frozenset({"NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "REMOVE"})
 ID_PATTERN = re.compile(r"[A-Z][A-Z0-9_-]{0,79}\Z")
 SAFE_REMOTE = re.compile(r"^(?:https://|ssh://|git@|file://|[A-Za-z]:[\\/]|/)")
+SECRET_TEXT_SUFFIXES = frozenset({".json", ".jsonl", ".md"})
 
 ROADMAP_FIELDS = {"format", "format_version", "project_id", "roadmap_id", "title", "assignments"}
 ASSIGNMENT_FIELDS = {
@@ -39,6 +41,47 @@ ASSIGNMENT_FIELDS = {
     "conflict",
     "migration",
     "definition_of_done",
+}
+HANDOFF_INPUT_FIELDS = {
+    "changed_paths",
+    "decisions",
+    "evidence_explanation",
+    "result",
+    "risks",
+}
+HANDOFF_FIELDS = {
+    "assignment_id",
+    "changed_paths",
+    "decisions",
+    "dependencies",
+    "evidence",
+    "evidence_explanation",
+    "format",
+    "format_version",
+    "handoff_digest",
+    "next_assignment",
+    "outcome",
+    "previous_event_head",
+    "project_id",
+    "receipt_digest",
+    "result",
+    "risks",
+    "roadmap_id",
+}
+CLAIM_FIELDS = {
+    "assignment_id",
+    "authority",
+    "claim_digest",
+    "claimed_event_previous_head",
+    "context_digest",
+    "delivery_digest",
+    "detail_path",
+    "detail_sha256",
+    "format",
+    "format_version",
+    "host_id",
+    "project_id",
+    "roadmap_id",
 }
 STORE_DIRECTORIES = (
     "roadmaps",
@@ -464,6 +507,7 @@ def _validate_store_bindings(
     roadmap_digest = _value_digest(roadmap)
     if (
         first.get("type") != "FLOW_STARTED"
+        or first.get("payload", {}).get("authority") != AUTHORITY
         or first.get("payload", {}).get("roadmap_digest") != roadmap_digest
         or first.get("payload", {}).get("roadmap_id") != roadmap["roadmap_id"]
     ):
@@ -515,6 +559,8 @@ def _validate_store_bindings(
             )
         selections[str(identifier)] = payload
 
+    _validate_handoffs(store, roadmap, events)
+    _validate_claims(store, roadmap, events)
     current = state["current_assignment"]
     current_path = store / "context" / "current.json"
     if current is None:
@@ -549,6 +595,198 @@ def _validate_store_bindings(
             "continuity_store_invalid",
             "Current context differs from its bound assignment selection.",
         )
+
+
+def _next_trigger(events: Sequence[dict[str, Any]], start: int) -> str | None:
+    for event in events[start:]:
+        if event["type"] == "NEXT_ASSIGNMENT_TRIGGERED":
+            return str(event["payload"]["assignment_id"])
+        if event["type"] == "FLOW_COMPLETED":
+            return None
+    raise _fail("continuity_store_invalid", "Completed assignment has no next-flow event.")
+
+
+def _validate_handoffs(
+    store: Path, roadmap: dict[str, Any], events: Sequence[dict[str, Any]]
+) -> None:
+    assignments = {item["id"]: item for item in roadmap["assignments"]}
+    bound_paths: set[str] = set()
+    for index, event in enumerate(events):
+        if event["type"] != "ASSIGNMENT_COMPLETED":
+            continue
+        payload = event["payload"]
+        handoff_digest = payload.get("handoff_digest")
+        handoff_path = payload.get("handoff_path")
+        if handoff_digest is None and handoff_path is None:
+            continue
+        identifier = str(payload.get("assignment_id"))
+        expected_path = f"handoffs/{identifier}.json"
+        if handoff_path != expected_path or not isinstance(handoff_digest, str):
+            raise _fail("continuity_store_invalid", "Handoff event binding is invalid.")
+        record = _read_json(store / expected_path, failure_kind="continuity_store_invalid")
+        if set(record) != HANDOFF_FIELDS:
+            raise _fail("continuity_store_invalid", "Handoff record fields are invalid.")
+        basis = {key: value for key, value in record.items() if key != "handoff_digest"}
+        assignment = assignments.get(identifier)
+        receipt = _read_json(
+            store / "receipts" / f"{identifier}-complete.json",
+            failure_kind="continuity_store_invalid",
+        )
+        if (
+            assignment is None
+            or record["format"] != "opencntx-continuity-handoff"
+            or record["format_version"] != 1
+            or record["project_id"] != roadmap["project_id"]
+            or record["roadmap_id"] != roadmap["roadmap_id"]
+            or record["assignment_id"] != identifier
+            or record["outcome"] != "PASS"
+            or record["dependencies"] != assignment["depends_on"]
+            or record["evidence"] != receipt.get("evidence")
+            or record["receipt_digest"] != payload.get("receipt_digest")
+            or record["previous_event_head"] != event["previous_digest"]
+            or record["next_assignment"] != _next_trigger(events, index + 1)
+            or record["handoff_digest"] != _value_digest(basis)
+            or record["handoff_digest"] != handoff_digest
+        ):
+            raise _fail("continuity_store_invalid", "Handoff differs from its event binding.")
+        bound_paths.add(expected_path)
+    handoff_root = store / "handoffs"
+    if handoff_root.exists() and (handoff_root.is_symlink() or not handoff_root.is_dir()):
+        raise _fail("continuity_store_invalid", "Handoff directory is unsafe.")
+    if handoff_root.is_dir() and any(path.is_symlink() for path in handoff_root.rglob("*")):
+        raise _fail("continuity_store_invalid", "Handoff inventory contains a link.")
+    actual_paths = (
+        {
+            path.relative_to(store).as_posix()
+            for path in handoff_root.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        if handoff_root.is_dir() and not handoff_root.is_symlink()
+        else set()
+    )
+    if actual_paths != bound_paths:
+        raise _fail("continuity_store_invalid", "Handoff inventory differs from event history.")
+
+
+def _reject_secret_content(*, relative: str, content: bytes, context: str) -> None:
+    if PurePosixPath(relative).suffix.lower() not in SECRET_TEXT_SUFFIXES:
+        return
+    try:
+        text = content.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise _fail(
+            f"continuity_{context}_secret", f"{context.title()} text is not valid UTF-8."
+        ) from exc
+    findings = scan_text(path=relative, text=text, source_sha256=_digest(content))
+    if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
+        raise _fail(
+            f"continuity_{context}_secret",
+            f"{context.title()} content triggered the secret filter.",
+        )
+
+
+def _selection_for(events: Sequence[dict[str, Any]], identifier: str) -> Mapping[str, Any]:
+    for event in events:
+        if (
+            event["type"] == "ASSIGNMENT_SELECTED"
+            and event["payload"].get("assignment_id") == identifier
+        ):
+            return event["payload"]
+    raise _fail("continuity_store_invalid", "Claim has no assignment selection binding.")
+
+
+def _claim_for_assignment(
+    store: Path, events: Sequence[dict[str, Any]], identifier: str
+) -> dict[str, Any] | None:
+    matches = [
+        event
+        for event in events
+        if event["type"] == "ASSIGNMENT_CLAIMED"
+        and event["payload"].get("assignment_id") == identifier
+    ]
+    if not matches:
+        return None
+    if len(matches) != 1:
+        raise _fail("continuity_store_invalid", "Assignment has duplicate host claims.")
+    path = store / "claims" / f"{identifier}.json"
+    return _read_json(path, failure_kind="continuity_store_invalid")
+
+
+def _validate_claims(
+    store: Path, roadmap: dict[str, Any], events: Sequence[dict[str, Any]]
+) -> None:
+    assignments = {item["id"] for item in roadmap["assignments"]}
+    bound_paths: set[str] = set()
+    seen: set[str] = set()
+    for index, event in enumerate(events):
+        if event["type"] != "ASSIGNMENT_CLAIMED":
+            continue
+        payload = event["payload"]
+        identifier = str(payload.get("assignment_id"))
+        expected_path = f"claims/{identifier}.json"
+        if (
+            identifier in seen
+            or identifier not in assignments
+            or payload.get("claim_path") != expected_path
+        ):
+            raise _fail("continuity_store_invalid", "Host claim event binding is invalid.")
+        record = _read_json(store / expected_path, failure_kind="continuity_store_invalid")
+        if set(record) != CLAIM_FIELDS:
+            raise _fail("continuity_store_invalid", "Host claim fields are invalid.")
+        basis = {key: value for key, value in record.items() if key != "claim_digest"}
+        selection = _selection_for(events, identifier)
+        try:
+            detail = (store / record["detail_path"]).read_bytes()
+        except (OSError, TypeError) as exc:
+            raise _fail("continuity_store_invalid", "Claimed detail is unavailable.") from exc
+        if (
+            record["format"] != "opencntx-host-claim"
+            or record["format_version"] != 1
+            or record["project_id"] != roadmap["project_id"]
+            or record["roadmap_id"] != roadmap["roadmap_id"]
+            or record["assignment_id"] != identifier
+            or record["authority"] != AUTHORITY
+            or record["detail_path"] != f"details/{identifier}.md"
+            or record["detail_sha256"] != _digest(detail)
+            or record["context_digest"] != selection.get("context_digest")
+            or record["claimed_event_previous_head"] != event["previous_digest"]
+            or record["claim_digest"] != _value_digest(basis)
+            or payload.get("claim_digest") != record["claim_digest"]
+            or payload.get("delivery_digest") != record["delivery_digest"]
+            or payload.get("host_id") != record["host_id"]
+        ):
+            raise _fail("continuity_store_invalid", "Host claim differs from its event binding.")
+        for later in events[index + 1 :]:
+            if (
+                later["type"] == "ASSIGNMENT_COMPLETED"
+                and later["payload"].get("assignment_id") == identifier
+            ):
+                if (
+                    later["payload"].get("claim_digest") != record["claim_digest"]
+                    or later["payload"].get("host_id") != record["host_id"]
+                ):
+                    raise _fail(
+                        "continuity_store_invalid", "Completion is not bound to its host claim."
+                    )
+                break
+        seen.add(identifier)
+        bound_paths.add(expected_path)
+    claim_root = store / "claims"
+    if claim_root.exists() and (claim_root.is_symlink() or not claim_root.is_dir()):
+        raise _fail("continuity_store_invalid", "Host claim directory is unsafe.")
+    if claim_root.is_dir() and any(path.is_symlink() for path in claim_root.rglob("*")):
+        raise _fail("continuity_store_invalid", "Host claim inventory contains a link.")
+    actual_paths = (
+        {
+            path.relative_to(store).as_posix()
+            for path in claim_root.rglob("*")
+            if path.is_file() and not path.is_symlink()
+        }
+        if claim_root.is_dir()
+        else set()
+    )
+    if actual_paths != bound_paths:
+        raise _fail("continuity_store_invalid", "Host claim inventory differs from event history.")
 
 
 def _load_store(
@@ -773,19 +1011,140 @@ def _evidence(root: Path, paths: Sequence[str]) -> list[dict[str, Any]]:
     return result
 
 
+def _handoff_lines(value: object, field: str, maximum: int = 20) -> list[str]:
+    if not isinstance(value, list) or len(value) > maximum:
+        raise _fail("continuity_handoff_invalid", f"handoff.{field} must be a bounded list.")
+    lines = [_one_line(item, f"handoff.{field}", 500) for item in value]
+    if len(lines) != len(set(lines)):
+        raise _fail("continuity_handoff_invalid", f"handoff.{field} contains duplicates.")
+    return lines
+
+
+def _handoff_input(root: Path, relative_path: str | None) -> dict[str, Any]:
+    if relative_path is None:
+        return {
+            "changed_paths": [],
+            "decisions": [],
+            "evidence_explanation": (
+                "The assignment receipt binds every evidence path, byte count, and SHA-256 digest."
+            ),
+            "result": "The assignment met its declared Definition of Done with bound evidence.",
+            "risks": [],
+        }
+    relative = _safe_relative(relative_path, "handoff")
+    path = _resolve_input(root, relative)
+    try:
+        content = path.read_bytes()
+        if len(content) > 65_536:
+            raise _fail("continuity_handoff_invalid", "Handoff input exceeds 64 KiB.")
+        text = content.decode("utf-8")
+        value = json.loads(text)
+    except ContinuityError:
+        raise
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise _fail("continuity_handoff_invalid", "Handoff input is not valid UTF-8 JSON.") from exc
+    findings = scan_text(path=relative, text=text, source_sha256=_digest(content))
+    if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
+        raise _fail("continuity_handoff_secret", "Handoff input triggered the secret filter.")
+    if not isinstance(value, dict) or set(value) != HANDOFF_INPUT_FIELDS:
+        raise _fail("continuity_handoff_invalid", "Handoff input fields are invalid.")
+    if not isinstance(value["changed_paths"], list):
+        raise _fail("continuity_handoff_invalid", "Handoff changed_paths must be a list.")
+    changed = [_safe_relative(item, "handoff.changed_paths") for item in value["changed_paths"]]
+    if len(changed) > 100 or len(changed) != len(set(changed)):
+        raise _fail("continuity_handoff_invalid", "Handoff changed_paths are invalid.")
+    return {
+        "changed_paths": changed,
+        "decisions": _handoff_lines(value["decisions"], "decisions"),
+        "evidence_explanation": _one_line(
+            value["evidence_explanation"], "handoff.evidence_explanation", 2000
+        ),
+        "result": _one_line(value["result"], "handoff.result", 2000),
+        "risks": _handoff_lines(value["risks"], "risks"),
+    }
+
+
+def _write_handoff(
+    store: Path,
+    roadmap: dict[str, Any],
+    assignment: dict[str, Any],
+    evidence: list[dict[str, Any]],
+    receipt_digest: str,
+    next_assignment: str | None,
+    previous_event_head: str,
+    supplied: dict[str, Any],
+) -> dict[str, str]:
+    record = {
+        "format": "opencntx-continuity-handoff",
+        "format_version": 1,
+        "project_id": roadmap["project_id"],
+        "roadmap_id": roadmap["roadmap_id"],
+        "assignment_id": assignment["id"],
+        "outcome": "PASS",
+        "decisions": supplied["decisions"],
+        "result": supplied["result"],
+        "changed_paths": supplied["changed_paths"],
+        "evidence": evidence,
+        "evidence_explanation": supplied["evidence_explanation"],
+        "risks": supplied["risks"],
+        "dependencies": assignment["depends_on"],
+        "next_assignment": next_assignment,
+        "receipt_digest": receipt_digest,
+        "previous_event_head": previous_event_head,
+    }
+    record["handoff_digest"] = _value_digest(record)
+    content = _pretty(record)
+    findings = scan_text(
+        path=f"handoffs/{assignment['id']}.json",
+        text=content.decode("utf-8"),
+        source_sha256=_digest(content),
+    )
+    if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
+        raise _fail("continuity_handoff_secret", "Generated handoff triggered the secret filter.")
+    relative = f"handoffs/{assignment['id']}.json"
+    _write_atomic(store / relative, content)
+    return {"handoff_digest": record["handoff_digest"], "handoff_path": relative}
+
+
+def _advance_claim_binding(
+    store: Path,
+    events: Sequence[dict[str, Any]],
+    identifier: str,
+    host_id: str | None,
+    claim_digest: str | None,
+) -> dict[str, str]:
+    record = _claim_for_assignment(store, events, identifier)
+    if record is None:
+        if host_id is not None or claim_digest is not None:
+            raise _fail("continuity_claim_invalid", "No host claim exists for this assignment.")
+        return {}
+    if (
+        not isinstance(host_id, str)
+        or not isinstance(claim_digest, str)
+        or host_id != record["host_id"]
+        or claim_digest != record["claim_digest"]
+    ):
+        raise _fail("continuity_claim_required", "The active host claim must bind advance.")
+    return {"host_id": host_id, "claim_digest": claim_digest}
+
+
 def _advance_local(
     project_root: Path,
     *,
     outcome: str,
     evidence_paths: Sequence[str],
     reason: str = "",
+    handoff_path: str | None = None,
+    host_id: str | None = None,
+    claim_digest: str | None = None,
 ) -> FlowResult:
     """Record one bounded result and trigger the next dependency-ready detail."""
     root = _root(project_root)
-    store, roadmap, _, state = _load_store(root)
+    store, roadmap, events, state = _load_store(root)
     if state["status"] in {"COMPLETE", "BLOCKED"} or state["current_assignment"] is None:
         raise _fail("continuity_not_active", "Continuity has no active assignment.")
     identifier = str(state["current_assignment"])
+    claim_binding = _advance_claim_binding(store, events, identifier, host_id, claim_digest)
     evidence = _evidence(root, evidence_paths)
     normalized = outcome.strip().upper()
     if normalized == "FAIL":
@@ -817,6 +1176,7 @@ def _advance_local(
                     "fingerprint": fingerprint,
                     "reason": explanation,
                     "recovery_round": round_number,
+                    **claim_binding,
                 },
             )
         ]
@@ -833,6 +1193,7 @@ def _advance_local(
     if normalized != "PASS":
         raise _fail("continuity_outcome_invalid", "Outcome must be PASS or FAIL.")
     assignment = _assignment(roadmap, identifier)
+    supplied_handoff = _handoff_input(root, handoff_path)
     receipt = {
         "format": "opencntx-assignment-receipt",
         "format_version": 1,
@@ -846,10 +1207,25 @@ def _advance_local(
     _write_atomic(store / "receipts" / f"{identifier}-complete.json", _pretty(receipt))
     interim_completed = [*state["completed"], identifier]
     next_assignment = _next_assignment(roadmap, interim_completed)
+    handoff = _write_handoff(
+        store,
+        roadmap,
+        assignment,
+        evidence,
+        receipt["receipt_digest"],
+        None if next_assignment is None else next_assignment["id"],
+        state["event_head"],
+        supplied_handoff,
+    )
     entries = [
         (
             "ASSIGNMENT_COMPLETED",
-            {"assignment_id": identifier, "receipt_digest": receipt["receipt_digest"]},
+            {
+                "assignment_id": identifier,
+                "receipt_digest": receipt["receipt_digest"],
+                **handoff,
+                **claim_binding,
+            },
         ),
         ("ROADMAP_RETURNED", {"completed_assignment_id": identifier}),
     ]
@@ -885,6 +1261,9 @@ def advance_flow(
     outcome: str,
     evidence_paths: Sequence[str],
     reason: str = "",
+    handoff_path: str | None = None,
+    host_id: str | None = None,
+    claim_digest: str | None = None,
 ) -> FlowResult:
     """Record one result atomically and trigger the next dependency-ready detail."""
     root = _root(project_root)
@@ -895,15 +1274,31 @@ def advance_flow(
             outcome=outcome,
             evidence_paths=evidence_paths,
             reason=reason,
+            handoff_path=handoff_path,
+            host_id=host_id,
+            claim_digest=claim_digest,
         )
+    checkpoint_kind = "BLOCKED" if result.status == "BLOCKED" else outcome.strip().upper()
+    checkpoint = {
+        "format": "opencntx-continuity-checkpoint",
+        "format_version": 1,
+        "policy": "EVERY_CHECKPOINT",
+        "checkpoint": checkpoint_kind,
+        "requested_outcome": outcome.strip().upper(),
+        "flow_status": result.status,
+        "current_assignment": result.current_assignment,
+        "completed": list(result.completed),
+        "state_digest": result.state_digest,
+    }
+    checkpoint["checkpoint_digest"] = _value_digest(checkpoint)
     try:
         from .continuity_sync import sync_configured
 
-        sync_configured(root)
+        sync_configured(root, checkpoint=checkpoint)
     except ContinuityError as exc:
         from .continuity_sync import record_sync_error
 
-        record_sync_error(root, exc)
+        record_sync_error(root, exc, checkpoint=checkpoint)
     return result
 
 
@@ -920,7 +1315,14 @@ def _flow_result(roadmap: dict[str, Any], state: dict[str, Any]) -> FlowResult:
         minimum = "Change relevant input or evidence before one bounded retry."
     else:
         next_action = f"EXECUTE {current}"
-        minimum = f"Read .opencntx/continuity/details/{current}.md"
+        if state["completed"]:
+            previous = state["completed"][-1]
+            minimum = (
+                f"Read .opencntx/continuity/handoffs/{previous}.json, then "
+                f".opencntx/continuity/details/{current}.md"
+            )
+        else:
+            minimum = f"Read .opencntx/continuity/details/{current}.md"
     return FlowResult(
         status=state["status"],
         current_assignment=current,
@@ -1048,6 +1450,7 @@ def export_capsule(project_root: Path, destination: Path) -> dict[str, Any]:
     for path in _store_files(store):
         relative = path.relative_to(store).as_posix()
         content = path.read_bytes()
+        _reject_secret_content(relative=relative, content=content, context="capsule")
         entries.append({"path": relative, "bytes": len(content), "sha256": _digest(content)})
     manifest = {
         "format": CAPSULE_FORMAT,
@@ -1121,6 +1524,9 @@ def verify_capsule(path: Path) -> dict[str, Any]:
                 content = archive.read(name)
                 if len(content) != item["bytes"] or _digest(content) != item["sha256"]:
                     raise _fail("continuity_capsule_invalid", "Capsule file digest differs.")
+                _reject_secret_content(
+                    relative=str(item["path"]), content=content, context="capsule"
+                )
                 expected_names.add(name)
             if set(names) != expected_names:
                 raise _fail("continuity_capsule_invalid", "Capsule contains unexpected files.")

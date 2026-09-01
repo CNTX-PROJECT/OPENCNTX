@@ -157,16 +157,32 @@ features or expose private project records.
   `opencntx-1.1.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
   the immutable `v1.1.0` and `v1.0.0` releases.
 
+### v1.2.0 bounded continuity and order
+
+- added a read-only BOUNDED PERFECTION order contract and deterministic layout
+  planning with exact changed-base refusal;
+- added content-addressed handoffs, checkpoint receipts, capsule restoration,
+  and a provider-neutral host status/claim/resume protocol;
+- made optional replica behavior explicit at every PASS, FAIL, and BLOCKED
+  checkpoint while preserving the canonical local store after sync failure;
+- expanded universal-English and secret-policy coverage across generated
+  output, database URL families, environment assignments, and exports;
+- passed 459 local tests plus 100 assignments, 200 process restarts, eight
+  concurrent writers, bounded recovery, and 120 layout-chaos scenarios;
+- published exactly `opencntx-1.2.0-py3-none-any.whl`,
+  `opencntx-1.2.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
+  every earlier immutable release.
+
 ## Current state
 
-- Current package line: `v1.1.1`
-- Package version: `1.1.1`
+- Current package line: `v1.2.0`
+- Package version: `1.2.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public release: live exact `v1.1.1` tag plus immutable matching GitHub Release;
-  the `v1.1.0` and `v1.0.0` releases remain immutable
+- Public release: live exact `v1.2.0` tag plus immutable matching GitHub Release;
+  every earlier release remains immutable
 - Distribution: exact Git tag plus the four verified GitHub Release assets
   named above; no PyPI or TestPyPI package
 

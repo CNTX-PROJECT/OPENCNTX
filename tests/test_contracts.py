@@ -150,10 +150,14 @@ class PublicSurfaceContractTests(unittest.TestCase):
         }
         routes, arguments = _parser_contract()
         self.assertTrue(expected_routes.issubset(routes))
-        self.assertTrue(all(route.startswith("opencntx flow") for route in routes - expected_routes))
+        additive_families = ("opencntx flow", "opencntx layout")
+        self.assertTrue(all(route.startswith(additive_families) for route in routes - expected_routes))
         self.assertTrue(set(expected_arguments).issubset(arguments))
         self.assertTrue(
-            all(identity[0].startswith("opencntx flow") for identity in set(arguments) - set(expected_arguments))
+            all(
+                identity[0].startswith(additive_families)
+                for identity in set(arguments) - set(expected_arguments)
+            )
         )
         for identity, expected in expected_arguments.items():
             with self.subTest(argument=identity):

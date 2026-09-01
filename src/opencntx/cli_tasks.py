@@ -49,7 +49,7 @@ def _register_task_proposal(
     propose.add_argument("task_id", help="task ID, for example TASK-20260816-0001")
     propose.add_argument("--title", required=True, help="short task title")
     propose.add_argument("--goal", required=True, help="one bounded goal")
-    propose.add_argument("--done", required=True, help="exacte Definition of Done")
+    propose.add_argument("--done", required=True, help="exact Definition of Done")
     propose.add_argument(
         "--executor-role",
         required=True,

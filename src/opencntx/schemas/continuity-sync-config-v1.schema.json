@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-sync-config-v1.schema.json",
+  "title": "OPENCNTX continuity sync config v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "repository", "remote", "branch", "private_repository_confirmed", "enabled", "checkpoint_policy", "migration", "config_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-sync-config"},
+    "format_version": {"const": 1},
+    "repository": {"type": "string", "minLength": 1},
+    "remote": {"type": "string", "minLength": 1},
+    "branch": {"type": "string", "minLength": 1},
+    "private_repository_confirmed": {"type": "boolean"},
+    "enabled": {"const": true},
+    "checkpoint_policy": {"const": "EVERY_CHECKPOINT"},
+    "migration": {"enum": ["NONE", "LEGACY_IMPLICIT_EVERY_CHECKPOINT"]},
+    "config_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

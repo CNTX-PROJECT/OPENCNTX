@@ -1,0 +1,25 @@
+{
+  "$id": "https://opencntx.dev/schemas/layout-plan-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base": {"type": "string"},
+    "bounds": {"type": "object"},
+    "checks": {"type": "object"},
+    "findings": {"items": {"type": "object"}, "type": "array"},
+    "format": {"const": "opencntx-layout-plan"},
+    "format_version": {"const": 1},
+    "manifest_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "operations": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "plan_id": {"pattern": "^[A-Z][A-Z0-9_-]{1,79}$", "type": "string"},
+    "read_only": {"const": true},
+    "schema_id": {"const": "urn:uuid:5416419b-9784-5270-a87b-08b0c99bfb37"},
+    "status": {"enum": ["BLOCKED", "READY"]}
+  },
+  "required": ["base", "bounds", "checks", "findings", "format", "format_version", "manifest_sha256", "operations", "plan_digest", "plan_id", "read_only", "schema_id", "status"],
+  "title": "OPENCNTX read-only layout plan v1",
+  "type": "object",
+  "x-opencntx-format": "opencntx-layout-plan",
+  "x-opencntx-major": 1
+}

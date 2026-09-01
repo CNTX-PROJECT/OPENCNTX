@@ -228,8 +228,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(58, len(executable_paths))
-        self.assertEqual(63, len(documented_paths))
+        self.assertEqual(65, len(executable_paths))
+        self.assertEqual(70, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
@@ -618,7 +618,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.1.1")
+        self.assertEqual(version, "1.2.0")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],

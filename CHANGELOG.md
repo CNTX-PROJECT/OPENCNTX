@@ -4,6 +4,34 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+## 1.2.0 - 2026-09-01
+
+### Added
+
+- Added BOUNDED PERFECTION with a versioned, read-only order contract for
+  deterministic naming, hierarchy, placement, protected paths, and findings.
+- Added restart-safe handoff records, content-addressed evidence, atomic
+  current pointers, independent capsule restoration, and a provider-neutral
+  host status/claim/resume protocol.
+- Added explicit `EVERY_CHECKPOINT` optional sync for PASS, FAIL, and BLOCKED
+  outcomes, with legacy migration and local-first failure latching.
+- Added deterministic layout-plan preview and changed-base verification with
+  source-tree, ACL, link, lock, Git, collision, disk, path-length, and rollback
+  bindings. The product still has no general layout apply command.
+- Added long validation covering 100 assignments, 200 process restarts, eight
+  concurrent writers, bounded recovery, capsule and sync failure, and 120
+  synthetic layout-chaos scenarios without changing real project maps.
+
+### Changed
+
+- Broadened the provider-neutral secret policy for database URLs, environment
+  assignments, quoted values, and continuity export/verification boundaries.
+- Made every active product template, generated message, example, guide, and
+  test fixture English and project-neutral while retaining hash-bound legacy
+  compatibility inputs as read-only history.
+- Preserved every v1.0 and v1.1 CLI and durable-format boundary; this release
+  is additive, local-first, and has zero runtime dependencies.
+
 ## 1.1.1 - 2026-09-01
 
 ### Added

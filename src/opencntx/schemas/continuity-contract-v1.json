@@ -1,7 +1,7 @@
 {
   "format": "opencntx-continuity-contract",
   "format_version": 1,
-  "release": "1.1.1",
+  "release": "1.2.0",
   "stable_baseline": "1.0.0",
   "compatibility": "ADDITIVE",
   "commands": [
@@ -18,12 +18,20 @@
     "opencntx flow sync preview",
     "opencntx flow sync configure",
     "opencntx flow sync apply",
-    "opencntx flow sync status"
+    "opencntx flow sync status",
+    "opencntx flow host status",
+    "opencntx flow host claim",
+    "opencntx flow host resume"
   ],
   "schemas": [
     "continuity-roadmap-v1.schema.json",
     "continuity-state-v1.schema.json",
     "continuity-capsule-v1.schema.json",
+    "continuity-checkpoint-v1.schema.json",
+    "continuity-handoff-v1.schema.json",
+    "continuity-sync-config-v1.schema.json",
+    "host-claim-v1.schema.json",
+    "sync-receipt-v1.schema.json",
     "runtime-maturity-v1.json"
   ],
   "conflict_classes": ["NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "REMOVE"],

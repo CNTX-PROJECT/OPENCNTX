@@ -21,6 +21,7 @@ from .continuity import (
     verify_capsule,
 )
 from .continuity_sync import apply_sync, build_sync_preview, configure_sync, sync_status
+from .host_protocol import claim_host, host_status, resume_host
 
 
 def register_continuity_commands(
@@ -57,6 +58,12 @@ def register_continuity_commands(
         "--evidence", action="append", required=True, help="relative evidence file"
     )
     advance.add_argument("--reason", default="", help="required one-line reason for FAIL")
+    advance.add_argument(
+        "--handoff",
+        help="optional relative JSON with decisions, result, changed paths, explanation, and risks",
+    )
+    advance.add_argument("--host", help="portable host ID when the assignment was claimed")
+    advance.add_argument("--claim-digest", help="exact active host claim required after host claim")
     advance.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     health = commands.add_parser("health", help="verify store, roadmap, detail and event chain")
@@ -90,7 +97,7 @@ def register_continuity_commands(
     sync_commands = sync.add_subparsers(dest="flow_sync_command", required=True)
     for name, help_text in (
         ("preview", "preview a filtered private Git replica without writes"),
-        ("configure", "enable automatic sync after later assignment checkpoints"),
+        ("configure", "enable explicit EVERY_CHECKPOINT sync after PASS, FAIL, or BLOCKED"),
         ("apply", "apply one exact preview with non-force push and readback"),
     ):
         operation = sync_commands.add_parser(name, help=help_text)
@@ -107,6 +114,26 @@ def register_continuity_commands(
         _root_argument(operation)
     sync_state = sync_commands.add_parser("status", help="show optional sync state")
     _root_argument(sync_state)
+
+    host = commands.add_parser("host", help="deliver, claim, or resume one assignment safely")
+    host_commands = host.add_subparsers(dest="flow_host_command", required=True)
+    host_status_parser = host_commands.add_parser(
+        "status", help="deliver exactly one current assignment without writes"
+    )
+    host_status_parser.add_argument("--host", required=True, help="portable uppercase host ID")
+    _root_argument(host_status_parser)
+    host_claim_parser = host_commands.add_parser(
+        "claim", help="claim one exact delivery with idempotent retry behavior"
+    )
+    host_claim_parser.add_argument("--host", required=True, help="portable uppercase host ID")
+    host_claim_parser.add_argument("--delivery-digest", required=True)
+    _root_argument(host_claim_parser)
+    host_resume_parser = host_commands.add_parser(
+        "resume", help="resume a claim or route it to the next status transition"
+    )
+    host_resume_parser.add_argument("--host", required=True, help="portable uppercase host ID")
+    host_resume_parser.add_argument("--claim-digest", required=True)
+    _root_argument(host_resume_parser)
 
 
 def _root_argument(parser: argparse.ArgumentParser) -> None:
@@ -181,8 +208,25 @@ def _dispatch_sync(args: argparse.Namespace) -> int:
                 "file_count": result.file_count,
                 "byte_count": result.byte_count,
                 "checks": list(result.checks),
+                "checkpoint_policy": result.checkpoint_policy,
+                "trigger": result.trigger,
             }
         )
+        return 0
+    return 2
+
+
+def _dispatch_host(args: argparse.Namespace) -> int:
+    command = args.flow_host_command
+    root = Path(args.root)
+    if command == "status":
+        _print(host_status(root, args.host))
+        return 0
+    if command == "claim":
+        _print(claim_host(root, args.host, args.delivery_digest))
+        return 0
+    if command == "resume":
+        _print(resume_host(root, args.host, args.claim_digest))
         return 0
     return 2
 
@@ -210,6 +254,9 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
             outcome=args.outcome,
             evidence_paths=args.evidence,
             reason=args.reason,
+            handoff_path=args.handoff,
+            host_id=args.host,
+            claim_digest=args.claim_digest,
         )
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
@@ -227,4 +274,6 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
         return _dispatch_capsule(args)
     if command == "sync":
         return _dispatch_sync(args)
+    if command == "host":
+        return _dispatch_host(args)
     return 2
