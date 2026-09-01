@@ -554,9 +554,19 @@ class ContinuityTests(unittest.TestCase):
         self.assertEqual(status.returncode, 0, status.stderr)
         self.assertEqual(json.loads(started.stdout)["current_assignment"], "TASK-1")
         self.assertTrue(json.loads(status.stdout)["minimum_action"].endswith("TASK-1.md"))
-        self.assertEqual(catalog["release"], "1.1.1")
+        self.assertEqual(catalog["release"], "1.2.0")
         self.assertEqual(catalog["stable_baseline"], "1.0.0")
-        self.assertEqual(len(catalog["commands"]), 14)
+        self.assertEqual(len(catalog["commands"]), 17)
+        self.assertEqual(
+            catalog["commands"][-3:],
+            [
+                "opencntx flow host status",
+                "opencntx flow host claim",
+                "opencntx flow host resume",
+            ],
+        )
+        self.assertIn("continuity-handoff-v1.schema.json", catalog["schemas"])
+        self.assertIn("host-claim-v1.schema.json", catalog["schemas"])
 
     def test_public_product_bytes_are_name_neutral(self) -> None:
         public_files = [ROOT / "README.md", *sorted((ROOT / "docs").glob("*.md"))]

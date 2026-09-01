@@ -35,7 +35,7 @@ Version 1.1.1 retains those additive contracts while correcting continuity
 recovery, generated-detail language, and secret filtering. It also adds a
 release-version drift gate without changing an accepted CLI or durable format.
 
-The planned 1.2.0 line adds the backward-compatible `layout` command family and
+Version 1.2.0 adds the backward-compatible `layout` command family and
 the closed `opencntx-order-contract`, continuity handoff, and host-claim version
 1 schemas. It also adds the non-executing `flow host` family. The immutable
 1.0.0 catalog remains the compatibility floor; additive post-1.0 routes are

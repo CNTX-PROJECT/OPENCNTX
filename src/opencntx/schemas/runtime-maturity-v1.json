@@ -1,7 +1,7 @@
 {
   "format": "opencntx-runtime-maturity",
   "format_version": 1,
-  "release": "1.1.1",
+  "release": "1.2.0",
   "modules": [
     {"module": "intake_autopilot", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by flow preview"},
     {"module": "project_runtime", "disposition": "INTERNALIZE", "surface": "historical corpus; product value replaced by continuity ledger"},
