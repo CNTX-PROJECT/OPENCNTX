@@ -72,7 +72,7 @@ required arguments and repeatable options.
 | 58 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
 | 59 | `opencntx flow capsule import` | restore a capsule only into a new local store |
 | 60 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
-| 61 | `opencntx flow sync configure` | enable one optional automatic checkpoint replica |
+| 61 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
 | 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
 | 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
 | 64 | `opencntx flow host status` | deliver exactly one current assignment without writes |

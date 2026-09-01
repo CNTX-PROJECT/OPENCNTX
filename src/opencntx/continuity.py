@@ -1255,14 +1255,27 @@ def advance_flow(
             host_id=host_id,
             claim_digest=claim_digest,
         )
+    checkpoint_kind = "BLOCKED" if result.status == "BLOCKED" else outcome.strip().upper()
+    checkpoint = {
+        "format": "opencntx-continuity-checkpoint",
+        "format_version": 1,
+        "policy": "EVERY_CHECKPOINT",
+        "checkpoint": checkpoint_kind,
+        "requested_outcome": outcome.strip().upper(),
+        "flow_status": result.status,
+        "current_assignment": result.current_assignment,
+        "completed": list(result.completed),
+        "state_digest": result.state_digest,
+    }
+    checkpoint["checkpoint_digest"] = _value_digest(checkpoint)
     try:
         from .continuity_sync import sync_configured
 
-        sync_configured(root)
+        sync_configured(root, checkpoint=checkpoint)
     except ContinuityError as exc:
         from .continuity_sync import record_sync_error
 
-        record_sync_error(root, exc)
+        record_sync_error(root, exc, checkpoint=checkpoint)
     return result
 
 

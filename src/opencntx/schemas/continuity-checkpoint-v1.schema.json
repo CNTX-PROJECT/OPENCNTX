@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-checkpoint-v1.schema.json",
+  "title": "OPENCNTX continuity checkpoint v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "policy", "checkpoint", "requested_outcome", "flow_status", "current_assignment", "completed", "state_digest", "checkpoint_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-checkpoint"},
+    "format_version": {"const": 1},
+    "policy": {"const": "EVERY_CHECKPOINT"},
+    "checkpoint": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+    "requested_outcome": {"enum": ["PASS", "FAIL"]},
+    "flow_status": {"enum": ["RUNNING", "RECOVERY_REQUIRED", "BLOCKED", "COMPLETE"]},
+    "current_assignment": {"type": ["string", "null"]},
+    "completed": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "checkpoint_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

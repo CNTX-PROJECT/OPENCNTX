@@ -203,7 +203,7 @@ Apply uses a disposable clone, a non-force push and remote-head readback. A
 dirty checkout, changed preview, credential-bearing URL, content finding,
 push conflict or ambiguous readback stops sync.
 
-To attempt sync automatically after later successful assignment checkpoints:
+To attempt sync after every later local checkpoint:
 
 ```powershell
 opencntx flow sync configure private-context-repo `
@@ -216,6 +216,16 @@ An automatic sync failure is recorded once and latches automatic sync in
 retry or rewrite that error. The local roadmap continues to work offline. A
 successful explicit `sync apply`, or an explicit green `sync configure`, clears
 the latch and re-enables later automatic checkpoints.
+
+The single policy name is `EVERY_CHECKPOINT`. It means exactly one optional
+sync attempt after each locally committed `PASS`, `FAIL`, or `BLOCKED`
+transition. The checkpoint record binds requested outcome, resulting flow
+status, current assignment, completed assignments and state digest. Successful
+sync receipts and the first latched error include that exact record. A legacy
+valid config without the field is interpreted read-only as
+`EVERY_CHECKPOINT`, then rewritten once with migration marker
+`LEGACY_IMPLICIT_EVERY_CHECKPOINT` at the next configured checkpoint. No remote
+availability is required for the local transition to succeed.
 
 ## Exact boundary
 

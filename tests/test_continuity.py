@@ -372,6 +372,10 @@ class ContinuityTests(unittest.TestCase):
         self.assertEqual(second.current_assignment, "TASK-2")
         self.assertTrue(status["configured"])
         self.assertEqual(status["last_receipt"]["status"], "SYNCED")
+        self.assertEqual(status["checkpoint_policy"], "EVERY_CHECKPOINT")
+        self.assertEqual(status["last_receipt"]["checkpoint_policy"], "EVERY_CHECKPOINT")
+        self.assertEqual(status["last_receipt"]["trigger"], "CHECKPOINT")
+        self.assertEqual(status["last_receipt"]["checkpoint"]["checkpoint"], "PASS")
 
     def test_automatic_sync_failure_is_latched_until_explicit_rearm(self) -> None:
         project, roadmap_path = self._project()

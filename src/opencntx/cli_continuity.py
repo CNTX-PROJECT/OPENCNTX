@@ -99,7 +99,7 @@ def register_continuity_commands(
     sync_commands = sync.add_subparsers(dest="flow_sync_command", required=True)
     for name, help_text in (
         ("preview", "preview a filtered private Git replica without writes"),
-        ("configure", "enable automatic sync after later assignment checkpoints"),
+        ("configure", "enable explicit EVERY_CHECKPOINT sync after PASS, FAIL, or BLOCKED"),
         ("apply", "apply one exact preview with non-force push and readback"),
     ):
         operation = sync_commands.add_parser(name, help=help_text)
@@ -210,6 +210,8 @@ def _dispatch_sync(args: argparse.Namespace) -> int:
                 "file_count": result.file_count,
                 "byte_count": result.byte_count,
                 "checks": list(result.checks),
+                "checkpoint_policy": result.checkpoint_policy,
+                "trigger": result.trigger,
             }
         )
         return 0

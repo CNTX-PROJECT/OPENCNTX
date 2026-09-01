@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -19,6 +20,30 @@ from .security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
 SAFE_BRANCH = re.compile(r"[A-Za-z0-9][A-Za-z0-9._/-]{0,119}\Z")
 CREDENTIAL_URL = re.compile(r"^[a-z][a-z0-9+.-]*://[^/@\s]+:[^/@\s]+@", re.IGNORECASE)
 SYNC_SUFFIXES = frozenset({".json", ".jsonl", ".md"})
+CHECKPOINT_POLICY = "EVERY_CHECKPOINT"
+LEGACY_CONFIG_FIELDS = {
+    "branch",
+    "config_digest",
+    "enabled",
+    "format",
+    "format_version",
+    "private_repository_confirmed",
+    "remote",
+    "repository",
+}
+CURRENT_CONFIG_FIELDS = LEGACY_CONFIG_FIELDS | {"checkpoint_policy", "migration"}
+CHECKPOINT_FIELDS = {
+    "checkpoint",
+    "checkpoint_digest",
+    "completed",
+    "current_assignment",
+    "flow_status",
+    "format",
+    "format_version",
+    "policy",
+    "requested_outcome",
+    "state_digest",
+}
 
 
 @dataclass(frozen=True)
@@ -31,6 +56,8 @@ class SyncResult:
     byte_count: int
     remote_head: str | None
     checks: tuple[str, ...]
+    checkpoint_policy: str
+    trigger: str
 
 
 def _fail(code: str, message: str) -> ContinuityError:
@@ -93,6 +120,61 @@ def _blocked_sync_error(project_root: Path) -> dict[str, Any] | None:
     ):
         raise _fail("continuity_sync_config_invalid", "Blocked sync state is invalid.")
     return value
+
+
+def _load_sync_config(project_root: Path, *, migrate: bool) -> dict[str, Any] | None:
+    path = store_path(project_root) / "sync" / "config.json"
+    if not path.exists():
+        return None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise _fail("continuity_sync_config_invalid", "Sync configuration is invalid.") from exc
+    if not isinstance(value, dict) or frozenset(value) not in {
+        frozenset(LEGACY_CONFIG_FIELDS),
+        frozenset(CURRENT_CONFIG_FIELDS),
+    }:
+        raise _fail("continuity_sync_config_invalid", "Sync configuration fields are invalid.")
+    basis = {key: item for key, item in value.items() if key != "config_digest"}
+    if (
+        value.get("config_digest") != _value_digest(basis)
+        or value.get("format") != "opencntx-continuity-sync-config"
+        or value.get("format_version") != 1
+        or value.get("enabled") is not True
+    ):
+        raise _fail("continuity_sync_config_invalid", "Sync configuration is invalid.")
+    if set(value) == LEGACY_CONFIG_FIELDS:
+        normalized = basis | {
+            "checkpoint_policy": CHECKPOINT_POLICY,
+            "migration": "LEGACY_IMPLICIT_EVERY_CHECKPOINT",
+        }
+        normalized["config_digest"] = _value_digest(normalized)
+        if migrate:
+            _write_atomic(path, normalized)
+        return normalized
+    if (
+        value.get("checkpoint_policy") != CHECKPOINT_POLICY
+        or value.get("migration") not in {"NONE", "LEGACY_IMPLICIT_EVERY_CHECKPOINT"}
+    ):
+        raise _fail("continuity_sync_config_invalid", "Checkpoint sync policy is invalid.")
+    return value
+
+
+def _checkpoint(value: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    record = dict(value)
+    basis = {key: item for key, item in record.items() if key != "checkpoint_digest"}
+    if (
+        set(record) != CHECKPOINT_FIELDS
+        or record.get("checkpoint_digest") != _value_digest(basis)
+        or record.get("format") != "opencntx-continuity-checkpoint"
+        or record.get("format_version") != 1
+        or record.get("policy") != CHECKPOINT_POLICY
+        or record.get("checkpoint") not in {"PASS", "FAIL", "BLOCKED"}
+    ):
+        raise _fail("continuity_sync_config_invalid", "Checkpoint record is invalid.")
+    return record
 
 
 def _git() -> str:
@@ -266,8 +348,10 @@ def apply_sync(
     branch: str,
     private_repository_confirmed: bool,
     expected_preview_digest: str,
+    checkpoint: Mapping[str, Any] | None = None,
 ) -> SyncResult:
     """Apply exactly one non-force replica commit and verify the remote head."""
+    checkpoint_record = _checkpoint(checkpoint)
     preview = build_sync_preview(
         project_root,
         repository_path,
@@ -341,6 +425,9 @@ def apply_sync(
         "readback_head": readback,
         "file_count": preview["file_count"],
         "byte_count": preview["byte_count"],
+        "checkpoint_policy": CHECKPOINT_POLICY,
+        "trigger": "CHECKPOINT" if checkpoint_record is not None else "MANUAL",
+        "checkpoint": checkpoint_record,
     }
     receipt["receipt_digest"] = _value_digest(receipt)
     _write_atomic(store_path(project_root) / "sync" / "last-receipt.json", receipt)
@@ -354,6 +441,8 @@ def apply_sync(
         byte_count=int(preview["byte_count"]),
         remote_head=readback,
         checks=tuple(preview["checks"]),
+        checkpoint_policy=CHECKPOINT_POLICY,
+        trigger="CHECKPOINT" if checkpoint_record is not None else "MANUAL",
     )
 
 
@@ -381,6 +470,8 @@ def configure_sync(
         "branch": branch,
         "private_repository_confirmed": private_repository_confirmed,
         "enabled": True,
+        "checkpoint_policy": CHECKPOINT_POLICY,
+        "migration": "NONE",
     }
     config["config_digest"] = _value_digest(config)
     _write_atomic(store_path(project_root) / "sync" / "config.json", config)
@@ -388,17 +479,15 @@ def configure_sync(
     return {"status": "CONFIGURED", "preview_digest": preview["preview_digest"]} | config
 
 
-def sync_configured(project_root: Path) -> SyncResult | None:
+def sync_configured(
+    project_root: Path, *, checkpoint: Mapping[str, Any] | None = None
+) -> SyncResult | None:
     """Apply a configured replica once; never retry an external result automatically."""
-    config_path = store_path(project_root) / "sync" / "config.json"
-    if not config_path.exists():
+    config = _load_sync_config(project_root, migrate=True)
+    if config is None:
         return None
     if _blocked_sync_error(project_root) is not None:
         return None
-    config = json.loads(config_path.read_text(encoding="utf-8"))
-    basis = {key: value for key, value in config.items() if key != "config_digest"}
-    if config.get("config_digest") != _value_digest(basis) or not config.get("enabled"):
-        raise _fail("continuity_sync_config_invalid", "Sync configuration is invalid.")
     repository = Path(config["repository"])
     preview = build_sync_preview(
         project_root,
@@ -414,6 +503,7 @@ def sync_configured(project_root: Path) -> SyncResult | None:
         branch=config["branch"],
         private_repository_confirmed=config["private_repository_confirmed"],
         expected_preview_digest=preview["preview_digest"],
+        checkpoint=checkpoint,
     )
 
 
@@ -422,8 +512,11 @@ def sync_status(project_root: Path) -> dict[str, Any]:
     config = store / "sync" / "config.json"
     receipt = store / "sync" / "last-receipt.json"
     error = store / "sync" / "last-error.json"
+    loaded_config = _load_sync_config(project_root, migrate=False)
     return {
         "configured": config.exists(),
+        "checkpoint_policy": loaded_config["checkpoint_policy"] if loaded_config else None,
+        "config_migration": loaded_config["migration"] if loaded_config else None,
         "last_receipt": json.loads(receipt.read_text(encoding="utf-8"))
         if receipt.exists()
         else None,
@@ -432,13 +525,25 @@ def sync_status(project_root: Path) -> dict[str, Any]:
     }
 
 
-def record_sync_error(project_root: Path, error: ContinuityError) -> None:
+def record_sync_error(
+    project_root: Path,
+    error: ContinuityError,
+    *,
+    checkpoint: Mapping[str, Any] | None = None,
+) -> None:
     """Record one bounded external stop without automatic retry."""
     try:
         if _blocked_sync_error(project_root) is not None:
             return
     except ContinuityError:
         pass
-    value = {"status": "SYNC_BLOCKED", "code": error.code, "retry": "NOT_AUTOMATIC"}
+    value = {
+        "status": "SYNC_BLOCKED",
+        "code": error.code,
+        "retry": "NOT_AUTOMATIC",
+        "checkpoint_policy": CHECKPOINT_POLICY,
+        "checkpoint": _checkpoint(checkpoint),
+        "local_flow": "CONTINUES_OFFLINE",
+    }
     value["error_digest"] = _value_digest(value)
     _write_atomic(store_path(project_root) / "sync" / "last-error.json", value)
