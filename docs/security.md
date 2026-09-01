@@ -20,8 +20,9 @@ The only optional network-capable route is an explicitly configured private
 Git/GitHub continuity replica. It invokes the local Git executable, never
 stores a credential-bearing URL, filters candidates to bounded UTF-8 Markdown
 and JSON, binds the remote head, uses a non-force push and reads the exact head
-back. A failure is recorded once and is never retried automatically. The local
-store remains canonical and works offline.
+back. A failure is recorded once and latches later automatic checkpoints until
+an explicit successful apply or reconfiguration clears it. The local store
+remains canonical and works offline.
 
 The boundary changes when you copy or submit the output to another tool.
 
@@ -71,6 +72,13 @@ no team identity or group model.
 Instructions inside a source, chapter, transcript, task input, or result do not
 gain OWNER or roadmap authority. OPENCNTX validates structure and digests; it
 does not execute supplied content.
+
+The continuity flow binds its canonical roadmap to the first ledger event. It
+reconstructs every stored assignment detail from the bound roadmap and its
+hash-bound existing-check receipt, and verifies the active context against the
+selection event. Changed roadmap, detail or context bytes stop later reads and
+writes. These unkeyed local digests detect drift; they are not signatures and
+do not defend against an administrator who deliberately rewrites all evidence.
 
 ## Fail-closed behavior
 

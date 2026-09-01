@@ -100,11 +100,29 @@ class ContinuityTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
 
-    def _project(self) -> tuple[Path, Path]:
-        project = self.root / "project"
+    def _project(self, name: str = "project") -> tuple[Path, Path]:
+        project = self.root / name
         project.mkdir()
         (project / "input.txt").write_text("existing\n", encoding="utf-8")
         return project, roadmap(project / "roadmap.json")
+
+    def _private_replica(self, name: str) -> tuple[Path, Path]:
+        bare = self.root / f"{name}.git"
+        mirror = self.root / f"{name}-mirror"
+        subprocess.run(["git", "init", "--bare", "-q", str(bare)], check=True)
+        subprocess.run(["git", "init", "-q", str(mirror)], check=True)
+        subprocess.run(["git", "-C", str(mirror), "config", "user.name", "Example"], check=True)
+        subprocess.run(
+            ["git", "-C", str(mirror), "config", "user.email", "example@example.invalid"],
+            check=True,
+        )
+        (mirror / "README.md").write_text("# Private replica\n", encoding="utf-8")
+        subprocess.run(["git", "-C", str(mirror), "add", "README.md"], check=True)
+        subprocess.run(["git", "-C", str(mirror), "commit", "-qm", "initial"], check=True)
+        subprocess.run(["git", "-C", str(mirror), "branch", "-M", "main"], check=True)
+        subprocess.run(["git", "-C", str(mirror), "remote", "add", "origin", str(bare)], check=True)
+        subprocess.run(["git", "-C", str(mirror), "push", "-qu", "origin", "main"], check=True)
+        return bare, mirror
 
     def test_preview_is_read_only_and_one_approval_triggers_the_complete_cycle(self) -> None:
         project, roadmap_path = self._project()
@@ -150,6 +168,80 @@ class ContinuityTests(unittest.TestCase):
         assert result is not None
         self.assertEqual(result.status, "BLOCKED")
         self.assertEqual(result.next_action, "STOP_FAIL_CLOSED")
+
+    def test_recovery_rounds_reset_for_each_assignment(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        evidence = project / "evidence.txt"
+        for number in range(1, 3):
+            evidence.write_text(f"task one failure {number}\n", encoding="utf-8")
+            result = advance_flow(
+                project,
+                outcome="FAIL",
+                evidence_paths=[evidence.name],
+                reason=f"task one strategy {number}",
+            )
+            self.assertEqual(result.status, "RECOVERY_REQUIRED")
+        evidence.write_text("task one green\n", encoding="utf-8")
+        result = advance_flow(project, outcome="PASS", evidence_paths=[evidence.name])
+        state = json.loads(
+            (project / ".opencntx" / "continuity" / "state.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(result.current_assignment, "TASK-2")
+        self.assertEqual(state["recovery_rounds"], 0)
+        self.assertEqual(state["failure_fingerprints"], [])
+
+        for number in range(1, 4):
+            evidence.write_text(f"task two failure {number}\n", encoding="utf-8")
+            result = advance_flow(
+                project,
+                outcome="FAIL",
+                evidence_paths=[evidence.name],
+                reason=f"task two strategy {number}",
+            )
+            expected = "BLOCKED" if number == 3 else "RECOVERY_REQUIRED"
+            self.assertEqual(result.status, expected)
+
+    def test_bound_roadmap_and_all_generated_details_reject_drift(self) -> None:
+        roadmap_project, roadmap_path = self._project("roadmap-drift")
+        start_flow(roadmap_project, roadmap_path, "AUTO PILOT")
+        stored_roadmap = roadmap_project / ".opencntx" / "continuity" / "roadmaps" / "roadmap.json"
+        value = json.loads(stored_roadmap.read_text(encoding="utf-8"))
+        value["assignments"][1]["detail"] = "Tampered next assignment."
+        stored_roadmap.write_text(json.dumps(value), encoding="utf-8")
+        with self.assertRaisesRegex(ContinuityError, "roadmap bound"):
+            flow_status(roadmap_project)
+
+        current_project, current_roadmap = self._project("current-detail-drift")
+        start_flow(current_project, current_roadmap, "AUTO PILOT")
+        current_detail = current_project / ".opencntx" / "continuity" / "details" / "TASK-1.md"
+        current_detail.write_text("tampered\n", encoding="utf-8")
+        with self.assertRaisesRegex(ContinuityError, "detail differs"):
+            health_report(current_project)
+        with self.assertRaises(ContinuityError):
+            export_capsule(current_project, self.root / "tampered.ocx")
+
+        historical_project, historical_roadmap = self._project("historical-detail-drift")
+        start_flow(historical_project, historical_roadmap, "AUTO PILOT")
+        evidence = historical_project / "evidence.txt"
+        evidence.write_text("green\n", encoding="utf-8")
+        advance_flow(historical_project, outcome="PASS", evidence_paths=[evidence.name])
+        historical_detail = (
+            historical_project / ".opencntx" / "continuity" / "details" / "TASK-1.md"
+        )
+        historical_detail.write_text("tampered after completion\n", encoding="utf-8")
+        with self.assertRaisesRegex(ContinuityError, "detail differs"):
+            flow_status(historical_project)
+
+    def test_current_context_rejects_drift(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        context_path = project / ".opencntx" / "continuity" / "context" / "current.json"
+        context = json.loads(context_path.read_text(encoding="utf-8"))
+        context["detail_path"] = "details/TASK-2.md"
+        context_path.write_text(json.dumps(context), encoding="utf-8")
+        with self.assertRaisesRegex(ContinuityError, "Current context differs"):
+            flow_status(project)
 
     def test_ten_tasks_use_one_authority_and_restart_at_every_transition(self) -> None:
         project = self.root / "long-project"
@@ -280,6 +372,62 @@ class ContinuityTests(unittest.TestCase):
         self.assertEqual(second.current_assignment, "TASK-2")
         self.assertTrue(status["configured"])
         self.assertEqual(status["last_receipt"]["status"], "SYNCED")
+
+    def test_automatic_sync_failure_is_latched_until_explicit_rearm(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        _, mirror = self._private_replica("latched")
+        configure_sync(
+            project,
+            mirror,
+            remote="origin",
+            branch="main",
+            private_repository_confirmed=False,
+        )
+        (mirror / "README.md").write_text("dirty\n", encoding="utf-8")
+        first = project / "first.txt"
+        first.write_text("green one\n", encoding="utf-8")
+        result = advance_flow(project, outcome="PASS", evidence_paths=[first.name])
+        error_path = project / ".opencntx" / "continuity" / "sync" / "last-error.json"
+        first_error = error_path.read_bytes()
+        first_mtime = error_path.stat().st_mtime_ns
+        self.assertEqual(result.current_assignment, "TASK-2")
+        self.assertEqual(sync_status(project)["last_error"]["retry"], "NOT_AUTOMATIC")
+
+        second = project / "second.txt"
+        second.write_text("green two\n", encoding="utf-8")
+        result = advance_flow(project, outcome="PASS", evidence_paths=[second.name])
+        self.assertEqual(result.status, "COMPLETE")
+        self.assertEqual(error_path.read_bytes(), first_error)
+        self.assertEqual(error_path.stat().st_mtime_ns, first_mtime)
+
+        subprocess.run(["git", "-C", str(mirror), "restore", "--", "README.md"], check=True)
+        preview = build_sync_preview(
+            project,
+            mirror,
+            remote="origin",
+            branch="main",
+            private_repository_confirmed=False,
+        )
+        apply_sync(
+            project,
+            mirror,
+            remote="origin",
+            branch="main",
+            private_repository_confirmed=False,
+            expected_preview_digest=preview["preview_digest"],
+        )
+        self.assertIsNone(sync_status(project)["last_error"])
+
+        error_path.write_bytes(first_error)
+        configure_sync(
+            project,
+            mirror,
+            remote="origin",
+            branch="main",
+            private_repository_confirmed=False,
+        )
+        self.assertIsNone(sync_status(project)["last_error"])
 
     def test_cli_and_contract_catalog_are_machine_readable(self) -> None:
         project, roadmap_path = self._project()

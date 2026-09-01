@@ -68,6 +68,33 @@ def _write_atomic(path: Path, value: object) -> None:
         raise _fail("continuity_sync_write_failed", "Cannot write sync state.") from exc
 
 
+def _clear_sync_error(project_root: Path) -> None:
+    try:
+        (store_path(project_root) / "sync" / "last-error.json").unlink(missing_ok=True)
+    except OSError as exc:
+        raise _fail("continuity_sync_write_failed", "Cannot clear blocked sync state.") from exc
+
+
+def _blocked_sync_error(project_root: Path) -> dict[str, Any] | None:
+    path = store_path(project_root) / "sync" / "last-error.json"
+    if not path.exists():
+        return None
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise _fail("continuity_sync_config_invalid", "Blocked sync state is invalid.") from exc
+    if not isinstance(value, dict):
+        raise _fail("continuity_sync_config_invalid", "Blocked sync state is invalid.")
+    basis = {key: item for key, item in value.items() if key != "error_digest"}
+    if (
+        value.get("error_digest") != _value_digest(basis)
+        or basis.get("status") != "SYNC_BLOCKED"
+        or basis.get("retry") != "NOT_AUTOMATIC"
+    ):
+        raise _fail("continuity_sync_config_invalid", "Blocked sync state is invalid.")
+    return value
+
+
 def _git() -> str:
     executable = shutil.which("git")
     if executable is None:
@@ -317,6 +344,7 @@ def apply_sync(
     }
     receipt["receipt_digest"] = _value_digest(receipt)
     _write_atomic(store_path(project_root) / "sync" / "last-receipt.json", receipt)
+    _clear_sync_error(project_root)
     return SyncResult(
         status=status,
         preview_digest=expected_preview_digest,
@@ -356,6 +384,7 @@ def configure_sync(
     }
     config["config_digest"] = _value_digest(config)
     _write_atomic(store_path(project_root) / "sync" / "config.json", config)
+    _clear_sync_error(project_root)
     return {"status": "CONFIGURED", "preview_digest": preview["preview_digest"]} | config
 
 
@@ -363,6 +392,8 @@ def sync_configured(project_root: Path) -> SyncResult | None:
     """Apply a configured replica once; never retry an external result automatically."""
     config_path = store_path(project_root) / "sync" / "config.json"
     if not config_path.exists():
+        return None
+    if _blocked_sync_error(project_root) is not None:
         return None
     config = json.loads(config_path.read_text(encoding="utf-8"))
     basis = {key: value for key, value in config.items() if key != "config_digest"}
@@ -403,6 +434,11 @@ def sync_status(project_root: Path) -> dict[str, Any]:
 
 def record_sync_error(project_root: Path, error: ContinuityError) -> None:
     """Record one bounded external stop without automatic retry."""
+    try:
+        if _blocked_sync_error(project_root) is not None:
+            return
+    except ContinuityError:
+        pass
     value = {"status": "SYNC_BLOCKED", "code": error.code, "retry": "NOT_AUTOMATIC"}
     value["error_digest"] = _value_digest(value)
     _write_atomic(store_path(project_root) / "sync" / "last-error.json", value)

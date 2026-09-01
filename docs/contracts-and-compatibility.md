@@ -31,6 +31,11 @@ baseline. Version 1.1.0 adds the `flow` family, three continuity schemas and a
 runtime-maturity catalog without changing an accepted v1.0.0 route or durable
 format. Existing v1.0.0 packages and workspaces remain readable.
 
+Backward-compatible continuity maintenance may strengthen validation by using
+digest fields already present in the v1 event ledger. Recovery counters describe
+the active assignment, while historical failures remain in that ledger. This
+does not introduce a new command, schema major or mandatory migration.
+
 `public-contract-v1.json` lists all 1,575 accepted public surfaces. The catalog
 covers CLI routes and arguments, configuration fields, durable formats, error
 and exit codes, machine output, public documentation claims, Python symbols,

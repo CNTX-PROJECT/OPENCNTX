@@ -49,8 +49,12 @@ opencntx flow advance --outcome FAIL `
   --reason "Relevant input changed after the failed check"
 ```
 
-The flow allows at most three recovery rounds. It blocks the third repeat of
-the same failed strategy and never retries an external action itself.
+The flow allows at most three recovery rounds for the current assignment. The
+counter and its failure fingerprints reset only when that assignment
+passes and the roadmap selects the next one; earlier failures remain in the
+append-only ledger for audit. It blocks the third failure in one assignment,
+blocks the third repeat of the same strategy sooner, and never retries an
+external action itself.
 
 ## Short existing check
 
@@ -75,8 +79,12 @@ opencntx flow health --json
 ```
 
 Status is rebuilt from the hash-chained event ledger. It always reports the
-current assignment, progress, next action and minimum action. Health checks the
-roadmap digest, derived state, current detail and required store directories.
+current assignment, progress, next action and minimum action. Every read binds
+the stored roadmap back to the digest in `FLOW_STARTED`. It also reconstructs
+every generated detail from the bound roadmap and existing-check receipt, and
+binds the current context to its selection event. Roadmap, detail or context
+drift therefore stops status, advance, health, export and sync fail-closed.
+Health additionally checks the derived state cache and required directories.
 
 ## Portable capsule
 
@@ -136,8 +144,11 @@ opencntx flow sync configure private-context-repo `
   --private-repository
 ```
 
-An automatic sync failure is recorded once and is not retried automatically.
-The local roadmap continues to work offline.
+An automatic sync failure is recorded once and latches automatic sync in
+`SYNC_BLOCKED` with `retry: NOT_AUTOMATIC`. Later assignment checkpoints do not
+retry or rewrite that error. The local roadmap continues to work offline. A
+successful explicit `sync apply`, or an explicit green `sync configure`, clears
+the latch and re-enables later automatic checkpoints.
 
 ## Exact boundary
 

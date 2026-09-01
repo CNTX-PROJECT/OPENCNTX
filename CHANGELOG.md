@@ -4,7 +4,15 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
-No changes yet.
+### Fixed
+
+- Bound the stored continuity roadmap, every generated assignment detail and
+  the active context to their original hash-chained flow evidence, so local
+  byte drift stops status, advance, health, capsule export and sync.
+- Counted the three bounded recovery rounds per active assignment instead of
+  cumulatively across unrelated roadmap assignments.
+- Latched automatic Git replica failures after the first recorded error until
+  an explicit successful apply or reconfiguration re-enables automatic sync.
 
 ## 1.1.0 - 2026-09-01
 
