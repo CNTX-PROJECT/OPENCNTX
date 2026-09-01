@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.1.0"
+version = "1.1.1"
 description = "Create small, explicit, verifiable context packages for one AI task."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -59,6 +59,7 @@ target-version = "py311"
 "tools/quality_gate.py" = ["S603"] # Runs only the current Python and fixed repository commands.
 "tools/r8_hardening.py" = ["BLE001", "E402", "S310", "S603"] # A child reports every failure class; the fixed bootstrap, HTTPS URL, and local executables are trusted.
 "tools/release_artifacts.py" = ["S603"] # Runs only controlled local build and install commands.
+"tools/release_version_gate.py" = ["S603"] # Runs only the discovered Git binary with closed read-only arguments.
 "tools/render_brand.py" = ["S314"] # Parses only SVG bytes generated inside this repository.
 
 [tool.mypy]

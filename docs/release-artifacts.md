@@ -2,20 +2,20 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page explains the four files in the immutable `v1.1.0` GitHub Release and
+This page explains the four files in the immutable `v1.1.1` GitHub Release and
 how contributors prepare equivalent local candidates. It does not grant
 authority to publish a new release or package-index upload.
 
 ## Current public distribution
 
-The `v1.1.0` Production/Stable release is live and immutable. Install it from
+The `v1.1.1` Production/Stable release is live and immutable. Install it from
 the exact public Git tag as described in [Get started](start-here.md):
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.1.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.1.1"`.
 
 - OPENCNTX is not published on PyPI or TestPyPI.
 - The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
   build record attached to it.
-- The v1.1.0 GitHub Release must contain exactly the four files named below.
+- The v1.1.1 GitHub Release must contain exactly the four files named below.
 
 Any file built locally is an unpublished candidate unless it is one of the
 four exact assets attached to the immutable GitHub Release.
@@ -24,8 +24,8 @@ four exact assets attached to the immutable GitHub Release.
 
 The local release helper emits exactly four candidate files:
 
-1. `opencntx-1.1.0-py3-none-any.whl`;
-2. `opencntx-1.1.0.tar.gz`;
+1. `opencntx-1.1.1-py3-none-any.whl`;
+2. `opencntx-1.1.1.tar.gz`;
 3. `SHA256SUMS` for those two artifacts;
 4. `BUILD-RECORD.json`.
 
@@ -46,7 +46,7 @@ python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.1.0 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.1.1 --expected-commit $commit --expected-tree $tree
 ```
 
 Ubuntu:
@@ -56,7 +56,7 @@ python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0
 commit=$(git rev-parse HEAD)
 tree=$(git rev-parse 'HEAD^{tree}')
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.1.0 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.1.1 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
 The helper exports the exact Git tree to two independent temporary source
@@ -94,8 +94,8 @@ must support:
 Run the same bounded smoke for both local candidates:
 
 ```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.1.0-py3-none-any.whl --expected-version 1.1.0
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.1.0.tar.gz --expected-version 1.1.0
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.1.1-py3-none-any.whl --expected-version 1.1.1
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.1.1.tar.gz --expected-version 1.1.1
 ```
 
 This tests a local candidate. It is not proof that an external package-index

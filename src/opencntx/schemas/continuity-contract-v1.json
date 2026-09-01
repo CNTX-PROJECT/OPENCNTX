@@ -1,7 +1,7 @@
 {
   "format": "opencntx-continuity-contract",
   "format_version": 1,
-  "release": "1.1.0",
+  "release": "1.1.1",
   "stable_baseline": "1.0.0",
   "compatibility": "ADDITIVE",
   "commands": [
