@@ -28,12 +28,21 @@ class SecretPolicyTests(unittest.TestCase):
             "github-classic-token": "gh" + "p_" + ("A" * 36),
             "github-fine-grained-token": "github_" + "pat_" + ("B" * 50),
             "aws-secret-access-key": "AWS_SECRET_ACCESS_KEY=" + ("C" * 40),
+            "provider-credential-stripe": "sk_" + "live_" + ("D" * 24),
+            "provider-credential-openai": "sk-" + "proj-" + ("E" * 24),
+            "provider-credential-slack": "xo" + "xb-" + ("F" * 16),
+            "provider-credential-aws-id": "AK" + "IA" + ("G" * 16),
         }
         for expected_rule, value in corpus.items():
             with self.subTest(rule=expected_rule):
                 findings = scan(value)
                 self.assertEqual(len(findings), 1)
-                self.assertEqual(findings[0].rule_id, expected_rule)
+                self.assertEqual(
+                    findings[0].rule_id,
+                    "provider-credential"
+                    if expected_rule.startswith("provider-credential-")
+                    else expected_rule,
+                )
                 self.assertEqual(findings[0].confidence, CONFIDENCE_HIGH)
                 assessment = assess_findings(findings, ())
                 self.assertEqual(assessment.blocked, findings)
@@ -87,6 +96,8 @@ class SecretPolicyTests(unittest.TestCase):
             "mongodb+srv://app:synthetic-password@cluster.example.invalid/app",
             "redis://app:synthetic-password@cache.example.invalid/0",
             "rediss://app:synthetic-password@cache.example.invalid/0",
+            "amqp://app:synthetic-password@queue.example.invalid/vhost",
+            "ftp://app:synthetic-password@files.example.invalid/path",
         )
         for value in corpus:
             with self.subTest(value=value.split(":", 1)[0]):
@@ -95,17 +106,44 @@ class SecretPolicyTests(unittest.TestCase):
                 self.assertEqual(findings[0].rule_id, "basic-auth-url")
                 self.assertEqual(findings[0].confidence, CONFIDENCE_WARNING)
 
+    def test_prefixed_credential_assignments_are_detected_by_category(self) -> None:
+        corpus = (
+            "MY_API_KEY=syntheticValue123",
+            "APP_TOKEN=syntheticValue123",
+            "secret=syntheticValue123",
+            "private_key: syntheticValue123",
+            "passphrase=syntheticValue123",
+            "service_auth_token=syntheticValue123",
+        )
+        for value in corpus:
+            with self.subTest(key=value.split("=", 1)[0].split(":", 1)[0]):
+                findings = scan(value)
+                self.assertEqual(len(findings), 1)
+                self.assertEqual(findings[0].rule_id, "credential-like-assignment")
+                self.assertEqual(findings[0].confidence, CONFIDENCE_WARNING)
+
     def test_normal_code_and_secret_documentation_are_bounded(self) -> None:
         quiet_corpus = (
             "token_count = len(parts)\n",
             "password = prompt_user()\n",
+            "private_key = load_key()\n",
+            "APP_TOKEN = fetch_token()\n",
             "The word secret alone is not a credential.\n",
+            "The password field is required.\n",
+            'password = ""\n',
+            "token = None\n",
             '{"api_key": "example"}\n',
             "authorization: omitted\n",
             "DATABASE_PASSWORD = read_secret()\n",
             "APP_SECRET = load_from_vault()\n",
             "mongodb://cluster.example.invalid/app\n",
             "redis://cache.example.invalid/0\n",
+            "amqp://queue.example.invalid/vhost\n",
+            "ftp://files.example.invalid/path\n",
+            "sk_live_example\n",
+            "sk-proj-example\n",
+            "xoxb-example\n",
+            "AKIAEXAMPLE\n",
         )
         for value in quiet_corpus:
             with self.subTest(value=value):

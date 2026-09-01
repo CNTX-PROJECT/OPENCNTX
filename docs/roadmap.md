@@ -173,15 +173,30 @@ features or expose private project records.
   `opencntx-1.2.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
   every earlier immutable release.
 
+### v1.2.1 feature-freeze optimization
+
+- optimized the existing dependency graph, continuity ledger, security scan,
+  and large-layout audit without adding a command, schema, product layer,
+  runtime dependency, distribution route, or mandatory migration;
+- reduced the accepted 1,000-assignment Windows stress profile from 493.199 to
+  289.977 seconds, approximately 41.2 percent, with complete and healthy final
+  state;
+- passed 477 tests, 72 of 72 R9 checks, the complete R10 stress profile,
+  concurrent-writer refusal, restart recovery, and a deterministic 20,000-file
+  layout audit;
+- published exactly `opencntx-1.2.1-py3-none-any.whl`,
+  `opencntx-1.2.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
+  every earlier immutable release.
+
 ## Current state
 
-- Current package line: `v1.2.0`
-- Package version: `1.2.0`
+- Current package line: `v1.2.1`
+- Package version: `1.2.1`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public release: live exact `v1.2.0` tag plus immutable matching GitHub Release;
+- Public release: live exact `v1.2.1` tag plus immutable matching GitHub Release;
   every earlier release remains immutable
 - Distribution: exact Git tag plus the four verified GitHub Release assets
   named above; no PyPI or TestPyPI package

@@ -293,6 +293,38 @@ class PublicQualityTests(unittest.TestCase):
 
         self.assertIn(README_NAVIGATION, README.read_text(encoding="utf-8"))
 
+        docs_index = (DOCS / "README.md").read_text(encoding="utf-8")
+        start_here = (DOCS / "start-here.md").read_text(encoding="utf-8")
+        self.assertIn("The default route remains", docs_index)
+        self.assertIn("path is the default route", start_here)
+        self.assertLess(
+            docs_index.index("## Core package guides"),
+            docs_index.index("## Stable workspace guides"),
+        )
+
+    def test_layout_and_continuity_quick_routes_are_complete(self) -> None:
+        layout = (DOCS / "layout.md").read_text(encoding="utf-8")
+        continuity = (DOCS / "continuity.md").read_text(encoding="utf-8")
+
+        for fragment in (
+            "../examples/order-contract.json",
+            "opencntx layout audit --contract examples/order-contract.json --base . --json",
+            "changes nothing",
+        ):
+            self.assertIn(fragment, layout)
+        for fragment in (
+            "1. Preview",
+            "2. Start",
+            "3. Read",
+            "4. After",
+            "5. Read",
+            "opencntx flow preview examples/continuity-roadmap.json --json",
+            "opencntx flow advance --outcome PASS",
+            "opencntx flow advance --outcome FAIL",
+            ".opencntx\\continuity\\details\\TASK-2.md",
+        ):
+            self.assertIn(fragment, continuity)
+
     def test_current_public_guidance_calls_workspace_stable(self) -> None:
         runtime_sources = tuple(sorted((ROOT / "src" / "opencntx").rglob("*.py")))
         current_guidance = (README, *sorted(DOCS.glob("*.md")), *runtime_sources)
@@ -346,6 +378,8 @@ class PublicQualityTests(unittest.TestCase):
             ROOT / "CONTRIBUTING.md",
             ROOT / "SUPPORT.md",
             ROOT / "examples" / "minimal" / "opencntx.toml",
+            ROOT / "examples" / "continuity-roadmap.json",
+            ROOT / "examples" / "order-contract.json",
             ROOT / ".github" / "ISSUE_TEMPLATE" / "bug_report.yml",
             ROOT / ".github" / "ISSUE_TEMPLATE" / "config.yml",
             ROOT / ".github" / "ISSUE_TEMPLATE" / "feature_request.yml",
@@ -618,7 +652,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.2.0")
+        self.assertEqual(version, "1.2.1")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],

@@ -41,6 +41,10 @@ the closed `opencntx-order-contract`, continuity handoff, and host-claim version
 1.0.0 catalog remains the compatibility floor; additive post-1.0 routes are
 tested as separate minor-line surfaces.
 
+Version 1.2.1 optimizes those existing routes under a feature freeze. It adds
+no command, argument, schema, format major, runtime dependency, product layer,
+or mandatory migration and preserves every v1.2.0 durable-format boundary.
+
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe
 the active assignment, while historical failures remain in that ledger. This

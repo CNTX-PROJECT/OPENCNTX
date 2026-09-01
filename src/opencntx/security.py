@@ -63,6 +63,16 @@ _HIGH_RULES = (
             re.IGNORECASE | re.MULTILINE,
         ),
     ),
+    _Rule(
+        rule_id="provider-credential",
+        confidence=CONFIDENCE_HIGH,
+        expression=re.compile(
+            r"\b(?:sk_live_[A-Za-z0-9]{20,}|"
+            r"sk-proj-[A-Za-z0-9_-]{20,}|"
+            r"xox[baprs]-[A-Za-z0-9-]{10,}|"
+            r"AKIA[0-9A-Z]{16})\b",
+        ),
+    ),
 )
 
 _WARNING_RULES = (
@@ -70,8 +80,9 @@ _WARNING_RULES = (
         rule_id="credential-like-assignment",
         confidence=CONFIDENCE_WARNING,
         expression=re.compile(
-            r"\b(?:password|passwd|db[_-]?password|database[_-]?password|"
-            r"app[_-]?secret|token|api[_-]?key|client[_-]?secret|authorization)"
+            r"\b(?:[A-Za-z0-9]+[_-])*"
+            r"(?:password|passwd|secret|token|api[_-]?key|apikey|"
+            r"private[_-]?key|passphrase|credential|authorization|auth[_-]?token)"
             r"\b[\"']?"
             r"[ \t]*[:=][ \t]*"
             r"(?:"
@@ -87,8 +98,7 @@ _WARNING_RULES = (
         rule_id="basic-auth-url",
         confidence=CONFIDENCE_WARNING,
         expression=re.compile(
-            r"(?:https?|postgres(?:ql)?|mysql(?:\+[a-z0-9._-]+)?|"
-            r"mariadb(?:\+[a-z0-9._-]+)?|mongodb(?:\+srv)?|rediss?)://"
+            r"\b[a-z][a-z0-9+.-]*://"
             r"[^/\s:@]+:[^@\s/]+@",
             re.IGNORECASE,
         ),

@@ -12,6 +12,7 @@ from opencntx.core import OpenCntxError
 from opencntx.layout import SCHEMA_ID, audit_layout, load_order_contract
 
 ROOT = Path(__file__).resolve().parents[1]
+EXAMPLE_CONTRACT = ROOT / "examples" / "order-contract.json"
 
 
 def contract_value() -> dict[str, object]:
@@ -77,6 +78,13 @@ def snapshot(parent: Path) -> dict[str, bytes]:
 
 
 class LayoutContractTests(unittest.TestCase):
+    def test_public_example_uses_the_existing_v1_schema_and_runtime_loader(self) -> None:
+        contract, digest = load_order_contract(EXAMPLE_CONTRACT)
+
+        self.assertEqual("GENERIC-PROJECT", contract["contract_id"])
+        self.assertEqual(SCHEMA_ID, contract["schema_id"])
+        self.assertEqual(64, len(digest))
+
     def test_green_audit_is_deterministic_and_read_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             base = Path(temporary_directory)

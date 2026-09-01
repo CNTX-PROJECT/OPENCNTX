@@ -8,14 +8,18 @@ import os
 import platform
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
+import threading
+import time
 import zipfile
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, TypeVar
 
 from .security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
 from .workspace import WorkspaceError
@@ -30,6 +34,20 @@ CONFLICT_CLASSES = frozenset({"NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "
 ID_PATTERN = re.compile(r"[A-Z][A-Z0-9_-]{0,79}\Z")
 SAFE_REMOTE = re.compile(r"^(?:https://|ssh://|git@|file://|[A-Za-z]:[\\/]|/)")
 SECRET_TEXT_SUFFIXES = frozenset({".json", ".jsonl", ".md"})
+VALIDATION_PARALLEL_THRESHOLD = 16
+_VALIDATION_EXECUTOR = ThreadPoolExecutor(
+    max_workers=4,
+    thread_name_prefix="opencntx-validation",
+)
+_LEDGER_SNAPSHOTS: dict[Path, tuple[str, str]] = {}
+_EVENT_CACHE: dict[Path, tuple[bytes, list[dict[str, Any]]]] = {}
+_JSON_CACHE: dict[Path, tuple[str, dict[str, Any]]] = {}
+_ROADMAP_CACHE: dict[Path, tuple[str, dict[str, Any]]] = {}
+_STORE_ACCESS_LOCK = threading.RLock()
+_Key = TypeVar("_Key")
+_Input = TypeVar("_Input")
+_Output = TypeVar("_Output")
+_Value = TypeVar("_Value")
 
 ROADMAP_FIELDS = {"format", "format_version", "project_id", "roadmap_id", "title", "assignments"}
 ASSIGNMENT_FIELDS = {
@@ -132,13 +150,25 @@ def _value_digest(value: object) -> str:
     return _digest(_canonical(value))
 
 
+def _remember(cache: dict[_Key, _Value], key: _Key, value: _Value, *, maximum: int) -> None:
+    cache[key] = value
+    while len(cache) > maximum:
+        cache.pop(next(iter(cache)))
+
+
 def _read_json(path: Path, *, failure_kind: str) -> dict[str, Any]:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
+        content = path.read_bytes()
+        digest = _digest(content)
+        cached = _JSON_CACHE.get(path)
+        if cached is not None and cached[0] == digest:
+            return cached[1]
+        value = json.loads(content)
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise _fail(failure_kind, f"Cannot read valid JSON: {path}") from exc
     if not isinstance(value, dict):
         raise _fail(failure_kind, f"JSON root must be an object: {path}")
+    _remember(_JSON_CACHE, path, (digest, value), maximum=8192)
     return value
 
 
@@ -150,7 +180,14 @@ def _write_atomic(path: Path, content: bytes) -> None:
             output.write(content)
             output.flush()
             os.fsync(output.fileno())
-        os.replace(temporary, path)
+        for attempt in range(20):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if os.name != "nt" or attempt == 19:
+                    raise
+                time.sleep(0.005)
     except OSError as exc:
         temporary.unlink(missing_ok=True)
         raise _fail("continuity_write_failed", f"Cannot write continuity state: {path}") from exc
@@ -196,22 +233,30 @@ def _validate_graph(assignments: Sequence[dict[str, Any]]) -> None:
     graph = {item["id"]: tuple(item["depends_on"]) for item in assignments}
     if any(dependency not in identifiers for values in graph.values() for dependency in values):
         raise _fail("continuity_roadmap_invalid", "An assignment has an unknown dependency.")
-    visiting: set[str] = set()
-    visited: set[str] = set()
+    remaining_dependencies = {
+        identifier: len(dependencies) for identifier, dependencies in graph.items()
+    }
+    dependents: dict[str, list[str]] = {identifier: [] for identifier in identifiers}
+    for identifier, dependencies in graph.items():
+        for dependency in dependencies:
+            dependents[dependency].append(identifier)
 
-    def visit(identifier: str) -> None:
-        if identifier in visiting:
-            raise _fail("continuity_roadmap_invalid", "The assignment graph contains a cycle.")
-        if identifier in visited:
-            return
-        visiting.add(identifier)
-        for dependency in graph[identifier]:
-            visit(dependency)
-        visiting.remove(identifier)
-        visited.add(identifier)
+    ready = [
+        identifier
+        for identifier in sorted(identifiers, reverse=True)
+        if remaining_dependencies[identifier] == 0
+    ]
+    visited = 0
+    while ready:
+        identifier = ready.pop()
+        visited += 1
+        for dependent in dependents[identifier]:
+            remaining_dependencies[dependent] -= 1
+            if remaining_dependencies[dependent] == 0:
+                ready.append(dependent)
 
-    for identifier in sorted(identifiers):
-        visit(identifier)
+    if visited != len(identifiers):
+        raise _fail("continuity_roadmap_invalid", "The assignment graph contains a cycle.")
 
 
 def validate_roadmap(value: Mapping[str, Any]) -> dict[str, Any]:
@@ -272,6 +317,24 @@ def load_roadmap(path: Path) -> dict[str, Any]:
     return validate_roadmap(
         _read_json(path.resolve(strict=True), failure_kind="continuity_roadmap_invalid")
     )
+
+
+def _load_bound_roadmap(path: Path) -> dict[str, Any]:
+    try:
+        resolved = path.resolve(strict=True)
+        content = resolved.read_bytes()
+        digest = _digest(content)
+        cached = _ROADMAP_CACHE.get(resolved)
+        if cached is not None and cached[0] == digest:
+            return cached[1]
+        value = json.loads(content)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise _fail("continuity_store_invalid", f"Cannot read valid JSON: {path}") from exc
+    if not isinstance(value, dict):
+        raise _fail("continuity_store_invalid", f"JSON root must be an object: {resolved}")
+    roadmap = validate_roadmap(value)
+    _remember(_ROADMAP_CACHE, resolved, (digest, roadmap), maximum=128)
+    return roadmap
 
 
 def _root(project_root: Path, *, create: bool = False) -> Path:
@@ -417,12 +480,25 @@ def _store_files(store: Path) -> list[Path]:
 def _read_events(store: Path) -> list[dict[str, Any]]:
     ledger = store / "history" / "events.jsonl"
     try:
-        lines = ledger.read_text(encoding="utf-8").splitlines()
+        content = ledger.read_bytes()
     except OSError as exc:
         raise _fail("continuity_store_invalid", "Continuity event ledger is unavailable.") from exc
-    events: list[dict[str, Any]] = []
-    previous = ZERO_DIGEST
-    for number, line in enumerate(lines, start=1):
+    cached = _EVENT_CACHE.get(ledger)
+    if cached is not None and content == cached[0]:
+        return list(cached[1])
+    if cached is not None and content.startswith(cached[0]) and cached[0].endswith(b"\n"):
+        events = list(cached[1])
+        previous = str(events[-1]["event_digest"])
+        remainder = content[len(cached[0]) :]
+    else:
+        events = []
+        previous = ZERO_DIGEST
+        remainder = content
+    try:
+        lines = remainder.decode("utf-8").splitlines()
+    except UnicodeError as exc:
+        raise _fail("continuity_store_invalid", "Continuity event ledger is invalid.") from exc
+    for number, line in enumerate(lines, start=len(events) + 1):
         try:
             event = json.loads(line)
         except json.JSONDecodeError as exc:
@@ -437,7 +513,68 @@ def _read_events(store: Path) -> list[dict[str, Any]]:
         events.append(event)
     if not events:
         raise _fail("continuity_store_invalid", "Continuity event ledger is empty.")
+    _remember(
+        _LEDGER_SNAPSHOTS,
+        ledger,
+        (str(events[-1]["event_digest"]), _digest(content)),
+        maximum=256,
+    )
+    _remember(_EVENT_CACHE, ledger, (content, list(events)), maximum=256)
     return events
+
+
+def _bounded_parallel_map(
+    function: Callable[[_Input], _Output], values: Sequence[_Input]
+) -> list[_Output]:
+    if len(values) < VALIDATION_PARALLEL_THRESHOLD:
+        return [function(value) for value in values]
+    worker_count = min(4, len(values))
+    chunk_size = (len(values) + worker_count - 1) // worker_count
+    futures = [
+        _VALIDATION_EXECUTOR.submit(_function_batch, function, values[offset : offset + chunk_size])
+        for offset in range(0, len(values), chunk_size)
+    ]
+    return [item for future in futures for item in future.result()]
+
+
+def _function_batch(
+    function: Callable[[_Input], _Output], values: Sequence[_Input]
+) -> list[_Output]:
+    return [function(value) for value in values]
+
+
+def _selection_artifacts(
+    value: tuple[Path, dict[str, Any], str],
+) -> tuple[dict[str, Any], bytes, bytes]:
+    store, assignment, identifier = value
+    check = _read_json(
+        store / "receipts" / f"{identifier}-existing-check.json",
+        failure_kind="continuity_store_invalid",
+    )
+    try:
+        expected_detail = _detail_bytes(assignment, check["result"])
+        actual_detail = (store / "details" / f"{identifier}.md").read_bytes()
+    except (KeyError, OSError, TypeError) as exc:
+        raise _fail(
+            "continuity_store_invalid",
+            "Bound assignment detail is unavailable or invalid.",
+        ) from exc
+    return check, expected_detail, actual_detail
+
+
+def _handoff_artifacts(
+    value: tuple[Path, str],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    store, identifier = value
+    return (
+        _read_json(
+            store / "handoffs" / f"{identifier}.json", failure_kind="continuity_store_invalid"
+        ),
+        _read_json(
+            store / "receipts" / f"{identifier}-complete.json",
+            failure_kind="continuity_store_invalid",
+        ),
+    )
 
 
 def _reduce(
@@ -518,6 +655,8 @@ def _validate_store_bindings(
 
     assignments = {item["id"]: item for item in roadmap["assignments"]}
     selections: dict[str, Mapping[str, Any]] = {}
+    selection_inputs: list[tuple[Path, dict[str, Any], str]] = []
+    selection_payloads: list[Mapping[str, Any]] = []
     for event in events:
         if event["type"] != "ASSIGNMENT_SELECTED":
             continue
@@ -529,10 +668,15 @@ def _validate_store_bindings(
                 "continuity_store_invalid",
                 "Selected assignment is absent from the bound roadmap.",
             )
-        check = _read_json(
-            store / "receipts" / f"{identifier}-existing-check.json",
-            failure_kind="continuity_store_invalid",
-        )
+        selection_inputs.append((store, assignment, str(identifier)))
+        selection_payloads.append(payload)
+
+    selection_files = _bounded_parallel_map(_selection_artifacts, selection_inputs)
+    for selection_input, payload, artifacts in zip(
+        selection_inputs, selection_payloads, selection_files, strict=True
+    ):
+        _, _, identifier = selection_input
+        check, expected_detail, actual_detail = artifacts
         check_digest = check.get("check_digest")
         check_basis = {key: value for key, value in check.items() if key != "check_digest"}
         if (
@@ -544,14 +688,6 @@ def _validate_store_bindings(
                 "continuity_store_invalid",
                 "Existing-check receipt differs from its selected assignment binding.",
             )
-        try:
-            expected_detail = _detail_bytes(assignment, check_basis["result"])
-            actual_detail = (store / "details" / f"{identifier}.md").read_bytes()
-        except (KeyError, OSError, TypeError) as exc:
-            raise _fail(
-                "continuity_store_invalid",
-                "Bound assignment detail is unavailable or invalid.",
-            ) from exc
         if actual_detail != expected_detail:
             raise _fail(
                 "continuity_store_invalid",
@@ -606,14 +742,44 @@ def _next_trigger(events: Sequence[dict[str, Any]], start: int) -> str | None:
     raise _fail("continuity_store_invalid", "Completed assignment has no next-flow event.")
 
 
+def _bound_inventory(store: Path, directory: str, label: str) -> set[str]:
+    root = store / directory
+    if not root.exists():
+        return set()
+    if root.is_symlink() or not root.is_dir():
+        raise _fail("continuity_store_invalid", f"{label} directory is unsafe.")
+    files: set[str] = set()
+    try:
+        for path in root.rglob("*"):
+            mode = path.stat(follow_symlinks=False).st_mode
+            if stat.S_ISLNK(mode):
+                raise _fail("continuity_store_invalid", f"{label} inventory contains a link.")
+            if stat.S_ISREG(mode):
+                files.add(path.relative_to(store).as_posix())
+    except OSError as exc:
+        raise _fail("continuity_store_invalid", f"{label} inventory is unavailable.") from exc
+    return files
+
+
 def _validate_handoffs(
     store: Path, roadmap: dict[str, Any], events: Sequence[dict[str, Any]]
 ) -> None:
     assignments = {item["id"]: item for item in roadmap["assignments"]}
     bound_paths: set[str] = set()
-    for index, event in enumerate(events):
-        if event["type"] != "ASSIGNMENT_COMPLETED":
-            continue
+    completed_events = [
+        (index, event)
+        for index, event in enumerate(events)
+        if event["type"] == "ASSIGNMENT_COMPLETED"
+        and (
+            event["payload"].get("handoff_digest") is not None
+            or event["payload"].get("handoff_path") is not None
+        )
+    ]
+    handoff_inputs = [
+        (store, str(event["payload"].get("assignment_id"))) for _, event in completed_events
+    ]
+    handoff_files = _bounded_parallel_map(_handoff_artifacts, handoff_inputs)
+    for (index, event), artifacts in zip(completed_events, handoff_files, strict=True):
         payload = event["payload"]
         handoff_digest = payload.get("handoff_digest")
         handoff_path = payload.get("handoff_path")
@@ -623,15 +789,11 @@ def _validate_handoffs(
         expected_path = f"handoffs/{identifier}.json"
         if handoff_path != expected_path or not isinstance(handoff_digest, str):
             raise _fail("continuity_store_invalid", "Handoff event binding is invalid.")
-        record = _read_json(store / expected_path, failure_kind="continuity_store_invalid")
+        record, receipt = artifacts
         if set(record) != HANDOFF_FIELDS:
             raise _fail("continuity_store_invalid", "Handoff record fields are invalid.")
         basis = {key: value for key, value in record.items() if key != "handoff_digest"}
         assignment = assignments.get(identifier)
-        receipt = _read_json(
-            store / "receipts" / f"{identifier}-complete.json",
-            failure_kind="continuity_store_invalid",
-        )
         if (
             assignment is None
             or record["format"] != "opencntx-continuity-handoff"
@@ -650,20 +812,7 @@ def _validate_handoffs(
         ):
             raise _fail("continuity_store_invalid", "Handoff differs from its event binding.")
         bound_paths.add(expected_path)
-    handoff_root = store / "handoffs"
-    if handoff_root.exists() and (handoff_root.is_symlink() or not handoff_root.is_dir()):
-        raise _fail("continuity_store_invalid", "Handoff directory is unsafe.")
-    if handoff_root.is_dir() and any(path.is_symlink() for path in handoff_root.rglob("*")):
-        raise _fail("continuity_store_invalid", "Handoff inventory contains a link.")
-    actual_paths = (
-        {
-            path.relative_to(store).as_posix()
-            for path in handoff_root.rglob("*")
-            if path.is_file() and not path.is_symlink()
-        }
-        if handoff_root.is_dir() and not handoff_root.is_symlink()
-        else set()
-    )
+    actual_paths = _bound_inventory(store, "handoffs", "Handoff")
     if actual_paths != bound_paths:
         raise _fail("continuity_store_invalid", "Handoff inventory differs from event history.")
 
@@ -771,20 +920,7 @@ def _validate_claims(
                 break
         seen.add(identifier)
         bound_paths.add(expected_path)
-    claim_root = store / "claims"
-    if claim_root.exists() and (claim_root.is_symlink() or not claim_root.is_dir()):
-        raise _fail("continuity_store_invalid", "Host claim directory is unsafe.")
-    if claim_root.is_dir() and any(path.is_symlink() for path in claim_root.rglob("*")):
-        raise _fail("continuity_store_invalid", "Host claim inventory contains a link.")
-    actual_paths = (
-        {
-            path.relative_to(store).as_posix()
-            for path in claim_root.rglob("*")
-            if path.is_file() and not path.is_symlink()
-        }
-        if claim_root.is_dir()
-        else set()
-    )
+    actual_paths = _bound_inventory(store, "claims", "Host claim")
     if actual_paths != bound_paths:
         raise _fail("continuity_store_invalid", "Host claim inventory differs from event history.")
 
@@ -792,33 +928,35 @@ def _validate_claims(
 def _load_store(
     project_root: Path,
 ) -> tuple[Path, dict[str, Any], list[dict[str, Any]], dict[str, Any]]:
-    store = store_path(project_root)
-    if not store.is_dir() or store.is_symlink():
-        raise _fail("continuity_store_missing", "Continuity store is not initialized.")
-    roadmap = validate_roadmap(
-        _read_json(store / "roadmaps" / "roadmap.json", failure_kind="continuity_store_invalid")
-    )
-    events = _read_events(store)
-    state = _reduce(store, roadmap, events)
-    _validate_store_bindings(store, roadmap, events, state)
-    return store, roadmap, events, state
+    with _STORE_ACCESS_LOCK:
+        store = store_path(project_root)
+        if not store.is_dir() or store.is_symlink():
+            raise _fail("continuity_store_missing", "Continuity store is not initialized.")
+        roadmap = _load_bound_roadmap(store / "roadmaps" / "roadmap.json")
+        events = _read_events(store)
+        state = _reduce(store, roadmap, events)
+        _validate_store_bindings(store, roadmap, events, state)
+        return store, roadmap, events, state
 
 
 @contextmanager
 def _writer_lock(path: Path):
-    try:
-        descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        os.close(descriptor)
-    except FileExistsError as exc:
-        raise _fail("continuity_write_conflict", "Another continuity writer is active.") from exc
-    except OSError as exc:
-        raise _fail(
-            "continuity_write_failed", "Cannot acquire the continuity writer lock."
-        ) from exc
-    try:
-        yield
-    finally:
-        path.unlink(missing_ok=True)
+    with _STORE_ACCESS_LOCK:
+        try:
+            descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            os.close(descriptor)
+        except FileExistsError as exc:
+            raise _fail(
+                "continuity_write_conflict", "Another continuity writer is active."
+            ) from exc
+        except OSError as exc:
+            raise _fail(
+                "continuity_write_failed", "Cannot acquire the continuity writer lock."
+            ) from exc
+        try:
+            yield
+        finally:
+            path.unlink(missing_ok=True)
 
 
 def _append_events(
@@ -826,9 +964,29 @@ def _append_events(
     entries: Sequence[tuple[str, Mapping[str, Any]]],
     *,
     expected_head: str | None = None,
+    existing_events: Sequence[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     ledger = store / "history" / "events.jsonl"
-    events = _read_events(store) if ledger.exists() and ledger.stat().st_size else []
+    if existing_events is None:
+        events = _read_events(store) if ledger.exists() and ledger.stat().st_size else []
+        existing_content = b"".join(_canonical(event) for event in events)
+    else:
+        events = list(existing_events)
+        try:
+            existing_content = ledger.read_bytes()
+            head = str(events[-1]["event_digest"]) if events else ZERO_DIGEST
+            snapshot = _LEDGER_SNAPSHOTS.get(ledger)
+            if snapshot is None:
+                expected_content = b"".join(_canonical(event) for event in events)
+                unchanged = existing_content == expected_content
+            else:
+                unchanged = snapshot == (head, _digest(existing_content))
+            if not unchanged:
+                raise _fail("continuity_write_conflict", "Continuity state changed before commit.")
+        except OSError as exc:
+            raise _fail(
+                "continuity_write_conflict", "Continuity state changed before commit."
+            ) from exc
     head = events[-1]["event_digest"] if events else ZERO_DIGEST
     if expected_head is not None and expected_head != head:
         raise _fail("continuity_write_conflict", "Continuity state changed before commit.")
@@ -842,7 +1000,15 @@ def _append_events(
         }
         event["event_digest"] = _value_digest(event)
         appended.append(event)
-    _write_atomic(ledger, b"".join(_canonical(event) for event in (*events, *appended)))
+    content = existing_content + b"".join(_canonical(event) for event in appended)
+    _write_atomic(ledger, content)
+    _remember(
+        _LEDGER_SNAPSHOTS,
+        ledger,
+        (str(appended[-1]["event_digest"]), _digest(content)),
+        maximum=256,
+    )
+    _remember(_EVENT_CACHE, ledger, (content, [*events, *appended]), maximum=256)
     return appended
 
 
@@ -860,7 +1026,9 @@ def _assignment(roadmap: dict[str, Any], identifier: str) -> dict[str, Any]:
 def _next_assignment(roadmap: dict[str, Any], completed: Sequence[str]) -> dict[str, Any] | None:
     done = set(completed)
     for assignment in roadmap["assignments"]:
-        if assignment["id"] not in done and set(assignment["depends_on"]).issubset(done):
+        if assignment["id"] not in done and all(
+            dependency in done for dependency in assignment["depends_on"]
+        ):
             return assignment
     return None
 
@@ -933,8 +1101,12 @@ def _prepare_selection(
     }
 
 
-def _cache_state(store: Path, roadmap: dict[str, Any]) -> dict[str, Any]:
-    state = _reduce(store, roadmap, _read_events(store))
+def _cache_state(
+    store: Path,
+    roadmap: dict[str, Any],
+    events: Sequence[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    state = _reduce(store, roadmap, _read_events(store) if events is None else events)
     _write_atomic(store / "state.json", _pretty(state))
     return state
 
@@ -976,7 +1148,7 @@ def start_flow(project_root: Path, roadmap_path: Path, approval: str) -> FlowRes
                     "continuity_roadmap_invalid", "Roadmap has no dependency-ready assignment."
                 )
             selection = _prepare_selection(staging, root, roadmap, first)
-            _append_events(
+            started_events = _append_events(
                 staging,
                 (
                     (
@@ -991,7 +1163,7 @@ def start_flow(project_root: Path, roadmap_path: Path, approval: str) -> FlowRes
                 ),
                 expected_head=ZERO_DIGEST,
             )
-            state = _cache_state(staging, roadmap)
+            state = _cache_state(staging, roadmap, started_events)
             os.replace(staging, store)
         except Exception:
             shutil.rmtree(staging, ignore_errors=True)
@@ -1154,7 +1326,7 @@ def _advance_local(
         )
         repetitions = state["failure_fingerprints"].count(fingerprint)
         if repetitions >= 2:
-            _append_events(
+            appended = _append_events(
                 store,
                 (
                     (
@@ -1163,8 +1335,9 @@ def _advance_local(
                     ),
                 ),
                 expected_head=state["event_head"],
+                existing_events=events,
             )
-            state = _cache_state(store, roadmap)
+            state = _cache_state(store, roadmap, [*events, *appended])
             return _flow_result(roadmap, state)
         round_number = state["recovery_rounds"] + 1
         entries: list[tuple[str, Mapping[str, Any]]] = [
@@ -1187,8 +1360,13 @@ def _advance_local(
                     {"assignment_id": identifier, "reason": "THREE_FAILED_RECOVERY_ROUNDS"},
                 )
             )
-        _append_events(store, entries, expected_head=state["event_head"])
-        state = _cache_state(store, roadmap)
+        appended = _append_events(
+            store,
+            entries,
+            expected_head=state["event_head"],
+            existing_events=events,
+        )
+        state = _cache_state(store, roadmap, [*events, *appended])
         return _flow_result(roadmap, state)
     if normalized != "PASS":
         raise _fail("continuity_outcome_invalid", "Outcome must be PASS or FAIL.")
@@ -1248,10 +1426,15 @@ def _advance_local(
                 ("ASSIGNMENT_SELECTED", selection),
             )
         )
-    _append_events(store, entries, expected_head=state["event_head"])
+    appended = _append_events(
+        store,
+        entries,
+        expected_head=state["event_head"],
+        existing_events=events,
+    )
     if next_assignment is None:
         (store / "context" / "current.json").unlink(missing_ok=True)
-    state = _cache_state(store, roadmap)
+    state = _cache_state(store, roadmap, [*events, *appended])
     return _flow_result(roadmap, state)
 
 

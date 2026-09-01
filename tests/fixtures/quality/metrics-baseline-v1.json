@@ -3,8 +3,8 @@
   "format_version": 1,
   "basis_head": "f213627c58a33344d84a7da1649f74d773e0d230",
   "basis_tree": "0740c39c9cea7852fe9136ee979ec577c40ed803",
-  "branch_coverage_percent": 75,
-  "cli_coverage_percent": 37,
+  "branch_coverage_percent": 78,
+  "cli_coverage_percent": 62,
   "cli_lines": 1312,
   "error_code_count": 273,
   "error_code_set_sha256": "3d1c5a72da044f193f2e73ecab92247a85b2eb558d35f5d7470196741ad86493",
@@ -13,7 +13,7 @@
   "ruff_findings": 0,
   "safety_module_coverage": {
     "windows": {
-      "core.py": {"covered": 453, "total": 667},
+      "core.py": {"covered": 611, "total": 669},
       "integrity.py": {"covered": 795, "total": 1002},
       "lifecycle.py": {"covered": 854, "total": 1173},
       "workspace.py": {"covered": 575, "total": 722}

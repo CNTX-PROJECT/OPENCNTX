@@ -4,7 +4,9 @@
 
 This page covers installation and your first useful result in one continuous
 path. Start with a small test project that contains only files you are allowed
-to read and share.
+to read and share. This `init` → `pack --preview` → `pack` → inspect → `verify`
+path is the default route; the workspace, layout, and continuity routes are
+optional.
 
 ## 1. Check the requirements
 
@@ -23,19 +25,19 @@ OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
 ## 2. Install the Stable release
 
-The immutable `v1.2.0` Production/Stable release is available from its exact
+The immutable `v1.2.1` Production/Stable release is available from its exact
 Git tag and matching GitHub Release. OPENCNTX is not published on PyPI or
 TestPyPI.
 
 With `pipx` and Git available, install the exact tag in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.1"
 opencntx --version
 opencntx --help
 ```
 
-Do not remove `@v1.2.0` or replace it with `main`. The pin is what binds the
+Do not remove `@v1.2.1` or replace it with `main`. The pin is what binds the
 installation to the named release. The following source-checkout routes remain
 available when `pipx` is not the intended environment.
 
@@ -44,7 +46,7 @@ available when `pipx` is not the intended environment.
 Open PowerShell:
 
 ```powershell
-git clone --branch v1.2.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.2.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -59,7 +61,7 @@ launcher is available in PowerShell. Do not use unofficial installers.
 Open a terminal:
 
 ```bash
-git clone --branch v1.2.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.2.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python3 -m pip install .
 opencntx --help
@@ -80,7 +82,7 @@ opencntx --help
 opencntx --version
 ```
 
-The Stable release prints exactly `opencntx 1.2.0`.
+The Stable release prints exactly `opencntx 1.2.1`.
 
 ## 4. Open a small project
 
@@ -198,8 +200,8 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The immutable `v1.2.0` GitHub Release contains exactly
-`opencntx-1.2.0-py3-none-any.whl`, `opencntx-1.2.0.tar.gz`, `SHA256SUMS`,
+The immutable `v1.2.1` GitHub Release contains exactly
+`opencntx-1.2.1-py3-none-any.whl`, `opencntx-1.2.1.tar.gz`, `SHA256SUMS`,
 and `BUILD-RECORD.json`. OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local candidate builds,
 checksums, reproducibility limits, and the separate publication gate.

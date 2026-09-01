@@ -28,7 +28,22 @@ versions, invalid patterns, and unbounded limits.
 
 ## Read-only routes
 
-Audit and keep the findings as planning input:
+The complete [generic order contract](../examples/order-contract.json) uses the
+installed version 1 schema. From an OPENCNTX source checkout, this copy-and-paste
+command audits the example contract against `PROJECT` under the current
+directory and changes nothing:
+
+```powershell
+opencntx layout audit --contract examples/order-contract.json --base . --json
+```
+
+`GREEN` means the current `PROJECT` tree meets the example policy. A missing
+root, missing required `src` role, disallowed name, ownership gap, duplicate, or
+reached bound appears as a finding. Customize the registered root, roles, naming
+rules, owners, and bounds in a copy before using the contract as project policy.
+
+For a contract saved as `order-contract.json`, audit and keep the findings as
+planning input:
 
 ```text
 opencntx layout audit --contract order-contract.json --base . --json

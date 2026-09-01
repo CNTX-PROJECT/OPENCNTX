@@ -6,6 +6,10 @@ You do not need to read every page. Choose what you want to do, follow the
 smallest matching route, and open the technical reference only when you need
 more detail.
 
+The default route remains [Get started](start-here.md): `init`, `pack
+--preview`, `pack`, inspect, and `verify`. Workspace, layout, and continuity are
+optional routes for projects that already need those existing controls.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
   <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review and verify a small context package, then decide whether to share it">
