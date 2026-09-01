@@ -38,7 +38,11 @@ V030_WHEEL_URL = (
 )
 V030_WHEEL_SHA256 = "6dee59d5255c73278400c05217abb298abb50a51f5998c7fb9d1c41e8e027cc6"
 CRASH_EXIT = 86
-LOCK_FAILURES = {"transaction_locked", "transaction_state_changed"}
+LOCK_FAILURES = {
+    "transaction_locked",
+    "transaction_recovery_required",
+    "transaction_state_changed",
+}
 
 
 class HardeningError(RuntimeError):

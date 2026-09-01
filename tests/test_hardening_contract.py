@@ -123,6 +123,28 @@ def _canonical_vector(family: str, round_number: int) -> tuple[int, bytes, str]:
 
 
 class HardeningContractTests(unittest.TestCase):
+    def test_contention_accepts_every_safe_loser_race(self) -> None:
+        path = ROOT / "tools" / "r8_hardening.py"
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        assignments = [
+            node
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name) and target.id == "LOCK_FAILURES"
+                for target in node.targets
+            )
+        ]
+        self.assertEqual(1, len(assignments))
+        self.assertEqual(
+            {
+                "transaction_locked",
+                "transaction_recovery_required",
+                "transaction_state_changed",
+            },
+            ast.literal_eval(assignments[0].value),
+        )
+
     def test_registry_is_set_equal_to_every_current_writer_operation(self) -> None:
         register = _load("mutation-families-v1.json")
         families = register["families"]
