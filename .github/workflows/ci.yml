@@ -38,6 +38,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -110,6 +111,10 @@ jobs:
 
       - name: Verify installed development tools
         run: python -m pip check
+
+      - name: Verify package version against latest stable tag
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        run: python tools/release_version_gate.py --repository .
 
       - name: Run tests
         if: matrix.python-version != '3.13'

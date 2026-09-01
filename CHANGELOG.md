@@ -4,6 +4,14 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+## 1.1.1 - 2026-09-01
+
+### Added
+
+- Added a CI release-version gate that compares the package version with the
+  latest canonical stable Git tag and fails when an untagged source change
+  reuses an already released version.
+
 ### Fixed
 
 - Bound the stored continuity roadmap, every generated assignment detail and

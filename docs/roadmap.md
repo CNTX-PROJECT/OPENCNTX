@@ -144,16 +144,29 @@ features or expose private project records.
   `opencntx-1.1.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`;
 - kept `v1.0.0` immutable and preserved all existing core and workspace routes.
 
+### v1.1.1 continuity correction
+
+- bound roadmap, detail, and context bytes to the original flow evidence;
+- counted recovery rounds per assignment and latched failed automatic sync;
+- generated English-only assignment details and expanded the language guard;
+- detected JSON passwords, `DB_PASSWORD`, and credential-bearing PostgreSQL
+  URLs before optional private synchronization;
+- added a latest-stable-tag version gate to prevent unreleased source changes
+  from reusing an immutable release version;
+- published exactly `opencntx-1.1.1-py3-none-any.whl`,
+  `opencntx-1.1.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
+  the immutable `v1.1.0` and `v1.0.0` releases.
+
 ## Current state
 
-- Current package line: `v1.1.0`
-- Package version: `1.1.0`
+- Current package line: `v1.1.1`
+- Package version: `1.1.1`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public release: live exact `v1.1.0` tag plus immutable matching GitHub Release;
-  the `v1.0.0` release remains immutable
+- Public release: live exact `v1.1.1` tag plus immutable matching GitHub Release;
+  the `v1.1.0` and `v1.0.0` releases remain immutable
 - Distribution: exact Git tag plus the four verified GitHub Release assets
   named above; no PyPI or TestPyPI package
 

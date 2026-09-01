@@ -31,6 +31,10 @@ baseline. Version 1.1.0 adds the `flow` family, three continuity schemas and a
 runtime-maturity catalog without changing an accepted v1.0.0 route or durable
 format. Existing v1.0.0 packages and workspaces remain readable.
 
+Version 1.1.1 retains those additive contracts while correcting continuity
+recovery, generated-detail language, and secret filtering. It also adds a
+release-version drift gate without changing an accepted CLI or durable format.
+
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe
 the active assignment, while historical failures remain in that ledger. This
