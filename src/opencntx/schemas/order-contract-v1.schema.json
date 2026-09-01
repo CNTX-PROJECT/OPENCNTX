@@ -1,0 +1,91 @@
+{
+  "$id": "urn:uuid:4e8bb8a8-3b29-5bf9-afac-dbdb27fb7ce1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract_id": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"},
+    "duplicate_ownership": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_sha256": {"items": {"pattern": "^[0-9a-f]{64}$", "type": "string"}, "type": "array", "uniqueItems": true},
+        "enabled": {"type": "boolean"},
+        "minimum_bytes": {"maximum": 1073741824, "minimum": 1, "type": "integer"}
+      },
+      "required": ["allowed_sha256", "enabled", "minimum_bytes"],
+      "type": "object"
+    },
+    "folder_roles": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"},
+          "owner": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"},
+          "path": {"minLength": 1, "type": "string"},
+          "required": {"type": "boolean"},
+          "root": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"}
+        },
+        "required": ["id", "owner", "path", "required", "root"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "format": {"const": "opencntx-order-contract"},
+    "format_version": {"const": 1},
+    "naming": {
+      "additionalProperties": false,
+      "properties": {
+        "directory_pattern": {"minLength": 1, "type": "string"},
+        "exempt": {"items": {"minLength": 1, "type": "string"}, "type": "array", "uniqueItems": true},
+        "file_pattern": {"minLength": 1, "type": "string"}
+      },
+      "required": ["directory_pattern", "exempt", "file_pattern"],
+      "type": "object"
+    },
+    "path_allowlist": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "owner": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"},
+          "pattern": {"minLength": 1, "type": "string"},
+          "root": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"}
+        },
+        "required": ["owner", "pattern", "root"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "revision": {"maximum": 1000000, "minimum": 1, "type": "integer"},
+    "roots": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"},
+          "path": {"minLength": 1, "type": "string"},
+          "required": {"type": "boolean"},
+          "role": {"pattern": "^[A-Z][A-Z0-9_-]{1,63}$", "type": "string"}
+        },
+        "required": ["id", "path", "required", "role"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_id": {"const": "urn:uuid:4e8bb8a8-3b29-5bf9-afac-dbdb27fb7ce1"},
+    "stop_rule": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance": {"const": "ZERO_FINDINGS"},
+        "maximum_bytes": {"maximum": 10995116277760, "minimum": 1, "type": "integer"},
+        "maximum_files": {"maximum": 10000000, "minimum": 1, "type": "integer"},
+        "maximum_findings": {"maximum": 100000, "minimum": 1, "type": "integer"}
+      },
+      "required": ["acceptance", "maximum_bytes", "maximum_files", "maximum_findings"],
+      "type": "object"
+    }
+  },
+  "required": ["contract_id", "duplicate_ownership", "folder_roles", "format", "format_version", "naming", "path_allowlist", "revision", "roots", "schema_id", "stop_rule"],
+  "type": "object",
+  "x-opencntx-format": "opencntx-order-contract",
+  "x-opencntx-format-version": 1
+}

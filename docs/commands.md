@@ -2,8 +2,11 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This navigation table documents 63 public CLI paths: five orientation and
-version routes plus all 58 executable routes from the real parser. It does not invent options or grant
+For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
+stop-rule checks, see [Bounded workspace order](layout.md).
+
+This navigation table documents 65 public CLI paths: five orientation and
+version routes plus all 60 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -72,6 +75,8 @@ required arguments and repeatable options.
 | 61 | `opencntx flow sync configure` | enable one optional automatic checkpoint replica |
 | 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
 | 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
+| 64 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 65 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
 
 ## Roadmap flow
 

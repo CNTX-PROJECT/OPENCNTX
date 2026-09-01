@@ -35,6 +35,11 @@ Version 1.1.1 retains those additive contracts while correcting continuity
 recovery, generated-detail language, and secret filtering. It also adds a
 release-version drift gate without changing an accepted CLI or durable format.
 
+The planned 1.2.0 line adds the backward-compatible `layout` command family and
+the closed `opencntx-order-contract` version 1 schema. The immutable 1.0.0
+catalog remains the compatibility floor; additive post-1.0 routes are tested as
+separate minor-line surfaces.
+
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe
 the active assignment, while historical failures remain in that ledger. This

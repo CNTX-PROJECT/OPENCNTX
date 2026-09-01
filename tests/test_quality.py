@@ -228,8 +228,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(58, len(executable_paths))
-        self.assertEqual(63, len(documented_paths))
+        self.assertEqual(60, len(executable_paths))
+        self.assertEqual(65, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
