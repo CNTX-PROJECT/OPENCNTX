@@ -4,6 +4,30 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
+## 1.2.1 - 2026-09-01
+
+### Changed
+
+- Optimized dependency scheduling, bounded continuity reads and writes,
+  deterministic security scanning, and large-layout auditing without changing
+  a public command, schema, format major, runtime dependency, or distribution
+  route.
+- Reduced the accepted 1,000-assignment Windows stress profile from 493.199 to
+  289.977 seconds, approximately 41.2 percent, while preserving complete and
+  healthy roadmap state.
+- Clarified the existing continuity, layout, security, and start routes with
+  copy-and-paste examples and explicit PASS, FAIL, recovery, and local trust
+  boundaries.
+
+### Fixed
+
+- Strengthened deterministic behavior across filtered dependency graphs,
+  concurrent writers, restarts, nested credential-bearing URLs, high-volume
+  event ledgers, and 20,000-file layout scans.
+- Expanded regression evidence to 477 passing tests, 72 of 72 R9 checks, the
+  complete R10 stress profile, and a feature-freeze audit with zero new public
+  surfaces.
+
 ## 1.2.0 - 2026-09-01
 
 ### Added

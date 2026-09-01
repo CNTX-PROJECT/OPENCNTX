@@ -9,7 +9,7 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.2.0** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.2.1** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
@@ -35,17 +35,17 @@ OPENCNTX never uploads files and never sends a prompt for you.
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the exact v1.2.0 release in one command:
+`pipx` installed, install the exact v1.2.1 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.1"
 opencntx --version
 ```
 
 Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.2.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.2.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -142,8 +142,8 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Release | `v1.2.0` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
-| Package | `opencntx 1.2.0` |
+| Release | `v1.2.1` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
+| Package | `opencntx 1.2.1` |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -153,8 +153,8 @@ route—never in a public issue.
 
 The immutable Release contains exactly:
 
-- `opencntx-1.2.0-py3-none-any.whl`
-- `opencntx-1.2.0.tar.gz`
+- `opencntx-1.2.1-py3-none-any.whl`
+- `opencntx-1.2.1.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 

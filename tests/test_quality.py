@@ -652,7 +652,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.2.0")
+        self.assertEqual(version, "1.2.1")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],
