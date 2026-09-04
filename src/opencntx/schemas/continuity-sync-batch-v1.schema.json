@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-sync-batch-v1.schema.json",
+  "title": "OPENCNTX continuity sync batch v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "target_digest", "status", "included", "excluded", "external_writes_performed", "local_canonical", "batch_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-sync-batch"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "target_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["READY_FOR_ADAPTER", "QUEUED_OFFLINE", "CONFLICT"]},
+    "included": {"type": "array", "items": {"type": "object"}},
+    "excluded": {"type": "array", "items": {"type": "object"}},
+    "external_writes_performed": {"const": 0},
+    "local_canonical": {"const": true},
+    "batch_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

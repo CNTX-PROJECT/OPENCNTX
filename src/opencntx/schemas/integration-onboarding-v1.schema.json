@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/integration-onboarding-v1.schema.json",
+  "title": "OPENCNTX integration onboarding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "project_scope", "selected_projects", "future_registered_projects", "selected_tools", "existing_method_detected", "method_choice", "inventory_only", "writes", "authority_granted", "profile_digest"],
+  "properties": {
+    "format": {"const": "opencntx-integration-onboarding"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "project_scope": {"enum": ["CURRENT_PROJECT", "ALL_REGISTERED_PROJECTS"]},
+    "selected_projects": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "future_registered_projects": {"type": "boolean"},
+    "selected_tools": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "existing_method_detected": {"type": "boolean"},
+    "method_choice": {"enum": ["NONE", "PRESERVE_AND_LINK", "USE_RECOMMENDED"]},
+    "inventory_only": {"const": true},
+    "writes": {"type": "array", "maxItems": 0},
+    "authority_granted": {"const": false},
+    "profile_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/integration-approval-v1.schema.json",
+  "title": "OPENCNTX integration approval v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "plan_digest", "status", "adapter_execution_performed", "writes_performed", "approval_digest"],
+  "properties": {
+    "format": {"const": "opencntx-integration-approval"},
+    "format_version": {"const": 1},
+    "plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["DECLINED", "NO_MUTATION_REQUIRED", "APPROVED_FOR_ADAPTER"]},
+    "adapter_execution_performed": {"const": false},
+    "writes_performed": {"const": 0},
+    "approval_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

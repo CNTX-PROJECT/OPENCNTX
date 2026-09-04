@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/specification-companion-plan-v1.schema.json",
+  "title": "OPENCNTX specification companion plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "adapter_id", "requested", "status", "action", "detected_state", "installed_version", "target_version", "provenance_digest", "selected_projects", "selected_tools", "approval_required", "proposed_writes", "network_actions_performed", "writes_performed", "onboarding_digest", "plan_digest"],
+  "properties": {
+    "format": {"const": "opencntx-specification-companion-plan"},
+    "format_version": {"const": 1},
+    "adapter_id": {"type": "string"},
+    "requested": {"type": "boolean"},
+    "status": {"enum": ["DECLINED", "AMBIGUOUS", "READY"]},
+    "action": {"enum": ["NONE", "BLOCKED", "VALIDATE", "INITIALIZE", "INSTALL_AND_INITIALIZE", "UPDATE_AND_VALIDATE", "REPAIR_AND_VALIDATE"]},
+    "detected_state": {"enum": ["ABSENT", "COMPATIBLE", "OUTDATED", "DAMAGED", "AMBIGUOUS"]},
+    "installed_version": {"type": ["string", "null"]},
+    "target_version": {"type": "string"},
+    "provenance_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "selected_projects": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "selected_tools": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "approval_required": {"type": "boolean"},
+    "proposed_writes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "network_actions_performed": {"const": 0},
+    "writes_performed": {"const": 0},
+    "onboarding_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
