@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/evidence-object-v1.schema.json",
+  "title": "OPENCNTX compressed evidence object metadata v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "sha256", "bytes", "compressed_bytes", "compression", "object_path", "summary", "error_lines", "metadata_digest"],
+  "properties": {
+    "format": {"const": "opencntx-evidence-object"},
+    "format_version": {"const": 1},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "bytes": {"type": "integer", "minimum": 1},
+    "compressed_bytes": {"type": "integer", "minimum": 1},
+    "compression": {"const": "gzip"},
+    "object_path": {"type": "string"},
+    "summary": {"type": "string"},
+    "error_lines": {"type": "array", "maxItems": 20, "items": {"type": "string"}},
+    "metadata_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
