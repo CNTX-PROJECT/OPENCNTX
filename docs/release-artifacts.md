@@ -118,6 +118,13 @@ A PyPI 404 at one moment is not ownership or reservation evidence. This
 repository contains no PyPI token, trusted-publishing configuration, OIDC
 permission, or publication command.
 
+Documentation-only commits after a stable release do not replace or mutate the
+release. The CI release-version gate accepts them only when the stable tag is
+an ancestor and every changed path is explicitly classified as documentation
+or exact gate-verification support. Any runtime, package, release, workflow,
+deletion, rename, or unknown path still requires a newer package version and a
+separate release decision.
+
 ## Related pages
 
 - [Start here](start-here.md)

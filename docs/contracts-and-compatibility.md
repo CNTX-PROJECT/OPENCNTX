@@ -49,9 +49,16 @@ Version 1.3.0 released the additive R11 host contracts. It retains every
 accepted CLI route and supported durable-format read boundary; immutable
 v1.2.1 remains historical compatibility evidence.
 
-Version 1.4.0 is an unpublished candidate with additive visual-intent and
-joint-review contracts. It adds no command, runtime dependency, format major,
-mandatory migration, provider call, deployment, or package-index route.
+Version 1.4.0 released the additive visual-intent and joint-review contracts.
+It adds no command, runtime dependency, format major, mandatory migration,
+provider call, deployment, or package-index route.
+
+After a stable release, documentation may be corrected without inventing a
+new package version. The release-version gate permits that state only when the
+stable tag is an ancestor of HEAD, at least one documentation file changed,
+all changes are additions or modifications, and every changed path belongs to
+the narrow documentation or gate-verification allowlist. Runtime, packaging,
+release, workflow, deletion, rename, and unknown paths remain fail-closed.
 
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe
