@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-assurance-receipt"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "risk": {"enum": ["LIGHT", "STANDARD", "CRITICAL"]},
+    "bindings": {"type": "object"},
+    "test_results": {"type": "object"},
+    "actuals": {"type": "object"},
+    "estimate_comparison": {"type": "object"},
+    "status": {"const": "GREEN"},
+    "receipt_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "plan_digest", "risk", "bindings", "test_results", "actuals", "estimate_comparison", "status", "receipt_digest"],
+  "type": "object"
+}
