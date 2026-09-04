@@ -58,11 +58,13 @@ changing files:
 
 ```powershell
 python tools/render_visual_tokens.py --check
+python tools/visual_quality_gate.py
 python -m unittest tests.test_visual_design tests.test_visual_site -v
 ```
 
 Use `--write` only after a deliberate token-source change. A green automated
 check proves consistency and accessibility rules, not subjective human visual
-acceptance and not release authority.
+acceptance and not release authority. The pinned visual baseline always uses
+`HUMAN_REVIEW_REQUIRED_ON_DIFF`; a changed hash is never accepted automatically.
 
 [Documentation home](README.md)

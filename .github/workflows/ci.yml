@@ -135,6 +135,8 @@ jobs:
         run: |
           python tools/quality_gate.py lint
           python tools/quality_gate.py types
+          python tools/render_visual_tokens.py --check
+          python tools/visual_quality_gate.py
 
       - name: Build twice and verify unpublished candidates
         shell: python {0}

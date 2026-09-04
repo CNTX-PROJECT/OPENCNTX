@@ -1,0 +1,15 @@
+{
+  "format": "opencntx-site-performance-budget",
+  "version": 1,
+  "local_entrypoint_max_bytes": 32768,
+  "local_initial_resources_max_bytes": 65536,
+  "javascript_max_bytes": 0,
+  "remote_runtime_requests_max": 0,
+  "field_metrics": {
+    "status": "NOT_AVAILABLE_UNPUBLISHED",
+    "lcp_p75_max_ms": 2500,
+    "inp_p75_max_ms": 200,
+    "cls_p75_max": 0.1,
+    "required_populations": ["MOBILE", "DESKTOP"]
+  }
+}

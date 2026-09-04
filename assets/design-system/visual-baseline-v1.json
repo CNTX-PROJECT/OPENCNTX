@@ -1,0 +1,15 @@
+{
+  "format": "opencntx-visual-baseline",
+  "version": 1,
+  "review_policy": "HUMAN_REVIEW_REQUIRED_ON_DIFF",
+  "files": {
+    "assets/design-system/surface-inventory-v1.json": "f1cdfa01a6b179fa81aa5b37f965308a56a421adcc8180df7d6427fb8fbfd374",
+    "assets/design-system/tokens-v1.css": "ac02b7ec0b08f7bac2f969d459e51d7c55b495b8a09f3f2c92f997c81bcc9ec7",
+    "assets/design-system/tokens-v1.json": "75d3e72ac8309d5309815933551a2fe0e207ccf2887b4d3578fdbc02dff20075",
+    "site/assets/opencntx.css": "72ffe6c221be649d0b86f1d0e12ee88eff4a2b228eeeaa07e4ea178e80b2a6f2",
+    "site/components.html": "1398c356cf2aaece45de80d033322cdf047575fa4d7ba5251db2d51b55e0c7f3",
+    "site/content-map-v1.json": "71f5312f2e203a4ee15ae9086340a1b82dcb7f72fae2c15b63755724c41a5387",
+    "site/index.html": "a13c27d4465beca285449590565819506fae681d980fb0603729959702736b6e",
+    "site/performance-budget-v1.json": "973e337124159729333696800e3104a998558f65757914b55d6cd02da26b477e"
+  }
+}
