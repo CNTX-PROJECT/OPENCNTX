@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/visual-review-v1.schema.json",
+  "title": "OPENCNTX visual review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "surface_id", "intent_digest", "refinement_round", "visual_status", "perfection_status", "human_review_status", "visual_findings", "perfection_findings", "decision", "stop_reason", "review_digest"],
+  "properties": {
+    "format": {"const": "opencntx-visual-review"},
+    "format_version": {"const": 1},
+    "surface_id": {"type": "string"},
+    "intent_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "refinement_round": {"type": "integer", "minimum": 0, "maximum": 3},
+    "visual_status": {"enum": ["PASS", "FAIL"]},
+    "perfection_status": {"enum": ["PASS", "FAIL"]},
+    "human_review_status": {"enum": ["APPROVED", "PENDING", "REJECTED"]},
+    "visual_findings": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "perfection_findings": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "decision": {"enum": ["AWAITING_HUMAN_REVIEW", "BLOCKED", "COMPLETE", "REFINE"]},
+    "stop_reason": {"enum": ["DECLARED_CRITERIA_GREEN", "DECLARED_CRITERIA_NOT_GREEN", "HUMAN_VISUAL_REVIEW_REQUIRED", "REFINEMENT_LIMIT_REACHED"]},
+    "review_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

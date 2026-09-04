@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/visual-intent-v1.schema.json",
+  "title": "OPENCNTX visual intent v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "role_id", "surface_id", "medium", "user_task", "primary_message", "content_priority", "required_states", "constraints", "accessibility_targets", "authority_state", "refinement_round", "max_refinement_rounds", "intent_digest"],
+  "properties": {
+    "format": {"const": "opencntx-visual-intent"},
+    "format_version": {"const": 1},
+    "role_id": {"const": "VISUAL_ARTIST"},
+    "surface_id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "medium": {"enum": ["DOCUMENT", "IMAGE", "REPORT", "TERMINAL", "WEB"]},
+    "user_task": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "primary_message": {"type": "string", "minLength": 1, "maxLength": 500},
+    "content_priority": {"type": "array", "maxItems": 40, "uniqueItems": true, "items": {"type": "string"}},
+    "required_states": {"type": "array", "maxItems": 40, "uniqueItems": true, "items": {"type": "string"}},
+    "constraints": {"type": "array", "maxItems": 40, "uniqueItems": true, "items": {"type": "string"}},
+    "accessibility_targets": {"type": "array", "maxItems": 40, "uniqueItems": true, "items": {"type": "string"}},
+    "authority_state": {"enum": ["APPROVED_INTERNAL", "OWNER_REQUIRED", "NOT_AUTHORIZED"]},
+    "refinement_round": {"type": "integer", "minimum": 0, "maximum": 3},
+    "max_refinement_rounds": {"const": 3},
+    "intent_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
