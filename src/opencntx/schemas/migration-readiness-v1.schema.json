@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/migration-readiness-v1.schema.json",
+  "title": "OPENCNTX migration readiness v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "operational_health", "migration_readiness", "valid_transaction_count", "legacy_null_transactions", "invalid_transactions", "source_changed", "readiness_digest"],
+  "properties": {
+    "format": {"const": "opencntx-migration-readiness"},
+    "format_version": {"const": 1},
+    "operational_health": {"type": "string"},
+    "migration_readiness": {"enum": ["READY", "COMPATIBILITY_REQUIRED", "BLOCKED"]},
+    "valid_transaction_count": {"type": "integer", "minimum": 0},
+    "legacy_null_transactions": {"type": "array", "items": {"type": "object"}},
+    "invalid_transactions": {"type": "array", "items": {"type": "object"}},
+    "source_changed": {"const": false},
+    "readiness_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/transactional-update-receipt-v1.schema.json",
+  "title": "OPENCNTX transactional update receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "plan_id", "plan_digest", "from_version", "to_version", "backup_path", "backup_digest", "component_results", "staging_residue", "retired_residue", "status", "rollback_boundary", "receipt_digest"],
+  "properties": {
+    "format": {"const": "opencntx-transactional-update-receipt"},
+    "format_version": {"const": 1},
+    "plan_id": {"type": "string"},
+    "plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "from_version": {"type": "string"},
+    "to_version": {"type": "string"},
+    "backup_path": {"type": "string"},
+    "backup_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "component_results": {"type": "array", "items": {"type": "object"}},
+    "staging_residue": {"const": false},
+    "retired_residue": {"const": false},
+    "status": {"const": "COMPLETED"},
+    "rollback_boundary": {"type": "string"},
+    "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

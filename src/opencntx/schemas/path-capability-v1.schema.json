@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/path-capability-v1.schema.json",
+  "title": "OPENCNTX path capability v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "path", "exists", "status", "next_action", "state_changed", "capability_digest"],
+  "properties": {
+    "format": {"const": "opencntx-path-capability"},
+    "format_version": {"const": 1},
+    "path": {"type": "string"},
+    "exists": {"type": "boolean"},
+    "status": {"enum": ["READABLE", "MISSING", "ACL_DENIED", "SANDBOX_DENIED", "REPARSE_UNSAFE", "LOCKED"]},
+    "next_action": {"type": "string"},
+    "state_changed": {"const": false},
+    "capability_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
