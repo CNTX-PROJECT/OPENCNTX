@@ -723,6 +723,18 @@ class PublicQualityTests(unittest.TestCase):
             with self.subTest(surface=surface.relative_to(ROOT)):
                 self.assertNotIn("0.2.0.dev0", surface.read_text(encoding="utf-8"))
 
+    def test_source_distribution_includes_visual_site(self) -> None:
+        manifest = (ROOT / "MANIFEST.in").read_text(encoding="utf-8")
+        self.assertIn("recursive-include site *.html *.css *.json *.md", manifest)
+        for relative in (
+            "site/index.html",
+            "site/components.html",
+            "site/assets/opencntx.css",
+            "site/content-map-v1.json",
+            "site/performance-budget-v1.json",
+        ):
+            self.assertTrue((ROOT / relative).is_file(), relative)
+
     def test_active_build_toolchain_pins_are_consistent(self) -> None:
         active_surfaces = {
             ".github/workflows/ci.yml": WORKFLOW,
