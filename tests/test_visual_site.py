@@ -61,6 +61,41 @@ class VisualSiteTests(unittest.TestCase):
             for key in ("href", "src", "srcset"):
                 self.assertNotRegex(attrs.get(key, ""), r"^https?://")
 
+    def test_landing_page_matches_the_content_map(self) -> None:
+        landing = (SITE / "index.html").read_text(encoding="utf-8")
+        parser = SurfaceParser()
+        parser.feed(landing)
+        tags = [tag for tag, _ in parser.elements]
+        ids = {attrs["id"] for _, attrs in parser.elements if "id" in attrs}
+        content = json.loads((SITE / "content-map-v1.json").read_text(encoding="utf-8"))
+        self.assertEqual(tags.count("main"), 1)
+        self.assertEqual(tags.count("h1"), 1)
+        self.assertTrue({item["id"] for item in content["navigation"]}.issubset(ids))
+        self.assertIn("The right context. Nothing more.", " ".join(parser.text))
+        self.assertNotIn("cookie", landing.lower())
+        self.assertNotIn("analytics", landing.lower())
+        self.assertNotIn("<script", landing.lower())
+
+    def test_landing_page_local_links_and_images_resolve(self) -> None:
+        landing = (SITE / "index.html").read_text(encoding="utf-8")
+        parser = SurfaceParser()
+        parser.feed(landing)
+        ids = {attrs["id"] for _, attrs in parser.elements if "id" in attrs}
+        for tag, attrs in parser.elements:
+            for key in ("href", "src", "srcset"):
+                target = attrs.get(key, "")
+                if not target or target.startswith("https://"):
+                    continue
+                if target.startswith("#"):
+                    self.assertIn(target[1:], ids)
+                    continue
+                path = (SITE / target.split("#", 1)[0]).resolve()
+                self.assertTrue(path.exists(), f"missing {key}: {target}")
+            if tag == "img":
+                self.assertTrue(attrs.get("alt"))
+                self.assertTrue(attrs.get("width"))
+                self.assertTrue(attrs.get("height"))
+
     def test_all_declared_states_have_text_or_interaction_evidence(self) -> None:
         rendered = " ".join(self.parser.text).upper()
         evidence = {

@@ -175,6 +175,93 @@ pre {
   background: var(--oc-surface-soft);
 }
 
+.hero {
+  padding-block: var(--oc-space-8);
+}
+
+.hero__layout {
+  display: grid;
+  align-items: center;
+  gap: var(--oc-space-7);
+  grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr);
+}
+
+.hero__visual {
+  padding: var(--oc-space-4);
+  border: 0.0625rem solid var(--oc-border);
+  border-radius: var(--oc-radius-panel);
+  background: var(--oc-surface);
+  box-shadow: var(--oc-shadow-panel);
+}
+
+.hero__visual img {
+  width: 100%;
+  height: auto;
+}
+
+.proof-strip {
+  display: grid;
+  margin-block-start: var(--oc-space-7);
+  border-block: 0.0625rem solid var(--oc-border);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.proof-strip__item {
+  padding: var(--oc-space-4);
+}
+
+.proof-strip__item + .proof-strip__item {
+  border-inline-start: 0.0625rem solid var(--oc-border);
+}
+
+.proof-strip strong,
+.proof-strip span {
+  display: block;
+}
+
+.proof-strip span {
+  color: var(--oc-text-muted);
+  font-size: var(--oc-type-small);
+}
+
+.split {
+  display: grid;
+  align-items: start;
+  gap: var(--oc-space-7);
+  grid-template-columns: minmax(0, 0.85fr) minmax(18rem, 1.15fr);
+}
+
+.plain-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plain-list li {
+  padding-block: var(--oc-space-3);
+  border-bottom: 0.0625rem solid var(--oc-border);
+}
+
+.plain-list strong {
+  display: block;
+}
+
+.link-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.link-card:hover {
+  border-color: var(--oc-accent);
+  transform: translateY(-0.1rem);
+}
+
+.link-card p {
+  margin-block-end: 0;
+  color: var(--oc-text-muted);
+}
+
 .eyebrow {
   margin-block-end: var(--oc-space-3);
   color: var(--oc-text-muted);
@@ -397,6 +484,20 @@ pre {
 
   .section {
     padding-block: var(--oc-space-7);
+  }
+
+  .hero__layout,
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-strip__item + .proof-strip__item {
+    border-block-start: 0.0625rem solid var(--oc-border);
+    border-inline-start: 0;
   }
 }
 
