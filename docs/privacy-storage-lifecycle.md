@@ -118,6 +118,19 @@ and reported as `SYNCED` or `UNSUPPORTED`; a reported sync is evidence that
 the operating-system call completed, not proof against every device cache or
 power-loss scenario. Windows and Ubuntu CI exercise the actual platform paths.
 
+## v1.3.0 candidate adaptive storage and targets
+
+The [v1.3.0 adaptive AI workflow candidate](adaptive-ai-workflow.md) defines one
+storage contract that can remain as compact files, add a local index, shard a
+very large local index, or apply explicit team concurrency controls. Escalation
+depends on measured need; no database becomes mandatory.
+
+It also defines disabled-by-default contracts for project-isolated continuity
+destinations such as a notes application or synchronized folder. Those
+contracts do not bundle product-specific connectors or authorize network
+writes. Stable v1.2.1 behavior remains the lifecycle and optional private
+Git/GitHub routes documented today.
+
 ## Sharing boundary
 
 All lifecycle operations are local. Status aliases and counts reduce accidental

@@ -23,6 +23,10 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
+The v1.3.0 candidate is under separate Draft-PR review. Until its integration
+and publication gates are complete, install only the immutable v1.2.1 Stable
+release described below.
+
 ## 2. Install the Stable release
 
 The immutable `v1.2.1` Production/Stable release is available from its exact
@@ -179,6 +183,10 @@ The complete core route ends above. If a longer project needs supplied source
 storage, chapters, task gates, playbooks, roles, or executor packages, continue
 with [Workspace](workspace.md). Those concepts are optional
 and are not prerequisites for a first package.
+
+For a clearly separated preview of locally tested behavior being considered
+after v1.2.1, read the [Adaptive AI workflow candidate](adaptive-ai-workflow.md).
+It is not an installation instruction or a released command reference.
 
 ## Upgrade or remove OPENCNTX
 

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-storage-profile-plan"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "project_root": {"type": "string"},
+    "current_profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL", "TEAM_SHARED"]},
+    "recommended_profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL", "TEAM_SHARED"]},
+    "requested_profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL", "TEAM_SHARED"]},
+    "target_profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL", "TEAM_SHARED"]},
+    "migration_status": {"enum": ["NOT_REQUESTED", "APPROVED", "OWNER_APPROVAL_REQUIRED"]},
+    "measurements": {
+      "additionalProperties": false,
+      "properties": {
+        "object_count": {"minimum": 0, "type": "integer"},
+        "total_bytes": {"minimum": 0, "type": "integer"},
+        "monthly_change_bytes": {"minimum": 0, "type": "integer"},
+        "queries_per_day": {"minimum": 0, "type": "integer"},
+        "concurrent_writers": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["object_count", "total_bytes", "monthly_change_bytes", "queries_per_day", "concurrent_writers"],
+      "type": "object"
+    },
+    "soft_limit_bytes": {"minimum": 0, "type": "integer"},
+    "hard_limit_bytes": {"minimum": 1, "type": "integer"},
+    "rollback_reserve_bytes": {"minimum": 0, "type": "integer"},
+    "writes_performed": {"const": false},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "project_root", "current_profile", "recommended_profile", "requested_profile", "target_profile", "migration_status", "measurements", "soft_limit_bytes", "hard_limit_bytes", "rollback_reserve_bytes", "writes_performed", "plan_digest"],
+  "type": "object"
+}

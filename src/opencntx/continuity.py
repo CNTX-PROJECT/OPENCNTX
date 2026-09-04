@@ -30,6 +30,17 @@ STORE_FORMAT = "opencntx-continuity-store"
 CAPSULE_FORMAT = "opencntx-continuity-capsule"
 AUTHORITY = "AUTO PILOT"
 ZERO_DIGEST = "0" * 64
+EXECUTION_CAPSULE_FORMAT = "opencntx-execution-state-capsule"
+FINALIZATION_DECISIONS = frozenset(
+    {
+        "CONTINUE",
+        "REQUEST_OWNER",
+        "BLOCKED",
+        "COMPLETE_ASSIGNMENT",
+        "COMPLETE_ROADMAP",
+        "RECONCILE_REQUIRED",
+    }
+)
 CONFLICT_CLASSES = frozenset({"NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "REMOVE"})
 ID_PATTERN = re.compile(r"[A-Z][A-Z0-9_-]{0,79}\Z")
 SAFE_REMOTE = re.compile(r"^(?:https://|ssh://|git@|file://|[A-Za-z]:[\\/]|/)")
@@ -697,6 +708,7 @@ def _validate_store_bindings(
 
     _validate_handoffs(store, roadmap, events)
     _validate_claims(store, roadmap, events)
+    _validate_execution_checkpoints(store, roadmap, events)
     current = state["current_assignment"]
     current_path = store / "context" / "current.json"
     if current is None:
@@ -731,6 +743,48 @@ def _validate_store_bindings(
             "continuity_store_invalid",
             "Current context differs from its bound assignment selection.",
         )
+
+
+def _validate_execution_checkpoints(
+    store: Path, roadmap: dict[str, Any], events: Sequence[dict[str, Any]]
+) -> None:
+    """Validate progressive checkpoint bindings without making them mandatory."""
+    current: str | None = None
+    seen: set[str] = set()
+    checkpoint_number = 0
+    for index, event in enumerate(events):
+        event_type = event["type"]
+        payload = event["payload"]
+        if event_type == "ASSIGNMENT_SELECTED":
+            current = str(payload["assignment_id"])
+        elif event_type == "ASSIGNMENT_COMPLETED":
+            current = None
+        if event_type != "EXECUTION_CHECKPOINT":
+            continue
+
+        checkpoint_number += 1
+        checkpoint_id = payload.get("checkpoint_id")
+        evidence = payload.get("evidence")
+        if (
+            not isinstance(checkpoint_id, str)
+            or ID_PATTERN.fullmatch(checkpoint_id) is None
+            or checkpoint_id in seen
+            or payload.get("checkpoint_number") != checkpoint_number
+            or payload.get("assignment_id") != current
+            or not isinstance(evidence, list)
+            or payload.get("evidence_digest") != _value_digest(evidence)
+            or payload.get("prior_state_digest")
+            != _reduce(store, roadmap, events[:index])["state_digest"]
+        ):
+            raise _fail(
+                "continuity_store_invalid",
+                "Execution checkpoint differs from its event binding.",
+            )
+        for field in ("current_internal_task", "next_internal_action"):
+            value = payload.get(field)
+            if not isinstance(value, str) or not value.strip() or "\n" in value or "\r" in value:
+                raise _fail("continuity_store_invalid", "Execution checkpoint text is invalid.")
+        seen.add(checkpoint_id)
 
 
 def _next_trigger(events: Sequence[dict[str, Any]], start: int) -> str | None:
@@ -1521,6 +1575,232 @@ def flow_status(project_root: Path) -> FlowResult:
     """Return the restart-safe state rebuilt from the hash-chained ledger."""
     _, roadmap, _, state = _load_store(project_root)
     return _flow_result(roadmap, state)
+
+
+def _capsule_from_loaded(
+    roadmap: dict[str, Any], events: Sequence[dict[str, Any]], state: dict[str, Any]
+) -> dict[str, Any]:
+    current = state["current_assignment"]
+    latest_checkpoint = next(
+        (
+            event["payload"]
+            for event in reversed(events)
+            if event["type"] == "EXECUTION_CHECKPOINT"
+            and event["payload"].get("assignment_id") == current
+        ),
+        None,
+    )
+    latest_selection = next(
+        (
+            event["payload"]
+            for event in reversed(events)
+            if event["type"] == "ASSIGNMENT_SELECTED"
+            and event["payload"].get("assignment_id") == current
+        ),
+        None,
+    )
+    flow = _flow_result(roadmap, state)
+    if state["status"] == "COMPLETE":
+        assignment_status = "COMPLETED"
+        continuation_mode = "STOP_COMPLETE"
+    elif state["status"] == "BLOCKED":
+        assignment_status = "BLOCKED"
+        continuation_mode = "STOP_FAIL_CLOSED"
+    elif state["status"] == "RECOVERY_REQUIRED":
+        assignment_status = "RECOVERY_REQUIRED"
+        continuation_mode = "CONTINUE_AUTOMATICALLY"
+    else:
+        assignment_status = "ACTIVE"
+        continuation_mode = "CONTINUE_AUTOMATICALLY"
+
+    next_assignment = None
+    if current is not None:
+        candidate = _next_assignment(roadmap, [*state["completed"], str(current)])
+        next_assignment = None if candidate is None else candidate["id"]
+
+    if latest_checkpoint is not None:
+        internal_task = latest_checkpoint["current_internal_task"]
+        internal_action = latest_checkpoint["next_internal_action"]
+        evidence_digest = latest_checkpoint["evidence_digest"]
+    elif current is not None:
+        internal_task = "READ_BOUND_DETAIL"
+        internal_action = flow.minimum_action
+        evidence_digest = (
+            ZERO_DIGEST
+            if latest_selection is None
+            else str(latest_selection["existing_check_digest"])
+        )
+    else:
+        internal_task = None
+        internal_action = None
+        last_receipt = next(
+            (
+                event["payload"].get("receipt_digest")
+                for event in reversed(events)
+                if event["type"] == "ASSIGNMENT_COMPLETED"
+            ),
+            ZERO_DIGEST,
+        )
+        evidence_digest = str(last_receipt)
+
+    capsule = {
+        "format": EXECUTION_CAPSULE_FORMAT,
+        "format_version": 1,
+        "roadmap_revision": state["roadmap_digest"],
+        "current_assignment": current,
+        "current_internal_task": internal_task,
+        "assignment_status": assignment_status,
+        "next_internal_action": internal_action,
+        "next_assignment_after_completion": next_assignment,
+        "authority_state": "APPROVED_AUTO_PILOT",
+        "continuation_mode": continuation_mode,
+        "recovery_round": state["recovery_rounds"],
+        "checkpoint_number": sum(event["type"] == "EXECUTION_CHECKPOINT" for event in events),
+        "evidence_digest": evidence_digest,
+        "state_digest": state["state_digest"],
+    }
+    return capsule | {"capsule_digest": _value_digest(capsule)}
+
+
+def execution_state_capsule(project_root: Path) -> dict[str, Any]:
+    """Compile a fresh execution projection from validated durable state."""
+    _, roadmap, events, state = _load_store(project_root)
+    return _capsule_from_loaded(roadmap, events, state)
+
+
+def decide_finalization(
+    capsule: Mapping[str, Any], *, projection_digest: str | None = None
+) -> dict[str, Any]:
+    """Return the one legal host decision for a validated execution capsule."""
+    basis = {key: value for key, value in capsule.items() if key != "capsule_digest"}
+    capsule_digest = capsule.get("capsule_digest")
+    decision = "RECONCILE_REQUIRED"
+    reason = "CAPSULE_INVALID"
+    next_action = "Reread durable roadmap, events, authority and evidence."
+    recovery_round = capsule.get("recovery_round")
+    recovery_exhausted = (
+        isinstance(recovery_round, int)
+        and not isinstance(recovery_round, bool)
+        and recovery_round >= 3
+    )
+    valid_core = (
+        capsule.get("format") == EXECUTION_CAPSULE_FORMAT
+        and capsule.get("format_version") == 1
+        and isinstance(recovery_round, int)
+        and not isinstance(recovery_round, bool)
+        and 0 <= recovery_round <= 3
+        and capsule.get("assignment_status")
+        in {"ACTIVE", "RECOVERY_REQUIRED", "BLOCKED", "COMPLETED"}
+    )
+    if capsule_digest == _value_digest(basis) and valid_core:
+        if projection_digest is not None and projection_digest != capsule_digest:
+            reason = "PROJECTION_STALE"
+        elif capsule.get("authority_state") != "APPROVED_AUTO_PILOT":
+            decision = "REQUEST_OWNER"
+            reason = "AUTHORITY_REQUIRED"
+            next_action = "Request exactly the missing OWNER decision."
+        elif capsule.get("assignment_status") == "BLOCKED" or recovery_exhausted:
+            decision = "BLOCKED"
+            reason = "RECOVERY_BOUND_REACHED"
+            next_action = "Review the failed evidence and define one changed bounded route."
+        elif capsule.get("assignment_status") == "COMPLETED":
+            if capsule.get("next_assignment_after_completion") is None:
+                decision = "COMPLETE_ROADMAP"
+                reason = "ROADMAP_TERMINAL_PROOF"
+                next_action = "NONE"
+            else:
+                decision = "COMPLETE_ASSIGNMENT"
+                reason = "ASSIGNMENT_TERMINAL_PROOF"
+                next_action = "Request authority for the next roadmap assignment."
+        elif (
+            capsule.get("assignment_status") in {"ACTIVE", "RECOVERY_REQUIRED"}
+            and capsule.get("current_assignment")
+            and capsule.get("next_internal_action")
+        ):
+            decision = "CONTINUE"
+            reason = "APPROVED_SAFE_ACTION_OPEN"
+            next_action = str(capsule["next_internal_action"])
+    result = {
+        "format": "opencntx-finalization-decision",
+        "format_version": 1,
+        "decision": decision,
+        "reason": reason,
+        "next_action": next_action,
+        "capsule_digest": capsule_digest,
+    }
+    return result | {"decision_digest": _value_digest(result)}
+
+
+def finalization_guard(
+    project_root: Path, *, projection_digest: str | None = None
+) -> dict[str, Any]:
+    """Compile current state and decide whether the caller may finalize."""
+    return decide_finalization(
+        execution_state_capsule(project_root), projection_digest=projection_digest
+    )
+
+
+def record_execution_checkpoint(
+    project_root: Path,
+    *,
+    checkpoint_id: str,
+    current_internal_task: str,
+    next_internal_action: str,
+    evidence_paths: Sequence[str],
+    expected_state_digest: str,
+) -> dict[str, Any]:
+    """Append one idempotent, state-bound progress checkpoint."""
+    root = _root(project_root)
+    normalized_id = _identifier(checkpoint_id, "checkpoint_id")
+    normalized_task = _one_line(current_internal_task, "current_internal_task", 240)
+    normalized_action = _one_line(next_internal_action, "next_internal_action", 500)
+    store = store_path(root)
+    with _writer_lock(store / ".operation.lock"):
+        store, roadmap, events, state = _load_store(root)
+        if state["status"] in {"COMPLETE", "BLOCKED"} or state["current_assignment"] is None:
+            raise _fail("continuity_not_active", "Continuity has no active assignment.")
+        evidence = _evidence(root, evidence_paths)
+        evidence_digest = _value_digest(evidence)
+        requested = {
+            "assignment_id": state["current_assignment"],
+            "checkpoint_id": normalized_id,
+            "current_internal_task": normalized_task,
+            "next_internal_action": normalized_action,
+            "evidence": evidence,
+            "evidence_digest": evidence_digest,
+        }
+        existing = next(
+            (
+                event["payload"]
+                for event in events
+                if event["type"] == "EXECUTION_CHECKPOINT"
+                and event["payload"].get("checkpoint_id") == normalized_id
+            ),
+            None,
+        )
+        if existing is not None:
+            comparable = {key: existing.get(key) for key in requested}
+            if comparable != requested:
+                raise _fail(
+                    "continuity_checkpoint_conflict",
+                    "Checkpoint ID already exists with different content.",
+                )
+            return _capsule_from_loaded(roadmap, events, state)
+        if expected_state_digest != state["state_digest"]:
+            raise _fail("continuity_write_conflict", "Continuity state changed before checkpoint.")
+        payload = requested | {
+            "checkpoint_number": 1
+            + sum(event["type"] == "EXECUTION_CHECKPOINT" for event in events),
+            "prior_state_digest": state["state_digest"],
+        }
+        appended = _append_events(
+            store,
+            (("EXECUTION_CHECKPOINT", payload),),
+            expected_head=state["event_head"],
+            existing_events=events,
+        )
+        state = _cache_state(store, roadmap, [*events, *appended])
+        return _capsule_from_loaded(roadmap, [*events, *appended], state)
 
 
 def health_report(project_root: Path) -> dict[str, Any]:

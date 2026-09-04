@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/start-authority-v1.schema.json",
+  "title": "OPENCNTX start authority v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "roadmap_id", "roadmap_revision", "current_assignment", "scope", "approved_assignments", "release_authorized", "publication_authorized", "authority_granted", "authority_digest"],
+  "properties": {
+    "format": {"const": "opencntx-start-authority"},
+    "format_version": {"const": 1},
+    "roadmap_id": {"type": "string"},
+    "roadmap_revision": {"type": "string"},
+    "current_assignment": {"type": "string"},
+    "scope": {"enum": ["CURRENT_ASSIGNMENT", "REMAINING_ROADMAP"]},
+    "approved_assignments": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "release_authorized": {"const": false},
+    "publication_authorized": {"const": false},
+    "authority_granted": {"const": true},
+    "authority_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

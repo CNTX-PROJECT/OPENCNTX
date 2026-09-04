@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/session-metrics-v1.schema.json",
+  "title": "OPENCNTX normalized session metrics v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "available", "metrics", "metrics_digest"],
+  "properties": {
+    "format": {"const": "opencntx-session-metrics"},
+    "format_version": {"const": 1},
+    "available": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chat_bytes", "compaction_count", "context_percent", "failure_density", "response_latency_ms", "tool_output_bytes", "total_tokens"],
+      "properties": {
+        "chat_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "compaction_count": {"type": ["integer", "null"], "minimum": 0},
+        "context_percent": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "failure_density": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "response_latency_ms": {"type": ["integer", "null"], "minimum": 0},
+        "tool_output_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "total_tokens": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "metrics_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -16,12 +16,16 @@ from typing import Any
 from opencntx.continuity import (
     ContinuityError,
     advance_flow,
+    decide_finalization,
+    execution_state_capsule,
     export_capsule,
+    finalization_guard,
     flow_status,
     health_report,
     import_capsule,
     inspect_adapter,
     preview_roadmap,
+    record_execution_checkpoint,
     start_flow,
     validate_roadmap,
     verify_capsule,
@@ -318,6 +322,114 @@ class ContinuityTests(unittest.TestCase):
             self.assertEqual(flow_status(project).state_digest, result.state_digest)
         self.assertEqual(result.status, "COMPLETE")
         self.assertEqual(len(result.completed), 10)
+
+    def test_execution_capsule_and_all_six_finalization_decisions(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        capsule = execution_state_capsule(project)
+
+        self.assertEqual(capsule["assignment_status"], "ACTIVE")
+        self.assertEqual(capsule["current_internal_task"], "READ_BOUND_DETAIL")
+        self.assertEqual(capsule["next_assignment_after_completion"], "TASK-2")
+        self.assertEqual(finalization_guard(project)["decision"], "CONTINUE")
+        self.assertEqual(
+            finalization_guard(project, projection_digest="0" * 64)["decision"],
+            "RECONCILE_REQUIRED",
+        )
+
+        def changed(**values: object) -> dict[str, Any]:
+            result = dict(capsule)
+            result.update(values)
+            basis = {key: value for key, value in result.items() if key != "capsule_digest"}
+            content = (
+                json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+            ).encode("utf-8")
+            result["capsule_digest"] = hashlib.sha256(content).hexdigest()
+            return result
+
+        owner = changed(authority_state="OWNER_REQUIRED")
+        blocked = changed(assignment_status="BLOCKED", recovery_round=3)
+        assignment_done = changed(
+            assignment_status="COMPLETED",
+            current_assignment=None,
+            current_internal_task=None,
+            next_internal_action=None,
+        )
+        roadmap_done = changed(
+            assignment_status="COMPLETED",
+            current_assignment=None,
+            current_internal_task=None,
+            next_internal_action=None,
+            next_assignment_after_completion=None,
+        )
+        self.assertEqual(decide_finalization(owner)["decision"], "REQUEST_OWNER")
+        self.assertEqual(decide_finalization(blocked)["decision"], "BLOCKED")
+        self.assertEqual(decide_finalization(assignment_done)["decision"], "COMPLETE_ASSIGNMENT")
+        self.assertEqual(decide_finalization(roadmap_done)["decision"], "COMPLETE_ROADMAP")
+        invalid = changed(recovery_round="unknown")
+        self.assertEqual(decide_finalization(invalid)["decision"], "RECONCILE_REQUIRED")
+
+    def test_execution_checkpoints_are_progressive_idempotent_and_single_writer(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        initial = execution_state_capsule(project)
+        first = record_execution_checkpoint(
+            project,
+            checkpoint_id="CP-1",
+            current_internal_task="Run bounded analysis",
+            next_internal_action="Verify the analysis receipt",
+            evidence_paths=["input.txt"],
+            expected_state_digest=initial["state_digest"],
+        )
+        duplicate = record_execution_checkpoint(
+            project,
+            checkpoint_id="CP-1",
+            current_internal_task="Run bounded analysis",
+            next_internal_action="Verify the analysis receipt",
+            evidence_paths=["input.txt"],
+            expected_state_digest=initial["state_digest"],
+        )
+        self.assertEqual(first["checkpoint_number"], 1)
+        self.assertEqual(duplicate["capsule_digest"], first["capsule_digest"])
+        self.assertEqual(execution_state_capsule(project)["checkpoint_number"], 1)
+        with self.assertRaisesRegex(ContinuityError, "different content"):
+            record_execution_checkpoint(
+                project,
+                checkpoint_id="CP-1",
+                current_internal_task="Run bounded analysis",
+                next_internal_action="Different action",
+                evidence_paths=["input.txt"],
+                expected_state_digest=first["state_digest"],
+            )
+
+        outcomes: list[str] = []
+        errors: list[str] = []
+
+        def writer(identifier: str) -> None:
+            try:
+                value = record_execution_checkpoint(
+                    project,
+                    checkpoint_id=identifier,
+                    current_internal_task="Verify concurrency",
+                    next_internal_action="Continue exactly once",
+                    evidence_paths=["input.txt"],
+                    expected_state_digest=first["state_digest"],
+                )
+                outcomes.append(value["capsule_digest"])
+            except ContinuityError as exc:
+                errors.append(exc.code)
+
+        writers = [
+            threading.Thread(target=writer, args=(identifier,)) for identifier in ("CP-2", "CP-3")
+        ]
+        for thread in writers:
+            thread.start()
+        for thread in writers:
+            thread.join(5)
+        self.assertEqual(len(outcomes), 1)
+        self.assertEqual(errors, ["continuity_write_conflict"])
+        self.assertEqual(execution_state_capsule(project)["checkpoint_number"], 2)
+        self.assertEqual(health_report(project)["status"], "HEALTHY")
 
     def test_four_bounded_readers_do_not_starve_one_writer(self) -> None:
         project = self.root / "bounded-reader-writer"
@@ -670,6 +782,7 @@ class ContinuityTests(unittest.TestCase):
             ],
         )
         self.assertIn("continuity-handoff-v1.schema.json", catalog["schemas"])
+        self.assertIn("execution-state-capsule-v1.schema.json", catalog["schemas"])
         self.assertIn("host-claim-v1.schema.json", catalog["schemas"])
 
     def test_public_product_bytes_are_name_neutral(self) -> None:

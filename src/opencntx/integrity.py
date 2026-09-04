@@ -17,6 +17,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from uuid import uuid4
 
+from .contracts import ContractError, validate_durable_record
 from .primitives import sha256_bytes as _sha256
 from .primitives import timestamp_microseconds as _timestamp
 
@@ -30,6 +31,7 @@ RECOVERY_FORMAT = "opencntx-recovery-receipt"
 RECOVERY_VERSION = 1
 LOCK_FORMAT = "opencntx-writer-lock"
 LOCK_VERSION = 1
+UNBOUND_EXPECTED_DIGEST = "UNBOUND"
 
 TRANSACTION_ID_PATTERN = re.compile(r"TXN-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
 RECOVERY_ID_PATTERN = re.compile(r"RECOVERY-\d{8}T\d{12}Z-[0-9a-f]{12}\Z")
@@ -813,7 +815,9 @@ def writer_transaction(
         _create_integrity_directory(directory / "phases")
         intent = {
             "created_at": _timestamp(now),
-            "expected_digest": expected_digest,
+            "expected_digest": (
+                expected_digest if expected_digest is not None else UNBOUND_EXPECTED_DIGEST
+            ),
             "format": TRANSACTION_FORMAT,
             "format_version": TRANSACTION_VERSION,
             "locks": [
@@ -827,6 +831,13 @@ def writer_transaction(
             "task_id": task_id,
             "transaction_id": transaction_id,
         }
+        try:
+            validate_durable_record(intent)
+        except ContractError as exc:
+            raise IntegrityError(
+                "Transaction writer produced contract-invalid intent.",
+                code="transaction_invalid",
+            ) from exc
         _write_new(directory / "intent.json", _json_bytes(intent))
         transaction = Transaction(resolved, directory, transaction_id, intent, locks)
         transaction.checkpoint("INTENT_DURABLE", {})

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/session-handoff-ack-v1.schema.json",
+  "title": "OPENCNTX session handoff acknowledgement v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "handoff_id", "handoff_digest", "target_part", "status", "live_state_digest", "live_capsule_digest", "next_action", "execution", "ack_digest"],
+  "properties": {
+    "format": {"const": "opencntx-session-handoff-ack"},
+    "format_version": {"const": 1},
+    "handoff_id": {"type": "string"},
+    "handoff_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_part": {"type": "string"},
+    "status": {"enum": ["RESUME_AUTOMATICALLY", "RECONCILE_REQUIRED", "WAIT_FOR_OWNER", "STOP_WITH_EVIDENCE"]},
+    "live_state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "live_capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "next_action": {"type": ["string", "null"]},
+    "execution": {"const": "NOT_PERFORMED"},
+    "ack_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

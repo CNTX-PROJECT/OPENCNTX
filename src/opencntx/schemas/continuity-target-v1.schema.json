@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/continuity-target-v1.schema.json",
+  "title": "OPENCNTX continuity target v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "enabled", "target_id", "target_kind", "allowed_content", "direction", "cadence", "conflict_policy", "local_canonical", "credentials_stored", "target_digest"],
+  "properties": {
+    "format": {"const": "opencntx-continuity-target"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "enabled": {"type": "boolean"},
+    "target_id": {"type": ["string", "null"]},
+    "target_kind": {"enum": ["LOCAL_FOLDER", "SYNCED_FOLDER", "API_ADAPTER", null]},
+    "allowed_content": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "direction": {"enum": ["PUSH_DERIVED", "BIDIRECTIONAL_REVIEW", null]},
+    "cadence": {"enum": ["MANUAL", "VERIFIED_CHANGE", "CHECKPOINT", null]},
+    "conflict_policy": {"enum": ["FAIL_CLOSED", "CREATE_CONFLICT_COPY", null]},
+    "local_canonical": {"const": true},
+    "credentials_stored": {"const": false},
+    "target_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

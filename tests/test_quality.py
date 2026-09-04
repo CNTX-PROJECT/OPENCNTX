@@ -652,7 +652,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.2.1")
+        self.assertEqual(version, "1.3.0")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],
@@ -675,10 +675,7 @@ class PublicQualityTests(unittest.TestCase):
             "git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
             readme,
         )
-        self.assertIn(
-            f"git clone --branch v{version} --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
-            readme,
-        )
+        self.assertIn(f"v{version} candidate", readme)
         self.assertIn("The workspace is a **Stable, optional** route", workspace)
         self.assertIn("installed --version output differs", release_tool)
         self.assertIn("expected_version", release_tool)
@@ -708,7 +705,7 @@ class PublicQualityTests(unittest.TestCase):
             "BUILD-RECORD.json",
         ):
             with self.subTest(asset=asset_name):
-                for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
+                for public_surface in (readme, faq, roadmap, release_artifacts):
                     self.assertIn(asset_name, public_surface)
 
         release_surfaces = (

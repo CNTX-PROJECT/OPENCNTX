@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/start-authority-choice-v1.schema.json",
+  "title": "OPENCNTX start authority choice v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "language", "roadmap_id", "roadmap_revision", "current_assignment", "remaining_assignments", "roadmap_started", "presentation", "question", "choices", "authority_granted", "choice_digest"],
+  "properties": {
+    "format": {"const": "opencntx-start-authority-choice"},
+    "format_version": {"const": 1},
+    "language": {"type": "string"},
+    "roadmap_id": {"type": "string"},
+    "roadmap_revision": {"type": "string"},
+    "current_assignment": {"type": "string"},
+    "remaining_assignments": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "roadmap_started": {"type": "boolean"},
+    "presentation": {"enum": ["INTERACTIVE_CHOICE", "COPY_COMMANDS"]},
+    "question": {"type": "string"},
+    "choices": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["choice_id", "label", "submit_value"],
+        "properties": {
+          "choice_id": {"enum": ["CURRENT_ASSIGNMENT", "REMAINING_ROADMAP"]},
+          "label": {"type": "string"},
+          "submit_value": {"type": "string"}
+        }
+      }
+    },
+    "authority_granted": {"const": false},
+    "choice_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

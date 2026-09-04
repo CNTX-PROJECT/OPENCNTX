@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-assurance-plan"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "risk": {"enum": ["LIGHT", "STANDARD", "CRITICAL"]},
+    "specification_profile": {"enum": ["COMPACT", "FULL"]},
+    "terminal_boundary": {"type": "boolean"},
+    "impacted_components": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "selected_tests": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "parallel_read_groups": {"items": {"items": {"type": "string"}, "type": "array"}, "type": "array"},
+    "single_writer_preserved": {"const": true},
+    "estimates": {"type": "object"},
+    "test_manifest_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "risk", "specification_profile", "terminal_boundary", "impacted_components", "selected_tests", "parallel_read_groups", "single_writer_preserved", "estimates", "test_manifest_digest", "plan_digest"],
+  "type": "object"
+}

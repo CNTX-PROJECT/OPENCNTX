@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-acquisition-queue-status"},
+    "format_version": {"const": 1},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "revision": {"minimum": 0, "type": "integer"},
+    "counts": {"type": "object"},
+    "complete": {"type": "boolean"},
+    "status_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "plan_digest", "revision", "counts", "complete", "status_digest"],
+  "type": "object"
+}

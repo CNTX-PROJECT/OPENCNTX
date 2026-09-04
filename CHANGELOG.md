@@ -2,7 +2,24 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## Unreleased
+## 1.3.0 - 2026-09-04
+
+### Added
+
+- Added locally proven provider-neutral contracts for durable execution state,
+  restart and rollover continuity, plain-language presentation, transactional
+  updates, adaptive storage, 4,000+ scale planning and risk-based assurance.
+- Added an equivalent two-scope start choice for interactive and text-only
+  hosts while preserving the direct `AUTO PILOT` expert route.
+- Added opt-in contracts for specification companions and project-isolated
+  continuity destinations; neither becomes a runtime dependency or grants
+  publication authority.
+
+### Changed
+
+- Prepared the R11 release candidate for review. The immutable v1.2.1 Git tag
+  and GitHub Release remain the current public Stable installation until this
+  candidate is reviewed, merged, tagged, and released through separate gates.
 
 ## 1.2.1 - 2026-09-01
 

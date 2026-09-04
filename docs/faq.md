@@ -95,6 +95,8 @@ separate prevents the tool or executor from approving its own work.
 No. The immutable `v1.2.1` Production/Stable release is installed from its
 exact Git tag. The exact isolated route is
 `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.1"`.
+The v1.3.0 candidate is under separate Draft-PR review and is not an
+installation instruction yet.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
@@ -103,7 +105,9 @@ or reserved.
 The historical `v0.2.0` Release has none. The immutable `v1.2.1` Release has
 exactly `opencntx-1.2.1-py3-none-any.whl`,
 `opencntx-1.2.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Files built
-locally remain unpublished candidates rather than public release assets. See
+from the v1.3.0 candidate are named `opencntx-1.3.0-py3-none-any.whl` and
+`opencntx-1.3.0.tar.gz`; they remain unpublished candidates rather than public
+release assets. See
 [Release artifacts](release-artifacts.md) for
 checksums, build records, reproducibility limits, and the separate publication
 gate.

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/session-footer-metrics-v1.schema.json",
+  "title": "OPENCNTX session footer metrics v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "adapter", "session_id", "source_session_id", "status", "chat_megabytes", "total_tokens", "source_digest", "metrics_digest"],
+  "properties": {
+    "format": {"const": "opencntx-session-footer-metrics"},
+    "format_version": {"const": 1},
+    "adapter": {"const": "nested-token-count-v1"},
+    "session_id": {"type": "string"},
+    "source_session_id": {"type": "string"},
+    "status": {"enum": ["OK", "SESSION_NOT_FOUND", "TOKEN_EVENT_NOT_FOUND", "PARSE_ERROR"]},
+    "chat_megabytes": {"type": ["number", "null"], "minimum": 0},
+    "total_tokens": {"type": ["integer", "null"], "minimum": 0},
+    "source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "metrics_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
