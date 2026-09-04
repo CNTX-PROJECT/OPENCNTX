@@ -23,6 +23,19 @@ A technical user may deliberately select detailed output. That changes only
 the presentation. It never changes the approved scope, durable state, evidence
 or release authority.
 
+## Visual presentation
+
+A compatible visual host can pair `VISUAL_ARTIST` with `BOUNDED_PERFECTION` to
+turn the same governed state into a clear human-facing surface. The visual
+intent binds audience, primary task, hierarchy, responsive behavior,
+accessibility, evidence, and forbidden presentation patterns. The paired
+review checks design quality and bounded implementation together.
+
+Text-only hosts remain first-class. They preserve the same task order, named
+states, evidence, and stop conditions without depending on color or graphical
+controls. See the [visual system](visual-system.md) for the canonical tokens,
+components, fallbacks, and ownership boundary.
+
 ## Choose how much to start
 
 Before work starts, the host presents exactly two choices:

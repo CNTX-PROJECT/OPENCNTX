@@ -11,7 +11,7 @@
 
 **v1.3.0 candidate** · **Local first** · **Any model** · **Zero runtime dependencies**
 
-[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
+[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
@@ -136,6 +136,7 @@ route—never in a public issue.
 | look up an exact CLI path | [Command reference](docs/commands.md) |
 | solve an error | [Troubleshooting](docs/troubleshooting.md) |
 | understand privacy and safety | [Security](docs/security.md) |
+| understand the visual language and accessible fallbacks | [Visual system](docs/visual-system.md) |
 | review the locally tested next-workflow candidate | [Adaptive AI workflow candidate](docs/adaptive-ai-workflow.md) |
 | browse every guide | [Documentation home](docs/README.md) |
 

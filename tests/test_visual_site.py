@@ -169,6 +169,37 @@ class VisualSiteTests(unittest.TestCase):
         }
         self.assertEqual(set(raw_lengths) - allowlisted, set())
 
+    def test_surface_inventory_is_closed_and_complete(self) -> None:
+        inventory = json.loads(
+            (ROOT / "assets/design-system/surface-inventory-v1.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(inventory["format"], "opencntx-visual-surface-inventory")
+        allowed = set(inventory["required_statuses"])
+        self.assertNotIn("UNKNOWN", allowed)
+        self.assertEqual(len(inventory["surfaces"]), 8)
+        self.assertEqual({surface["status"] for surface in inventory["surfaces"]}, allowed)
+        self.assertEqual(
+            len({surface["id"] for surface in inventory["surfaces"]}),
+            len(inventory["surfaces"]),
+        )
+        for surface in inventory["surfaces"]:
+            self.assertIn(surface["status"], allowed)
+            self.assertTrue(surface["contract"])
+            for declared in surface["paths"]:
+                if "*" not in declared:
+                    self.assertTrue((ROOT / declared).exists(), declared)
+
+    def test_visual_system_is_linked_from_primary_guides(self) -> None:
+        visual = (ROOT / "docs/visual-system.md").read_text(encoding="utf-8")
+        self.assertIn("VISUAL_ARTIST", visual)
+        self.assertIn("BOUNDED_PERFECTION", visual)
+        self.assertIn(
+            "TEXT_ONLY_BY_DESIGN",
+            (ROOT / "assets/design-system/surface-inventory-v1.json").read_text(encoding="utf-8"),
+        )
+        for path in (ROOT / "README.md", ROOT / "docs/README.md", ROOT / "docs/brand.md"):
+            self.assertIn("visual-system.md", path.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

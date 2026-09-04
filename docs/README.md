@@ -29,6 +29,7 @@ optional routes for projects that already need those existing controls.
 | look up an exact command | [Command reference](commands.md) |
 | solve a failure | [Troubleshooting](troubleshooting.md) |
 | understand what stays local | [Security in plain language](security.md) |
+| understand the visual system and its boundaries | [Visual system](visual-system.md) |
 
 ## Core package guides
 
@@ -93,6 +94,8 @@ context package.
 - [Glossary](glossary.md) — plain meanings of fixed project terms.
 - [Brand guide](brand.md) — official colors, wordmarks, diagrams, and visual
   rules.
+- [Visual system](visual-system.md) — VISUAL_ARTIST, tokens, components,
+  accessibility, product-wide coverage, and text fallbacks.
 
 ## Product boundary
 

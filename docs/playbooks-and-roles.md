@@ -30,6 +30,19 @@ register → inspect → exact approval.
 A role name is not an operating-system account, cryptographic identity, or
 automatic permission grant.
 
+### Visual quality roles
+
+`VISUAL_ARTIST` is the provider-neutral specialist role for a human-facing
+surface. It defines the intended hierarchy, composition, typography, spacing,
+responsive behavior, accessibility, and finish. `BOUNDED_PERFECTION` performs
+the paired consistency and completion review. Their shared review contract is
+described in the [visual system](visual-system.md).
+
+Both are assessment roles, not authority. They cannot approve a task, expand
+scope, publish, deploy, or substitute automated checks for human visual
+acceptance. At most three bounded refinement rounds are allowed before an
+unresolved material finding stops explicitly.
+
 ## Effective actions are an intersection
 
 An action is effective only when it is allowed by all three:
