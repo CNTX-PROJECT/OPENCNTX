@@ -1,6 +1,6 @@
 # Visual system
 
-[Overview](../README.md) · [Components](../site/components.html) · [Brand](brand.md) · [Security](security.md) · [All guides](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 OPENCNTX uses one restrained visual system to make the next action, evidence,
 state, and boundary easy to understand. It is deliberately calm: hierarchy

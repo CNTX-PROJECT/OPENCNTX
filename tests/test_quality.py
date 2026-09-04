@@ -64,6 +64,7 @@ GUIDES = {
     "start-here.md",
     "platforms.md",
     "troubleshooting.md",
+    "visual-system.md",
     "workspace.md",
 }
 
@@ -86,7 +87,8 @@ PRIMARY_NAVIGATION = (
 )
 README_NAVIGATION = (
     "[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · "
-    "[Workspace](docs/workspace.md) · [Commands](docs/commands.md) · "
+    "[Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · "
+    "[Commands](docs/commands.md) · "
     "[Security](docs/security.md) · [All guides](docs/README.md)"
 )
 
