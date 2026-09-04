@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/human-intent-v1.schema.json",
+  "title": "OPENCNTX human intent v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "language", "human_intent", "goal", "scope", "exclusions", "constraints", "authority_state", "risks", "definition_of_done", "next_internal_action", "missing_material_decision", "intent_digest"],
+  "properties": {
+    "format": {"const": "opencntx-human-intent"},
+    "format_version": {"const": 1},
+    "language": {"type": "string"},
+    "human_intent": {"type": "string", "minLength": 1, "maxLength": 32768},
+    "goal": {"type": "string"},
+    "scope": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "exclusions": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "constraints": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "authority_state": {"enum": ["APPROVED", "OWNER_REQUIRED", "NOT_AUTHORIZED"]},
+    "risks": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "definition_of_done": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "next_internal_action": {"type": "string"},
+    "missing_material_decision": {"type": ["string", "null"]},
+    "intent_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
