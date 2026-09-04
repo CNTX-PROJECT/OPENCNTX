@@ -7,7 +7,7 @@ features or expose private project records.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
-  <img src="../assets/docs/roadmap.svg" alt="OPENCNTX progressed from the three-command core through the workspace foundation to universal local roadmap continuity">
+  <img src="../assets/docs/roadmap.svg" alt="Four foundation milestones from the three-command core through the version 1.0.0 Production Stable line; later completed releases are listed below">
 </picture>
 
 ## Completed foundation

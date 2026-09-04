@@ -97,6 +97,8 @@ class ReleaseVersionGateTests(unittest.TestCase):
             changes = (
                 "M\0README.md\0"
                 "A\0docs/start-here.md\0"
+                "M\0site/index.html\0"
+                "M\0assets/design-system/visual-baseline-v1.json\0"
                 "M\0tools/release_version_gate.py\0"
                 "M\0tests/test_release_version_gate.py\0"
                 "M\0tests/test_quality.py\0"
@@ -125,13 +127,47 @@ class ReleaseVersionGateTests(unittest.TestCase):
         self.assertEqual(
             [
                 "README.md",
+                "assets/design-system/visual-baseline-v1.json",
                 "docs/start-here.md",
+                "site/index.html",
                 "tests/test_quality.py",
                 "tests/test_release_version_gate.py",
                 "tools/release_version_gate.py",
             ],
             result["post_release_paths"],
         )
+
+    def test_equal_version_rejects_unclassified_site_asset(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_name:
+            repository = self._repository(Path(temp_name), "1.1.0")
+            tag_commit = "a" * 40
+            head = "b" * 40
+            responses = {
+                ("tag", "--list", "v*"): "v1.1.0",
+                ("rev-parse", "HEAD"): head,
+                ("rev-list", "-n", "1", "v1.1.0"): tag_commit,
+                ("merge-base", "--is-ancestor", tag_commit, head): "",
+                (
+                    "diff",
+                    "--name-status",
+                    "--no-renames",
+                    "-z",
+                    tag_commit,
+                    head,
+                ): "M\0docs/start-here.md\0M\0site/assets/opencntx.css\0",
+            }
+            with (
+                mock.patch.object(
+                    release_version_gate,
+                    "_git",
+                    side_effect=lambda _repository, *arguments: responses[arguments],
+                ),
+                self.assertRaisesRegex(
+                    release_version_gate.ReleaseVersionError,
+                    "site/assets/opencntx.css",
+                ),
+            ):
+                release_version_gate.inspect_release_version(repository)
 
     def test_post_release_documentation_deletion_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:

@@ -19,6 +19,10 @@ Every page or rendered report uses one of three templates: landing, reference,
 or status. Each template has exactly one primary message and one visible next
 safe action. A status may describe evidence but never implies OWNER approval.
 
+The install command and immutable Release link on `index.html` must match the
+current package version in `pyproject.toml`. The public quality checks derive
+that version from the package metadata so this route cannot silently drift.
+
 ## Local preview
 
 Open `index.html` directly or serve this repository root with a local static

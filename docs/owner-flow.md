@@ -75,8 +75,9 @@ can the task enter `APPROVED` and subsequently `IN_EXECUTION`.
 
 The workspace allows only one non-terminal task at a time.
 
-The [v1.3.0 adaptive workflow](adaptive-ai-workflow.md) adds a
-provider-neutral host contract that first asks whether approval covers only
+The [adaptive workflow](adaptive-ai-workflow.md), introduced in v1.3.0 and
+retained in v1.4.0, adds a provider-neutral host contract that first asks
+whether approval covers only
 the current assignment or the bounded remaining roadmap. Clickable controls
 and copyable CLI text have identical authority; displaying either is not
 approval. Stable v1.4.0 workspace commands retain the flow documented here.
