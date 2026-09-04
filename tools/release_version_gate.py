@@ -12,10 +12,14 @@ from typing import Any
 
 STABLE_VERSION = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
 DOCUMENTATION_SUFFIXES = frozenset(
-    {".gif", ".jpeg", ".jpg", ".md", ".png", ".svg", ".webp"}
+    {".gif", ".html", ".jpeg", ".jpg", ".md", ".png", ".svg", ".webp"}
+)
+PUBLIC_SITE_DOCUMENTATION_PATHS = frozenset(
+    {"site/README.md", "site/components.html", "site/index.html"}
 )
 GATE_SUPPORT_PATHS = frozenset(
     {
+        "assets/design-system/visual-baseline-v1.json",
         "tests/test_quality.py",
         "tests/test_release_version_gate.py",
         "tools/release_version_gate.py",
@@ -96,7 +100,11 @@ def _stable_tags(repository: Path) -> dict[StableVersion, str]:
 def _is_documentation_path(path: str) -> bool:
     candidate = Path(path)
     return (
-        (path == "README.md" or path.startswith("docs/"))
+        (
+            path == "README.md"
+            or path.startswith("docs/")
+            or path in PUBLIC_SITE_DOCUMENTATION_PATHS
+        )
         and candidate.suffix.lower() in DOCUMENTATION_SUFFIXES
     )
 

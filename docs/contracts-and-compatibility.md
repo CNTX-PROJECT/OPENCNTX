@@ -57,8 +57,11 @@ After a stable release, documentation may be corrected without inventing a
 new package version. The release-version gate permits that state only when the
 stable tag is an ancestor of HEAD, at least one documentation file changed,
 all changes are additions or modifications, and every changed path belongs to
-the narrow documentation or gate-verification allowlist. Runtime, packaging,
-release, workflow, deletion, rename, and unknown paths remain fail-closed.
+the narrow documentation or gate-verification allowlist. Documentation includes
+the official dependency-free site HTML and its README; only the exact visual
+baseline manifest may accompany changed site bytes as visual verification
+support. Runtime, packaging, release, workflow, deletion, rename, site scripts,
+styles, data, and unknown paths remain fail-closed.
 
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe

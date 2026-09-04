@@ -61,8 +61,8 @@ a choice grants no authority. `AUTO PILOT` remains the direct expert route.
 Important exact decisions, such as publication or a changed risk boundary,
 still use one explicit copyable command.
 
-These are host-integration contracts, not new v1.3.0 CLI commands. The current
-released flow continues to use its documented
+These are host-integration contracts, not separate CLI commands. v1.3.0
+introduced the contracts; the current v1.4.0 flow continues to use its documented
 `opencntx flow start ... --approval "AUTO PILOT"` route.
 
 ## Durable state, not chat memory

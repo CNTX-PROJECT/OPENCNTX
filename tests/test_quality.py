@@ -667,6 +667,7 @@ class PublicQualityTests(unittest.TestCase):
         faq = (DOCS / "faq.md").read_text(encoding="utf-8")
         roadmap = (DOCS / "roadmap.md").read_text(encoding="utf-8")
         release_artifacts = (DOCS / "release-artifacts.md").read_text(encoding="utf-8")
+        site_index = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
         contracts = (DOCS / "contracts-and-compatibility.md").read_text(encoding="utf-8")
         workspace = (DOCS / "workspace.md").read_text(encoding="utf-8")
         workflow = WORKFLOW.read_text(encoding="utf-8")
@@ -683,6 +684,9 @@ class PublicQualityTests(unittest.TestCase):
         self.assertIn("installed --version output differs", release_tool)
         self.assertIn("expected_version", release_tool)
         self.assertNotRegex(workflow, r'expected_version\s*=\s*["\']\d')
+        self.assertIn(f"@v{version}", site_index)
+        self.assertIn(f"/releases/tag/v{version}", site_index)
+        self.assertIn(f"Immutable v{version} release", site_index)
 
         for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
