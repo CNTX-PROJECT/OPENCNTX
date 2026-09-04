@@ -1,0 +1,69 @@
+{
+  "format": "opencntx-visual-surface-inventory",
+  "version": 1,
+  "design_system": "assets/design-system/tokens-v1.json",
+  "required_statuses": [
+    "APPLIED",
+    "TEXT_ONLY_BY_DESIGN",
+    "FUTURE_ADAPTER",
+    "NON_VISUAL_SUPPORT",
+    "OUT_OF_SCOPE"
+  ],
+  "surfaces": [
+    {
+      "id": "PROJECT_OVERVIEW",
+      "paths": ["README.md"],
+      "status": "APPLIED",
+      "contract": "TASK_FIRST_DOCUMENT_HIERARCHY"
+    },
+    {
+      "id": "DOCUMENTATION",
+      "paths": ["docs/*.md"],
+      "status": "APPLIED",
+      "contract": "SEMANTIC_MARKDOWN_AND_SHARED_LANGUAGE"
+    },
+    {
+      "id": "BRAND_ASSETS",
+      "paths": ["assets/brand/*", "assets/docs/*"],
+      "status": "APPLIED",
+      "contract": "BRAND_GUIDE_AND_PINNED_RENDERERS"
+    },
+    {
+      "id": "OFFICIAL_WEBSITE_SOURCE",
+      "paths": ["site/index.html", "site/components.html", "site/assets/opencntx.css"],
+      "status": "APPLIED",
+      "contract": "TOKENS_COMPONENTS_AND_CONTENT_MAP"
+    },
+    {
+      "id": "CLI_AND_STATUS_OUTPUT",
+      "paths": ["src/opencntx/*.py"],
+      "status": "TEXT_ONLY_BY_DESIGN",
+      "contract": "PLAIN_LANGUAGE_ORDER_STATUS_AND_NON_COLOR_EVIDENCE"
+    },
+    {
+      "id": "MACHINE_CONTRACTS",
+      "paths": ["schemas/*.json", "src/opencntx/*.py"],
+      "status": "NON_VISUAL_SUPPORT",
+      "contract": "CLOSED_SCHEMAS_AND_DETERMINISTIC_VALIDATION"
+    },
+    {
+      "id": "FUTURE_GUI_OR_DASHBOARD",
+      "paths": [],
+      "status": "FUTURE_ADAPTER",
+      "contract": "MUST_CONSUM_VISUAL_INTENT_TOKENS_COMPONENT_STATES_AND_REVIEW"
+    },
+    {
+      "id": "CODEX_OS_AND_THIRD_PARTY_UI",
+      "paths": [],
+      "status": "OUT_OF_SCOPE",
+      "contract": "HOST_REMAINS_RESPONSIBLE_FOR_ITS_OWN_CHROME"
+    }
+  ],
+  "rules": [
+    "NO_UNKNOWN_SURFACE_STATUS",
+    "NO_PERMISSION_FROM_PRESENTATION",
+    "NO_STATUS_BY_COLOR_ALONE",
+    "TEXT_FALLBACK_IS_REQUIRED",
+    "HUMAN_VISUAL_ACCEPTANCE_REMAINS_SEPARATE"
+  ]
+}

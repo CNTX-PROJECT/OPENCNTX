@@ -92,21 +92,21 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.2.1` Production/Stable release is installed from its
+No. The immutable `v1.3.0` Production/Stable release is installed from its
 exact Git tag. The exact isolated route is
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.2.1"`.
-The v1.3.0 candidate is under separate Draft-PR review and is not an
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.3.0"`.
+The v1.4.0 candidate is local and is not an
 installation instruction yet.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.2.1` Release has
-exactly `opencntx-1.2.1-py3-none-any.whl`,
-`opencntx-1.2.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Files built
-from the v1.3.0 candidate are named `opencntx-1.3.0-py3-none-any.whl` and
-`opencntx-1.3.0.tar.gz`; they remain unpublished candidates rather than public
+The historical `v0.2.0` Release has none. The immutable `v1.3.0` Release has
+exactly `opencntx-1.3.0-py3-none-any.whl`,
+`opencntx-1.3.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Files built
+from the v1.4.0 candidate are named `opencntx-1.4.0-py3-none-any.whl` and
+`opencntx-1.4.0.tar.gz`; they remain unpublished candidates rather than public
 release assets. See
 [Release artifacts](release-artifacts.md) for
 checksums, build records, reproducibility limits, and the separate publication

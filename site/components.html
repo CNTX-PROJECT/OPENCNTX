@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Accessible OPENCNTX component and state reference.">
+    <title>Visual system · OPENCNTX</title>
+    <link rel="stylesheet" href="assets/opencntx.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="topbar">
+      <div class="shell topbar__inner">
+        <a class="brand-link" href="index.html" aria-label="OPENCNTX home">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="../assets/brand/opencntx-wordmark-dark.svg">
+            <img src="../assets/brand/opencntx-wordmark-light.svg" alt="OPENCNTX" width="800" height="160">
+          </picture>
+        </a>
+        <nav aria-label="Primary navigation">
+          <ul class="nav-list">
+            <li><a href="index.html#how">How it works</a></li>
+            <li><a href="../docs/README.md">Documentation</a></li>
+            <li><a href="components.html" aria-current="page">Visual system</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section">
+        <div class="shell">
+          <p class="eyebrow">Visual system v1</p>
+          <h1>One calm language for every visible state.</h1>
+          <p class="lede">Components preserve meaning without color, motion, imagery, JavaScript, or a remote font.</p>
+          <div class="actions" aria-label="Button examples">
+            <a class="button button--primary" href="#states">Primary action</a>
+            <a class="button button--secondary" href="#patterns">Secondary action</a>
+            <button class="button button--secondary" type="button" disabled>Unavailable action</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--soft" id="patterns">
+        <div class="shell">
+          <p class="eyebrow">Reusable patterns</p>
+          <h2>Structure before decoration</h2>
+          <div class="grid grid--three">
+            <article class="panel">
+              <span class="panel__number" aria-hidden="true">1</span>
+              <h3>Primary message</h3>
+              <p>Each surface communicates one main idea before secondary detail.</p>
+            </article>
+            <article class="panel">
+              <span class="panel__number" aria-hidden="true">2</span>
+              <h3>Next safe action</h3>
+              <p>The next action is visible, specific, and separate from authority.</p>
+            </article>
+            <article class="panel">
+              <span class="panel__number" aria-hidden="true">3</span>
+              <h3>Proof and stop</h3>
+              <p>Evidence is readable and refinement stops when declared criteria are green.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="states">
+        <div class="shell">
+          <p class="eyebrow">System states</p>
+          <h2>Never hide status in color alone</h2>
+          <div class="state-grid">
+            <article class="panel panel--quiet"><p class="status">Default · Ready for input</p></article>
+            <article class="panel panel--quiet"><p class="status" data-kind="success">Success · Verification passed</p></article>
+            <article class="panel panel--quiet"><p class="status" data-kind="warning">Warning · Review needed</p></article>
+            <article class="panel panel--quiet"><p class="status" data-kind="error">Error · Validation failed</p></article>
+            <article class="panel panel--quiet"><p class="status" data-kind="blocked">Blocked · OWNER decision required</p></article>
+            <article class="panel panel--quiet" aria-live="polite">
+              <p class="status"><span class="loading-mark" aria-hidden="true"></span>Loading · Reading local evidence</p>
+            </article>
+            <article class="panel panel--quiet"><p class="status">Empty · No matching records</p></article>
+            <article class="panel panel--quiet"><p class="status">Disabled · Action unavailable</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--compact section--soft">
+        <div class="shell">
+          <div class="notice" role="note">
+            <strong>Joint gate:</strong> VISUAL_ARTIST and BOUNDED_PERFECTION must both pass. Human visual review remains separate.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer__inner">
+        <span>OPENCNTX visual reference · local and dependency-free</span>
+        <a href="../docs/brand.md">Brand guide</a>
+      </div>
+    </footer>
+  </body>
+</html>

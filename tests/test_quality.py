@@ -64,6 +64,7 @@ GUIDES = {
     "start-here.md",
     "platforms.md",
     "troubleshooting.md",
+    "visual-system.md",
     "workspace.md",
 }
 
@@ -86,7 +87,8 @@ PRIMARY_NAVIGATION = (
 )
 README_NAVIGATION = (
     "[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · "
-    "[Workspace](docs/workspace.md) · [Commands](docs/commands.md) · "
+    "[Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · "
+    "[Commands](docs/commands.md) · "
     "[Security](docs/security.md) · [All guides](docs/README.md)"
 )
 
@@ -652,7 +654,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.3.0")
+        self.assertEqual(version, "1.4.0")
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],
@@ -720,6 +722,18 @@ class PublicQualityTests(unittest.TestCase):
         for surface in release_surfaces:
             with self.subTest(surface=surface.relative_to(ROOT)):
                 self.assertNotIn("0.2.0.dev0", surface.read_text(encoding="utf-8"))
+
+    def test_source_distribution_includes_visual_site(self) -> None:
+        manifest = (ROOT / "MANIFEST.in").read_text(encoding="utf-8")
+        self.assertIn("recursive-include site *.html *.css *.json *.md", manifest)
+        for relative in (
+            "site/index.html",
+            "site/components.html",
+            "site/assets/opencntx.css",
+            "site/content-map-v1.json",
+            "site/performance-budget-v1.json",
+        ):
+            self.assertTrue((ROOT / relative).is_file(), relative)
 
     def test_active_build_toolchain_pins_are_consistent(self) -> None:
         active_surfaces = {

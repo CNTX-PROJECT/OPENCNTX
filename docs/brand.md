@@ -56,6 +56,18 @@ Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif
 
 No font file or remote font request is bundled.
 
+## Design-system integration
+
+The brand is one input to the wider [visual system](visual-system.md), not a
+separate decorative layer. Canonical design tokens live in
+`assets/design-system/tokens-v1.json`; deterministic CSS, accessible component
+states, and the official website source consume those choices. The component
+reference is available at `site/components.html`.
+
+Plum remains the only purple. Semantic states use their own named colors and
+always retain text or interaction evidence, so the brand never overrides
+clarity or accessibility.
+
 ## Official files
 
 | File | Use |

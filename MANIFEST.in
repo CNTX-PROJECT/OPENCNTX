@@ -11,6 +11,7 @@ recursive-include assets *
 recursive-include docs *.md
 recursive-include examples *.toml
 recursive-include examples *.json
+recursive-include site *.html *.css *.json *.md
 recursive-include src *.py
 recursive-include src/opencntx/schemas *.json
 recursive-include tests *.py

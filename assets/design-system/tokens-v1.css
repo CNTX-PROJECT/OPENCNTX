@@ -1,0 +1,69 @@
+/* Generated from assets/design-system/tokens-v1.json. Do not edit. */
+:root {
+  --oc-breakpoint-wide: 64rem;
+  --oc-content-measure: 68rem;
+  --oc-font-mono: Consolas, ui-monospace, SFMono-Regular, monospace;
+  --oc-font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  --oc-line-body: 1.65;
+  --oc-line-heading: 1.12;
+  --oc-motion-fast: 140ms;
+  --oc-motion-standard: 220ms;
+  --oc-radius-control: 0.65rem;
+  --oc-radius-panel: 1rem;
+  --oc-shadow-panel: 0 1.25rem 3rem rgb(15 23 42 / 0.12);
+  --oc-space-1: 0.25rem;
+  --oc-space-2: 0.5rem;
+  --oc-space-3: 0.75rem;
+  --oc-space-4: 1rem;
+  --oc-space-5: 1.5rem;
+  --oc-space-6: 2rem;
+  --oc-space-7: 3rem;
+  --oc-space-8: 4.5rem;
+  --oc-type-body: 1rem;
+  --oc-type-display: clamp(2.5rem, 7vw, 5.5rem);
+  --oc-type-h1: clamp(2rem, 5vw, 4rem);
+  --oc-type-h2: clamp(1.5rem, 3vw, 2.5rem);
+  --oc-type-small: 0.875rem;
+  --oc-accent: #0891B2;
+  --oc-blocked: #9F1239;
+  --oc-border: #CBD5E1;
+  --oc-brand: #DDA0DD;
+  --oc-brand-ink: #0B1020;
+  --oc-canvas: #F8FAFC;
+  --oc-danger: #B42318;
+  --oc-focus: #0891B2;
+  --oc-success: #047857;
+  --oc-surface: #FFFFFF;
+  --oc-surface-soft: #F1F5F9;
+  --oc-text: #0F172A;
+  --oc-text-muted: #475569;
+  --oc-warning: #92400E;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  --oc-accent: #22D3EE;
+  --oc-blocked: #FDA4AF;
+  --oc-border: #334155;
+  --oc-brand: #DDA0DD;
+  --oc-brand-ink: #0B1020;
+  --oc-canvas: #0B1020;
+  --oc-danger: #FCA5A5;
+  --oc-focus: #22D3EE;
+  --oc-success: #34D399;
+  --oc-surface: #111827;
+  --oc-surface-soft: #172033;
+  --oc-text: #F8FAFC;
+  --oc-text-muted: #CBD5E1;
+  --oc-warning: #FCD34D;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+  --oc-border: currentColor;
+  --oc-focus: currentColor;
+  --oc-shadow-panel: none;
+  }
+}

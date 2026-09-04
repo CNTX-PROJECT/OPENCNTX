@@ -35,6 +35,8 @@
     "evidence-object-v1.schema.json",
     "human-intent-v1.schema.json",
     "human-output-v1.schema.json",
+    "visual-intent-v1.schema.json",
+    "visual-review-v1.schema.json",
     "session-footer-metrics-v1.schema.json",
     "navigation-index-v1.schema.json",
     "path-capability-v1.schema.json",

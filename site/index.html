@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="OPENCNTX creates small, explicit, verifiable context packages for AI-assisted work.">
+    <title>OPENCNTX · The right context, nothing more</title>
+    <link rel="stylesheet" href="assets/opencntx.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="topbar">
+      <div class="shell topbar__inner">
+        <a class="brand-link" href="index.html" aria-label="OPENCNTX home" aria-current="page">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="../assets/brand/opencntx-wordmark-dark.svg">
+            <img src="../assets/brand/opencntx-wordmark-light.svg" alt="OPENCNTX" width="800" height="160">
+          </picture>
+        </a>
+        <nav aria-label="Primary navigation">
+          <ul class="nav-list">
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#start">Get started</a></li>
+            <li><a href="#safety">Safety</a></li>
+            <li><a href="#guides">Documentation</a></li>
+            <li><a href="#support">Support</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="shell">
+          <div class="hero__layout">
+            <div>
+              <p class="eyebrow">Local-first context control</p>
+              <h1>The right context. Nothing more.</h1>
+              <p class="lede">Give an AI the files it needs for one task—small, reviewable, and backed by exact byte evidence.</p>
+              <div class="actions">
+                <a class="button button--primary" href="#start">Get started safely</a>
+                <a class="button button--secondary" href="#how">See how it works</a>
+              </div>
+            </div>
+            <picture class="hero__visual">
+              <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
+              <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review a small context package, verify exact bytes, and then decide whether to share" width="1200" height="675">
+            </picture>
+          </div>
+          <div class="proof-strip" aria-label="Product properties">
+            <div class="proof-strip__item"><strong>Local first</strong><span>No account or upload</span></div>
+            <div class="proof-strip__item"><strong>Exact evidence</strong><span>Paths, sizes, and SHA-256</span></div>
+            <div class="proof-strip__item"><strong>Your decision</strong><span>OPENCNTX never grants approval</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--soft" id="how">
+        <div class="shell">
+          <p class="eyebrow">How it works</p>
+          <h2>Three calm checkpoints</h2>
+          <div class="grid grid--three">
+            <article class="panel"><span class="panel__number" aria-hidden="true">1</span><h3>Select</h3><p>Choose one goal and only the local text files needed for it.</p></article>
+            <article class="panel"><span class="panel__number" aria-hidden="true">2</span><h3>Review</h3><p>Preview the selection and inspect the readable context before sharing anything.</p></article>
+            <article class="panel"><span class="panel__number" aria-hidden="true">3</span><h3>Verify</h3><p>Prove the package and recorded source bytes still match exactly.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="start">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Get started</p>
+            <h2>One explicit local flow</h2>
+            <p>Install an immutable release, enter a small project, and keep the complete flow visible.</p>
+            <p><a href="../docs/start-here.md">Read the complete installation and rollback guide</a></p>
+          </div>
+          <pre class="code-block" aria-label="OPENCNTX first-run commands"><code>pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.3.0"
+opencntx --version
+opencntx init
+opencntx pack --preview
+opencntx pack
+opencntx verify</code></pre>
+        </div>
+      </section>
+
+      <section class="section section--soft" id="safety">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Safety boundary</p>
+            <h2>Evidence is not permission</h2>
+            <p class="lede">A green verification proves byte identity. It does not prove truth, completeness, safety, or OWNER acceptance.</p>
+          </div>
+          <ul class="plain-list">
+            <li><strong>Local by default</strong>No model, cloud service, database, or upload is required.</li>
+            <li><strong>Review before sharing</strong>You inspect the selected context and decide what leaves the machine.</li>
+            <li><strong>Fail closed</strong>Unknown state, drift, conflicts, or missing authority stop the action.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="guides">
+        <div class="shell">
+          <p class="eyebrow">Documentation</p>
+          <h2>Follow the task, not the tool</h2>
+          <div class="grid grid--three">
+            <a class="panel link-card" href="../docs/start-here.md"><h3>Start here</h3><p>Install, create a first package, inspect it, and remove it safely.</p></a>
+            <a class="panel link-card" href="../docs/how-it-works.md"><h3>Understand the model</h3><p>See what OPENCNTX reads, records, proves, and deliberately does not decide.</p></a>
+            <a class="panel link-card" href="../docs/workspace.md"><h3>Run a longer project</h3><p>Add durable sources, tasks, evidence, recovery, and a bounded roadmap.</p></a>
+            <a class="panel link-card" href="../docs/security.md"><h3>Protect sensitive work</h3><p>Review the local boundary, exclusions, limitations, and reporting route.</p></a>
+            <a class="panel link-card" href="../docs/commands.md"><h3>Find a command</h3><p>Use the complete reference only when you need exact syntax.</p></a>
+            <a class="panel link-card" href="components.html"><h3>Visual system</h3><p>Inspect the accessible components, states, tokens, and joint quality gate.</p></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--compact section--soft" id="support">
+        <div class="shell split">
+          <div>
+            <p class="eyebrow">Support</p>
+            <h2>Use the route that matches the problem</h2>
+          </div>
+          <div class="notice" role="note">
+            <p><strong>Question or reproducible bug?</strong> Use <a href="../SUPPORT.md">Support</a>.</p>
+            <p><strong>Possible vulnerability?</strong> Follow the private route in the <a href="../SECURITY.md">Security Policy</a>. Never post secrets publicly.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer__inner">
+        <span>OPENCNTX · local first · zero runtime dependencies</span>
+        <span><a href="https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.3.0">Immutable v1.3.0 release</a> · <a href="../LICENSE">Apache-2.0</a></span>
+      </div>
+    </footer>
+  </body>
+</html>
