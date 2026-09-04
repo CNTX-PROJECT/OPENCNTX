@@ -1,0 +1,28 @@
+{
+  "format": "opencntx-site-content-map",
+  "format_version": 1,
+  "audiences": ["NEW_USER", "RETURNING_USER", "CONTRIBUTOR", "SECURITY_REPORTER"],
+  "primary_task": "UNDERSTAND_AND_START_SAFELY",
+  "primary_message": "Give an AI the context it needs without handing over an entire project.",
+  "navigation": [
+    {"id": "how", "label": "How it works", "priority": 1},
+    {"id": "start", "label": "Get started", "priority": 2},
+    {"id": "safety", "label": "Safety", "priority": 3},
+    {"id": "guides", "label": "Documentation", "priority": 4},
+    {"id": "support", "label": "Support", "priority": 5}
+  ],
+  "page_sequence": ["VALUE", "HOW_IT_WORKS", "SAFE_START", "PROOF_BOUNDARY", "DOCUMENTATION", "SUPPORT"],
+  "templates": {
+    "landing": ["EYEBROW", "ONE_H1", "LEDE", "PRIMARY_ACTION", "SECONDARY_ACTION", "PROOF"],
+    "reference": ["EYEBROW", "ONE_H1", "SUMMARY", "CONTENTS", "EXAMPLES", "NEXT_ACTION"],
+    "status": ["STATUS_TEXT", "MEANING", "EVIDENCE", "NEXT_ACTION"]
+  },
+  "content_rules": [
+    "ONE_PRIMARY_MESSAGE_PER_SURFACE",
+    "ONE_H1_PER_PAGE",
+    "VISIBLE_NEXT_SAFE_ACTION",
+    "NO_AUTHORITY_IMPLIED_BY_STATUS",
+    "PLAIN_LANGUAGE_BEFORE_TECHNICAL_DETAIL",
+    "SEMANTIC_TEXT_REMAINS_CANONICAL"
+  ]
+}

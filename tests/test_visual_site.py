@@ -89,6 +89,17 @@ class VisualSiteTests(unittest.TestCase):
             with self.subTest(mode=mode, pair="brand"):
                 self.assertGreaterEqual(_contrast(palette["brand-ink"], palette["brand"]), 4.5)
 
+    def test_content_map_has_one_ordered_primary_route(self) -> None:
+        content = json.loads((SITE / "content-map-v1.json").read_text(encoding="utf-8"))
+        self.assertEqual(content["format"], "opencntx-site-content-map")
+        self.assertEqual(content["primary_task"], "UNDERSTAND_AND_START_SAFELY")
+        priorities = [item["priority"] for item in content["navigation"]]
+        self.assertEqual(priorities, list(range(1, len(priorities) + 1)))
+        self.assertEqual(len({item["id"] for item in content["navigation"]}), len(priorities))
+        self.assertEqual(set(content["templates"]), {"landing", "reference", "status"})
+        self.assertIn("ONE_PRIMARY_MESSAGE_PER_SURFACE", content["content_rules"])
+        self.assertIn("NO_AUTHORITY_IMPLIED_BY_STATUS", content["content_rules"])
+
     def test_no_unclassified_raw_visual_values_outside_token_source(self) -> None:
         raw_lengths = re.findall(r"(?<!var\()(?<![-\w])\d+(?:\.\d+)?(?:rem|px)", self.css)
         allowlisted = {
