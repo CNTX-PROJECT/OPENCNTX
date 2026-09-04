@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -82,6 +84,39 @@ class VisualDesignTests(unittest.TestCase):
         for name in names:
             schema = json.loads((ROOT / "src/opencntx/schemas" / name).read_text(encoding="utf-8"))
             self.assertFalse(schema["additionalProperties"])
+
+    def test_tokens_are_closed_complete_and_reproducible(self) -> None:
+        source = ROOT / "assets/design-system/tokens-v1.json"
+        tokens = json.loads(source.read_text(encoding="ascii"))
+        self.assertEqual(tokens["format"], "opencntx-visual-tokens")
+        self.assertEqual(tokens["light"]["brand"], "#DDA0DD")
+        self.assertEqual(tokens["dark"]["brand"], "#DDA0DD")
+        self.assertEqual(
+            tokens["component_states"],
+            sorted(
+                {
+                    "ACTIVE",
+                    "BLOCKED",
+                    "DEFAULT",
+                    "DISABLED",
+                    "EMPTY",
+                    "ERROR",
+                    "FOCUS_VISIBLE",
+                    "HOVER",
+                    "LOADING",
+                    "SUCCESS",
+                    "WARNING",
+                }
+            ),
+        )
+        completed = subprocess.run(
+            [sys.executable, "tools/render_visual_tokens.py", "--check"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr + completed.stdout)
 
 
 if __name__ == "__main__":
