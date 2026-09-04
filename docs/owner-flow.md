@@ -79,7 +79,7 @@ The [v1.3.0 adaptive workflow](adaptive-ai-workflow.md) adds a
 provider-neutral host contract that first asks whether approval covers only
 the current assignment or the bounded remaining roadmap. Clickable controls
 and copyable CLI text have identical authority; displaying either is not
-approval. Stable v1.3.0 workspace commands retain the flow documented here.
+approval. Stable v1.4.0 workspace commands retain the flow documented here.
 
 ## 4. Rebuild knowledge and build context
 

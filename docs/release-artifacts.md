@@ -2,27 +2,27 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page preserves the four files in the immutable `v1.3.0` GitHub Release and
-explains how contributors prepare the v1.4.0 local candidate. It does not grant
+This page identifies the four files in the immutable `v1.4.0` GitHub Release and
+explains how contributors reproduce a local candidate. It does not grant
 authority to publish a new release or package-index upload.
 
 ## Current public distribution
 
-The `v1.3.0` Production/Stable release is live and immutable. Install it from
+The `v1.4.0` Production/Stable release is live and immutable. Install it from
 the exact public Git tag as described in [Get started](start-here.md):
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.3.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.4.0"`.
 
 - OPENCNTX is not published on PyPI or TestPyPI.
 - The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
   build record attached to it.
-- The v1.3.0 GitHub Release must contain exactly the four files named below.
+- The v1.4.0 GitHub Release contains exactly the four files named below.
 
 Any file built locally is an unpublished candidate unless it is one of the
 four exact assets attached to the immutable GitHub Release.
 
-## Candidate output
+## Reproducible local output
 
-The local v1.4.0 release helper emits exactly four candidate files:
+The local release helper emits exactly four v1.4.0 candidate files:
 
 1. `opencntx-1.4.0-py3-none-any.whl`;
 2. `opencntx-1.4.0.tar.gz`;
@@ -117,6 +117,13 @@ publication, the release owner must:
 A PyPI 404 at one moment is not ownership or reservation evidence. This
 repository contains no PyPI token, trusted-publishing configuration, OIDC
 permission, or publication command.
+
+Documentation-only commits after a stable release do not replace or mutate the
+release. The CI release-version gate accepts them only when the stable tag is
+an ancestor and every changed path is explicitly classified as documentation
+or exact gate-verification support. Any runtime, package, release, workflow,
+deletion, rename, or unknown path still requires a newer package version and a
+separate release decision.
 
 ## Related pages
 

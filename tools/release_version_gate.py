@@ -11,6 +11,17 @@ from pathlib import Path
 from typing import Any
 
 STABLE_VERSION = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
+DOCUMENTATION_SUFFIXES = frozenset(
+    {".gif", ".jpeg", ".jpg", ".md", ".png", ".svg", ".webp"}
+)
+GATE_SUPPORT_PATHS = frozenset(
+    {
+        "tests/test_quality.py",
+        "tests/test_release_version_gate.py",
+        "tools/release_version_gate.py",
+    }
+)
+ALLOWED_POST_RELEASE_STATUSES = frozenset({"A", "M"})
 
 
 class ReleaseVersionError(RuntimeError):
@@ -82,6 +93,73 @@ def _stable_tags(repository: Path) -> dict[StableVersion, str]:
     return result
 
 
+def _is_documentation_path(path: str) -> bool:
+    candidate = Path(path)
+    return (
+        (path == "README.md" or path.startswith("docs/"))
+        and candidate.suffix.lower() in DOCUMENTATION_SUFFIXES
+    )
+
+
+def _post_release_documentation_paths(
+    repository: Path,
+    *,
+    tag_commit: str,
+    head: str,
+) -> list[str]:
+    try:
+        _git(repository, "merge-base", "--is-ancestor", tag_commit, head)
+    except ReleaseVersionError as exc:
+        raise ReleaseVersionError(
+            "latest stable tag commit is not an ancestor of HEAD"
+        ) from exc
+
+    raw_changes = _git(
+        repository,
+        "diff",
+        "--name-status",
+        "--no-renames",
+        "-z",
+        tag_commit,
+        head,
+    )
+    tokens = raw_changes.split("\0")
+    if tokens and tokens[-1] == "":
+        tokens.pop()
+    if not tokens or len(tokens) % 2:
+        raise ReleaseVersionError("cannot determine post-release changed paths")
+
+    documentation: list[str] = []
+    rejected: list[str] = []
+    changed_paths: list[str] = []
+    for index in range(0, len(tokens), 2):
+        status, path = tokens[index : index + 2]
+        safe_path = (
+            bool(path)
+            and "\\" not in path
+            and not path.startswith("/")
+            and all(part not in {"", ".", ".."} for part in path.split("/"))
+        )
+        if status not in ALLOWED_POST_RELEASE_STATUSES or not safe_path:
+            rejected.append(f"{status}:{path}")
+            continue
+        changed_paths.append(path)
+        if _is_documentation_path(path):
+            documentation.append(path)
+        elif path not in GATE_SUPPORT_PATHS:
+            rejected.append(f"{status}:{path}")
+
+    if rejected:
+        raise ReleaseVersionError(
+            "post-release changes are not docs-only: " + ", ".join(sorted(rejected))
+        )
+    if not documentation:
+        raise ReleaseVersionError(
+            "post-release docs-only maintenance requires a documentation path"
+        )
+    return sorted(changed_paths)
+
+
 def inspect_release_version(
     repository: Path,
     *,
@@ -114,19 +192,26 @@ def inspect_release_version(
         )
     if version == latest:
         tag_commit = _git(repository, "rev-list", "-n", "1", latest_tag)
-        if tag_commit != head:
-            raise ReleaseVersionError(
-                f"project version {version} equals {latest_tag}, but HEAD is not that release commit"
+        if tag_commit == head:
+            result = "TAG_ALIGNED"
+            post_release_paths: list[str] = []
+        else:
+            post_release_paths = _post_release_documentation_paths(
+                repository,
+                tag_commit=tag_commit,
+                head=head,
             )
-        result = "TAG_ALIGNED"
+            result = "POST_RELEASE_DOCS_ONLY"
     else:
         result = "UNRELEASED_VERSION_AHEAD"
+        post_release_paths = []
 
     return {
         "format": "opencntx-release-version-gate",
         "format_version": 1,
         "head": head,
         "latest_tag": latest_tag,
+        "post_release_paths": post_release_paths,
         "project_version": str(version),
         "result": result,
     }

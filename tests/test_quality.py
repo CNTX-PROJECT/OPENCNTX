@@ -677,7 +677,8 @@ class PublicQualityTests(unittest.TestCase):
             "git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
             readme,
         )
-        self.assertIn(f"v{version} candidate", readme)
+        self.assertIn(f"v{version} Stable", readme)
+        self.assertNotIn(f"v{version} candidate", readme)
         self.assertIn("The workspace is a **Stable, optional** route", workspace)
         self.assertIn("installed --version output differs", release_tool)
         self.assertIn("expected_version", release_tool)
