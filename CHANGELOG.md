@@ -2,7 +2,7 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## Unreleased
+## 1.3.0 - 2026-09-04
 
 ### Added
 
@@ -17,8 +17,9 @@ All notable OPENCNTX changes are recorded here.
 
 ### Changed
 
-- Documented the R11 work as an unreleased candidate. Stable v1.2.1 commands,
-  installation instructions and public-release claims remain unchanged.
+- Prepared the R11 release candidate for review. The immutable v1.2.1 Git tag
+  and GitHub Release remain the current public Stable installation until this
+  candidate is reviewed, merged, tagged, and released through separate gates.
 
 ## 1.2.1 - 2026-09-01
 

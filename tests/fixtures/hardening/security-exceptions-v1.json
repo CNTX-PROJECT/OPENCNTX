@@ -3,6 +3,11 @@
   "format_version": 1,
   "exceptions": [
     {
+      "path": "src/opencntx/adaptive_storage.py",
+      "codes": ["S608"],
+      "reason": "The only dynamic SQL fragment is a counted sequence of literal question-mark placeholders; every record value remains separately parameterized."
+    },
+    {
       "path": "src/opencntx/cli_workspace.py",
       "codes": ["S101"],
       "reason": "The assertion narrows one internal optional dispatcher result after the parser selected that route."

@@ -23,6 +23,10 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
+The v1.3.0 candidate is under separate Draft-PR review. Until its integration
+and publication gates are complete, install only the immutable v1.2.1 Stable
+release described below.
+
 ## 2. Install the Stable release
 
 The immutable `v1.2.1` Production/Stable release is available from its exact

@@ -342,8 +342,7 @@ class ContinuityTests(unittest.TestCase):
             result.update(values)
             basis = {key: value for key, value in result.items() if key != "capsule_digest"}
             content = (
-                json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-                + "\n"
+                json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
             ).encode("utf-8")
             result["capsule_digest"] = hashlib.sha256(content).hexdigest()
             return result
@@ -365,9 +364,7 @@ class ContinuityTests(unittest.TestCase):
         )
         self.assertEqual(decide_finalization(owner)["decision"], "REQUEST_OWNER")
         self.assertEqual(decide_finalization(blocked)["decision"], "BLOCKED")
-        self.assertEqual(
-            decide_finalization(assignment_done)["decision"], "COMPLETE_ASSIGNMENT"
-        )
+        self.assertEqual(decide_finalization(assignment_done)["decision"], "COMPLETE_ASSIGNMENT")
         self.assertEqual(decide_finalization(roadmap_done)["decision"], "COMPLETE_ROADMAP")
         invalid = changed(recovery_round="unknown")
         self.assertEqual(decide_finalization(invalid)["decision"], "RECONCILE_REQUIRED")
@@ -422,7 +419,9 @@ class ContinuityTests(unittest.TestCase):
             except ContinuityError as exc:
                 errors.append(exc.code)
 
-        writers = [threading.Thread(target=writer, args=(identifier,)) for identifier in ("CP-2", "CP-3")]
+        writers = [
+            threading.Thread(target=writer, args=(identifier,)) for identifier in ("CP-2", "CP-3")
+        ]
         for thread in writers:
             thread.start()
         for thread in writers:

@@ -9,7 +9,7 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.2.1** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.3.0 candidate** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
@@ -143,8 +143,9 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Release | `v1.2.1` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
-| Package | `opencntx 1.2.1` |
+| Candidate | `v1.3.0` is under review in a Draft PR; it is not yet a public installation |
+| Public Stable release | `v1.2.1` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
+| Candidate package | `opencntx 1.3.0`; its existing CLI routes and supported durable-format reads are retained |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -152,15 +153,16 @@ route—never in a public issue.
 | Distribution | exact Git tag and four verified GitHub Release assets; no PyPI/TestPyPI package |
 | License | [Apache-2.0](LICENSE) |
 
-The immutable Release contains exactly:
+The v1.3.0 candidate must produce exactly:
 
-- `opencntx-1.2.1-py3-none-any.whl`
-- `opencntx-1.2.1.tar.gz`
+- `opencntx-1.3.0-py3-none-any.whl`
+- `opencntx-1.3.0.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
-See [Release artifacts](docs/release-artifacts.md) for the exact build and
-verification boundary.
+These are local candidate artifacts, not a release claim. The immutable
+v1.2.1 Release assets remain unchanged. See [Release artifacts](docs/release-artifacts.md)
+for the exact build and verification boundary.
 
 ## Project routes
 

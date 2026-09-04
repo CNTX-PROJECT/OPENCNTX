@@ -2,8 +2,8 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page explains the four files in the immutable `v1.2.1` GitHub Release and
-how contributors prepare equivalent local candidates. It does not grant
+This page preserves the four files in the immutable `v1.2.1` GitHub Release and
+explains how contributors prepare the v1.3.0 local candidate. It does not grant
 authority to publish a new release or package-index upload.
 
 ## Current public distribution
@@ -22,10 +22,10 @@ four exact assets attached to the immutable GitHub Release.
 
 ## Candidate output
 
-The local release helper emits exactly four candidate files:
+The local v1.3.0 release helper emits exactly four candidate files:
 
-1. `opencntx-1.2.1-py3-none-any.whl`;
-2. `opencntx-1.2.1.tar.gz`;
+1. `opencntx-1.3.0-py3-none-any.whl`;
+2. `opencntx-1.3.0.tar.gz`;
 3. `SHA256SUMS` for those two artifacts;
 4. `BUILD-RECORD.json`.
 
@@ -46,7 +46,7 @@ python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.2.1 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.3.0 --expected-commit $commit --expected-tree $tree
 ```
 
 Ubuntu:
@@ -56,7 +56,7 @@ python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0
 commit=$(git rev-parse HEAD)
 tree=$(git rev-parse 'HEAD^{tree}')
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.2.1 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.3.0 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
 The helper exports the exact Git tree to two independent temporary source
@@ -94,8 +94,8 @@ must support:
 Run the same bounded smoke for both local candidates:
 
 ```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.2.1-py3-none-any.whl --expected-version 1.2.1
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.2.1.tar.gz --expected-version 1.2.1
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.3.0-py3-none-any.whl --expected-version 1.3.0
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.3.0.tar.gz --expected-version 1.3.0
 ```
 
 This tests a local candidate. It is not proof that an external package-index

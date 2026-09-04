@@ -1655,9 +1655,7 @@ def _capsule_from_loaded(
         "authority_state": "APPROVED_AUTO_PILOT",
         "continuation_mode": continuation_mode,
         "recovery_round": state["recovery_rounds"],
-        "checkpoint_number": sum(
-            event["type"] == "EXECUTION_CHECKPOINT" for event in events
-        ),
+        "checkpoint_number": sum(event["type"] == "EXECUTION_CHECKPOINT" for event in events),
         "evidence_digest": evidence_digest,
         "state_digest": state["state_digest"],
     }
@@ -1789,9 +1787,7 @@ def record_execution_checkpoint(
                 )
             return _capsule_from_loaded(roadmap, events, state)
         if expected_state_digest != state["state_digest"]:
-            raise _fail(
-                "continuity_write_conflict", "Continuity state changed before checkpoint."
-            )
+            raise _fail("continuity_write_conflict", "Continuity state changed before checkpoint.")
         payload = requested | {
             "checkpoint_number": 1
             + sum(event["type"] == "EXECUTION_CHECKPOINT" for event in events),

@@ -118,9 +118,9 @@ and reported as `SYNCED` or `UNSUPPORTED`; a reported sync is evidence that
 the operating-system call completed, not proof against every device cache or
 power-loss scenario. Windows and Ubuntu CI exercise the actual platform paths.
 
-## Unreleased adaptive storage and targets
+## v1.3.0 candidate adaptive storage and targets
 
-The [adaptive AI workflow candidate](adaptive-ai-workflow.md) defines one
+The [v1.3.0 adaptive AI workflow candidate](adaptive-ai-workflow.md) defines one
 storage contract that can remain as compact files, add a local index, shard a
 very large local index, or apply explicit team concurrency controls. Escalation
 depends on measured need; no database becomes mandatory.

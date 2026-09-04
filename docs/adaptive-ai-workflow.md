@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [Roadmap continuity](continuity.md) · [Security](security.md) · [All guides](README.md)
 
-> **Unreleased candidate:** this page describes locally tested R11 contracts.
+> **v1.3.0 release candidate:** this page describes locally tested R11 contracts.
 > The current Stable release is still v1.2.1 and does not expose this complete
 > workflow as a public command surface.
 
@@ -49,7 +49,7 @@ a choice grants no authority. `AUTO PILOT` remains the direct expert route.
 Important exact decisions, such as publication or a changed risk boundary,
 still use one explicit copyable command.
 
-These are host-integration contracts, not new v1.2.1 CLI commands. The current
+These are host-integration contracts, not new v1.3.0 CLI commands. The current
 released flow continues to use its documented
 `opencntx flow start ... --approval "AUTO PILOT"` route.
 
@@ -151,7 +151,7 @@ Each target remains project-isolated, filtered and disabled by default. Local
 durable state stays canonical. Offline or conflicting targets are latched and
 reported; they do not erase or rewrite local truth.
 
-The R11 candidate provides the neutral target and batch contracts. It does not
+The v1.3.0 candidate provides the neutral target and batch contracts. It does not
 bundle a connector for every external product and does not authorize network
 writes. The Stable v1.2.1 private Git/GitHub replica remains the only released
 optional remote continuity route described in [Roadmap continuity](continuity.md).

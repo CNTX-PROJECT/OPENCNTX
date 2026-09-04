@@ -100,8 +100,6 @@ def _validate_index(value: Mapping[str, object], project_id: str) -> dict[str, A
         or not isinstance(projections, list)
     ):
         raise _fail("navigation_index_invalid", "Navigation index is invalid.")
-    assert isinstance(chats, list)
-    assert isinstance(notes, list)
     chat_ids = [item.get("chat_id") for item in chats if isinstance(item, Mapping)]
     note_ids = [item.get("note_id") for item in notes if isinstance(item, Mapping)]
     reservations = [item.get("reservation_key") for item in chats if isinstance(item, Mapping)]

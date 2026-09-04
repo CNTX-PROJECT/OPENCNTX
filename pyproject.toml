@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.2.1"
+version = "1.3.0"
 description = "Create small, explicit, verifiable context packages for one AI task."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -49,6 +49,7 @@ target-version = "py311"
 [tool.ruff.lint.per-file-ignores]
 "src/opencntx/cli_tasks.py" = ["PLR0911"] # A closed CLI dispatcher has eight terminal routes.
 "src/opencntx/cli_workspace.py" = ["S101"] # Assert narrows an internal optional dispatch result.
+"src/opencntx/adaptive_storage.py" = ["S608"] # Bound question-mark placeholders keep record values parameterized.
 "src/opencntx/continuity.py" = ["S603"] # Read-only Git adapters execute only the discovered Git binary with bounded arguments.
 "src/opencntx/continuity_sync.py" = ["S603"] # Private sync executes only bounded Git commands and never invokes a shell.
 "src/opencntx/layout_plan.py" = ["S603"] # Planning executes only fixed read-only Git identity queries.

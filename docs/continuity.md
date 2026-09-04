@@ -9,8 +9,8 @@ remain available.
 
 ## Fast route
 
-The commands in this guide describe Stable v1.2.1. The
-[unreleased adaptive-workflow candidate](adaptive-ai-workflow.md) defines how
+The commands in this guide describe the v1.3.0 release candidate. The
+[v1.3.0 adaptive-workflow candidate](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice
 without changing authority. It does not add a released CLI command.
 

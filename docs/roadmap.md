@@ -188,7 +188,7 @@ features or expose private project records.
   `opencntx-1.2.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
   every earlier immutable release.
 
-### Unreleased R11 candidate
+### v1.3.0 R11 release candidate
 
 - locally proved durable execution state, restart and rollover continuity,
   plain-language presentation and equivalent interactive or CLI start choices;
@@ -196,21 +196,23 @@ features or expose private project records.
   and risk-based assurance in one composed synthetic simulation;
 - added opt-in specification-companion and external-continuity contracts while
   keeping the core local, provider-neutral and free of new runtime dependencies;
-- documented the candidate separately from Stable v1.2.1. No merge, push, tag,
-  release or package-index publication is implied by this local proof.
+- prepared v1.3.0 for separate Draft-PR review while preserving immutable Stable
+  v1.2.1 history. No merge, tag, release or package-index publication is
+  implied by this candidate proof.
 
 ## Current state
 
-- Current package line: `v1.2.1`
-- Package version: `1.2.1`
+- Candidate package line: `v1.3.0`
+- Candidate package version: `1.3.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public release: live exact `v1.2.1` tag plus immutable matching GitHub Release;
+- Public Stable release: live exact `v1.2.1` tag plus immutable matching GitHub Release;
   every earlier release remains immutable
-- Distribution: exact Git tag plus the four verified GitHub Release assets
-  named above; no PyPI or TestPyPI package
+- Candidate distribution: expected `opencntx-1.3.0-py3-none-any.whl`,
+  `opencntx-1.3.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+  TestPyPI package
 
 ## Future work
 
