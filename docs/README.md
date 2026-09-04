@@ -25,6 +25,7 @@ optional routes for projects that already need those existing controls.
 | organize a longer project | [Workspace](workspace.md) |
 | audit roots, naming, ownership, and duplicates without writes | [Bounded workspace order](layout.md) |
 | keep a complete roadmap moving with one approval | [Roadmap continuity](continuity.md) |
+| review the locally tested next-workflow candidate | [Adaptive AI workflow candidate](adaptive-ai-workflow.md) |
 | look up an exact command | [Command reference](commands.md) |
 | solve a failure | [Troubleshooting](troubleshooting.md) |
 | understand what stays local | [Security in plain language](security.md) |
@@ -64,6 +65,13 @@ context package.
   current detail, evidence and next trigger in a restart-safe local store;
   export a portable capsule and optionally mirror filtered records to private
   Git or GitHub.
+
+## Unreleased workflow candidate
+
+- [Adaptive AI workflow candidate](adaptive-ai-workflow.md) — plain-language
+  host behavior, two-scope start authority, durable state, adaptive storage,
+  large-workload gates and voluntary companion or continuity adapters. This is
+  not part of the current Stable v1.2.1 command surface.
 
 ## Decisions and bounded work
 

@@ -136,6 +136,7 @@ route—never in a public issue.
 | look up an exact CLI path | [Command reference](docs/commands.md) |
 | solve an error | [Troubleshooting](docs/troubleshooting.md) |
 | understand privacy and safety | [Security](docs/security.md) |
+| review the locally tested next-workflow candidate | [Adaptive AI workflow candidate](docs/adaptive-ai-workflow.md) |
 | browse every guide | [Documentation home](docs/README.md) |
 
 ## Current public state

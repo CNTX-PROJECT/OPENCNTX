@@ -188,6 +188,17 @@ features or expose private project records.
   `opencntx-1.2.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
   every earlier immutable release.
 
+### Unreleased R11 candidate
+
+- locally proved durable execution state, restart and rollover continuity,
+  plain-language presentation and equivalent interactive or CLI start choices;
+- locally proved transactional updates, adaptive storage, a 4,000+ scale bridge
+  and risk-based assurance in one composed synthetic simulation;
+- added opt-in specification-companion and external-continuity contracts while
+  keeping the core local, provider-neutral and free of new runtime dependencies;
+- documented the candidate separately from Stable v1.2.1. No merge, push, tag,
+  release or package-index publication is implied by this local proof.
+
 ## Current state
 
 - Current package line: `v1.2.1`
@@ -210,6 +221,9 @@ tests, review, and merge.
 Ideas are evaluated against the product boundary. AI calls, automatic agents,
 cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
 or other expansion are not implied roadmap commitments.
+
+The locally tested [adaptive AI workflow candidate](adaptive-ai-workflow.md)
+is evidence for review, not a public promise or released surface.
 
 ## Related pages
 

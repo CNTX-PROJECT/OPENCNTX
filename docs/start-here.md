@@ -180,6 +180,10 @@ storage, chapters, task gates, playbooks, roles, or executor packages, continue
 with [Workspace](workspace.md). Those concepts are optional
 and are not prerequisites for a first package.
 
+For a clearly separated preview of locally tested behavior being considered
+after v1.2.1, read the [Adaptive AI workflow candidate](adaptive-ai-workflow.md).
+It is not an installation instruction or a released command reference.
+
 ## Upgrade or remove OPENCNTX
 
 For an upgrade, clone the next approved tag into a fresh directory and install
