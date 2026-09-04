@@ -188,7 +188,7 @@ features or expose private project records.
   `opencntx-1.2.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
   every earlier immutable release.
 
-### v1.3.0 R11 release candidate
+### v1.3.0 R11 adaptive workflow
 
 - locally proved durable execution state, restart and rollover continuity,
   plain-language presentation and equivalent interactive or CLI start choices;
@@ -196,22 +196,33 @@ features or expose private project records.
   and risk-based assurance in one composed synthetic simulation;
 - added opt-in specification-companion and external-continuity contracts while
   keeping the core local, provider-neutral and free of new runtime dependencies;
-- prepared v1.3.0 for separate Draft-PR review while preserving immutable Stable
-  v1.2.1 history. No merge, tag, release or package-index publication is
-  implied by this candidate proof.
+- published immutable v1.3.0 after separate Draft-PR, merge, CI and release
+  gates while preserving v1.2.1 and all earlier history; no package-index
+  publication was added.
+
+### v1.4.0 R12 visual system candidate
+
+- added the provider-neutral VISUAL_ARTIST and joint bounded-perfection review
+  contract without granting either role OWNER authority;
+- added canonical tokens, component states, content order, surface inventory,
+  a dependency-free local website and deterministic visual quality gate;
+- passed the representative visual/core pilot and received explicit OWNER
+  acceptance of the visual direction;
+- prepared v1.4.0 locally for separate GitHub integration and release gates
+  while preserving immutable Stable v1.3.0.
 
 ## Current state
 
-- Candidate package line: `v1.3.0`
-- Candidate package version: `1.3.0`
+- Candidate package line: `v1.4.0`
+- Candidate package version: `1.4.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public Stable release: live exact `v1.2.1` tag plus immutable matching GitHub Release;
+- Public Stable release: live exact `v1.3.0` tag plus immutable matching GitHub Release;
   every earlier release remains immutable
-- Candidate distribution: expected `opencntx-1.3.0-py3-none-any.whl`,
-  `opencntx-1.3.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Candidate distribution: expected `opencntx-1.4.0-py3-none-any.whl`,
+  `opencntx-1.4.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
@@ -224,8 +235,8 @@ Ideas are evaluated against the product boundary. AI calls, automatic agents,
 cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
 or other expansion are not implied roadmap commitments.
 
-The locally tested [adaptive AI workflow candidate](adaptive-ai-workflow.md)
-is evidence for review, not a public promise or released surface.
+The [adaptive AI workflow](adaptive-ai-workflow.md) is Stable in v1.3.0. The
+R12 visual system remains a v1.4.0 candidate until its separate release gates.
 
 ## Related pages
 

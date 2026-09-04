@@ -1,12 +1,11 @@
-# Adaptive AI workflow candidate
+# Adaptive AI workflow
 
 [Overview](../README.md) · [Get started](start-here.md) · [Roadmap continuity](continuity.md) · [Security](security.md) · [All guides](README.md)
 
-> **v1.3.0 release candidate:** this page describes locally tested R11 contracts.
-> The current Stable release is still v1.2.1 and does not expose this complete
-> workflow as a public command surface.
+> **Stable in v1.3.0:** this page describes the released R11 contracts. The R12
+> visual presentation extension is part of the unpublished v1.4.0 candidate.
 
-This candidate helps an AI-assisted project stay understandable and on track
+This workflow helps an AI-assisted project stay understandable and on track
 without assuming one AI provider, user interface, storage product, project
 size, or technical skill level. OPENCNTX remains model-free: a compatible AI
 host interprets the human request, while OPENCNTX records and verifies the
@@ -68,7 +67,7 @@ released flow continues to use its documented
 
 ## Durable state, not chat memory
 
-The candidate state capsule binds the roadmap revision, current assignment,
+The state capsule binds the roadmap revision, current assignment,
 current internal task, status, next action, next assignment, authority,
 continuation mode, recovery round and latest evidence digest.
 
@@ -164,17 +163,17 @@ Each target remains project-isolated, filtered and disabled by default. Local
 durable state stays canonical. Offline or conflicting targets are latched and
 reported; they do not erase or rewrite local truth.
 
-The v1.3.0 candidate provides the neutral target and batch contracts. It does not
+The v1.3.0 release provides the neutral target and batch contracts. It does not
 bundle a connector for every external product and does not authorize network
-writes. The Stable v1.2.1 private Git/GitHub replica remains the only released
+writes. The Stable v1.3.0 private Git/GitHub replica remains the only released
 optional remote continuity route described in [Roadmap continuity](continuity.md).
 
 ## Release boundary
 
 Local tests, a wheel build, a commit, or a green candidate report prove only
 technical readiness. Merge, push, tag, release creation and package-index
-publication remain separate explicit decisions. Until that publication gate
-is approved and verified, v1.2.1 remains the public Stable release.
+publication remain separate explicit decisions. v1.3.0 remains the public
+Stable release until a later candidate completes those publication gates.
 
 ## Related pages
 

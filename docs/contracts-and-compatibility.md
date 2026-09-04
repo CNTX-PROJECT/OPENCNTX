@@ -45,10 +45,13 @@ Version 1.2.1 optimizes those existing routes under a feature freeze. It adds
 no command, argument, schema, format major, runtime dependency, product layer,
 or mandatory migration and preserves every v1.2.0 durable-format boundary.
 
-Version 1.3.0 is a release candidate with additive R11 host contracts. It
-retains every accepted CLI route and supported durable-format read boundary;
-the immutable v1.2.1 release remains historical compatibility evidence until
-the candidate passes its separate integration and publication gates.
+Version 1.3.0 released the additive R11 host contracts. It retains every
+accepted CLI route and supported durable-format read boundary; immutable
+v1.2.1 remains historical compatibility evidence.
+
+Version 1.4.0 is an unpublished candidate with additive visual-intent and
+joint-review contracts. It adds no command, runtime dependency, format major,
+mandatory migration, provider call, deployment, or package-index route.
 
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe

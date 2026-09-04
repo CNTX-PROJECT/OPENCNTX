@@ -2,6 +2,27 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.4.0 - 2026-09-04
+
+### Added
+
+- Added the provider-neutral `VISUAL_ARTIST` role and closed visual-intent and
+  joint-review contracts, paired with `BOUNDED_PERFECTION` and explicit human
+  visual acceptance.
+- Added one canonical token system, accessible component/state reference,
+  task-first content map, product-wide surface inventory, and professional
+  dependency-free local website source.
+- Added deterministic visual quality, contrast, link, asset, performance and
+  regression checks with mandatory human review for every baseline change.
+
+### Changed
+
+- Applied one restrained visual language and semantic text fallback across all
+  OPENCNTX-owned human-facing surfaces while keeping third-party host chrome
+  outside product ownership.
+- Preserved the complete v1.3.0 command, durable-format, local-first, zero
+  runtime-dependency and no-package-index boundaries.
+
 ## 1.3.0 - 2026-09-04
 
 ### Added
@@ -17,9 +38,9 @@ All notable OPENCNTX changes are recorded here.
 
 ### Changed
 
-- Prepared the R11 release candidate for review. The immutable v1.2.1 Git tag
-  and GitHub Release remain the current public Stable installation until this
-  candidate is reviewed, merged, tagged, and released through separate gates.
+- Published the reviewed R11 result as immutable v1.3.0 Git tag and GitHub
+  Release while preserving every earlier release and keeping PyPI/TestPyPI
+  unpublished.
 
 ## 1.2.1 - 2026-09-01
 
