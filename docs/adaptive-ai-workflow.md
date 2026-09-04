@@ -2,8 +2,8 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [Roadmap continuity](continuity.md) · [Security](security.md) · [All guides](README.md)
 
-> **Stable in v1.3.0:** this page describes the released R11 contracts. The R12
-> visual presentation extension is part of the unpublished v1.4.0 candidate.
+> **Stable in v1.4.0:** this page describes the released R11 workflow and R12
+> visual presentation extension.
 
 This workflow helps an AI-assisted project stay understandable and on track
 without assuming one AI provider, user interface, storage product, project
@@ -163,17 +163,17 @@ Each target remains project-isolated, filtered and disabled by default. Local
 durable state stays canonical. Offline or conflicting targets are latched and
 reported; they do not erase or rewrite local truth.
 
-The v1.3.0 release provides the neutral target and batch contracts. It does not
+The v1.4.0 release provides the neutral target, batch and visual contracts. It does not
 bundle a connector for every external product and does not authorize network
-writes. The Stable v1.3.0 private Git/GitHub replica remains the only released
+writes. The Stable v1.4.0 private Git/GitHub replica remains the only released
 optional remote continuity route described in [Roadmap continuity](continuity.md).
 
 ## Release boundary
 
 Local tests, a wheel build, a commit, or a green candidate report prove only
 technical readiness. Merge, push, tag, release creation and package-index
-publication remain separate explicit decisions. v1.3.0 remains the public
-Stable release until a later candidate completes those publication gates.
+publication remain separate explicit decisions. v1.4.0 is the current public
+Stable release.
 
 ## Related pages
 

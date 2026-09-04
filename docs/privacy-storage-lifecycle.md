@@ -128,7 +128,7 @@ depends on measured need; no database becomes mandatory.
 It also defines disabled-by-default contracts for project-isolated continuity
 destinations such as a notes application or synchronized folder. Those
 contracts do not bundle product-specific connectors or authorize network
-writes. Stable v1.3.0 behavior remains the lifecycle and optional private
+writes. Stable v1.4.0 behavior remains the lifecycle and optional private
 Git/GitHub routes documented today.
 
 ## Sharing boundary

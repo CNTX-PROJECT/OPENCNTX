@@ -9,7 +9,7 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.4.0 candidate** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.4.0 Stable** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
@@ -35,17 +35,17 @@ OPENCNTX never uploads files and never sends a prompt for you.
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the exact v1.3.0 release in one command:
+`pipx` installed, install the exact v1.4.0 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.3.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.4.0"
 opencntx --version
 ```
 
 Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.3.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.4.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -144,9 +144,8 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Candidate | `v1.4.0` is locally proven; it is not yet pushed, merged, tagged, released, or installed |
-| Public Stable release | `v1.3.0` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
-| Candidate package | `opencntx 1.4.0`; every v1.3.0 CLI route and supported durable-format read is retained |
+| Public Stable release | `v1.4.0` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
+| Package | `opencntx 1.4.0`; every v1.3.0 CLI route and supported durable-format read is retained |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -154,16 +153,16 @@ route—never in a public issue.
 | Distribution | exact Git tag and four verified GitHub Release assets; no PyPI/TestPyPI package |
 | License | [Apache-2.0](LICENSE) |
 
-The v1.4.0 candidate must produce exactly:
+The immutable v1.4.0 GitHub Release contains exactly:
 
 - `opencntx-1.4.0-py3-none-any.whl`
 - `opencntx-1.4.0.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
-These are local candidate artifacts, not a release claim. The immutable
-v1.3.0 Release assets remain unchanged. See [Release artifacts](docs/release-artifacts.md)
-for the exact build and verification boundary.
+Locally built files remain unpublished candidates unless they match an asset
+attached to that Release. See [Release artifacts](docs/release-artifacts.md)
+for the exact build, checksum and verification boundary.
 
 ## Project routes
 

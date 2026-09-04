@@ -25,7 +25,7 @@ optional routes for projects that already need those existing controls.
 | organize a longer project | [Workspace](workspace.md) |
 | audit roots, naming, ownership, and duplicates without writes | [Bounded workspace order](layout.md) |
 | keep a complete roadmap moving with one approval | [Roadmap continuity](continuity.md) |
-| understand the Stable v1.3.0 AI workflow | [Adaptive AI workflow](adaptive-ai-workflow.md) |
+| understand the Stable v1.4.0 AI and visual workflow | [Adaptive AI workflow](adaptive-ai-workflow.md) |
 | look up an exact command | [Command reference](commands.md) |
 | solve a failure | [Troubleshooting](troubleshooting.md) |
 | understand what stays local | [Security in plain language](security.md) |
@@ -67,13 +67,13 @@ context package.
   export a portable capsule and optionally mirror filtered records to private
   Git or GitHub.
 
-## Stable v1.3.0 workflow
+## Stable v1.4.0 workflow
 
 - [Adaptive AI workflow](adaptive-ai-workflow.md) — plain-language
   host behavior, two-scope start authority, durable state, adaptive storage,
-  large-workload gates and voluntary companion or continuity adapters. This is
-  released in immutable public Stable v1.3.0. The R12 visual extension remains
-  part of the unpublished v1.4.0 candidate.
+  large-workload gates, voluntary companion or continuity adapters and the
+  visual presentation contract. This is released in immutable public Stable
+  v1.4.0.
 
 ## Decisions and bounded work
 
