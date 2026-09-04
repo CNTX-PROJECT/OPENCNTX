@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/execution-state-capsule-v1.schema.json",
+  "title": "OPENCNTX execution state capsule v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "roadmap_revision",
+    "current_assignment",
+    "current_internal_task",
+    "assignment_status",
+    "next_internal_action",
+    "next_assignment_after_completion",
+    "authority_state",
+    "continuation_mode",
+    "recovery_round",
+    "checkpoint_number",
+    "evidence_digest",
+    "state_digest",
+    "capsule_digest"
+  ],
+  "properties": {
+    "format": {"const": "opencntx-execution-state-capsule"},
+    "format_version": {"const": 1},
+    "roadmap_revision": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "current_assignment": {"type": ["string", "null"]},
+    "current_internal_task": {"type": ["string", "null"]},
+    "assignment_status": {"enum": ["ACTIVE", "RECOVERY_REQUIRED", "BLOCKED", "COMPLETED"]},
+    "next_internal_action": {"type": ["string", "null"]},
+    "next_assignment_after_completion": {"type": ["string", "null"]},
+    "authority_state": {"enum": ["APPROVED_AUTO_PILOT", "OWNER_REQUIRED"]},
+    "continuation_mode": {"enum": ["CONTINUE_AUTOMATICALLY", "STOP_FAIL_CLOSED", "STOP_COMPLETE"]},
+    "recovery_round": {"type": "integer", "minimum": 0, "maximum": 3},
+    "checkpoint_number": {"type": "integer", "minimum": 0},
+    "evidence_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
