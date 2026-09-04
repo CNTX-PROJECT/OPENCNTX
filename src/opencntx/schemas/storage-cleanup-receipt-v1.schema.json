@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-storage-cleanup-receipt"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "plan_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "removed_digests": {"items": {"pattern": "^[0-9a-f]{64}$", "type": "string"}, "type": "array", "uniqueItems": true},
+    "reclaimed_bytes": {"minimum": 0, "type": "integer"},
+    "unknown_files_untouched": {"const": true},
+    "status": {"const": "COMPLETED"},
+    "revision": {"minimum": 0, "type": "integer"},
+    "state_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "receipt_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "plan_digest", "removed_digests", "reclaimed_bytes", "unknown_files_untouched", "status", "revision", "state_digest", "receipt_digest"],
+  "type": "object"
+}

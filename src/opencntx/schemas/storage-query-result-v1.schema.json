@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-storage-query-result"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL"]},
+    "query_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "strategy": {"enum": ["MANIFEST_SCAN", "SQLITE_INDEX"]},
+    "semantic_status": {"enum": ["DISABLED", "ADAPTER_REQUIRED"]},
+    "scanned_records": {"minimum": 0, "type": "integer"},
+    "results": {"items": {"type": "object"}, "type": "array"},
+    "next_cursor": {"type": ["integer", "null"]},
+    "state_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "result_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "profile", "query_digest", "strategy", "semantic_status", "scanned_records", "results", "next_cursor", "state_digest", "result_digest"],
+  "type": "object"
+}

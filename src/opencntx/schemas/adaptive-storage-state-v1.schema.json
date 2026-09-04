@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-adaptive-storage-state"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "profile": {"enum": ["TINY_LOCAL", "LOCAL_INDEXED", "LARGE_LOCAL"]},
+    "revision": {"minimum": 0, "type": "integer"},
+    "soft_limit_bytes": {"minimum": 0, "type": "integer"},
+    "hard_limit_bytes": {"minimum": 1, "type": "integer"},
+    "rollback_reserve_bytes": {"minimum": 0, "type": "integer"},
+    "objects": {"type": "object"},
+    "records": {"type": "object"},
+    "generations": {"items": {"type": "object"}, "type": "array"},
+    "audit": {"items": {"type": "object"}, "type": "array"},
+    "state_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "profile", "revision", "soft_limit_bytes", "hard_limit_bytes", "rollback_reserve_bytes", "objects", "records", "generations", "audit", "state_digest"],
+  "type": "object"
+}

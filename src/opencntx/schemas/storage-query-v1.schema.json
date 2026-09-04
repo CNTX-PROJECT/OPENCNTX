@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "format": {"const": "opencntx-storage-query"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string"},
+    "exact": {"type": ["string", "null"]},
+    "text": {"type": ["string", "null"]},
+    "relation_to": {"type": ["string", "null"]},
+    "data_class": {"type": ["string", "null"]},
+    "cursor": {"minimum": 0, "type": "integer"},
+    "limit": {"maximum": 100, "minimum": 1, "type": "integer"},
+    "scan_budget": {"maximum": 100000, "minimum": 1, "type": "integer"},
+    "semantic_requested": {"type": "boolean"},
+    "query_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["format", "format_version", "project_id", "exact", "text", "relation_to", "data_class", "cursor", "limit", "scan_budget", "semantic_requested", "query_digest"],
+  "type": "object"
+}
