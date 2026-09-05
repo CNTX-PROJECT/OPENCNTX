@@ -45,6 +45,10 @@ belongs to the connected platform adapter, not to string validation here.
 Evidence references associate outcomes, but do not establish content coverage,
 usability, completion or OWNER acceptance merely by existing.
 
-Later R15 work connects physical execution, planning/coverage, continuation and
-durable handoff using this shared boundary. Until that combined proof exists,
-this contract must not be marketed as complete goal-bound enforcement.
+The development candidate connects physical execution, planning/coverage,
+continuation and [durable handoff](GOAL_HANDOFF_CONTRACT.md) using this boundary.
+`tests/test_r15_integrated.py` exercises the original question through the closed
+Windows action route and an actual restarted handoff. This combined proof does
+not extend enforcement to arbitrary Codex tools, untrusted supervisors or an
+active installation. Host limits in [the reference contract](REFERENCE_FIXTURE_HOST.md)
+continue to apply.

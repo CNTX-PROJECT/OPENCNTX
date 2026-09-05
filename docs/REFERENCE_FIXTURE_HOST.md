@@ -19,8 +19,10 @@ current capsule and performing the action. A concurrent native writer refuses;
 changed state requires a new binding. The host reuses `decide_finalization`,
 including bounded recovery, instead of inventing a separate continuation rule.
 Unknown/AI-only provenance cannot authorize this fixture writer. In-memory
-single-use state and physical preconditions refuse replays; durable execution
-receipt and cross-process restart integration remain separate R15 work.
+single-use state and physical preconditions refuse replays. Native-bound progress
+and [handoff/ACK integration](GOAL_HANDOFF_CONTRACT.md) retain open outcomes across
+process restart; physical preconditions still refuse a repeated mutation. An ACK
+reports NOT_PERFORMED and is not a durable success receipt for arbitrary actions.
 
 ## Exact resources and recovery
 
@@ -43,6 +45,10 @@ rollback. The response is PARTIAL_RECOVERY_REQUIRED and originals/backups remain
 available. Unpublished pending temporary objects disappear when their handles
 close. No user file or backup is deleted for cleanup. Ordinary exceptions can be
 recovered; atomic three-file recovery across power/process loss is not claimed.
+Recovery obtains the actual current paths from the still-held Windows handles,
+so an error after a completed rename cannot bypass recovery through stale Python
+bookkeeping. Unexpected positions or competing destinations fail closed; a
+successful rollback also reads back the original paths and bytes.
 
 ## Proof and platform boundary
 
