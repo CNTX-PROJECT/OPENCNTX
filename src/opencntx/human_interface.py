@@ -159,3 +159,10 @@ def select_output_profile(profile: str = "HUMAN_SIMPLE", *, scope: str = "RESPON
         "authority_changed": False,
     }
     return value | {"selection_digest": _value_digest(value)}
+
+
+def assess_task_size(facts: Any) -> dict[str, Any]:
+    """Classify host-interpreted task meaning without inventing project state."""
+    from .task_assessment import classify_task
+
+    return classify_task(facts)

@@ -24,9 +24,16 @@ from opencntx.continuity import (
 from opencntx.goal_binding import HostSource
 from opencntx.human_interface import build_intent_contract
 from opencntx.reference_host import MAX_REQUEST, ReferenceHost, serve_reference_host
+from opencntx.task_assessment import TaskFacts
 
 
-def host(root: Path, *, source_role: str = "OWNER", fixture: Path | None = None) -> ReferenceHost:
+def host(
+    root: Path,
+    *,
+    source_role: str = "OWNER",
+    fixture: Path | None = None,
+    assessment_facts: TaskFacts | None = None,
+) -> ReferenceHost:
     intent = build_intent_contract(
         human_intent="Replace exactly parent files, preserve all children and backups.",
         language="en",
@@ -48,6 +55,7 @@ def host(root: Path, *, source_role: str = "OWNER", fixture: Path | None = None)
         ),
         request_id="FIXTURE-REQUEST",
         revision=1,
+        assessment_facts=assessment_facts,
     )
 
 
@@ -118,6 +126,21 @@ class ReferenceHostTests(unittest.TestCase):
         target = self.fixture / f.NAMES[0]
         target.rename(target.with_suffix(".retained.txt"))
         self.denied_unchanged(self.request)
+
+    def test_complex_task_cannot_write_without_hierarchy(self) -> None:
+        for facts in (
+            TaskFacts(kind="MULTI_PHASE", dependent_phases=2),
+            TaskFacts(kind="MULTI_STREAM", independent_large_streams=2),
+        ):
+            with self.subTest(facts=facts):
+                self.host = host(self.root, assessment_facts=facts)
+                reply = self.denied_unchanged(self.host.expected.payload())
+                self.assertIn("planning", reply["reason"].lower())
+
+    def test_uncertainty_cannot_masquerade_write_as_source_probe(self) -> None:
+        self.host = host(self.root, assessment_facts=TaskFacts(uncertainty="NEEDS_PROBE"))
+        reply = self.denied_unchanged(self.host.expected.payload())
+        self.assertIn("reconnaissance", reply["reason"].lower())
 
     def test_client_cannot_rebind_or_rehash_child_target(self) -> None:
         self.request["action"]["targets"][0] = "parent/child/00.txt"

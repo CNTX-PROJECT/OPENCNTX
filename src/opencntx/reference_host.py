@@ -23,6 +23,7 @@ from .continuity import (
     validate_current_goal_binding,
 )
 from .goal_binding import HostSource, build_goal_binding
+from .task_assessment import TaskFacts, assess_bound_task, require_assessed_broad_execution
 
 MAX_REQUEST = 65_536
 
@@ -64,6 +65,7 @@ class ReferenceHost:
         source: HostSource | None,
         request_id: str,
         revision: int,
+        assessment_facts: TaskFacts | None = None,
     ) -> None:
         self.project_root = project_root
         self.consumed = False
@@ -105,6 +107,11 @@ class ReferenceHost:
                 action=action,
                 source=source,
             )
+            self.assessment = assess_bound_task(
+                self.expected,
+                assessment_facts or TaskFacts(),
+                reason="Trusted supervisor facts for the fixed parent fixture action.",
+            )
 
     def dispatch(self, message: object) -> dict[str, Any]:
         """The whole client surface; no fixture mutation precedes bound validation."""
@@ -119,6 +126,7 @@ class ReferenceHost:
                 bound = validate_current_goal_binding(
                     self.project_root, message, expected=self.expected
                 )
+                require_assessed_broad_execution(self.assessment, self.expected)
                 if (
                     bound["request"]["source"]["role"] != "OWNER"
                     or bound["intent_v1"]["authority_state"] != "APPROVED"
