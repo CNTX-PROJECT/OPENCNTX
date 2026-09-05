@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "request",
+    "capsule_digest",
+    "matrix_digest",
+    "open_outcome_ids",
+    "goal_status",
+    "decision",
+    "reason",
+    "proposed_outcome",
+    "next_outcome_id",
+    "authority_changed",
+    "context_digest"
+  ],
+  "properties": {
+    "format": {
+      "const": "opencntx-goal-output-context"
+    },
+    "format_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "request": {
+      "$ref": "goal-binding-v2.schema.json#/properties/request"
+    },
+    "capsule_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "matrix_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "open_outcome_ids": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "goal_status": {
+      "enum": [
+        "PARTIAL",
+        "TECHNICALLY_COMPLETE"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "CONTINUE",
+        "REQUEST_OWNER",
+        "BLOCKED",
+        "COMPLETE_ASSIGNMENT",
+        "COMPLETE_ROADMAP",
+        "RECONCILE_REQUIRED"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "proposed_outcome": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "next_outcome_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "authority_changed": {
+      "const": false
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

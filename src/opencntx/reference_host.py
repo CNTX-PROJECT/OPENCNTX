@@ -23,6 +23,7 @@ from .continuity import (
     validate_current_goal_binding,
 )
 from .goal_binding import HostSource, build_goal_binding
+from .goal_followup import enforce_goal_followup
 from .goal_progress import load_goal_progress
 from .task_assessment import TaskFacts, assess_bound_task, require_assessed_broad_execution
 
@@ -129,6 +130,7 @@ class ReferenceHost:
                 bound = validate_current_goal_binding(
                     self.project_root, message, expected=self.expected
                 )
+                enforce_goal_followup(self.project_root, self.expected)
                 progress = (
                     None
                     if self.progress_node_id is None

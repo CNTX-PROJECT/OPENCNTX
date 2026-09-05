@@ -10,10 +10,12 @@ from opencntx.continuity import (
     ContinuityError,
     _digest,
     _value_digest,
+    advance_flow,
     execution_state_capsule,
     start_flow,
 )
 from opencntx.goal_binding import HostSource, build_goal_binding
+from opencntx.goal_followup import compile_goal_context
 from opencntx.goal_progress import build_goal_progress, persist_goal_progress
 from opencntx.human_interface import build_intent_contract
 from opencntx.outcome_coverage import (
@@ -294,6 +296,15 @@ class OutcomeCoverageTests(unittest.TestCase):
         self.assertEqual(result["acceptance"], "UNKNOWN")
         with self.assertRaises(ContinuityError):
             compile_current_outcomes(self.root, fresh, synthesis_reference="unbound.json")
+        advance_flow(self.root, outcome="PASS", evidence_paths=["evidence/synthesis.json"])
+        closed_goal = self.goal(
+            "A", "source-A.json", reports[0].payload()["query"]["source_sha256"]
+        )
+        closed = compile_goal_context(
+            self.root, closed_goal, synthesis_reference="evidence/synthesis.json"
+        )
+        self.assertEqual(closed["decision"], "COMPLETE_ROADMAP")
+        self.assertEqual(closed["open_outcome_ids"], [])
 
     def test_scale_has_exact_independent_denominator_and_findings(self) -> None:
         for count in (10, 100, 1000, 4001):

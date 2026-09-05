@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "request",
+    "stopped",
+    "attempts",
+    "followup_digest"
+  ],
+  "properties": {
+    "format": {
+      "const": "opencntx-goal-followup"
+    },
+    "format_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "request": {
+      "$ref": "goal-binding-v2.schema.json#/properties/request"
+    },
+    "stopped": {
+      "type": "boolean"
+    },
+    "attempts": {
+      "type": "array",
+      "maxItems": 150,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request_id",
+          "revision",
+          "outcome_id",
+          "capability",
+          "operation",
+          "targets",
+          "fingerprint",
+          "action_fingerprint",
+          "error_class",
+          "capabilities_digest",
+          "relevant_evidence_digest"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "outcome_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "capability": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "operation": {
+            "enum": [
+              "READ_EXACT",
+              "REPLACE_EXACT"
+            ]
+          },
+          "targets": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "action_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "error_class": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "capabilities_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "relevant_evidence_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "followup_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

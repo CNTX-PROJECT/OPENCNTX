@@ -307,12 +307,15 @@ def persist_goal_progress(
 def load_goal_progress(root: Path, goal: BoundGoal) -> GoalProgress:
     """Only native-bound objects are current; unreferenced prepared files are inert."""
     store, _, events, state = _load_store(root)
+    assignment = state["current_assignment"]
+    if assignment is None and state["status"] == "COMPLETE" and state["completed"]:
+        assignment = state["completed"][-1]
     event = next(
         (
             event
             for event in reversed(events)
             if event["type"] == "EXECUTION_CHECKPOINT"
-            and event["payload"]["assignment_id"] == state["current_assignment"]
+            and event["payload"]["assignment_id"] == assignment
             and event["payload"]["current_internal_task"] == "GOAL_PROGRESS_V2"
         ),
         None,

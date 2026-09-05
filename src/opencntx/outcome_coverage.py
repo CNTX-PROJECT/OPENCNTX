@@ -104,7 +104,10 @@ def run_source_query(
     inspect_limit: int | None = None,
 ) -> OutcomeReport:
     """Actual read route: no caller completeness/count flags and no writes."""
+    from .goal_followup import enforce_goal_followup
+
     bound = validate_current_goal_binding(root, message, expected=expected)
+    enforce_goal_followup(root, expected)
     query.payload()
     action = bound["action"]
     if (
