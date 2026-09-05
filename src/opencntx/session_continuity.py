@@ -315,6 +315,7 @@ def prepare_session_handoff(
     rollback_boundary: str,
     exclusions: Sequence[str] = (),
     evidence_object_digests: Sequence[str] = (),
+    expected_state_digest: str | None = None,
 ) -> dict[str, Any]:
     """Atomically prepare one compact state-bound handoff before target creation."""
     selected_id = _identifier(handoff_id, "handoff_id")
@@ -331,6 +332,8 @@ def prepare_session_handoff(
     store = store_path(project_root)
     with _writer_lock(store / ".operation.lock"):
         store, roadmap, events, state = _load_store(project_root)
+        if expected_state_digest is not None and state["state_digest"] != expected_state_digest:
+            raise _fail("continuity_session_handoff_conflict", "Handoff preparation state changed.")
         evidence = [verify_evidence_object(project_root, value) for value in evidence_digests]
         capsule = _capsule_from_loaded(roadmap, events, state)
         current = state["current_assignment"]
@@ -413,6 +416,7 @@ def accept_session_handoff(
     *,
     handoff_id: str,
     target_part: str,
+    expected_state_digest: str | None = None,
 ) -> dict[str, Any]:
     """Reread live durable state and atomically acknowledge one handoff."""
     selected_id = _identifier(handoff_id, "handoff_id")
@@ -420,6 +424,8 @@ def accept_session_handoff(
     store = store_path(project_root)
     with _writer_lock(store / ".operation.lock"):
         store, roadmap, events, state = _load_store(project_root)
+        if expected_state_digest is not None and state["state_digest"] != expected_state_digest:
+            raise _fail("continuity_session_handoff_conflict", "Handoff acceptance state changed.")
         record = _read_handoff(store, selected_id)
         if record.get("project_id") != roadmap["project_id"] or record.get("roadmap_id") != roadmap["roadmap_id"]:
             raise _fail("continuity_session_handoff_cross_project", "Handoff belongs to another project.")

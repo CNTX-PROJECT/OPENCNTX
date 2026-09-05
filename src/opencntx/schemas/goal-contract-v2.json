@@ -1,0 +1,17 @@
+{
+  "format": "opencntx-goal-contract",
+  "format_version": 2,
+  "compatibility": "EXPLICIT_VERSION_BOUNDARY",
+  "schemas": [
+    "goal-binding-v2.schema.json",
+    "task-assessment-v2.schema.json",
+    "goal-progress-v2.schema.json",
+    "outcome-report-v2.schema.json",
+    "outcome-matrix-v2.schema.json",
+    "goal-followup-v2.schema.json",
+    "goal-output-context-v2.schema.json",
+    "human-output-v2.schema.json",
+    "goal-handoff-evidence-v2.schema.json",
+    "goal-storage-envelope-v2.schema.json"
+  ]
+}

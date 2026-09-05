@@ -343,7 +343,9 @@ def _load_bound_roadmap(path: Path) -> dict[str, Any]:
         raise _fail("continuity_store_invalid", f"Cannot read valid JSON: {path}") from exc
     if not isinstance(value, dict):
         raise _fail("continuity_store_invalid", f"JSON root must be an object: {resolved}")
-    roadmap = validate_roadmap(value)
+    from .continuity_version import unwrap_goal_storage
+
+    roadmap = validate_roadmap(unwrap_goal_storage(value))
     _remember(_ROADMAP_CACHE, resolved, (digest, roadmap), maximum=128)
     return roadmap
 

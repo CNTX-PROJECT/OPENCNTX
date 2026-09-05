@@ -15,6 +15,7 @@ from opencntx.transactional_update import (
     classify_path_capability,
     export_legacy_transaction_history,
     migration_readiness,
+    recover_interrupted_update,
     update_postflight,
 )
 from opencntx.workspace import WorkspaceError, init_workspace
@@ -245,6 +246,31 @@ class TransactionalUpdateTests(unittest.TestCase):
             (Path(components[0]["active_path"]) / "version.txt").read_text(encoding="utf-8"),
             "old\n",
         )
+
+    def test_rollback_preserves_later_user_work_and_all_recovery_sources(self) -> None:
+        root, components = self.update_fixture("later-work")
+        plan = self.plan(root, components)
+        active = Path(components[0]["active_path"])
+        later = active / "later-user-work.txt"
+        original_bytes = (active / "version.txt").read_bytes()
+
+        def fail(phase: str) -> None:
+            if phase == "AFTER_ACTIVATE:RUNTIME":
+                later.write_bytes(b"irreplaceable later work\n")
+                raise RuntimeError("injected after later user work")
+
+        with self.assertRaisesRegex(WorkspaceError, "preserved"):
+            apply_update_plan(
+                plan, approval=f"APPLY UPDATE {plan['plan_digest']}", fault_hook=fail
+            )
+        self.assertTrue(later.is_file(), "Rollback must not erase later user work")
+        self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
+        retired = root / ".opencntx-update" / "retired" / str(plan["plan_id"]) / "RUNTIME"
+        self.assertEqual((retired / "version.txt").read_bytes(), original_bytes)
+        self.assertEqual((Path(str(plan["backup_path"])) / "RUNTIME" / "version.txt").read_bytes(), original_bytes)
+        with self.assertRaisesRegex(WorkspaceError, "preserved"):
+            recover_interrupted_update(plan)
+        self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
 
     def test_completed_receipt_never_hides_later_active_drift(self) -> None:
         root, components = self.update_fixture("postflight-drift")
