@@ -21,7 +21,7 @@ from .continuity import (
     verify_capsule,
 )
 from .continuity_sync import apply_sync, build_sync_preview, configure_sync, sync_status
-from .host_protocol import claim_host, host_status, resume_host
+from .host_protocol import claim_host, guarded_copy, host_status, resume_host
 
 
 def register_continuity_commands(
@@ -81,6 +81,13 @@ def register_continuity_commands(
     inspect.add_argument("target", nargs="?", default=".")
     _root_argument(inspect)
     inspect.add_argument("--json", action="store_true", help="print machine-readable JSON")
+
+    guarded_copy_parser = commands.add_parser(
+        "guarded-copy", help="copy one exact bound file through the closed host route"
+    )
+    guarded_copy_parser.add_argument("action", help="closed guarded-copy action JSON below root")
+    _root_argument(guarded_copy_parser)
+    guarded_copy_parser.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     capsule = commands.add_parser("capsule", help="export, verify or import a portable capsule")
     capsule_commands = capsule.add_subparsers(dest="flow_capsule_command", required=True)
@@ -269,6 +276,9 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
         return 0
     if command == "inspect":
         _print(inspect_adapter(root, args.adapter, args.target))
+        return 0
+    if command == "guarded-copy":
+        _print(guarded_copy(root, Path(args.action)))
         return 0
     if command == "capsule":
         return _dispatch_capsule(args)

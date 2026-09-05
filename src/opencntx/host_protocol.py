@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import re
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +25,19 @@ from .continuity import (
 )
 
 HOST_ID_PATTERN = re.compile(r"[A-Z][A-Z0-9._-]{1,79}\Z")
+SHA256_PATTERN = re.compile(r"[0-9a-f]{64}\Z")
+GUARDED_COPY_FORMAT = "opencntx-guarded-copy"
+GUARDED_COPY_FIELDS = frozenset(
+    {
+        "format",
+        "format_version",
+        "source",
+        "source_sha256",
+        "target",
+        "target_sha256",
+        "approved_target",
+    }
+)
 
 
 def _host_id(value: str) -> str:
@@ -30,6 +45,104 @@ def _host_id(value: str) -> str:
     if HOST_ID_PATTERN.fullmatch(text) is None:
         raise _fail("continuity_host_invalid", "Host ID must be a portable uppercase identifier.")
     return text
+
+
+def _guarded_relative_path(value: object, *, field: str) -> Path:
+    if not isinstance(value, str) or not value or "\\" in value:
+        raise _fail("guarded_copy_invalid", f"{field} must be a portable relative path.")
+    candidate = Path(value)
+    if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
+        raise _fail("guarded_copy_invalid", f"{field} must be a portable relative path.")
+    return candidate
+
+
+def _guarded_digest(value: object, *, field: str) -> str:
+    if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
+        raise _fail("guarded_copy_invalid", f"{field} must be a lowercase SHA-256 digest.")
+    return value
+
+
+def _guarded_path(root: Path, relative: Path, *, field: str) -> Path:
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise _fail("guarded_copy_escape", f"{field} must not traverse a symbolic link.")
+    try:
+        resolved = current.resolve(strict=True)
+        resolved.relative_to(root)
+    except (OSError, ValueError) as exc:
+        raise _fail("guarded_copy_escape", f"{field} escapes the guarded root.") from exc
+    if not resolved.is_file():
+        raise _fail("guarded_copy_invalid", f"{field} must name one existing regular file.")
+    return resolved
+
+
+def _guarded_action(root: Path, action_path: Path) -> tuple[dict[str, object], Path, Path]:
+    try:
+        selected_root = root.resolve(strict=True)
+        selected_action = action_path.resolve(strict=True)
+        selected_action.relative_to(selected_root)
+        raw = json.loads(selected_action.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        raise _fail("guarded_copy_invalid", "Guarded-copy action must be readable JSON below root.") from exc
+    if not isinstance(raw, dict) or set(raw) != GUARDED_COPY_FIELDS:
+        raise _fail("guarded_copy_invalid", "Guarded-copy action has unknown or missing fields.")
+    if raw.get("format") != GUARDED_COPY_FORMAT or raw.get("format_version") != 1:
+        raise _fail("guarded_copy_invalid", "Guarded-copy action format is unsupported.")
+    source_relative = _guarded_relative_path(raw["source"], field="source")
+    target_relative = _guarded_relative_path(raw["target"], field="target")
+    approved_relative = _guarded_relative_path(raw["approved_target"], field="approved_target")
+    if target_relative != approved_relative:
+        raise _fail("guarded_copy_target_mismatch", "Target does not equal the approved exact target.")
+    source = _guarded_path(selected_root, source_relative, field="source")
+    target = _guarded_path(selected_root, target_relative, field="target")
+    if source == target:
+        raise _fail("guarded_copy_invalid", "Source and target must be different files.")
+    if _digest(source.read_bytes()) != _guarded_digest(raw["source_sha256"], field="source_sha256"):
+        raise _fail("guarded_copy_source_drift", "Source bytes differ from the bound action.")
+    if _digest(target.read_bytes()) != _guarded_digest(raw["target_sha256"], field="target_sha256"):
+        raise _fail("guarded_copy_target_drift", "Target bytes differ from the bound action.")
+    return raw, source, target
+
+
+def guarded_copy(root: Path, action_path: Path) -> dict[str, object]:
+    """Copy one already-bound file through the closed supported host route.
+
+    This deliberately accepts a small JSON action rather than a shell command.
+    Its enforced claim is limited to this route; request lineage is added in the
+    later shared-contract assignment.
+    """
+    action, source, target = _guarded_action(root, action_path)
+    source_bytes = source.read_bytes()
+    before = target.read_bytes()
+    if _digest(source_bytes) != str(action["source_sha256"]):
+        raise _fail("guarded_copy_source_drift", "Source changed before the guarded write.")
+    if _digest(before) != str(action["target_sha256"]):
+        raise _fail("guarded_copy_target_drift", "Target changed before the guarded write.")
+    temporary_name: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as temporary:
+            temporary_name = temporary.name
+            temporary.write(source_bytes)
+            temporary.flush()
+        Path(temporary_name).replace(target)
+    finally:
+        if temporary_name is not None:
+            Path(temporary_name).unlink(missing_ok=True)
+    receipt = {
+        "format": "opencntx-guarded-copy-receipt",
+        "format_version": 1,
+        "action_digest": _value_digest(action),
+        "source": str(action["source"]),
+        "target": str(action["target"]),
+        "source_sha256": _digest(source_bytes),
+        "target_before_sha256": _digest(before),
+        "target_after_sha256": _digest(target.read_bytes()),
+        "enforcement": "ENFORCED_CLOSED_COPY_ROUTE",
+        "scope": "one existing regular source and one exact existing target",
+    }
+    return receipt | {"receipt_digest": _value_digest(receipt)}
 
 
 def _last_handoff(store: Path, state: dict[str, Any]) -> tuple[str | None, str | None]:

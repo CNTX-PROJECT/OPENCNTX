@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import ast
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -157,7 +160,7 @@ class HostProtocolTests(unittest.TestCase):
             with self.assertRaises(ContinuityError):
                 health_report(root)
 
-    def test_authority_is_bound_and_protocol_has_no_execution_primitive(self) -> None:
+    def test_authority_is_bound_and_claim_protocol_remains_nonexecuting(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = project(Path(temporary_directory))
             delivery = host_status(root, "HOST-A")
@@ -180,6 +183,85 @@ class HostProtocolTests(unittest.TestCase):
         }
         self.assertNotIn("subprocess", imported)
         self.assertNotIn("os", imported)
+
+    def test_closed_cli_copy_route_rejects_wrong_and_unbounded_actions_before_write(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            (root / "parent").mkdir()
+            (root / "child").mkdir()
+            source = root / "source.txt"
+            expected = root / "parent" / "same-name.txt"
+            wrong = root / "child" / "same-name.txt"
+            source.write_text("approved bytes\n", encoding="utf-8")
+            expected.write_text("old parent bytes\n", encoding="utf-8")
+            wrong.write_text("protected child bytes\n", encoding="utf-8")
+
+            def action(target: str, approved_target: str, **extra: object) -> Path:
+                value: dict[str, object] = {
+                    "format": "opencntx-guarded-copy",
+                    "format_version": 1,
+                    "source": "source.txt",
+                    "source_sha256": __import__("hashlib").sha256(source.read_bytes()).hexdigest(),
+                    "target": target,
+                    "target_sha256": __import__("hashlib").sha256(
+                        (root / target).read_bytes()
+                    ).hexdigest(),
+                    "approved_target": approved_target,
+                }
+                value.update(extra)
+                path = root / "action.json"
+                path.write_text(json.dumps(value), encoding="utf-8")
+                return path
+
+            environment = os.environ.copy()
+            existing = environment.get("PYTHONPATH")
+            environment["PYTHONPATH"] = os.pathsep.join(
+                part for part in (str(ROOT / "src"), existing) if part
+            )
+
+            def invoke(path: Path) -> subprocess.CompletedProcess[str]:
+                return subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "opencntx",
+                        "flow",
+                        "guarded-copy",
+                        str(path),
+                        "--root",
+                        str(root),
+                        "--json",
+                    ],
+                    cwd=root,
+                    env=environment,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+            rejected = invoke(action("child/same-name.txt", "parent/same-name.txt"))
+            self.assertEqual(2, rejected.returncode)
+            self.assertIn("guarded_copy_target_mismatch", rejected.stderr)
+            self.assertEqual("protected child bytes\n", wrong.read_text(encoding="utf-8"))
+            self.assertEqual("old parent bytes\n", expected.read_text(encoding="utf-8"))
+
+            unbounded = invoke(
+                action(
+                    "parent/same-name.txt",
+                    "parent/same-name.txt",
+                    command="copy source.txt parent/same-name.txt",
+                )
+            )
+            self.assertEqual(2, unbounded.returncode)
+            self.assertIn("guarded_copy_invalid", unbounded.stderr)
+            self.assertEqual("old parent bytes\n", expected.read_text(encoding="utf-8"))
+
+            accepted = invoke(action("parent/same-name.txt", "parent/same-name.txt"))
+            self.assertEqual(0, accepted.returncode, accepted.stderr)
+            receipt = json.loads(accepted.stdout)
+            self.assertEqual("ENFORCED_CLOSED_COPY_ROUTE", receipt["enforcement"])
+            self.assertEqual(source.read_text(encoding="utf-8"), expected.read_text(encoding="utf-8"))
+            self.assertEqual("protected child bytes\n", wrong.read_text(encoding="utf-8"))
 
     def test_host_claim_schema_is_closed(self) -> None:
         schema = json.loads(
