@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [Roadmap continuity](continuity.md) · [Security](security.md) · [All guides](README.md)
 
-> **Stable in v1.4.0:** this page describes the released R11 workflow and R12
+> **Stable in v1.5.0:** this page describes the released R11 workflow and R12
 > visual presentation extension.
 
 This workflow helps an AI-assisted project stay understandable and on track
@@ -62,7 +62,7 @@ Important exact decisions, such as publication or a changed risk boundary,
 still use one explicit copyable command.
 
 These are host-integration contracts, not separate CLI commands. v1.3.0
-introduced the contracts; the current v1.4.0 flow continues to use its documented
+introduced the contracts; the current v1.5.0 flow continues to use its documented
 `opencntx flow start ... --approval "AUTO PILOT"` route.
 
 ## Durable state, not chat memory
@@ -163,17 +163,17 @@ Each target remains project-isolated, filtered and disabled by default. Local
 durable state stays canonical. Offline or conflicting targets are latched and
 reported; they do not erase or rewrite local truth.
 
-The v1.4.0 release provides the neutral target, batch and visual contracts. It does not
+The v1.5.0 release provides the neutral target, batch and visual contracts. It does not
 bundle a connector for every external product and does not authorize network
-writes. The Stable v1.4.0 private Git/GitHub replica remains the only released
+writes. The Stable v1.5.0 private Git/GitHub replica remains the only released
 optional remote continuity route described in [Roadmap continuity](continuity.md).
 
 ## Release boundary
 
 Local tests, a wheel build, a commit, or a green candidate report prove only
 technical readiness. Merge, push, tag, release creation and package-index
-publication remain separate explicit decisions. v1.4.0 is the current public
-Stable release.
+publication remain separate explicit decisions. This source tree targets
+v1.5.0; the matching GitHub Release establishes published availability.
 
 ## Related pages
 

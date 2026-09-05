@@ -9,7 +9,7 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.4.0 Stable** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.5.0 Stable release target** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
@@ -23,6 +23,14 @@ AI memory. You choose the files and roadmap; OPENCNTX keeps the local evidence.
 It needs no account, API key, cloud service, database, or built-in AI model.
 OPENCNTX never uploads files and never sends a prompt for you.
 
+## New in v1.5.0: keep the work tied to the goal
+
+R15 connects the original request, exact targets, linked plans, source coverage,
+open outcomes and restart-safe handoff. A completed subtask is not a complete goal.
+It requires a trusted, connected host: installation does **not** activate Codex
+hooks or enforce arbitrary AI tools. The reference writer is limited to closed
+Windows fixtures. See [Goal-bound workflows](docs/goal-bound-workflows.md) for limits.
+
 | What you control | What OPENCNTX proves | What it never decides |
 |---|---|---|
 | Goal, files, limits, and sharing | Paths, sizes, hashes, budgets, and later drift | Truth, safety, approval, or which AI to use |
@@ -35,17 +43,17 @@ OPENCNTX never uploads files and never sends a prompt for you.
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the exact v1.4.0 release in one command:
+`pipx` installed, install the exact v1.5.0 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.4.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.5.0"
 opencntx --version
 ```
 
 Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.4.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.5.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -140,12 +148,12 @@ route—never in a public issue.
 | understand the Stable adaptive AI workflow | [Adaptive AI workflow](docs/adaptive-ai-workflow.md) |
 | browse every guide | [Documentation home](docs/README.md) |
 
-## Current public state
+## Version and publication boundary
 
 | Item | Proven state |
 |---|---|
-| Public Stable release | `v1.4.0` Production/Stable, immutable GitHub Release; all earlier releases remain immutable |
-| Package | `opencntx 1.4.0`; every v1.3.0 CLI route and supported durable-format read is retained |
+| Release target | `v1.5.0`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
+| Package | `opencntx 1.5.0`; every v1.4.0 CLI route and supported durable-format read is retained |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -153,10 +161,10 @@ route—never in a public issue.
 | Distribution | exact Git tag and four verified GitHub Release assets; no PyPI/TestPyPI package |
 | License | [Apache-2.0](LICENSE) |
 
-The immutable v1.4.0 GitHub Release contains exactly:
+The v1.5.0 release distribution requires exactly:
 
-- `opencntx-1.4.0-py3-none-any.whl`
-- `opencntx-1.4.0.tar.gz`
+- `opencntx-1.5.0-py3-none-any.whl`
+- `opencntx-1.5.0.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 

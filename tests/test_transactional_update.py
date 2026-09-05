@@ -15,6 +15,7 @@ from opencntx.transactional_update import (
     classify_path_capability,
     export_legacy_transaction_history,
     migration_readiness,
+    recover_interrupted_update,
     update_postflight,
 )
 from opencntx.workspace import WorkspaceError, init_workspace
@@ -234,6 +235,50 @@ class TransactionalUpdateTests(unittest.TestCase):
         self.assertFalse((root / ".opencntx-update" / "staging" / str(plan["plan_id"])).exists())
         self.assertFalse((root / ".opencntx-update" / "retired" / str(plan["plan_id"])).exists())
 
+    def test_every_declared_cutover_phase_restores_original_components(self) -> None:
+        for component in ("RUNTIME", "PROJECT_STATE"):
+            for phase_name in ("BACKUP", "STAGING", "RETIRE", "ACTIVATE"):
+                target = f"AFTER_{phase_name}:{component}"
+                with self.subTest(phase=target):
+                    root, components = self.update_fixture(f"{component}-{phase_name}")
+                    plan = self.plan(root, components)
+                    before = {
+                        item["name"]: {
+                            path.name: path.read_bytes()
+                            for path in Path(item["active_path"]).iterdir()
+                        }
+                        for item in components
+                    }
+                    visited = []
+
+                    def fail(
+                        phase: str, *, selected: str = target, seen: list[str] = visited
+                    ) -> None:
+                        seen.append(phase)
+                        if phase == selected:
+                            raise RuntimeError("bounded phase failure")
+
+                    with self.assertRaisesRegex(RuntimeError, "bounded phase failure"):
+                        apply_update_plan(
+                            plan,
+                            approval=f"APPLY UPDATE {plan['plan_digest']}",
+                            fault_hook=fail,
+                        )
+                    self.assertEqual(visited[-1], target)
+                    for item in components:
+                        after = {
+                            path.name: path.read_bytes()
+                            for path in Path(item["active_path"]).iterdir()
+                        }
+                        self.assertEqual(after, before[item["name"]])
+                    self.assertEqual(recover_interrupted_update(plan)["status"], "ROLLED_BACK")
+                    for item in components:
+                        after = {
+                            path.name: path.read_bytes()
+                            for path in Path(item["active_path"]).iterdir()
+                        }
+                        self.assertEqual(after, before[item["name"]])
+
     def test_source_or_candidate_drift_stops_before_cutover(self) -> None:
         root, components = self.update_fixture("drift")
         plan = self.plan(root, components)
@@ -245,6 +290,31 @@ class TransactionalUpdateTests(unittest.TestCase):
             (Path(components[0]["active_path"]) / "version.txt").read_text(encoding="utf-8"),
             "old\n",
         )
+
+    def test_rollback_preserves_later_user_work_and_all_recovery_sources(self) -> None:
+        root, components = self.update_fixture("later-work")
+        plan = self.plan(root, components)
+        active = Path(components[0]["active_path"])
+        later = active / "later-user-work.txt"
+        original_bytes = (active / "version.txt").read_bytes()
+
+        def fail(phase: str) -> None:
+            if phase == "AFTER_ACTIVATE:RUNTIME":
+                later.write_bytes(b"irreplaceable later work\n")
+                raise RuntimeError("injected after later user work")
+
+        with self.assertRaisesRegex(WorkspaceError, "preserved"):
+            apply_update_plan(
+                plan, approval=f"APPLY UPDATE {plan['plan_digest']}", fault_hook=fail
+            )
+        self.assertTrue(later.is_file(), "Rollback must not erase later user work")
+        self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
+        retired = root / ".opencntx-update" / "retired" / str(plan["plan_id"]) / "RUNTIME"
+        self.assertEqual((retired / "version.txt").read_bytes(), original_bytes)
+        self.assertEqual((Path(str(plan["backup_path"])) / "RUNTIME" / "version.txt").read_bytes(), original_bytes)
+        with self.assertRaisesRegex(WorkspaceError, "preserved"):
+            recover_interrupted_update(plan)
+        self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
 
     def test_completed_receipt_never_hides_later_active_drift(self) -> None:
         root, components = self.update_fixture("postflight-drift")

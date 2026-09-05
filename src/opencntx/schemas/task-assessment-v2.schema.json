@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/task-assessment-v2.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "assessment_revision",
+    "previous_assessment_digest",
+    "goal_binding_digest",
+    "request_id",
+    "request_revision",
+    "outcome_ids",
+    "request_source",
+    "original_source",
+    "authority_state",
+    "authority_changed",
+    "reason",
+    "classification",
+    "assessment_digest"
+  ],
+  "properties": {
+    "format": {
+      "const": "opencntx-task-assessment"
+    },
+    "format_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "assessment_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "previous_assessment_digest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "goal_binding_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "request_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "outcome_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    },
+    "request_source": {
+      "$ref": "goal-binding-v2.schema.json#/properties/request/properties/source"
+    },
+    "original_source": {
+      "$ref": "goal-binding-v2.schema.json#/properties/request/properties/source"
+    },
+    "authority_state": {
+      "enum": [
+        "APPROVED",
+        "OWNER_REQUIRED",
+        "NOT_AUTHORIZED"
+      ]
+    },
+    "authority_changed": {
+      "const": false
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "size_class",
+        "required_planning",
+        "reconnaissance_required",
+        "risk",
+        "facts",
+        "authority_granted"
+      ],
+      "properties": {
+        "size_class": {
+          "enum": [
+            "SHORT",
+            "LARGE",
+            "MEGA"
+          ]
+        },
+        "required_planning": {
+          "enum": [
+            "CHECKLIST",
+            "MAIN_ROADMAP",
+            "MAIN_AND_CHILD_ROADMAPS"
+          ]
+        },
+        "reconnaissance_required": {
+          "type": "boolean"
+        },
+        "risk": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "independent_large_streams",
+            "dependent_phases",
+            "analysis_dimensions",
+            "item_count",
+            "uncertainty",
+            "risk"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "SINGLE_RESULT",
+                "COUNT_ONLY",
+                "MULTI_PHASE",
+                "MULTI_STREAM",
+                "FULL_COLLECTION_ANALYSIS"
+              ]
+            },
+            "independent_large_streams": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "dependent_phases": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "analysis_dimensions": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50
+            },
+            "item_count": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9223372036854776000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "enum": [
+                "KNOWN",
+                "NEEDS_PROBE"
+              ]
+            },
+            "risk": {
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+              ]
+            }
+          }
+        },
+        "authority_granted": {
+          "const": false
+        }
+      }
+    },
+    "assessment_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import stat
+import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -432,14 +433,53 @@ def _write_journal(state_root: Path, plan: Mapping[str, object], phase: str) -> 
     _write_atomic(state_root / "journal.json", _pretty(value))
 
 
+def _recovery_preflight(plan: Mapping[str, object], state_root: Path) -> list[dict[str, Any]]:
+    """Validate the whole restore set before moving any component."""
+    components = plan.get("components")
+    if not isinstance(components, list) or not all(isinstance(item, dict) for item in components):
+        raise _fail("update_plan_invalid", "Update components are invalid.")
+    backup = Path(str(plan["backup_path"]))
+    for item in components:
+        name = item["name"]
+        active = Path(item["active_path"])
+        retired = state_root / "retired" / str(plan["plan_id"]) / name
+        staged = state_root / "staging" / str(plan["plan_id"]) / name
+        original = backup / name
+        expected = (
+            (active, {item["active_digest"], item["candidate_digest"]}),
+            (retired, {item["active_digest"]}),
+            (original, {item["active_digest"]}),
+            (staged, {item["candidate_digest"]}),
+        )
+        for path, digests in expected:
+            if path.exists() and _tree_digest(path) not in digests:
+                raise _fail(
+                    "update_recovery_required",
+                    "Changed component preserved in place; explicit recovery is required.",
+                )
+        if not retired.exists() and not original.exists() and (
+            not active.exists() or _tree_digest(active) != item["active_digest"]
+        ):
+            raise _fail("update_recovery_required", "Missing original; remaining evidence preserved.")
+    return components
+
+
+def _preserve_directory(source: Path, state_root: Path) -> None:
+    """Keep the complete directory, including any bytes written after preflight."""
+    if not source.exists():
+        return
+    destination_root = state_root / "preserved-recovery"
+    destination_root.mkdir(exist_ok=True)
+    destination = Path(tempfile.mkdtemp(prefix="snapshot-", dir=destination_root)) / source.name
+    os.rename(source, destination)
+
+
 def _recover_unlocked(plan: Mapping[str, object], state_root: Path) -> dict[str, Any]:
     backup = Path(str(plan["backup_path"]))
     retired_root = state_root / "retired" / str(plan["plan_id"])
     staging_root = state_root / "staging" / str(plan["plan_id"])
     restored: list[str] = []
-    components = plan.get("components")
-    if not isinstance(components, list) or not all(isinstance(item, dict) for item in components):
-        raise _fail("update_plan_invalid", "Update components are invalid.")
+    components = _recovery_preflight(plan, state_root)
     for item in reversed(components):
         name = item["name"]
         active = Path(item["active_path"])
@@ -447,17 +487,20 @@ def _recover_unlocked(plan: Mapping[str, object], state_root: Path) -> dict[str,
         original = backup / name
         if retired.exists():
             if active.exists():
-                shutil.rmtree(active)
+                _preserve_directory(active, state_root)
             os.replace(retired, active)
             restored.append(name)
         elif active.exists() and _tree_digest(active) == item["candidate_digest"] and original.exists():
-            shutil.rmtree(active)
+            _preserve_directory(active, state_root)
             shutil.copytree(original, active)
             restored.append(name)
-        if active.exists() and original.exists() and _tree_digest(active) != item["active_digest"]:
+        elif not active.exists() and original.exists():
+            shutil.copytree(original, active)
+            restored.append(name)
+        if not active.exists() or _tree_digest(active) != item["active_digest"]:
             raise _fail("update_rollback_failed", "Active component could not be restored.")
-    shutil.rmtree(staging_root, ignore_errors=True)
-    shutil.rmtree(retired_root, ignore_errors=True)
+    _preserve_directory(staging_root, state_root)
+    _preserve_directory(retired_root, state_root)
     _write_journal(state_root, plan, "ROLLED_BACK")
     result = {
         "format": "opencntx-update-recovery",
@@ -524,7 +567,6 @@ def apply_update_plan(
         if shutil.disk_usage(root).free < selected["required_bytes"]:
             raise _fail("update_disk_space_insufficient", "Current free space is below the plan bound.")
         backup = Path(str(selected["backup_path"]))
-        switched: list[dict[str, Any]] = []
         try:
             for item in selected["components"]:
                 name = item["name"]
@@ -543,7 +585,6 @@ def apply_update_plan(
                 retired = retired_root / name
                 retired.parent.mkdir(parents=True, exist_ok=True)
                 os.replace(active, retired)
-                switched.append(item)
                 _write_journal(state_root, selected, f"RETIRED:{name}")
                 if fault_hook is not None:
                     fault_hook(f"AFTER_RETIRE:{name}")
@@ -554,8 +595,8 @@ def apply_update_plan(
             for item in selected["components"]:
                 if _tree_digest(Path(item["active_path"])) != item["candidate_digest"]:
                     raise _fail("update_postflight_failed", "Active target digest differs after cutover.")
-            shutil.rmtree(staging_root, ignore_errors=True)
-            shutil.rmtree(retired_root, ignore_errors=True)
+            _preserve_directory(staging_root, state_root)
+            _preserve_directory(retired_root, state_root)
             receipt = {
                 "format": RECEIPT_FORMAT,
                 "format_version": 1,
@@ -583,20 +624,7 @@ def apply_update_plan(
             _write_journal(state_root, selected, "COMPLETED")
             return receipt
         except BaseException:
-            for item in reversed(switched):
-                name = item["name"]
-                active = Path(item["active_path"])
-                retired = retired_root / name
-                original = backup / name
-                if active.exists():
-                    shutil.rmtree(active)
-                if retired.exists():
-                    os.replace(retired, active)
-                elif original.exists():
-                    shutil.copytree(original, active)
-            shutil.rmtree(staging_root, ignore_errors=True)
-            shutil.rmtree(retired_root, ignore_errors=True)
-            _write_journal(state_root, selected, "ROLLED_BACK")
+            _recover_unlocked(selected, state_root)
             raise
 
 

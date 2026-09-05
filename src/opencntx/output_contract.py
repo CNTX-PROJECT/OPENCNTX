@@ -9,9 +9,7 @@ from typing import Any
 from .continuity import _digest, _fail, _one_line, _value_digest, decide_finalization
 from .human_interface import OUTPUT_PROFILES
 
-METRIC_STATUSES = frozenset(
-    {"OK", "SESSION_NOT_FOUND", "TOKEN_EVENT_NOT_FOUND", "PARSE_ERROR"}
-)
+METRIC_STATUSES = frozenset({"OK", "SESSION_NOT_FOUND", "TOKEN_EVENT_NOT_FOUND", "PARSE_ERROR"})
 NEXT_ACTION_STATES = frozenset(
     {
         "CONTINUE_AUTOMATICALLY",
@@ -163,9 +161,60 @@ def build_output_contract(
     uncertainty: str | None = None,
     duration: str | None = None,
     technical_details: Sequence[str] = (),
+    goal_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compile one closed output contract from a validated execution capsule."""
     decision = decide_finalization(execution_capsule)
+    if decision["decision"] == "RECONCILE_REQUIRED" and decision["reason"] == "CAPSULE_INVALID":
+        raise _fail("output_state_invalid", "Execution capsule is invalid.")
+    if goal_context is not None:
+        basis = {key: item for key, item in goal_context.items() if key != "context_digest"}
+        if (
+            goal_context.get("format") != "opencntx-goal-output-context"
+            or type(goal_context.get("format_version")) is not int
+            or goal_context.get("format_version") != 2
+            or goal_context.get("context_digest") != _value_digest(basis)
+            or goal_context.get("capsule_digest") != execution_capsule.get("capsule_digest")
+            or goal_context.get("authority_changed") is not False
+            or goal_context.get("decision") not in {decision["decision"], "BLOCKED"}
+            or external_action
+        ):
+            raise _fail(
+                "goal_output_stale", "Goal context is stale or external override is unbound."
+            )
+        decision = decision | {
+            "decision": goal_context["decision"],
+            "reason": goal_context["reason"],
+        }
+        decision["decision_digest"] = _value_digest(
+            {k: v for k, v in decision.items() if k != "decision_digest"}
+        )
+        opened = ", ".join(goal_context["open_outcome_ids"])
+        if goal_context.get("reason") == "REBIND_INDEPENDENT_OUTCOME":
+            thereafter = (
+                "Bind de onafhankelijke uitkomst: "
+                if language.lower() == "nl"
+                else "Bind independent outcome: "
+            ) + str(goal_context["next_outcome_id"])
+        if goal_context["reason"] == "OWNER_STOP":
+            summary = (
+                "Gestopt op jouw verzoek."
+                if language.lower() == "nl"
+                else "Stopped at your request."
+            )
+        elif goal_context["goal_status"] != "TECHNICALLY_COMPLETE":
+            summary = (
+                "Nog niet volledig afgerond. Open: "
+                if language.lower() == "nl"
+                else "Not fully complete. Open: "
+            ) + (
+                opened
+                or (
+                    "gezamenlijke conclusie"
+                    if language.lower() == "nl"
+                    else "integrated conclusion"
+                )
+            )
     if decision["decision"] == "RECONCILE_REQUIRED" and decision["reason"] == "CAPSULE_INVALID":
         raise _fail("output_state_invalid", "Execution capsule is invalid.")
     if metrics.get("status") not in METRIC_STATUSES:
@@ -191,7 +240,7 @@ def build_output_contract(
     localized = _labels(language, labels)
     value = {
         "format": "opencntx-human-output",
-        "format_version": 1,
+        "format_version": 1 if goal_context is None else 2,
         "language": language.lower(),
         "profile": profile,
         "summary": _one_line(summary, "summary", 2_000),
@@ -215,6 +264,8 @@ def build_output_contract(
         "decision_digest": decision["decision_digest"],
         "authority_changed": False,
     }
+    if goal_context is not None:
+        value["goal_context"] = dict(goal_context)
     return value | {"output_digest": _value_digest(value)}
 
 
@@ -231,7 +282,9 @@ def _number(value: float, language: str) -> str:
 def render_output(value: Mapping[str, object]) -> str:
     """Render the quiet footer shape; the contract remains the source of truth."""
     basis = {key: item for key, item in value.items() if key != "output_digest"}
-    if value.get("format") != "opencntx-human-output" or value.get("output_digest") != _value_digest(basis):
+    if value.get("format") != "opencntx-human-output" or value.get(
+        "output_digest"
+    ) != _value_digest(basis):
         raise _fail("output_contract_invalid", "Output contract differs from its digest.")
     labels = value["labels"]
     metrics = value["metrics"]

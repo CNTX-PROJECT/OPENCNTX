@@ -1,0 +1,8 @@
+{
+  "format": "r15-manual-coverage-oracle",
+  "cases": [
+    {"name": "match", "records": [{"id": "A", "kind": "match"}, {"id": "B", "kind": "clear"}, {"id": "C", "kind": "clear"}], "expected_findings": ["A"], "expected_missing": [], "expected_status": "DELIVERED"},
+    {"name": "zero", "records": [{"id": "A", "kind": "clear"}, {"id": "B", "kind": "clear"}, {"id": "C", "kind": "clear"}], "expected_findings": [], "expected_missing": [], "expected_status": "DELIVERED"},
+    {"name": "missing", "records": [{"id": "A"}, {"id": "B", "kind": null}, {"id": "C", "kind": "clear"}], "expected_findings": [], "expected_missing": ["A", "B"], "expected_status": "BLOCKED"}
+  ]
+}

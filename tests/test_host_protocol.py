@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
@@ -69,9 +73,9 @@ class HostProtocolTests(unittest.TestCase):
             self.assertEqual(first, retry)
             self.assertEqual("EXECUTE", first["phase"])
             self.assertEqual("TASK-1", first["claimed_assignment"])
-            events = (
-                root / ".opencntx" / "continuity" / "history" / "events.jsonl"
-            ).read_text(encoding="utf-8")
+            events = (root / ".opencntx" / "continuity" / "history" / "events.jsonl").read_text(
+                encoding="utf-8"
+            )
             self.assertEqual(1, events.count('"type":"ASSIGNMENT_CLAIMED"'))
             other = host_status(root, "HOST-B")
             self.assertEqual("CLAIMED", other["phase"])
@@ -114,8 +118,7 @@ class HostProtocolTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = project(Path(temporary_directory))
             deliveries = {
-                host: host_status(root, host)["delivery_digest"]
-                for host in ("HOST-A", "HOST-B")
+                host: host_status(root, host)["delivery_digest"] for host in ("HOST-A", "HOST-B")
             }
 
             def attempt(host: str) -> tuple[str, str]:
@@ -135,9 +138,9 @@ class HostProtocolTests(unittest.TestCase):
             losing_host = next(host for host, code in results if code != "CLAIMED")
             with self.assertRaisesRegex(ContinuityError, "already has another claim"):
                 claim_host(root, losing_host, deliveries[losing_host])
-            events = (
-                root / ".opencntx" / "continuity" / "history" / "events.jsonl"
-            ).read_text(encoding="utf-8")
+            events = (root / ".opencntx" / "continuity" / "history" / "events.jsonl").read_text(
+                encoding="utf-8"
+            )
             self.assertEqual(1, events.count('"type":"ASSIGNMENT_CLAIMED"'))
 
     def test_claim_drift_fails_every_normal_read_closed(self) -> None:
@@ -157,15 +160,15 @@ class HostProtocolTests(unittest.TestCase):
             with self.assertRaises(ContinuityError):
                 health_report(root)
 
-    def test_authority_is_bound_and_protocol_has_no_execution_primitive(self) -> None:
+    def test_authority_is_bound_and_claim_protocol_remains_nonexecuting(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = project(Path(temporary_directory))
             delivery = host_status(root, "HOST-A")
             claim = claim_host(root, "HOST-A", delivery["delivery_digest"])
             record = json.loads(
-                (
-                    root / ".opencntx" / "continuity" / "claims" / "TASK-1.json"
-                ).read_text(encoding="utf-8")
+                (root / ".opencntx" / "continuity" / "claims" / "TASK-1.json").read_text(
+                    encoding="utf-8"
+                )
             )
             self.assertEqual("AUTO PILOT", delivery["authority"])
             self.assertEqual("AUTO PILOT", record["authority"])
@@ -181,11 +184,107 @@ class HostProtocolTests(unittest.TestCase):
         self.assertNotIn("subprocess", imported)
         self.assertNotIn("os", imported)
 
+    def test_unbound_pilot_refuses_self_approval_and_valid_looking_actions_without_writes(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            (root / "parent").mkdir()
+            (root / "child").mkdir()
+            source = root / "source.txt"
+            expected = root / "parent" / "same-name.txt"
+            wrong = root / "child" / "same-name.txt"
+            source.write_text("approved bytes\n", encoding="utf-8")
+            expected.write_text("old parent bytes\n", encoding="utf-8")
+            wrong.write_text("protected child bytes\n", encoding="utf-8")
+
+            def action(target: str, approved_target: str, **extra: object) -> Path:
+                value: dict[str, object] = {
+                    "format": "opencntx-guarded-copy",
+                    "format_version": 1,
+                    "source": "source.txt",
+                    "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                    "target": target,
+                    "target_sha256": hashlib.sha256((root / target).read_bytes()).hexdigest(),
+                    "approved_target": approved_target,
+                }
+                value.update(extra)
+                path = root / "action.json"
+                path.write_text(json.dumps(value), encoding="utf-8")
+                return path
+
+            environment = os.environ.copy()
+            existing = environment.get("PYTHONPATH")
+            environment["PYTHONPATH"] = os.pathsep.join(
+                part for part in (str(ROOT / "src"), existing) if part
+            )
+
+            def invoke(path: Path) -> subprocess.CompletedProcess[str]:
+                return subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "opencntx",
+                        "flow",
+                        "guarded-copy",
+                        str(path),
+                        "--root",
+                        str(root),
+                        "--json",
+                    ],
+                    cwd=root,
+                    env=environment,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+            rejected = invoke(action("child/same-name.txt", "parent/same-name.txt"))
+            self.assertEqual(2, rejected.returncode)
+            self.assertIn("invalid choice: 'guarded-copy'", rejected.stderr)
+            self.assertEqual("protected child bytes\n", wrong.read_text(encoding="utf-8"))
+            self.assertEqual("old parent bytes\n", expected.read_text(encoding="utf-8"))
+
+            unbounded = invoke(
+                action(
+                    "parent/same-name.txt",
+                    "parent/same-name.txt",
+                    command="copy source.txt parent/same-name.txt",
+                )
+            )
+            self.assertEqual(2, unbounded.returncode)
+            self.assertIn("invalid choice: 'guarded-copy'", unbounded.stderr)
+            self.assertEqual("old parent bytes\n", expected.read_text(encoding="utf-8"))
+
+            before = {p.relative_to(root): p.read_bytes() for p in (source, expected, wrong)}
+            for target in ("parent/same-name.txt", "child/same-name.txt"):
+                with self.subTest(target=target):
+                    refused = invoke(action(target, target))
+                    self.assertEqual(2, refused.returncode, refused.stderr)
+                    self.assertIn("invalid choice: 'guarded-copy'", refused.stderr)
+                    self.assertEqual("", refused.stdout)
+                    self.assertEqual(
+                        before,
+                        {p.relative_to(root): p.read_bytes() for p in (source, expected, wrong)},
+                    )
+                    self.assertEqual(
+                        {"source.txt", "parent", "child", "action.json"},
+                        {p.name for p in root.iterdir()},
+                    )
+
+    def test_retired_pilot_refuses_before_any_action_path_access(self) -> None:
+        from unittest.mock import patch
+
+        from opencntx.host_protocol import guarded_copy
+
+        with patch.object(Path, "resolve", side_effect=AssertionError("unexpected path access")):
+            with self.assertRaises(ContinuityError) as caught:
+                guarded_copy(Path("missing-root"), Path("missing-action"))
+            self.assertEqual("guarded_copy_host_unbound", caught.exception.code)
+
     def test_host_claim_schema_is_closed(self) -> None:
         schema = json.loads(
-            (ROOT / "src/opencntx/schemas/host-claim-v1.schema.json").read_text(
-                encoding="utf-8"
-            )
+            (ROOT / "src/opencntx/schemas/host-claim-v1.schema.json").read_text(encoding="utf-8")
         )
         self.assertFalse(schema["additionalProperties"])
         self.assertEqual("AUTO PILOT", schema["properties"]["authority"]["const"])

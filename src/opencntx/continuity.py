@@ -343,7 +343,9 @@ def _load_bound_roadmap(path: Path) -> dict[str, Any]:
         raise _fail("continuity_store_invalid", f"Cannot read valid JSON: {path}") from exc
     if not isinstance(value, dict):
         raise _fail("continuity_store_invalid", f"JSON root must be an object: {resolved}")
-    roadmap = validate_roadmap(value)
+    from .continuity_version import unwrap_goal_storage
+
+    roadmap = validate_roadmap(unwrap_goal_storage(value))
     _remember(_ROADMAP_CACHE, resolved, (digest, roadmap), maximum=128)
     return roadmap
 
@@ -1666,6 +1668,21 @@ def execution_state_capsule(project_root: Path) -> dict[str, Any]:
     """Compile a fresh execution projection from validated durable state."""
     _, roadmap, events, state = _load_store(project_root)
     return _capsule_from_loaded(roadmap, events, state)
+
+
+def validate_current_goal_binding(
+    project_root: Path, value: Mapping[str, object], *, expected: Any
+) -> dict[str, Any]:
+    """Read-only R15 projection check; callers cannot supply substituted live state.
+
+    No event is written and no permission is granted. Retaining ``expected`` is
+    the separate supervisor's responsibility; durable v2 integration is distinct.
+    """
+    from .goal_binding import validate_goal_binding
+
+    return validate_goal_binding(
+        value, expected=expected, current_execution_capsule=execution_state_capsule(project_root)
+    )
 
 
 def decide_finalization(

@@ -49,6 +49,12 @@ Version 1.3.0 released the additive R11 host contracts. It retains every
 accepted CLI route and supported durable-format read boundary; immutable
 v1.2.1 remains historical compatibility evidence.
 
+Version 1.5.0 adds separately versioned goal bindings, assessment, linked progress,
+source/outcome coverage, followup and handoff contracts. Existing v1 schemas and
+historical bytes remain unchanged. Installing the package does not automatically
+migrate roadmap storage or enable a host hook. See [Goal-bound workflows](goal-bound-workflows.md)
+and [Storage compatibility](GOAL_HANDOFF_CONTRACT.md) for the explicit version fence.
+
 Version 1.4.0 released the additive visual-intent and joint-review contracts.
 It adds no command, runtime dependency, format major, mandatory migration,
 provider call, deployment, or package-index route.

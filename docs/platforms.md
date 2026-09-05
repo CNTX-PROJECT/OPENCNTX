@@ -32,6 +32,16 @@ controls appropriate to the data.
 
 ## Active CI matrix
 
+The R15 physical reference writer is Windows-only and refuses unsupported
+platforms before opening its fixture files. Portable goal/state/source/handoff
+APIs are exercised on both Windows and Ubuntu. Installing the package does not
+enable general Codex tool interception. Windows symlink privileges and directory
+flush support can differ; skips must be reported, not counted as successful tests.
+
+For WSL Linux-native permission and contention tests, use a native Linux test
+filesystem. A Windows drive mounted without Linux metadata does not provide the
+same 0600/0700 semantics or performance. Never relax those tests to claim it does.
+
 Status label: `CI_ACTIVE`
 
 Every pull request and push to `main` runs eight jobs:

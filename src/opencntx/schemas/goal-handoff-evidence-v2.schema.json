@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "goal-handoff-evidence-v2.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "goal",
+    "progress_digest",
+    "positions",
+    "context",
+    "followup",
+    "execution",
+    "snapshot_digest"
+  ],
+  "properties": {
+    "format": {
+      "const": "opencntx-goal-handoff-evidence"
+    },
+    "format_version": {
+      "const": 2,
+      "type": "integer"
+    },
+    "goal": {
+      "$ref": "goal-binding-v2.schema.json"
+    },
+    "progress_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "positions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "parent",
+          "return_to",
+          "outcome_ids",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "return_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "outcome_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "BLOCKED",
+              "DELIVERED"
+            ]
+          }
+        }
+      }
+    },
+    "context": {
+      "$ref": "goal-output-context-v2.schema.json"
+    },
+    "followup": {
+      "$ref": "goal-followup-v2.schema.json"
+    },
+    "execution": {
+      "const": "NOT_PERFORMED"
+    },
+    "snapshot_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}
