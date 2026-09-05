@@ -213,16 +213,22 @@ features or expose private project records.
 
 ## Current state
 
-- Public package line: `v1.4.0`
-- Public package version: `1.4.0`
+The v1.5.0 R15 release target connects original requests, exact actions,
+proportional planning, linked progress, source coverage and restart-safe handoff.
+The closed Windows reference host is explicitly separate from arbitrary Codex
+tools. It preserves later user work during recovery and retains the v1 boundary.
+See [Goal-bound workflows](goal-bound-workflows.md) for the actual use and limits.
+
+- Source release target: `v1.5.0`
+- Package version: `1.5.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Public Stable release: live exact `v1.4.0` tag plus immutable matching GitHub Release;
-  every earlier release remains immutable
-- Release distribution: exact `opencntx-1.4.0-py3-none-any.whl`,
-  `opencntx-1.4.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Published availability: the exact `v1.5.0` tag and matching GitHub Release are
+  authoritative; source state alone is not publication. Earlier releases stay immutable.
+- Release distribution: exact `opencntx-1.5.0-py3-none-any.whl`,
+  `opencntx-1.5.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
@@ -236,7 +242,7 @@ cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
 or other expansion are not implied roadmap commitments.
 
 The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
-Stable in v1.4.0.
+retained from Stable v1.4.0 in the v1.5.0 release target.
 
 ## Related pages
 

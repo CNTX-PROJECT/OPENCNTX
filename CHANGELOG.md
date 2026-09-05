@@ -2,6 +2,37 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.5.0 - 2026-09-06
+
+### Added
+
+- Added versioned goal bindings that retain original request provenance,
+  revisions, exact action targets and outcome references against native state.
+- Added proportional short/large/mega assessment, linked parent/child progress,
+  source-derived coverage and synthesis that keeps incomplete outcomes visible.
+- Added goal-bound followup, bounded recovery history and restart-safe handoff
+  using the existing writer, checkpoint, evidence-object and acknowledgement routes.
+- Added a closed Windows reference fixture host with exact-target physical
+  checks; this is not general Codex tool interception or an automatically enabled hook.
+- Added explicit v2 storage fencing and actual legacy reader/writer compatibility
+  tests while preserving existing v1 schemas and historical fixture bytes.
+
+### Fixed
+
+- Preserve later user work and recovery sources during transactional rollback.
+- Recover a completed Windows rename even when an error precedes internal
+  bookkeeping, using held file positions and original-byte readback.
+- Keep source absence, partial outcomes, stale revisions and unchanged failed
+  action facts from being promoted to successful whole-goal completion.
+
+### Boundaries
+
+- Existing CLI routes and v1 durable reads remain supported; no runtime
+  dependencies, mandatory storage migration or automatic host activation added.
+- Physical fixture execution remains Windows-only. Free AI tools are advisory
+  unless explicitly connected; no universal semantic or power-loss guarantee.
+- Distribution remains exact Git tags and four GitHub Release assets, not PyPI.
+
 ## 1.4.0 - 2026-09-04
 
 ### Added

@@ -20,6 +20,7 @@ SOURCE_ROOT = ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
 
+from opencntx import __version__
 from opencntx.cli import build_parser
 
 README = ROOT / "README.md"
@@ -654,7 +655,7 @@ class PublicQualityTests(unittest.TestCase):
             project = tomllib.load(project_file)["project"]
         version = project["version"]
 
-        self.assertEqual(version, "1.4.0")
+        self.assertEqual(version, __version__)
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],
