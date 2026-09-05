@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "format_version",
+    "request",
+    "outcomes",
+    "report_digests",
+    "conflicting_claim_keys",
+    "synthesis_proof",
+    "status",
+    "acceptance",
+    "authority_granted",
+    "matrix_digest"
+  ],
+  "properties": {
+    "format": {
+      "const": "opencntx-outcome-matrix"
+    },
+    "format_version": {
+      "type": "integer",
+      "const": 2
+    },
+    "request": {
+      "$ref": "goal-binding-v2.schema.json#/properties/request"
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "DELIVERED",
+          "PARTIAL",
+          "BLOCKED",
+          "NOT_ASSESSED"
+        ]
+      }
+    },
+    "report_digests": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "conflicting_claim_keys": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "synthesis_proof": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reports_digest",
+            "reference",
+            "sha256",
+            "conclusion"
+          ],
+          "properties": {
+            "reports_digest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "reference": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "conclusion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "TECHNICALLY_COMPLETE",
+        "PARTIAL"
+      ]
+    },
+    "acceptance": {
+      "const": "UNKNOWN"
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "matrix_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
