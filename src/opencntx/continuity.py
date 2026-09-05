@@ -1668,6 +1668,21 @@ def execution_state_capsule(project_root: Path) -> dict[str, Any]:
     return _capsule_from_loaded(roadmap, events, state)
 
 
+def validate_current_goal_binding(
+    project_root: Path, value: Mapping[str, object], *, expected: Any
+) -> dict[str, Any]:
+    """Read-only R15 projection check; callers cannot supply substituted live state.
+
+    No event is written and no permission is granted. Retaining ``expected`` is
+    the separate supervisor's responsibility; durable v2 integration is distinct.
+    """
+    from .goal_binding import validate_goal_binding
+
+    return validate_goal_binding(
+        value, expected=expected, current_execution_capsule=execution_state_capsule(project_root)
+    )
+
+
 def decide_finalization(
     capsule: Mapping[str, Any], *, projection_digest: str | None = None
 ) -> dict[str, Any]:

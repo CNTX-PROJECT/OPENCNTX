@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/goal-binding-v2.schema.json",
+  "title": "OPENCNTX shared goal binding v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "request", "intent_v1", "execution_capsule_v1", "action", "evidence", "execution", "authority_granted", "binding_digest"],
+  "properties": {
+    "format": {"const": "opencntx-goal-binding"},
+    "format_version": {"type": "integer", "const": 2},
+    "intent_v1": {"$ref": "human-intent-v1.schema.json"},
+    "execution_capsule_v1": {"$ref": "execution-state-capsule-v1.schema.json"},
+    "execution": {"const": "NOT_PERFORMED"},
+    "authority_granted": {"const": false},
+    "binding_digest": {"$ref": "#/$defs/digest"},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "revision", "parent_id", "outcome_ids", "source"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "revision": {"type": "integer", "minimum": 1},
+        "parent_id": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+        "outcome_ids": {"$ref": "#/$defs/ids"},
+        "source": {
+          "type": "object", "additionalProperties": false,
+          "required": ["role", "reference", "content_sha256", "derived_from"],
+          "properties": {
+            "role": {"enum": ["OWNER", "AI_PROPOSAL", "UNKNOWN"]},
+            "reference": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+            "content_sha256": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+            "derived_from": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]}
+          }
+        }
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome_id", "operation", "targets", "recursive", "protected_targets", "preconditions", "capability_ref"],
+      "properties": {
+        "outcome_id": {"$ref": "#/$defs/id"},
+        "operation": {"enum": ["READ_EXACT", "REPLACE_EXACT"]},
+        "targets": {"type": "array", "minItems": 1, "maxItems": 50, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "recursive": {"const": false},
+        "protected_targets": {"type": "array", "maxItems": 50, "uniqueItems": true, "items": {"$ref": "#/$defs/path"}},
+        "capability_ref": {"$ref": "#/$defs/text"},
+        "preconditions": {
+          "type": "array", "minItems": 1, "maxItems": 50,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["target", "sha256", "identity_ref"],
+            "properties": {"target": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/digest"}, "identity_ref": {"$ref": "#/$defs/text"}}
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array", "maxItems": 50, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["outcome_id", "reference", "sha256"],
+        "properties": {"outcome_id": {"$ref": "#/$defs/id"}, "reference": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/digest"}}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 500},
+    "id": {"type": "string", "minLength": 1, "maxLength": 120},
+    "ids": {"type": "array", "minItems": 1, "maxItems": 50, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "path": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "^(?!.*[\\\\:])(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\/$).+$"}
+  }
+}
