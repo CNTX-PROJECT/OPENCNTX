@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Self
 
+_CTYPES: dict[str, Any] = vars(c)
 MAX_FILE = 1024 * 1024
 MAX_REQUEST = 65536
 IO_BYTES = {"file_read": 0, "file_written": 0, "request_read": 0}
@@ -66,7 +67,9 @@ class Handle:
     ):
         if sys.platform != "win32":
             raise Refused("unsupported_platform")
-        self.k = c.WinDLL("kernel32", use_last_error=True)
+        # These ctypes names exist only on Windows. Resolve them dynamically so
+        # the closed Windows fixture remains type-checkable on Linux CI.
+        self.k: Any = _CTYPES["WinDLL"]("kernel32", use_last_error=True)
         signatures = {
             "CreateFileW": (
                 [w.LPCWSTR, w.DWORD, w.DWORD, c.c_void_p, w.DWORD, w.DWORD, w.HANDLE],
@@ -97,9 +100,9 @@ class Handle:
         for name, (args, result) in signatures.items():
             fn = getattr(self.k, name)
             fn.argtypes, fn.restype = args, result
-        self.path = path
-        self.new = create
-        self.sealed = not create
+        self.path: Path = path
+        self.new: bool = create
+        self.sealed: bool = not create
         access = (
             0x80
             if directory
@@ -107,7 +110,7 @@ class Handle:
         )
         flags = 0x00200000 | (0x02000000 if directory else 0)
         # Directory handles deny write and delete opens, including reparse mutation.
-        self.h = self.k.CreateFileW(
+        self.h: Any = self.k.CreateFileW(
             str(path),
             access,
             1 if directory else 0,
@@ -117,14 +120,14 @@ class Handle:
             None,
         )
         if self.h == c.c_void_p(-1).value:
-            raise Refused(f"open_denied_{c.get_last_error()}")
+            raise Refused(f"open_denied_{_CTYPES['get_last_error']()}")
         try:
             # Only a newly created empty staging object is marked delete-pending.
             # Unlike FILE_FLAG_DELETE_ON_CLOSE, explicit disposition blocks links.
             # A link won before this point is caught before the first data write.
             if create:
                 self.pending(True)
-            self.info = Info()
+            self.info: Info = Info()
             self.check(self.k.GetFileInformationByHandle(self.h, c.byref(self.info)))
             if self.info.attrs & 0x400:
                 raise Refused("reparse_point")
@@ -147,7 +150,7 @@ class Handle:
 
     def check(self, ok: Any) -> None:
         if not ok:
-            raise Refused(f"io_error_{c.get_last_error()}")
+            raise Refused(f"io_error_{_CTYPES['get_last_error']()}")
 
     def __enter__(self) -> Self:
         return self
