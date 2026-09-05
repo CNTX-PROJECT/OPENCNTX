@@ -377,6 +377,34 @@ class ReferenceHostTests(unittest.TestCase):
         for name in f.WATCHED[3:]:
             self.assertEqual(snapshot(self.fixture)[str(Path(name))], self.before[str(Path(name))])
 
+    def test_completed_rename_error_restores_actual_handle_positions(self) -> None:
+        for method, total in (("replace", 3), ("seal", 3), ("rename", 6)):
+            for ordinal in range(1, total + 1):
+                with self.subTest(method=method, ordinal=ordinal):
+                    fixture = ReferenceHostTests()
+                    fixture.setUp()
+                    self.addCleanup(fixture.doCleanups)
+                    original = getattr(f.Handle, method)
+                    calls = 0
+
+                    def lost_reply(handle: f.Handle, *args, _original=original, _ordinal=ordinal) -> None:
+                        nonlocal calls
+                        old_path = handle.path
+                        _original(handle, *args)
+                        calls += 1
+                        if calls == _ordinal:
+                            # Even the handle wrapper's cached path may be stale.
+                            handle.path = old_path
+                            raise f.Refused("injected error after completed operation")
+
+                    with patch.object(f.Handle, method, lost_reply):
+                        reply = fixture.host.dispatch(fixture.request)
+                    self.assertEqual(reply["decision"], "DENY")
+                    self.assertEqual(reply["execution"], "NOT_PERFORMED_OR_ROLLED_BACK", reply)
+                    for name in f.WATCHED:
+                        self.assertTrue((fixture.fixture / name).is_file(), name)
+                        self.assertEqual(f.digest((fixture.fixture / name).read_bytes()), fixture.before[str(Path(name))])
+
     def test_real_messages_only_subprocess(self) -> None:
         evidence = []
         with subprocess.Popen(

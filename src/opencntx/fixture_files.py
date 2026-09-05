@@ -74,6 +74,7 @@ class Handle:
             ),
             "CloseHandle": ([w.HANDLE], w.BOOL),
             "GetFileInformationByHandle": ([w.HANDLE, c.POINTER(Info)], w.BOOL),
+            "GetFinalPathNameByHandleW": ([w.HANDLE, w.LPWSTR, w.DWORD, w.DWORD], w.DWORD),
             "SetFilePointerEx": (
                 [w.HANDLE, c.c_longlong, c.POINTER(c.c_longlong), w.DWORD],
                 w.BOOL,
@@ -163,6 +164,17 @@ class Handle:
         if count.value > MAX_FILE:
             raise Refused("oversize")
         return buf.raw[: count.value]
+
+    def current_path(self) -> Path:
+        """Read the held object's OS position, not an interrupted Python update."""
+        buffer = c.create_unicode_buffer(32768)
+        length = self.k.GetFinalPathNameByHandleW(self.h, buffer, len(buffer), 0)
+        if not 0 < length < len(buffer):
+            raise Refused("held_path_unavailable")
+        value = buffer.value
+        if not value.startswith("\\\\?\\") or value.startswith("\\\\?\\UNC\\"):
+            raise Refused("held_path_not_local_dos")
+        return Path(value[4:])
 
     def replace(self, data: bytes) -> None:
         if not self.new or self.sealed:
@@ -280,24 +292,34 @@ def execute(binding: Binding) -> None:
         # All replacement bytes are prepared before any original name moves.
         for handle, replacement in zip(staged, b.replacements):
             handle.replace(replacement)
-        moved: list[int] = []
-        published: list[int] = []
         try:
             for i in range(3):
                 handles[i].rename(b.root / RETAINED[i])
-                moved.append(i)
                 staged[i].seal()
                 staged[i].rename(b.root / NAMES[i])
-                published.append(i)
         except BaseException:
             # Recovery never overwrites a competing new destination. Original
             # file objects, including aliases created during the operation,
             # retain their original bytes. Power-loss atomicity is not claimed.
             try:
-                for i in reversed(moved):
-                    if i in published:
+                for i in reversed(range(3)):
+                    position = handles[i].current_path()
+                    if position == b.root / NAMES[i]:
+                        continue
+                    if position != b.root / RETAINED[i]:
+                        raise Refused("unexpected_original_position")
+                    staged_position = staged[i].current_path()
+                    if staged_position == b.root / NAMES[i]:
                         staged[i].rename(b.root / STAGED[i])
+                    elif staged_position != b.root / STAGED[i]:
+                        raise Refused("unexpected_staged_position")
                     handles[i].rename(b.root / NAMES[i])
+                if any(
+                    handles[i].current_path() != b.root / NAMES[i]
+                    or handles[i].read() != b.originals[i]
+                    for i in range(3)
+                ):
+                    raise Refused("rollback_readback_failed")
             except BaseException as rollback_failure:
                 raise RecoveryRequired("rollback_failed_backups_retained") from rollback_failure
             raise
