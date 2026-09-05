@@ -23,6 +23,7 @@ from .continuity import (
     validate_current_goal_binding,
 )
 from .goal_binding import HostSource, build_goal_binding
+from .goal_progress import load_goal_progress
 from .task_assessment import TaskFacts, assess_bound_task, require_assessed_broad_execution
 
 MAX_REQUEST = 65_536
@@ -66,9 +67,11 @@ class ReferenceHost:
         request_id: str,
         revision: int,
         assessment_facts: TaskFacts | None = None,
+        progress_node_id: str | None = None,
     ) -> None:
         self.project_root = project_root
         self.consumed = False
+        self.progress_node_id = progress_node_id
         exclusions = intent.get("exclusions")
         if (
             intent.get("scope") != ["parent"]
@@ -126,7 +129,14 @@ class ReferenceHost:
                 bound = validate_current_goal_binding(
                     self.project_root, message, expected=self.expected
                 )
-                require_assessed_broad_execution(self.assessment, self.expected)
+                progress = (
+                    None
+                    if self.progress_node_id is None
+                    else load_goal_progress(self.project_root, self.expected)
+                )
+                require_assessed_broad_execution(
+                    self.assessment, self.expected, progress=progress, node_id=self.progress_node_id
+                )
                 if (
                     bound["request"]["source"]["role"] != "OWNER"
                     or bound["intent_v1"]["authority_state"] != "APPROVED"

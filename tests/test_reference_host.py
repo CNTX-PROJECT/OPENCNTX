@@ -33,6 +33,7 @@ def host(
     source_role: str = "OWNER",
     fixture: Path | None = None,
     assessment_facts: TaskFacts | None = None,
+    progress_node_id: str | None = None,
 ) -> ReferenceHost:
     intent = build_intent_contract(
         human_intent="Replace exactly parent files, preserve all children and backups.",
@@ -56,6 +57,7 @@ def host(
         request_id="FIXTURE-REQUEST",
         revision=1,
         assessment_facts=assessment_facts,
+        progress_node_id=progress_node_id,
     )
 
 

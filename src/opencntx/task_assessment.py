@@ -8,6 +8,7 @@ from typing import Any
 
 from .continuity import _fail, _value_digest
 from .goal_binding import BoundGoal, _canonical, _text
+from .goal_progress import GoalProgress, progress_readiness, validate_goal_progress
 
 KINDS = frozenset(
     {"SINGLE_RESULT", "COUNT_ONLY", "MULTI_PHASE", "MULTI_STREAM", "FULL_COLLECTION_ANALYSIS"}
@@ -163,7 +164,13 @@ def validate_task_assessment(assessment: TaskAssessment, goal: BoundGoal) -> dic
     return value
 
 
-def require_assessed_broad_execution(assessment: TaskAssessment, goal: BoundGoal) -> None:
+def require_assessed_broad_execution(
+    assessment: TaskAssessment,
+    goal: BoundGoal,
+    *,
+    progress: GoalProgress | None = None,
+    node_id: str | None = None,
+) -> None:
     """No standalone ready flag: uncertainty/planning needs cannot be bypassed."""
     classification = validate_task_assessment(assessment, goal)["classification"]
     if classification["reconnaissance_required"]:
@@ -171,7 +178,34 @@ def require_assessed_broad_execution(assessment: TaskAssessment, goal: BoundGoal
             "task_reconnaissance_required", "Bounded source reconnaissance is required first."
         )
     if classification["required_planning"] != "CHECKLIST":
-        raise _fail(
-            "task_planning_required",
-            "Verified main/child planning is required before broad execution.",
-        )
+        if progress is None or node_id is None:
+            raise _fail(
+                "task_planning_required",
+                "Verified main/child planning is required before broad execution.",
+            )
+        value = validate_goal_progress(progress, goal)
+        root = next(node for node in value["nodes"] if node["id"] == value["root_id"])
+        if not root["children"] or (
+            classification["size_class"] == "MEGA" and len(root["children"]) < 2
+        ):
+            raise _fail(
+                "task_planning_required", "The hierarchy does not meet the required size class."
+            )
+        if any(
+            not node["source_snapshot"]
+            for node in value["nodes"]
+            if node["parent"] == value["root_id"]
+        ):
+            raise _fail(
+                "task_reconnaissance_required", "Each major branch needs bounded source evidence."
+            )
+    if progress is not None:
+        readiness = progress_readiness(progress, goal)
+        value = progress.payload()
+        node = next((node for node in value["nodes"] if node["id"] == node_id), None)
+        if (
+            node is None
+            or node_id not in readiness["ready_nodes"]
+            or goal.payload()["action"]["outcome_id"] not in node["outcome_ids"]
+        ):
+            raise _fail("task_node_not_ready", "This exact outcome has no ready hierarchy leaf.")
