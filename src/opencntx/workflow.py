@@ -304,7 +304,7 @@ def _text_list(values: Sequence[str], *, field: str, required: bool = False) -> 
     if isinstance(values, (str, bytes)):
         raise WorkflowError(f"{field} moet een lijst zijn.", code="task_field_invalid")
     if required and not values:
-        raise WorkflowError(f"{field} vereist minimaal één waarde.", code="task_field_invalid")
+        raise WorkflowError(f"{field} requires at least one value.", code="task_field_invalid")
     if len(values) > MAX_LIST_ITEMS:
         raise WorkflowError(f"{field} bevat te veel waarden.", code="task_field_invalid")
     normalized = tuple(_short_text(value, field=field) for value in values)
@@ -387,7 +387,7 @@ def _input_record(root: Path, relative_text: str) -> dict[str, object]:
     relative = _safe_relative(relative_text, field="Inputpad")
     if relative.parts[0] not in INPUT_ROOTS:
         raise WorkflowError(
-            f"Inputpad valt buiten de officiële invoermappen: {relative.as_posix()}",
+            f"Input path is outside the official input directories: {relative.as_posix()}",
             code="task_input_path_invalid",
         )
     path = _assert_no_symlink(root, relative, code="task_input_unsafe")
@@ -770,7 +770,7 @@ def _event(chain: TaskChain, event_type: str) -> TaskEvent:
     matches = [event for event in chain.events if event.event_type == event_type]
     if len(matches) != 1:
         raise WorkflowError(
-            f"Taak vereist exact één event van type {event_type}.",
+            f"Task requires exactly one event of type {event_type}.",
             code="task_record_invalid",
         )
     return matches[0]
@@ -1015,7 +1015,7 @@ def _task_directories(root: Path) -> list[Path]:
     for child in children:
         if child.name.startswith(".task-") and child.name.endswith(".tmp"):
             raise WorkflowError(
-                "TASKS bevat een onvoltooide stagingdirectory; controleer deze vóór nieuw werk.",
+                "TASKS contains an incomplete staging directory; inspect it before new work.",
                 code="task_staging_incomplete",
             )
         if (
@@ -1496,7 +1496,7 @@ def _append_event(
             actual_record = _copy_artifact(source, destination)
             if actual_record != expected_record:
                 raise WorkflowError(
-                    "Pogingbewijs veranderde vóór publicatie.",
+                    "Attempt evidence changed before publication.",
                     code="task_artifact_changed",
                 )
             transaction.mark_target_published(destination)
@@ -1763,7 +1763,7 @@ def _copy_artifact(source_path: Path, destination: Path) -> dict[str, object]:
         identity_after = (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
         if identity_before != identity_after or byte_count != before.st_size:
             raise WorkflowError(
-                "Artifact veranderde tijdens kopiëren.", code="task_artifact_changed"
+                "Artifact changed while being copied.", code="task_artifact_changed"
             )
         if destination.exists() or destination.is_symlink():
             raise WorkflowError(

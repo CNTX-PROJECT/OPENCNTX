@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/global-recovery-analysis-v1.schema.json",
+  "title": "OPENCNTX whole-chain recovery analysis v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "round_number", "assignment_id", "chain_coverage", "failure_layers", "prior_failure_digests", "evidence_digest", "connected_conflicts", "rules", "effective_rule_ids", "superseded_rule_ids", "previous_analysis_digest", "provider_call_required", "authority_changed", "analysis_digest"],
+  "properties": {
+    "format": {"const": "opencntx-global-recovery-analysis"},
+    "format_version": {"const": 1},
+    "round_number": {"type": "integer", "minimum": 1, "maximum": 2},
+    "assignment_id": {"type": "string", "minLength": 1, "maxLength": 80},
+    "chain_coverage": {"type": "array", "minItems": 1, "maxItems": 100, "uniqueItems": true, "items": {"type": "string"}},
+    "failure_layers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "prior_failure_digests": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "evidence_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "connected_conflicts": {"type": "array", "items": {"type": "object"}},
+    "rules": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "effective_rule_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "superseded_rule_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "previous_analysis_digest": {"type": ["string", "null"]},
+    "provider_call_required": {"const": false},
+    "authority_changed": {"const": false},
+    "analysis_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -7,10 +7,14 @@ import ast
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+import language_gate
+import schema_purpose_gate
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "src" / "opencntx"
@@ -38,10 +42,36 @@ FORBIDDEN_SUPPRESSIONS = (
     "# " + "type: ignore",
     "# " + "pragma: no cover",
 )
+START_HERE_WARNING_WORDS = 1_000
+WORD_TOKEN = re.compile(r"\b[\w-]+\b", flags=re.UNICODE)
 
 
 class QualityGateError(RuntimeError):
     """Raised when a quality ratchet fails closed."""
+
+
+def count_document_words(text: str) -> int:
+    """Use one Unicode-aware tokenizer for the start-here soft budget."""
+    return len(WORD_TOKEN.findall(text))
+
+
+def check_start_here_budget(path: Path | None = None) -> dict[str, Any]:
+    """Report the accepted warning from 1,000 words without inventing a hard limit."""
+    selected = ROOT / "docs" / "start-here.md" if path is None else path
+    words = count_document_words(selected.read_text(encoding="utf-8"))
+    status = "WARN" if words >= START_HERE_WARNING_WORDS else "OK"
+    result = {
+        "path": selected.as_posix(),
+        "words": words,
+        "warning_threshold": START_HERE_WARNING_WORDS,
+        "hard_limit": None,
+        "status": status,
+    }
+    print(
+        f"QUALITY_START_HERE_{status} words={words} "
+        f"warning={START_HERE_WARNING_WORDS} hard_limit=NONE"
+    )
+    return result
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -223,6 +253,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("metrics")
     subparsers.add_parser("lint")
     subparsers.add_parser("types")
+    subparsers.add_parser("start-here")
+    subparsers.add_parser("language")
+    subparsers.add_parser("schemas")
     coverage = subparsers.add_parser("coverage")
     coverage.add_argument("report", type=Path)
     all_checks = subparsers.add_parser("all")
@@ -239,11 +272,25 @@ def main(argv: list[str] | None = None) -> int:
             check_lint()
         if args.command in {"types", "all"}:
             check_types()
+        if args.command in {"start-here", "all"}:
+            check_start_here_budget()
+        if args.command in {"language", "all"}:
+            language_gate.check_language()
+        if args.command in {"schemas", "all"}:
+            schema_purpose_gate.check_schema_purposes()
         if args.command == "coverage":
             check_coverage(args.report)
         elif args.command == "all":
             check_coverage(args.coverage_report)
-    except (KeyError, OSError, QualityGateError, TypeError, ValueError) as exc:
+    except (
+        KeyError,
+        OSError,
+        QualityGateError,
+        TypeError,
+        ValueError,
+        language_gate.LanguageGateError,
+        schema_purpose_gate.SchemaPurposeError,
+    ) as exc:
         print(f"QUALITY_GATE_FAILED: {exc}", file=sys.stderr)
         return 1
     return 0

@@ -55,6 +55,35 @@ DEFAULT_LABELS = {
 }
 
 
+def recovery_output_details(handoff: Mapping[str, Any]) -> list[str]:
+    """Project a complete compact timeline without hiding open outcomes."""
+    basis = {key: value for key, value in handoff.items() if key != "handoff_digest"}
+    if (
+        handoff.get("format") != "opencntx-recovery-handoff"
+        or handoff.get("handoff_digest") != _value_digest(basis)
+        or handoff.get("authority_changed") is not False
+        or handoff.get("open_required_outcomes") is not True
+    ):
+        raise _fail("output_recovery_invalid", "Recovery handoff is invalid or incomplete.")
+    timeline = handoff.get("attempt_timeline")
+    alternatives = handoff.get("alternative_approaches")
+    if not isinstance(timeline, list) or not isinstance(alternatives, list):
+        raise _fail("output_recovery_invalid", "Recovery timeline or alternatives are invalid.")
+    lines = [
+        f"{item['stage']}: {item['failure_layer']} - {item['reason']}"
+        for item in timeline
+    ]
+    lines.extend(
+        [
+            f"Alternative approaches: {', '.join(str(item) for item in alternatives) or 'none'}",
+            f"Rollback: {handoff['rollback']}",
+            f"Minimum continuation: {handoff['minimum_continuation']}",
+            "Required outcomes remain open; this output grants no authority.",
+        ]
+    )
+    return lines
+
+
 def extract_bound_session_metrics(
     *,
     session_id: str,

@@ -118,7 +118,10 @@ publication, the release owner must:
 
 A PyPI 404 at one moment is not ownership or reservation evidence. This
 repository contains no PyPI token, trusted-publishing configuration, OIDC
-permission, or publication command.
+permission, or publication command. PyPI and TestPyPI remain outside the
+current distribution route. Adding either one requires a materially changed
+situation and a new exact OWNER decision; a local build or green test cannot
+grant that authority.
 
 Documentation-only commits after a stable release do not replace or mutate the
 release. The CI release-version gate accepts them only when the stable tag is

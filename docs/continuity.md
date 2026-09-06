@@ -7,6 +7,11 @@ one hash-chained history outside the chat. It is local-first, model-free and
 provider-neutral. Existing `init`, `pack`, `verify` and `workspace` commands
 remain available.
 
+For one host, use the fast route below directly; no host claim is needed. Use
+the concurrent-host protocol only when more than one process could act on the
+same roadmap. Both routes keep the same single writer, authority, target,
+privacy, integrity, and evidence checks.
+
 ## Fast route
 
 The commands in this guide remain Stable in the current v1.5.0 release. The
@@ -96,12 +101,17 @@ opencntx flow advance --outcome FAIL `
   --reason "Relevant input changed after the failed check"
 ```
 
-The flow allows at most three recovery rounds for the current assignment. The
-counter and its failure fingerprints reset only when that assignment
-passes and the roadmap selects the next one; earlier failures remain in the
-append-only ledger for audit. It blocks the third failure in one assignment,
-blocks the third repeat of the same strategy sooner, and never retries an
-external action itself.
+Roadmaps that preclassify every detail with `CHAIN.` or `STANDALONE.` use four
+fixed stages: `STANDARD_ATTEMPT_1`, `STANDARD_RETRY_2`,
+`GLOBAL_RECOVERY_1`, and `GLOBAL_RECOVERY_2`. A global stage must bind the
+complete relevant chain, the failure layer, prior evidence, and a materially
+changed approach. The second global stage also needs new evidence and strictly
+wider coverage. An exhausted chain stops with a detailed report. An exhausted
+standalone assignment may be skipped only to a proven independent assignment;
+that required skip still prevents full-roadmap success.
+
+Older roadmaps without either classification retain their v1 three-round
+behavior and stored bytes. No migration silently changes historical evidence.
 
 ## Short existing check
 

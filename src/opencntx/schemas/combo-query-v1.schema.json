@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/combo-query-v1.schema.json",
+  "title": "OPENCNTX bounded combo query result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "combo_digest", "limit", "match_count", "results", "ranking", "query_digest"],
+  "properties": {
+    "format": {"const": "opencntx-combo-query"},
+    "format_version": {"const": 1},
+    "combo_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "limit": {"type": "integer", "minimum": 1, "maximum": 20},
+    "match_count": {"type": "integer", "minimum": 0},
+    "results": {"type": "array", "maxItems": 20, "items": {"type": "object"}},
+    "ranking": {"const": "status-kind-sequence-id"},
+    "query_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

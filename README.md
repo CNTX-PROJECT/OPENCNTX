@@ -58,7 +58,7 @@ cd OPENCNTX
 python -m pip install .
 ```
 
-Contributors who deliberately need the current source can clone `main`:
+Contributors testing an unpublished candidate can clone its exact branch; the stable instructions above remain authoritative until publication:
 
 ```powershell
 git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git

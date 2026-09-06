@@ -379,7 +379,7 @@ def _text_list(
         raise PlaybookError(f"{field} moet een lijst zijn.", code="definition_field_invalid")
     if required and not values:
         raise PlaybookError(
-            f"{field} vereist minimaal één waarde.", code="definition_field_invalid"
+            f"{field} requires at least one value.", code="definition_field_invalid"
         )
     if len(values) > MAX_ITEMS:
         raise PlaybookError(f"{field} bevat te veel waarden.", code="definition_field_invalid")
@@ -731,7 +731,7 @@ def _load_definition(
     )
     if document_bytes != render(record, legacy=legacy):
         raise PlaybookError(
-            "Definitiedocument stemt niet overeen met het officiële record.",
+            "Definition document does not match the official record.",
             code="definition_stale",
         )
     definition = _Definition(
@@ -1717,7 +1717,7 @@ def _load_assignment(project_root: Path, task_id: str, executor_id: str) -> _Ass
     children = _directory_entries(parent, label="Taakgebonden uitvoerderpad")
     if len(children) != 1 or children[0].name != executor_id:
         raise PlaybookError(
-            "Taak vereist exact één bekend uitvoerderpakket.", code="executor_path_invalid"
+            "Task requires exactly one known executor package.", code="executor_path_invalid"
         )
     directory = children[0]
     if _is_link_like(directory) or not directory.is_dir():
@@ -1840,7 +1840,7 @@ def _load_assignment(project_root: Path, task_id: str, executor_id: str) -> _Ass
         )
     if document_bytes != _render_assignment(record, legacy=legacy_variant):
         raise PlaybookError(
-            "Uitvoerderdocument stemt niet overeen met het officiële record.",
+            "Executor document does not match the official record.",
             code="executor_stale",
         )
     actual_record_digest = _digest(record.get("record_digest"), field="Uitvoerderrecorddigest")

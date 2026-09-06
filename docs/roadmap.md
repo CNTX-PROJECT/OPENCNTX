@@ -241,6 +241,37 @@ Ideas are evaluated against the product boundary. AI calls, automatic agents,
 cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
 or other expansion are not implied roadmap commitments.
 
+### Later real-project pilot protocol
+
+A real R17 pilot can begin only after the local R17 implementation and its
+Windows, Ubuntu, package-only, recovery, privacy, rollback, and scale evidence
+are green. The pilot itself remains a separate decision. The OWNER must choose
+one exact existing project and approve its scope before any project state is
+changed.
+
+The selected project must contain real multi-step work over at least two weeks,
+have a known private-data boundary, permit a reversible return to its prior
+OPENCNTX route, and avoid a production-critical first trial. A baseline is
+recorded before activation. Synthetic tasks may test the harness but never
+count as pilot success.
+
+The pilot records these measures per route and for the whole period:
+
+- time to the first useful answer and to a completed task;
+- safety checks, durable artifacts, and state writes by profile;
+- automatic promotions, warnings, hard blocks, and any incorrect route choice;
+- recovery stage, failure layer, repeated approach rejection, and final result;
+- restart and handoff readback, unresolved outcomes, and rollback use;
+- Combo size, query result limit, lookup time, supersession, and epoch growth;
+- OWNER interventions and any avoidable friction on simple work.
+
+The review point is the later of two full weeks or 25 real tasks, with at least
+three genuine restart or handoff events. Stop immediately on an authority,
+privacy, integrity, single-writer, or rollback failure. Rollback restores the
+project's pinned pre-pilot route and preserves the evidence needed to explain
+the stop. Completion of the measurements grants no publication, installation,
+or adoption authority; the OWNER evaluates the result separately.
+
 The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
 retained from Stable v1.4.0 in the v1.5.0 release target.
 

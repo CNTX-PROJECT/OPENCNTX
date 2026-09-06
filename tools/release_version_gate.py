@@ -26,6 +26,7 @@ GATE_SUPPORT_PATHS = frozenset(
     }
 )
 ALLOWED_POST_RELEASE_STATUSES = frozenset({"A", "M"})
+CURRENT_SURFACES = Path("tests/fixtures/quality/current-version-surfaces-v1.json")
 
 
 class ReleaseVersionError(RuntimeError):
@@ -95,6 +96,69 @@ def _stable_tags(repository: Path) -> dict[StableVersion, str]:
             raise ReleaseVersionError(f"stable tag is not canonical: {tag}")
         result[version] = tag
     return result
+
+
+def inspect_current_version_surfaces(
+    repository: Path, *, version: StableVersion | None = None
+) -> dict[str, Any]:
+    """Verify declared current claims while leaving historical versions untouched."""
+    selected = _project_version(repository) if version is None else version
+    manifest_path = repository / CURRENT_SURFACES
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ReleaseVersionError(f"cannot read current-version surface manifest: {exc}") from exc
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("format") != "opencntx-current-version-surfaces"
+        or manifest.get("format_version") != 1
+        or not isinstance(manifest.get("surfaces"), list)
+    ):
+        raise ReleaseVersionError("current-version surface manifest is invalid")
+    checked: list[dict[str, Any]] = []
+    for surface in manifest["surfaces"]:
+        if not isinstance(surface, dict) or set(surface) != {"path", "patterns", "purpose"}:
+            raise ReleaseVersionError("current-version surface entry is invalid")
+        path = repository / str(surface["path"])
+        patterns = surface["patterns"]
+        if not isinstance(patterns, list) or not patterns:
+            raise ReleaseVersionError(f"current-version surface has no patterns: {surface['path']}")
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise ReleaseVersionError(f"cannot read current-version surface {surface['path']}") from exc
+        matches = 0
+        for template in patterns:
+            if not isinstance(template, str) or template.count("{version}") != 1:
+                raise ReleaseVersionError("current-version surface pattern is invalid")
+            pattern = template.replace(
+                "{version}", r"(?P<version>[0-9]+\.[0-9]+\.[0-9]+)"
+            )
+            match = re.search(pattern, text, flags=re.MULTILINE)
+            if match is None:
+                raise ReleaseVersionError(
+                    f"declared current-version claim is missing: {surface['path']}"
+                )
+            found = StableVersion.parse(match.group("version"))
+            if found != selected:
+                raise ReleaseVersionError(
+                    f"stale current version in {surface['path']}: {found} != {selected}"
+                )
+            matches += 1
+        checked.append(
+            {
+                "path": surface["path"],
+                "purpose": surface["purpose"],
+                "claim_count": matches,
+            }
+        )
+    return {
+        "manifest": CURRENT_SURFACES.as_posix(),
+        "project_version": str(selected),
+        "surface_count": len(checked),
+        "claim_count": sum(int(item["claim_count"]) for item in checked),
+        "surfaces": checked,
+    }
 
 
 def _is_documentation_path(path: str) -> bool:
@@ -179,6 +243,11 @@ def inspect_release_version(
         raise ReleaseVersionError(
             f"project version {version} differs from expected version {expected_version}"
         )
+    surfaces = (
+        inspect_current_version_surfaces(repository, version=version)
+        if (repository / CURRENT_SURFACES).is_file()
+        else None
+    )
 
     tags = _stable_tags(repository)
     head = _git(repository, "rev-parse", "HEAD")
@@ -190,6 +259,7 @@ def inspect_release_version(
             "latest_tag": None,
             "project_version": str(version),
             "result": "INITIAL_RELEASE_AHEAD",
+            "current_surfaces": surfaces,
         }
 
     latest = max(tags)
@@ -222,6 +292,7 @@ def inspect_release_version(
         "post_release_paths": post_release_paths,
         "project_version": str(version),
         "result": result,
+        "current_surfaces": surfaces,
     }
 
 

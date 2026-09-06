@@ -2,6 +2,31 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## Unreleased - R17 local candidate
+
+### Added
+
+- Added proportional `ANSWER_ONLY`, `LIGHT_TASK`, and `GOVERNED_FLOW`
+  assessment with invariant hard guards and automatic fail-closed promotion.
+- Added a four-stage recovery route with two bounded standard attempts followed
+  by two whole-chain analyses that must use materially different approaches.
+- Added a bounded, deterministic Combo Roadmap with atomic generations,
+  stable identifiers, source-linked queries, pre-start comparison, history
+  compaction, long-horizon sharding, and rollback receipts.
+
+### Changed
+
+- Continuity state v2 now preserves recovery evidence and distinguishes blocked
+  chain work from independently skippable standalone work.
+- Release quality now checks declared current-version surfaces, schema purpose,
+  source-language portability, and a warning-only start-here threshold.
+
+### Boundaries
+
+- This is an unpublished local development candidate. Version selection,
+  public PR, release, installation, adoption, and a real pilot remain separate
+  OWNER decisions with their own evidence gates.
+
 ## 1.5.0 - 2026-09-06
 
 ### Added

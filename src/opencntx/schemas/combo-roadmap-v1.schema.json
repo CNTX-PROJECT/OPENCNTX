@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/combo-roadmap-v1.schema.json",
+  "title": "OPENCNTX bounded combo roadmap v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "project_id", "revision", "active", "recent_completed", "epochs", "decisions", "conflicts", "capabilities", "relations", "history_index", "source_roadmap_ids", "combo_digest"],
+  "properties": {
+    "format": {"const": "opencntx-combo-roadmap"},
+    "format_version": {"const": 1},
+    "project_id": {"type": "string", "minLength": 1, "maxLength": 80},
+    "revision": {"type": "integer", "minimum": 0},
+    "active": {"type": "array", "maxItems": 12, "items": {"type": "object"}},
+    "recent_completed": {"type": "array", "maxItems": 3, "items": {"type": "object"}},
+    "epochs": {"type": "array", "maxItems": 12, "items": {"type": "object"}},
+    "decisions": {"type": "array", "maxItems": 32, "items": {"type": "object"}},
+    "conflicts": {"type": "array", "maxItems": 24, "items": {"type": "object"}},
+    "capabilities": {"type": "array", "maxItems": 24, "items": {"type": "object"}},
+    "relations": {"type": "array", "items": {"type": "object"}},
+    "history_index": {"type": "array", "items": {"type": "object"}},
+    "source_roadmap_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "combo_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

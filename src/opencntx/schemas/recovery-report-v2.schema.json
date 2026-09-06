@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/recovery-report-v2.schema.json",
+  "title": "OPENCNTX exhausted recovery report v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "status", "assignment_id", "dependency_class", "attempt_timeline", "failure_layers", "alternative_approaches", "rollback", "minimum_continuation", "authority_changed", "open_required_outcomes", "report_digest"],
+  "properties": {
+    "format": {"const": "opencntx-recovery-report"},
+    "format_version": {"const": 2},
+    "status": {"enum": ["CONTINUE", "BLOCKED_CHAIN", "SKIPPED_STANDALONE"]},
+    "assignment_id": {"type": ["string", "null"]},
+    "dependency_class": {"enum": ["CHAIN", "STANDALONE", null]},
+    "attempt_timeline": {"type": "array", "maxItems": 4, "items": {"$ref": "recovery-attempt-v2.schema.json"}},
+    "failure_layers": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "alternative_approaches": {"type": "array", "maxItems": 2, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "rollback": {"type": "string", "minLength": 1, "maxLength": 500},
+    "minimum_continuation": {"type": "string", "minLength": 1, "maxLength": 500},
+    "authority_changed": {"const": false},
+    "open_required_outcomes": {"type": "boolean"},
+    "report_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

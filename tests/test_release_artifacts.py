@@ -119,6 +119,16 @@ class ReleaseArtifactUnitTests(unittest.TestCase):
                     ),
                 )
 
+    def test_sdist_content_and_container_bytes_are_reported_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_name:
+            record = self._write_candidate_record(Path(temp_name))
+        self.assertIs(record["reproducibility"]["sdist_content"], True)
+        self.assertIs(record["reproducibility"]["sdist_bytes"], False)
+        self.assertNotEqual(
+            record["reproducibility"]["sdist_content"],
+            record["reproducibility"]["sdist_bytes"],
+        )
+
     def test_verify_candidate_rejects_each_build_toolchain_record_drift(self) -> None:
         for field, value in (
             ("build_frontend", "build==1.2.2"),

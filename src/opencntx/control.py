@@ -116,7 +116,7 @@ def _extract_block(roadmap: bytes) -> bytes | None:
         return None
     if starts != 1 or ends != 1:
         raise ControlError(
-            "CONTROL/ROADMAP.md moet exact één volledig control-markerpair bevatten.",
+            "CONTROL/ROADMAP.md must contain exactly one complete control marker pair.",
             code="control_markers_invalid",
         )
     start = roadmap.find(CONTROL_START)
@@ -221,7 +221,7 @@ def inspect_control(project_root: Path, *, require_snapshot: bool = False) -> Co
         )
         if actual not in {snapshot, legacy_snapshot}:
             raise ControlError(
-                "De beheerde control-snapshot wijkt af van de officiële controlbytes.",
+                "The managed control snapshot differs from the official control bytes.",
                 code="control_snapshot_stale",
             )
         if actual == legacy_snapshot:
@@ -349,14 +349,14 @@ def _refresh_control_snapshot_unlocked(
             target = _snapshot_target(root)
             if state.snapshot_bytes is None:
                 raise ControlError(
-                    "De officiële controlbytes zijn intern onvolledig.",
+                    "The official control bytes are internally incomplete.",
                     code="control_file_invalid",
                 )
             _atomic_snapshot(target, state.snapshot_bytes)
             confirmed = inspect_control(root, require_snapshot=True)
             if confirmed.fingerprint != state.fingerprint:
                 raise ControlError(
-                    "De officiële controlbytes veranderden tijdens refresh.",
+                    "The official control bytes changed during refresh.",
                     code="control_state_changed",
                 )
             state = confirmed

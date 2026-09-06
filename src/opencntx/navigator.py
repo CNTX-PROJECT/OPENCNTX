@@ -269,7 +269,7 @@ def _current_task(root: Path) -> tuple[str, int]:
     matches = CURRENT_TASK_PATTERN.findall(text)
     if len(matches) != 1:
         raise NavigatorError(
-            "CONTROL/CURRENT.md moet exact één actieve taak en revisie noemen.",
+            "CONTROL/CURRENT.md must name exactly one active task and revision.",
             code="context_current_invalid",
         )
     return matches[0][0], int(matches[0][1])
@@ -432,14 +432,14 @@ def _read_catalog(
             or not metadata["generated_at"]
         ):
             raise NavigatorError(
-                "Catalogus en officiële werkruimtebytes verschillen; rebuild vereist.",
+                "Catalog and official workspace bytes differ; rebuild is required.",
                 code="catalog_rebuild_required",
             )
         for table, expected in expected_rows.items():
             actual = list(connection.execute(CATALOG_SELECT_QUERIES[table]))
             if sorted(actual, key=repr) != sorted(expected, key=repr):
                 raise NavigatorError(
-                    "Catalogusrijen verschillen van de officiële werkruimtebytes.",
+                    "Catalog rows differ from the official workspace bytes.",
                     code="catalog_rebuild_required",
                 )
     except NavigatorError:
@@ -528,7 +528,7 @@ def _prepare_route(
     content_inputs = tuple(path for path in input_paths if not path.startswith("CONTROL/"))
     if not content_inputs:
         raise NavigatorError(
-            "Taak vereist minimaal één inhoudelijke input buiten CONTROL.",
+            "Task requires at least one substantive input outside CONTROL.",
             code="context_content_input_missing",
         )
     current_task_id, current_revision = _current_task(root)

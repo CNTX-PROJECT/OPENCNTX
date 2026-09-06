@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/recovery-handoff-v1.schema.json",
+  "title": "OPENCNTX recovery output and restart handoff v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "assignment_id", "status", "attempt_timeline", "alternative_approaches", "rollback", "minimum_continuation", "open_required_outcomes", "report_digest", "state_digest", "execution_capsule_digest", "evidence_digest", "authority_changed", "handoff_digest"],
+  "properties": {
+    "format": {"const": "opencntx-recovery-handoff"},
+    "format_version": {"const": 1},
+    "assignment_id": {"type": "string"},
+    "status": {"enum": ["BLOCKED_CHAIN", "SKIPPED_STANDALONE"]},
+    "attempt_timeline": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "recovery-attempt-v2.schema.json"}},
+    "alternative_approaches": {"type": "array", "maxItems": 2, "items": {"type": "string"}},
+    "rollback": {"type": "string"},
+    "minimum_continuation": {"type": "string"},
+    "open_required_outcomes": {"const": true},
+    "report_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "execution_capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "authority_changed": {"const": false},
+    "handoff_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
