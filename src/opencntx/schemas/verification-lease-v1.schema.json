@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/verification-lease-v1.schema.json",
+  "title": "OPENCNTX exact verification lease v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "version", "project_root_digest", "context_digest", "instructions_digest", "lease_digest"],
+  "properties": {
+    "format": {"const": "opencntx-verification-lease"},
+    "format_version": {"const": 1},
+    "version": {"type": "string", "minLength": 1},
+    "project_root_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "context_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "instructions_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "lease_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

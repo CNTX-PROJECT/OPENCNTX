@@ -223,7 +223,7 @@ def _safe_line(value: object, *, field: str, maximum: int, allow_empty: bool = F
     if not isinstance(value, str):
         raise CatalogError(f"{field} moet tekst zijn.", code="chapter_schema_invalid")
     if value != value.strip() or "\n" in value or "\r" in value:
-        raise CatalogError(f"{field} moet één nette regel zijn.", code="chapter_schema_invalid")
+        raise CatalogError(f"{field} must be one clean line.", code="chapter_schema_invalid")
     if not allow_empty and not value:
         raise CatalogError(f"{field} mag niet leeg zijn.", code="chapter_schema_invalid")
     if len(value) > maximum:

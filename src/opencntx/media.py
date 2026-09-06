@@ -810,7 +810,7 @@ def _prepare_registration_plan(
     requested = text_path.absolute()
     if requested.is_symlink() or not requested.is_file():
         raise MediaError(
-            "Afgeleide tekst moet één regulier bestand zijn.",
+            "Derived text must be one regular file.",
             code="media_text_not_file",
         )
     try:
@@ -1110,7 +1110,7 @@ def review_derivation(
     derivation = _one_derivation(root, source_id, derivation_id)
     if derivation.status != "UNREVIEWED":
         raise MediaError(
-            "Alleen een UNREVIEWED afleiding kan exact één review krijgen.",
+            "Only an UNREVIEWED derivative can receive exactly one review.",
             code="media_review_state_invalid",
         )
     expected_content = _digest(content_sha256, field="content_sha256")

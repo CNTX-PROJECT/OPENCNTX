@@ -213,22 +213,22 @@ features or expose private project records.
 
 ## Current state
 
-The v1.5.0 R15 release target connects original requests, exact actions,
-proportional planning, linked progress, source coverage and restart-safe handoff.
-The closed Windows reference host is explicitly separate from arbitrary Codex
-tools. It preserves later user work during recovery and retains the v1 boundary.
-See [Goal-bound workflows](goal-bound-workflows.md) for the actual use and limits.
+The v1.6.0 R17 release adds proportional answer-only, light-task, and governed
+profiles; four-stage recovery with whole-chain analysis; restart-safe recovery
+handoff; and a bounded Combo Roadmap with atomic generations, query, comparison,
+supersession, epochs, and long-horizon sharding. Existing core packaging,
+workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
 
-- Source release target: `v1.5.0`
-- Package version: `1.5.0`
+- Source release target: `v1.6.0`
+- Package version: `1.6.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
-- Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Published availability: the exact `v1.5.0` tag and matching GitHub Release are
+- Product focus: proportional local context and restart-safe governed work
+- Published availability: the exact `v1.6.0` tag and matching GitHub Release are
   authoritative; source state alone is not publication. Earlier releases stay immutable.
-- Release distribution: exact `opencntx-1.5.0-py3-none-any.whl`,
-  `opencntx-1.5.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Release distribution: exact `opencntx-1.6.0-py3-none-any.whl`,
+  `opencntx-1.6.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
@@ -241,8 +241,39 @@ Ideas are evaluated against the product boundary. AI calls, automatic agents,
 cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
 or other expansion are not implied roadmap commitments.
 
+### Later real-project pilot protocol
+
+A real R17 pilot can begin only after the local R17 implementation and its
+Windows, Ubuntu, package-only, recovery, privacy, rollback, and scale evidence
+are green. The pilot itself remains a separate decision. The OWNER must choose
+one exact existing project and approve its scope before any project state is
+changed.
+
+The selected project must contain real multi-step work over at least two weeks,
+have a known private-data boundary, permit a reversible return to its prior
+OPENCNTX route, and avoid a production-critical first trial. A baseline is
+recorded before activation. Synthetic tasks may test the harness but never
+count as pilot success.
+
+The pilot records these measures per route and for the whole period:
+
+- time to the first useful answer and to a completed task;
+- safety checks, durable artifacts, and state writes by profile;
+- automatic promotions, warnings, hard blocks, and any incorrect route choice;
+- recovery stage, failure layer, repeated approach rejection, and final result;
+- restart and handoff readback, unresolved outcomes, and rollback use;
+- Combo size, query result limit, lookup time, supersession, and epoch growth;
+- OWNER interventions and any avoidable friction on simple work.
+
+The review point is the later of two full weeks or 25 real tasks, with at least
+three genuine restart or handoff events. Stop immediately on an authority,
+privacy, integrity, single-writer, or rollback failure. Rollback restores the
+project's pinned pre-pilot route and preserves the evidence needed to explain
+the stop. Completion of the measurements grants no publication, installation,
+or adoption authority; the OWNER evaluates the result separately.
+
 The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
-retained from Stable v1.4.0 in the v1.5.0 release target.
+retained from Stable v1.4.0 in the v1.6.0 release target.
 
 ## Related pages
 

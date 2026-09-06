@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/combo-optimization-receipt-v1.schema.json",
+  "title": "OPENCNTX combo projection receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "combo_digest", "json_digest", "markdown_digest", "markdown_words", "markdown_bytes", "query_default", "query_maximum", "epoch_count", "history_index_count", "history_shard_count", "receipt_digest"],
+  "properties": {
+    "format": {"const": "opencntx-combo-optimization-receipt"},
+    "format_version": {"const": 1},
+    "combo_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "json_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "markdown_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "markdown_words": {"type": "integer", "minimum": 0, "maximum": 2500},
+    "markdown_bytes": {"type": "integer", "minimum": 0, "maximum": 20480},
+    "query_default": {"const": 10},
+    "query_maximum": {"const": 20},
+    "epoch_count": {"type": "integer", "minimum": 0, "maximum": 12},
+    "history_index_count": {"type": "integer", "minimum": 0},
+    "history_shard_count": {"type": "integer", "minimum": 0},
+    "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -597,6 +597,8 @@ def _reduce(
     current: str | None = None
     status = "READY"
     failures: list[str] = []
+    skipped: list[str] = []
+    classified = all(_dependency_class(item) is not None for item in roadmap["assignments"])
     for event in events:
         event_type = event["type"]
         payload = event["payload"]
@@ -624,14 +626,24 @@ def _reduce(
             current = None
             failures = []
             status = "RUNNING"
+        elif event_type == "ASSIGNMENT_SKIPPED":
+            if payload.get("assignment_id") != current:
+                raise _fail(
+                    "continuity_store_invalid",
+                    "Continuity skip is not bound to the active assignment.",
+                )
+            skipped.append(payload["assignment_id"])
+            current = None
+            failures = []
+            status = "RUNNING"
         elif event_type == "FLOW_BLOCKED":
             status = "BLOCKED"
         elif event_type == "FLOW_COMPLETED":
             status = "COMPLETE"
             current = None
-    state = {
+    state: dict[str, Any] = {
         "format": STORE_FORMAT,
-        "format_version": 1,
+        "format_version": 2 if classified else 1,
         "project_id": roadmap["project_id"],
         "roadmap_id": roadmap["roadmap_id"],
         "roadmap_digest": _value_digest(roadmap),
@@ -643,6 +655,9 @@ def _reduce(
         "event_count": len(events),
         "event_head": events[-1]["event_digest"],
     }
+    if classified:
+        state["skipped"] = skipped
+        state["required_outcomes_complete"] = not skipped
     return state | {"state_digest": _value_digest(state)}
 
 
@@ -711,6 +726,7 @@ def _validate_store_bindings(
     _validate_handoffs(store, roadmap, events)
     _validate_claims(store, roadmap, events)
     _validate_execution_checkpoints(store, roadmap, events)
+    _validate_recovery_events(roadmap, events)
     current = state["current_assignment"]
     current_path = store / "context" / "current.json"
     if current is None:
@@ -787,6 +803,40 @@ def _validate_execution_checkpoints(
             if not isinstance(value, str) or not value.strip() or "\n" in value or "\r" in value:
                 raise _fail("continuity_store_invalid", "Execution checkpoint text is invalid.")
         seen.add(checkpoint_id)
+
+
+def _validate_recovery_events(roadmap: dict[str, Any], events: Sequence[dict[str, Any]]) -> None:
+    """Verify every classified failure against its restart-safe v2 record chain."""
+    from .recovery import validate_recovery_history
+
+    assignments = {item["id"]: item for item in roadmap["assignments"]}
+    histories: dict[str, list[dict[str, Any]]] = {}
+    for event in events:
+        payload = event["payload"]
+        if event["type"] == "ASSIGNMENT_SELECTED":
+            histories[str(payload["assignment_id"])] = []
+        if event["type"] != "ASSIGNMENT_FAILED":
+            continue
+        identifier = str(payload.get("assignment_id"))
+        assignment = assignments.get(identifier)
+        if assignment is None:
+            raise _fail("continuity_store_invalid", "Failure references an unknown assignment.")
+        record = payload.get("recovery_record")
+        if _dependency_class(assignment) is None:
+            if record is not None:
+                raise _fail(
+                    "continuity_store_invalid", "Legacy assignment contains a v2 recovery record."
+                )
+            continue
+        if not isinstance(record, dict) or payload.get("fingerprint") != record.get(
+            "record_digest"
+        ):
+            raise _fail(
+                "continuity_store_invalid", "Classified failure lacks its v2 recovery binding."
+            )
+        history = histories.setdefault(identifier, [])
+        history.append(record)
+        validate_recovery_history(history)
 
 
 def _next_trigger(events: Sequence[dict[str, Any]], start: int) -> str | None:
@@ -1089,6 +1139,29 @@ def _next_assignment(roadmap: dict[str, Any], completed: Sequence[str]) -> dict[
     return None
 
 
+def _next_unskipped_assignment(
+    roadmap: dict[str, Any], completed: Sequence[str], skipped: Sequence[str]
+) -> dict[str, Any] | None:
+    """Select only work whose dependencies actually passed."""
+    completed_set = set(completed)
+    unavailable = completed_set | set(skipped)
+    for assignment in roadmap["assignments"]:
+        if assignment["id"] in unavailable:
+            continue
+        if set(assignment["depends_on"]).issubset(completed_set):
+            return assignment
+    return None
+
+
+def _dependency_class(assignment: Mapping[str, Any]) -> str | None:
+    detail = str(assignment["detail"])
+    if detail.startswith("CHAIN."):
+        return "CHAIN"
+    if detail.startswith("STANDALONE."):
+        return "STANDALONE"
+    return None
+
+
 def _detail_bytes(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
     paths = (
         "\n".join(
@@ -1177,12 +1250,27 @@ def start_flow(project_root: Path, roadmap_path: Path, approval: str) -> FlowRes
     control.mkdir(exist_ok=True)
     store = control / "continuity"
     with _writer_lock(control / "continuity.lock"):
+        archived_store: Path | None = None
         if store.exists():
-            raise _fail(
-                "continuity_store_exists", "Continuity is already initialized; nothing changed."
-            )
-        staging = Path(tempfile.mkdtemp(prefix="continuity-start-", dir=control))
+            _, previous_roadmap, _, previous_state = _load_store(root)
+            if previous_state["status"] != "COMPLETE":
+                raise _fail(
+                    "continuity_store_exists",
+                    "An active or blocked continuity store already exists; nothing changed.",
+                )
+            history_root = control / "continuity-history"
+            history_root.mkdir(exist_ok=True)
+            history_name = f"{previous_roadmap['roadmap_id']}-{previous_state['state_digest'][:16]}"
+            archived_store = history_root / history_name
+            if archived_store.exists():
+                raise _fail(
+                    "continuity_store_exists",
+                    "The completed continuity generation is already archived; nothing changed.",
+                )
+            os.replace(store, archived_store)
+        staging: Path | None = None
         try:
+            staging = Path(tempfile.mkdtemp(prefix="continuity-start-", dir=control))
             for directory in STORE_DIRECTORIES:
                 (staging / directory).mkdir(parents=True, exist_ok=False)
             _write_atomic(staging / "roadmaps" / "roadmap.json", _pretty(roadmap))
@@ -1222,7 +1310,10 @@ def start_flow(project_root: Path, roadmap_path: Path, approval: str) -> FlowRes
             state = _cache_state(staging, roadmap, started_events)
             os.replace(staging, store)
         except Exception:
-            shutil.rmtree(staging, ignore_errors=True)
+            if staging is not None:
+                shutil.rmtree(staging, ignore_errors=True)
+            if archived_store is not None and archived_store.exists() and not store.exists():
+                os.replace(archived_store, store)
             raise
     return _flow_result(roadmap, state)
 
@@ -1356,6 +1447,117 @@ def _advance_claim_binding(
     return {"host_id": host_id, "claim_digest": claim_digest}
 
 
+def _recovery_history(events: Sequence[dict[str, Any]], identifier: str) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for event in events:
+        payload = event["payload"]
+        if event["type"] == "ASSIGNMENT_SELECTED" and payload.get("assignment_id") == identifier:
+            records = []
+        elif event["type"] == "ASSIGNMENT_FAILED" and payload.get("assignment_id") == identifier:
+            record = payload.get("recovery_record")
+            if isinstance(record, dict):
+                records.append(record)
+    return records
+
+
+def _classified_failure(
+    root: Path,
+    store: Path,
+    roadmap: dict[str, Any],
+    events: Sequence[dict[str, Any]],
+    state: dict[str, Any],
+    assignment: dict[str, Any],
+    evidence: list[dict[str, Any]],
+    explanation: str,
+    claim_binding: Mapping[str, str],
+    *,
+    dependency_class: str | None,
+    failure_layer: str,
+    scope_fingerprint: str | None,
+    approach_fingerprint: str | None,
+    chain_coverage: Sequence[str] | None,
+    global_analysis_digest: str | None,
+) -> FlowResult:
+    from .recovery import record_failed_attempt, recovery_decision
+
+    identifier = str(assignment["id"])
+    bound_class = _dependency_class(assignment)
+    if bound_class is None or dependency_class not in {None, bound_class}:
+        raise _fail(
+            "recovery_dependency_changed",
+            "Failure metadata differs from the preclassified roadmap assignment.",
+        )
+    history = _recovery_history(events, identifier)
+    record = record_failed_attempt(
+        history,
+        assignment_id=identifier,
+        dependency_class=bound_class,
+        failure_layer=failure_layer,
+        reason=explanation,
+        evidence_digest=_value_digest(evidence),
+        scope_fingerprint=scope_fingerprint or _value_digest(assignment["touches"]),
+        approach_fingerprint=approach_fingerprint
+        or _value_digest({"reason": explanation, "evidence": evidence}),
+        chain_coverage=chain_coverage or [identifier],
+        global_analysis_digest=global_analysis_digest,
+    )
+    skipped = list(state.get("skipped", []))
+    next_independent = _next_unskipped_assignment(
+        roadmap, state["completed"], [*skipped, identifier]
+    )
+    decision = recovery_decision(
+        [*history, record],
+        next_assignment_independent=True if bound_class == "STANDALONE" else None,
+    )
+    entries: list[tuple[str, Mapping[str, Any]]] = [
+        (
+            "ASSIGNMENT_FAILED",
+            {
+                "assignment_id": identifier,
+                "evidence": evidence,
+                "fingerprint": record["record_digest"],
+                "reason": explanation,
+                "recovery_round": record["attempt_number"],
+                "recovery_record": record,
+                **claim_binding,
+            },
+        )
+    ]
+    if decision["status"] == "BLOCKED_CHAIN":
+        entries.append(("FLOW_BLOCKED", {"assignment_id": identifier, "reason": "BLOCKED_CHAIN"}))
+    elif decision["status"] == "SKIPPED_STANDALONE":
+        entries.append(
+            (
+                "ASSIGNMENT_SKIPPED",
+                {"assignment_id": identifier, "reason": "RECOVERY_EXHAUSTED"},
+            )
+        )
+        if next_independent is None:
+            entries.append(
+                (
+                    "FLOW_BLOCKED",
+                    {"assignment_id": identifier, "reason": "REQUIRED_OUTCOME_SKIPPED"},
+                )
+            )
+            (store / "context" / "current.json").unlink(missing_ok=True)
+        else:
+            selection = _prepare_selection(store, root, roadmap, next_independent)
+            entries.extend(
+                (
+                    ("NEXT_ASSIGNMENT_TRIGGERED", {"assignment_id": next_independent["id"]}),
+                    ("ASSIGNMENT_SELECTED", selection),
+                )
+            )
+    appended = _append_events(
+        store,
+        entries,
+        expected_head=state["event_head"],
+        existing_events=events,
+    )
+    updated = _cache_state(store, roadmap, [*events, *appended])
+    return _flow_result(roadmap, updated)
+
+
 def _advance_local(
     project_root: Path,
     *,
@@ -1365,6 +1567,12 @@ def _advance_local(
     handoff_path: str | None = None,
     host_id: str | None = None,
     claim_digest: str | None = None,
+    dependency_class: str | None = None,
+    failure_layer: str = "PRODUCT",
+    scope_fingerprint: str | None = None,
+    approach_fingerprint: str | None = None,
+    chain_coverage: Sequence[str] | None = None,
+    global_analysis_digest: str | None = None,
 ) -> FlowResult:
     """Record one bounded result and trigger the next dependency-ready detail."""
     root = _root(project_root)
@@ -1375,8 +1583,27 @@ def _advance_local(
     claim_binding = _advance_claim_binding(store, events, identifier, host_id, claim_digest)
     evidence = _evidence(root, evidence_paths)
     normalized = outcome.strip().upper()
+    assignment = _assignment(roadmap, identifier)
     if normalized == "FAIL":
         explanation = _one_line(reason, "reason", 500)
+        if _dependency_class(assignment) is not None:
+            return _classified_failure(
+                root,
+                store,
+                roadmap,
+                events,
+                state,
+                assignment,
+                evidence,
+                explanation,
+                claim_binding,
+                dependency_class=dependency_class,
+                failure_layer=failure_layer,
+                scope_fingerprint=scope_fingerprint,
+                approach_fingerprint=approach_fingerprint,
+                chain_coverage=chain_coverage,
+                global_analysis_digest=global_analysis_digest,
+            )
         fingerprint = _value_digest(
             {"assignment_id": identifier, "evidence": evidence, "reason": explanation}
         )
@@ -1426,7 +1653,6 @@ def _advance_local(
         return _flow_result(roadmap, state)
     if normalized != "PASS":
         raise _fail("continuity_outcome_invalid", "Outcome must be PASS or FAIL.")
-    assignment = _assignment(roadmap, identifier)
     supplied_handoff = _handoff_input(root, handoff_path)
     receipt = {
         "format": "opencntx-assignment-receipt",
@@ -1440,7 +1666,8 @@ def _advance_local(
     receipt["receipt_digest"] = _value_digest(receipt)
     _write_atomic(store / "receipts" / f"{identifier}-complete.json", _pretty(receipt))
     interim_completed = [*state["completed"], identifier]
-    next_assignment = _next_assignment(roadmap, interim_completed)
+    skipped = list(state.get("skipped", []))
+    next_assignment = _next_unskipped_assignment(roadmap, interim_completed, skipped)
     handoff = _write_handoff(
         store,
         roadmap,
@@ -1464,16 +1691,27 @@ def _advance_local(
         ("ROADMAP_RETURNED", {"completed_assignment_id": identifier}),
     ]
     if next_assignment is None:
-        if len(interim_completed) != len(roadmap["assignments"]):
+        if skipped:
+            entries.append(
+                (
+                    "FLOW_BLOCKED",
+                    {"assignment_id": identifier, "reason": "REQUIRED_OUTCOME_SKIPPED"},
+                )
+            )
+        elif len(interim_completed) != len(roadmap["assignments"]):
             raise _fail(
                 "continuity_dependency_blocked", "No remaining assignment is dependency-ready."
             )
-        entries.append(
-            (
-                "FLOW_COMPLETED",
-                {"assignment_count": len(interim_completed), "roadmap_id": roadmap["roadmap_id"]},
+        else:
+            entries.append(
+                (
+                    "FLOW_COMPLETED",
+                    {
+                        "assignment_count": len(interim_completed),
+                        "roadmap_id": roadmap["roadmap_id"],
+                    },
+                )
             )
-        )
     else:
         selection = _prepare_selection(store, root, roadmap, next_assignment)
         entries.extend(
@@ -1503,6 +1741,12 @@ def advance_flow(
     handoff_path: str | None = None,
     host_id: str | None = None,
     claim_digest: str | None = None,
+    dependency_class: str | None = None,
+    failure_layer: str = "PRODUCT",
+    scope_fingerprint: str | None = None,
+    approach_fingerprint: str | None = None,
+    chain_coverage: Sequence[str] | None = None,
+    global_analysis_digest: str | None = None,
 ) -> FlowResult:
     """Record one result atomically and trigger the next dependency-ready detail."""
     root = _root(project_root)
@@ -1516,6 +1760,12 @@ def advance_flow(
             handoff_path=handoff_path,
             host_id=host_id,
             claim_digest=claim_digest,
+            dependency_class=dependency_class,
+            failure_layer=failure_layer,
+            scope_fingerprint=scope_fingerprint,
+            approach_fingerprint=approach_fingerprint,
+            chain_coverage=chain_coverage,
+            global_analysis_digest=global_analysis_digest,
         )
     checkpoint_kind = "BLOCKED" if result.status == "BLOCKED" else outcome.strip().upper()
     checkpoint = {

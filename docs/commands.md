@@ -5,8 +5,8 @@
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
 
-This navigation table documents 70 public CLI paths: five orientation and
-version routes plus all 65 executable routes from the real parser. It does not invent options or grant
+This navigation table documents 73 public CLI paths: five orientation and
+version routes plus all 68 executable routes from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -68,20 +68,23 @@ required arguments and repeatable options.
 | 54 | `opencntx flow health` | verify local roadmap, state, detail and history |
 | 55 | `opencntx flow capabilities` | discover local storage and Git capabilities read-only |
 | 56 | `opencntx flow inspect` | use the file, Git, Markdown or JSON adapter read-only |
-| 57 | `opencntx flow capsule export` | export a deterministic portable context capsule |
-| 58 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
-| 59 | `opencntx flow capsule import` | restore a capsule only into a new local store |
-| 60 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
-| 61 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
-| 62 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
-| 63 | `opencntx flow sync status` | report optional sync configuration and receipt |
-| 64 | `opencntx flow host status` | deliver exactly one current assignment without writes |
-| 65 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
-| 66 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
-| 67 | `opencntx layout audit` | report deterministic order findings without changing paths |
-| 68 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
-| 69 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
-| 70 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
+| 57 | `opencntx flow profile` | choose the smallest safe governance profile from fixed facts |
+| 58 | `opencntx flow recovery` | record or inspect the fixed four-stage recovery sequence |
+| 59 | `opencntx flow combo` | maintain or query the bounded derived Combo Roadmap |
+| 60 | `opencntx flow capsule export` | export a deterministic portable context capsule |
+| 61 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
+| 62 | `opencntx flow capsule import` | restore a capsule only into a new local store |
+| 63 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
+| 64 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
+| 65 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
+| 66 | `opencntx flow sync status` | report optional sync configuration and receipt |
+| 67 | `opencntx flow host status` | deliver exactly one current assignment without writes |
+| 68 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
+| 69 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
+| 70 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 71 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 72 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
+| 73 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
 
 ## Roadmap flow
 
@@ -107,6 +110,25 @@ Each successful `advance` stores a receipt, returns to the roadmap and selects
 the next dependency-ready detail. The approval is not requested again. Read
 [Roadmap continuity and AUTO PILOT](continuity.md) for the roadmap format,
 portable capsule, four read-only adapters and optional Git/GitHub replica.
+
+## Proportional governance and smart recovery
+
+`flow profile` evaluates only fixed facts. `ANSWER_ONLY` creates no project
+state, `LIGHT_TASK` keeps compact evidence, and `GOVERNED_FLOW` uses the full
+roadmap writer. Every profile applies the same hard blocks. A changed binding
+or material risk automatically promotes the work; a caller cannot force a
+downgrade.
+
+`flow recovery` uses exactly `STANDARD_ATTEMPT_1`, `STANDARD_RETRY_2`,
+`GLOBAL_RECOVERY_1`, and `GLOBAL_RECOVERY_2`. The two global stages require a
+cross-layer analysis. The final stage also requires new evidence and wider
+chain coverage. Exhausted chain work blocks with evidence. Exhausted standalone
+work may be skipped only when the next assignment is independently safe.
+
+`flow combo` writes a derived, bounded knowledge projection under its own
+generation pointer. It can compare, query, and summarize, but it cannot advance
+the continuity state, approve a roadmap, or start work. Only a fully completed
+roadmap may enter Combo history.
 
 ## Core pack options
 

@@ -181,7 +181,7 @@ class WorkspaceTests(unittest.TestCase):
                     "opencntx.workspace.os.replace",
                     side_effect=fail_during_init,
                 ),
-                self.assertRaisesRegex(WorkspaceError, "niet volledig"),
+                self.assertRaisesRegex(WorkspaceError, "initialized completely"),
             ):
                 init_workspace(workspace)
 
@@ -382,7 +382,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
 
-            with self.assertRaisesRegex(WorkspaceError, "regulier bestand"):
+            with self.assertRaisesRegex(WorkspaceError, "regular file"):
                 capture_source(workspace, workspace / "INBOX")
 
             source = workspace / "INBOX" / "bron.txt"

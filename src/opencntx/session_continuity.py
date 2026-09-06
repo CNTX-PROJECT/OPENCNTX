@@ -45,6 +45,80 @@ METRIC_FIELDS = frozenset(
 ROLLOVER_SIGNALS = frozenset(
     {"CONTINUE", "PREPARE_HANDOFF", "HANDOFF_NOW", "METRICS_UNAVAILABLE"}
 )
+
+
+def bind_recovery_handoff(
+    report: Mapping[str, Any],
+    *,
+    state_digest: str,
+    execution_capsule_digest: str,
+    evidence_digest: str,
+) -> dict[str, Any]:
+    """Bind an exhausted timeline to restart, output, and minimum continuation."""
+    report_basis = {key: value for key, value in report.items() if key != "report_digest"}
+    if report.get("report_digest") != _value_digest(report_basis):
+        raise _fail("continuity_recovery_report_invalid", "Recovery report digest is invalid.")
+    bindings = {
+        "state_digest": _safe_digest(state_digest, "state_digest"),
+        "execution_capsule_digest": _safe_digest(
+            execution_capsule_digest, "execution_capsule_digest"
+        ),
+        "evidence_digest": _safe_digest(evidence_digest, "evidence_digest"),
+    }
+    basis = {
+        "format": "opencntx-recovery-handoff",
+        "format_version": 1,
+        "assignment_id": report.get("assignment_id"),
+        "status": report.get("status"),
+        "attempt_timeline": report.get("attempt_timeline"),
+        "alternative_approaches": report.get("alternative_approaches"),
+        "rollback": report.get("rollback"),
+        "minimum_continuation": report.get("minimum_continuation"),
+        "open_required_outcomes": report.get("open_required_outcomes"),
+        "report_digest": report["report_digest"],
+        **bindings,
+        "authority_changed": False,
+    }
+    return basis | {"handoff_digest": _value_digest(basis)}
+
+
+def persist_recovery_handoff(project_root: Path, handoff: Mapping[str, Any]) -> dict[str, Any]:
+    """Persist one digest-bound recovery handoff for exact restart readback."""
+    basis = {key: value for key, value in handoff.items() if key != "handoff_digest"}
+    if handoff.get("handoff_digest") != _value_digest(basis):
+        raise _fail("continuity_recovery_report_invalid", "Recovery handoff digest is invalid.")
+    identifier = _identifier(handoff.get("assignment_id"), "assignment_id")
+    store = store_path(project_root)
+    with _writer_lock(store / ".operation.lock"):
+        _load_store(project_root)
+        directory = store / "recovery-handoffs"
+        directory.mkdir(exist_ok=True)
+        path = directory / f"{identifier}.json"
+        if path.exists():
+            existing = _read_json(path, failure_kind="continuity_recovery_report_invalid")
+            if existing != dict(handoff):
+                raise _fail(
+                    "continuity_recovery_report_conflict",
+                    "Recovery handoff ID already has different content.",
+                )
+            return existing
+        _write_atomic(path, _pretty(handoff))
+    return dict(handoff)
+
+
+def load_recovery_handoff(project_root: Path, assignment_id: str) -> dict[str, Any]:
+    """Read and verify one persisted recovery handoff after restart."""
+    identifier = _identifier(assignment_id, "assignment_id")
+    store = store_path(project_root)
+    _load_store(project_root)
+    handoff = _read_json(
+        store / "recovery-handoffs" / f"{identifier}.json",
+        failure_kind="continuity_recovery_report_invalid",
+    )
+    basis = {key: value for key, value in handoff.items() if key != "handoff_digest"}
+    if handoff.get("handoff_digest") != _value_digest(basis):
+        raise _fail("continuity_recovery_report_invalid", "Recovery handoff digest is invalid.")
+    return handoff
 HANDOFF_STATUSES = frozenset(
     {
         "RESUME_AUTOMATICALLY",

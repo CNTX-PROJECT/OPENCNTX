@@ -325,7 +325,7 @@ def init_workspace(project_root: Path) -> WorkspaceInitResult:
         if isinstance(exc, WorkspaceError):
             raise
         raise WorkspaceError(
-            f"De werkruimte kon niet volledig worden geïnitialiseerd: {exc}",
+            f"The workspace could not be initialized completely: {exc}",
             code="workspace_init_failed",
         ) from exc
     finally:
@@ -591,7 +591,7 @@ def _validate_origin(origin: str | None) -> str | None:
         return None
     if len(value) > 200 or any(ord(character) < 32 for character in value):
         raise WorkspaceError(
-            "Herkomst moet één korte regel van maximaal 200 tekens zijn.",
+            "Provenance must be one short line of at most 200 characters.",
             code="origin_invalid",
         )
     return value
@@ -854,7 +854,7 @@ def _prepare_capture_plan(
         )
     if not requested_source.is_file():
         raise WorkspaceError(
-            "De bron moet één bestaand regulier bestand zijn.",
+            "The source must be one existing regular file.",
             code="source_not_file",
         )
     try:

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/governance-decision-v1.schema.json",
+  "title": "OPENCNTX proportional governance decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "profile", "status", "hard_blocks", "promotion_reasons", "warnings", "authority_changed", "writes_allowed", "evidence_level", "facts_digest", "decision_digest"],
+  "properties": {
+    "format": {"const": "opencntx-governance-decision"},
+    "format_version": {"const": 1},
+    "profile": {"enum": ["ANSWER_ONLY", "LIGHT_TASK", "GOVERNED_FLOW"]},
+    "status": {"enum": ["READY", "BLOCKED"]},
+    "hard_blocks": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "promotion_reasons": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "warnings": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "authority_changed": {"const": false},
+    "writes_allowed": {"type": "boolean"},
+    "evidence_level": {"enum": ["NONE", "COMPACT", "FULL"]},
+    "facts_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decision_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

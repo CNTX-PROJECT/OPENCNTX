@@ -320,7 +320,7 @@ class MediaTests(unittest.TestCase):
                 )
             accept_default(workspace, registered)
 
-            with self.assertRaisesRegex(MediaError, "exact één review"):
+            with self.assertRaisesRegex(MediaError, "exactly one review"):
                 review_derivation(
                     workspace,
                     captured.source_id,

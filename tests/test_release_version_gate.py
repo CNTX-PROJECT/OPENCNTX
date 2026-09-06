@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -287,6 +288,36 @@ class ReleaseVersionGateTests(unittest.TestCase):
                 "not a canonical stable version",
             ):
                 release_version_gate.inspect_release_version(repository)
+
+    def test_declared_current_surfaces_reject_stale_claim_and_allow_history(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_name:
+            repository = self._repository(Path(temp_name), "1.5.0")
+            fixture = repository / "tests" / "fixtures" / "quality"
+            fixture.mkdir(parents=True)
+            (repository / "README.md").write_text(
+                "Current release v1.5.0. Historical release v1.4.0.\n", encoding="utf-8"
+            )
+            manifest = {
+                "format": "opencntx-current-version-surfaces",
+                "format_version": 1,
+                "surfaces": [{
+                    "path": "README.md",
+                    "patterns": [r"Current release v{version}\."],
+                    "purpose": "Test current claim",
+                }],
+            }
+            (fixture / "current-version-surfaces-v1.json").write_text(
+                json.dumps(manifest), encoding="utf-8"
+            )
+            result = release_version_gate.inspect_current_version_surfaces(repository)
+            self.assertEqual(1, result["surface_count"])
+            (repository / "README.md").write_text(
+                "Current release v1.4.0. Historical release v1.5.0.\n", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(
+                release_version_gate.ReleaseVersionError, "stale current version"
+            ):
+                release_version_gate.inspect_current_version_surfaces(repository)
 
 
 if __name__ == "__main__":

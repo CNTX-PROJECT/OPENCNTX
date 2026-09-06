@@ -5,9 +5,20 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Any
 
+from .combo import (
+    compare_roadmap,
+    load_combo,
+    new_combo,
+    query_combo,
+    set_active_roadmaps,
+    update_combo,
+    write_combo,
+)
 from .continuity import (
     FlowResult,
+    _fail,
     advance_flow,
     discover_capabilities,
     export_capsule,
@@ -21,7 +32,9 @@ from .continuity import (
     verify_capsule,
 )
 from .continuity_sync import apply_sync, build_sync_preview, configure_sync, sync_status
+from .governance import assess_profile
 from .host_protocol import claim_host, host_status, resume_host
+from .recovery import record_failed_attempt, recovery_decision, recovery_report
 
 
 def register_continuity_commands(
@@ -33,7 +46,6 @@ def register_continuity_commands(
         help="run a restart-safe local roadmap with one AUTO PILOT approval",
     )
     commands = parser.add_subparsers(dest="flow_command", required=True)
-
     preview = commands.add_parser("preview", help="check only existing paths touched by a roadmap")
     preview.add_argument("roadmap", help="portable roadmap JSON")
     _root_argument(preview)
@@ -64,6 +76,25 @@ def register_continuity_commands(
     )
     advance.add_argument("--host", help="portable host ID when the assignment was claimed")
     advance.add_argument("--claim-digest", help="exact active host claim required after host claim")
+    advance.add_argument("--dependency-class", choices=("CHAIN", "STANDALONE"))
+    advance.add_argument(
+        "--failure-layer",
+        default="PRODUCT",
+        choices=(
+            "PRODUCT",
+            "TEST",
+            "PLATFORM",
+            "DATA",
+            "DEPENDENCY",
+            "AUTHORITY",
+            "EXTERNAL_SERVICE",
+            "CONTROL_PLANE",
+        ),
+    )
+    advance.add_argument("--scope-fingerprint")
+    advance.add_argument("--approach-fingerprint")
+    advance.add_argument("--chain-coverage", action="append")
+    advance.add_argument("--global-analysis-digest")
     advance.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     health = commands.add_parser("health", help="verify store, roadmap, detail and event chain")
@@ -82,16 +113,8 @@ def register_continuity_commands(
     _root_argument(inspect)
     inspect.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
-    capsule = commands.add_parser("capsule", help="export, verify or import a portable capsule")
-    capsule_commands = capsule.add_subparsers(dest="flow_capsule_command", required=True)
-    capsule_export = capsule_commands.add_parser("export", help="export a deterministic capsule")
-    capsule_export.add_argument("destination")
-    _root_argument(capsule_export)
-    capsule_verify = capsule_commands.add_parser("verify", help="independently verify a capsule")
-    capsule_verify.add_argument("capsule")
-    capsule_import = capsule_commands.add_parser("import", help="restore into a new local store")
-    capsule_import.add_argument("capsule")
-    _root_argument(capsule_import)
+    _register_governance_commands(commands)
+    _register_capsule_commands(commands)
 
     sync = commands.add_parser("sync", help="preview, configure or apply an optional Git replica")
     sync_commands = sync.add_subparsers(dest="flow_sync_command", required=True)
@@ -136,6 +159,41 @@ def register_continuity_commands(
     _root_argument(host_resume_parser)
 
 
+def _register_governance_commands(
+    commands: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    profile = commands.add_parser(
+        "profile", help="select ANSWER_ONLY, LIGHT_TASK, or GOVERNED_FLOW from facts"
+    )
+    profile.add_argument("facts", help="JSON file with the fixed governance facts")
+    recovery = commands.add_parser("recovery", help="evaluate one four-stage recovery document")
+    recovery.add_argument("operation", choices=("record", "decision", "report"))
+    recovery.add_argument("document", help="JSON request for the selected recovery operation")
+    combo = commands.add_parser(
+        "combo", help="init, update, query, compare, or inspect local combo state"
+    )
+    combo.add_argument(
+        "operation", choices=("init", "active", "update", "status", "query", "compare")
+    )
+    combo.add_argument("document", nargs="?", help="JSON input for init, update, query, or compare")
+    _root_argument(combo)
+
+
+def _register_capsule_commands(
+    commands: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    capsule = commands.add_parser("capsule", help="export, verify or import a portable capsule")
+    capsule_commands = capsule.add_subparsers(dest="flow_capsule_command", required=True)
+    capsule_export = capsule_commands.add_parser("export", help="export a deterministic capsule")
+    capsule_export.add_argument("destination")
+    _root_argument(capsule_export)
+    capsule_verify = capsule_commands.add_parser("verify", help="independently verify a capsule")
+    capsule_verify.add_argument("capsule")
+    capsule_import = capsule_commands.add_parser("import", help="restore into a new local store")
+    capsule_import.add_argument("capsule")
+    _root_argument(capsule_import)
+
+
 def _root_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--root", default=".", help="project root; default: current directory")
 
@@ -157,6 +215,58 @@ def _print(value: object, *, as_json: bool = True) -> None:
         print(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
     else:
         print(value)
+
+
+def _json_document(path: str | None) -> dict[str, Any]:
+    if path is None:
+        raise _fail("continuity_input_invalid", "This operation requires a JSON document.")
+    try:
+        value = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise _fail("continuity_input_invalid", "The JSON document cannot be read.") from exc
+    if not isinstance(value, dict):
+        raise _fail("continuity_input_invalid", "The JSON document must contain one object.")
+    return value
+
+
+def _dispatch_recovery(args: argparse.Namespace) -> int:
+    request = _json_document(args.document)
+    operation = args.operation
+    history = request.pop("history", [])
+    if operation == "record":
+        _print(record_failed_attempt(history, **request))
+    elif operation == "decision":
+        _print(recovery_decision(history, **request))
+    elif operation == "report":
+        _print(recovery_report(history, **request))
+    else:
+        return 2
+    return 0
+
+
+def _dispatch_combo(args: argparse.Namespace) -> int:
+    operation = args.operation
+    root = Path(args.root)
+    if operation == "init":
+        request = _json_document(args.document)
+        combo = new_combo(str(request["project_id"]))
+        _print(write_combo(root, combo))
+    elif operation == "status":
+        _print(load_combo(root))
+    elif operation == "active":
+        request = _json_document(args.document)
+        _print(write_combo(root, set_active_roadmaps(load_combo(root), request["entries"])))
+    elif operation == "update":
+        request = _json_document(args.document)
+        _print(write_combo(root, update_combo(load_combo(root), request["entries"])))
+    elif operation == "query":
+        request = {} if args.document is None else _json_document(args.document)
+        _print(query_combo(load_combo(root), **request))
+    elif operation == "compare":
+        _print(compare_roadmap(load_combo(root), _json_document(args.document)))
+    else:
+        return 2
+    return 0
 
 
 def _dispatch_capsule(args: argparse.Namespace) -> int:
@@ -257,6 +367,12 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
             handoff_path=args.handoff,
             host_id=args.host,
             claim_digest=args.claim_digest,
+            dependency_class=args.dependency_class,
+            failure_layer=args.failure_layer,
+            scope_fingerprint=args.scope_fingerprint,
+            approach_fingerprint=args.approach_fingerprint,
+            chain_coverage=args.chain_coverage,
+            global_analysis_digest=args.global_analysis_digest,
         )
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
@@ -270,6 +386,13 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
     if command == "inspect":
         _print(inspect_adapter(root, args.adapter, args.target))
         return 0
+    if command == "profile":
+        _print(assess_profile(_json_document(args.facts)))
+        return 0
+    if command == "recovery":
+        return _dispatch_recovery(args)
+    if command == "combo":
+        return _dispatch_combo(args)
     if command == "capsule":
         return _dispatch_capsule(args)
     if command == "sync":

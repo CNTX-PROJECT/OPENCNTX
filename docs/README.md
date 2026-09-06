@@ -25,7 +25,7 @@ optional routes for projects that already need those existing controls.
 | organize a longer project | [Workspace](workspace.md) |
 | audit roots, naming, ownership, and duplicates without writes | [Bounded workspace order](layout.md) |
 | keep a complete roadmap moving with one approval | [Roadmap continuity](continuity.md) |
-| understand the Stable v1.5.0 AI and visual workflow | [Adaptive AI workflow](adaptive-ai-workflow.md) |
+| understand the Stable v1.6.0 AI and visual workflow | [Adaptive AI workflow](adaptive-ai-workflow.md) |
 | look up an exact command | [Command reference](commands.md) |
 | solve a failure | [Troubleshooting](troubleshooting.md) |
 | understand what stays local | [Security in plain language](security.md) |
@@ -67,12 +67,12 @@ context package.
   export a portable capsule and optionally mirror filtered records to private
   Git or GitHub.
 
-## Stable v1.5.0 workflow
+## Stable v1.6.0 workflow
 
 - [Adaptive AI workflow](adaptive-ai-workflow.md) — plain-language
   host behavior, two-scope start authority, durable state, adaptive storage,
   large-workload gates, voluntary companion or continuity adapters and the
-  visual presentation contract, retained by the v1.5.0 release target.
+  visual presentation contract, retained by the v1.6.0 release target.
   The matching GitHub Release is the authority for published availability.
 
 ## Decisions and bounded work
