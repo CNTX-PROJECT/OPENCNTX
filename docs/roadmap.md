@@ -213,22 +213,22 @@ features or expose private project records.
 
 ## Current state
 
-The v1.5.0 R15 release target connects original requests, exact actions,
-proportional planning, linked progress, source coverage and restart-safe handoff.
-The closed Windows reference host is explicitly separate from arbitrary Codex
-tools. It preserves later user work during recovery and retains the v1 boundary.
-See [Goal-bound workflows](goal-bound-workflows.md) for the actual use and limits.
+The v1.6.0 R17 release adds proportional answer-only, light-task, and governed
+profiles; four-stage recovery with whole-chain analysis; restart-safe recovery
+handoff; and a bounded Combo Roadmap with atomic generations, query, comparison,
+supersession, epochs, and long-horizon sharding. Existing core packaging,
+workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
 
-- Source release target: `v1.5.0`
-- Package version: `1.5.0`
+- Source release target: `v1.6.0`
+- Package version: `1.6.0`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
-- Product focus: local, explicit, bounded, verifiable context and roadmap continuity
-- Published availability: the exact `v1.5.0` tag and matching GitHub Release are
+- Product focus: proportional local context and restart-safe governed work
+- Published availability: the exact `v1.6.0` tag and matching GitHub Release are
   authoritative; source state alone is not publication. Earlier releases stay immutable.
-- Release distribution: exact `opencntx-1.5.0-py3-none-any.whl`,
-  `opencntx-1.5.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Release distribution: exact `opencntx-1.6.0-py3-none-any.whl`,
+  `opencntx-1.6.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
@@ -273,7 +273,7 @@ the stop. Completion of the measurements grants no publication, installation,
 or adoption authority; the OWNER evaluates the result separately.
 
 The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
-retained from Stable v1.4.0 in the v1.5.0 release target.
+retained from Stable v1.4.0 in the v1.6.0 release target.
 
 ## Related pages
 

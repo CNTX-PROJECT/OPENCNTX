@@ -92,17 +92,17 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.5.0` Production/Stable release is installed from its
+No. The immutable `v1.6.0` Production/Stable release is installed from its
 exact Git tag. The exact isolated route is
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.5.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.6.0"`.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.5.0` Release has
-exactly `opencntx-1.5.0-py3-none-any.whl`,
-`opencntx-1.5.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The historical `v0.2.0` Release has none. The immutable `v1.6.0` Release has
+exactly `opencntx-1.6.0-py3-none-any.whl`,
+`opencntx-1.6.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain unpublished candidates unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for

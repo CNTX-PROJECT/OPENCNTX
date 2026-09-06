@@ -121,7 +121,7 @@ power-loss scenario. Windows and Ubuntu CI exercise the actual platform paths.
 ## Adaptive storage and targets
 
 The [adaptive AI workflow](adaptive-ai-workflow.md), introduced in v1.3.0 and
-retained in v1.5.0, defines one storage contract that can remain as compact
+retained in v1.6.0, defines one storage contract that can remain as compact
 files, add a local index, shard a
 very large local index, or apply explicit team concurrency controls. Escalation
 depends on measured need; no database becomes mandatory.
@@ -129,7 +129,7 @@ depends on measured need; no database becomes mandatory.
 It also defines disabled-by-default contracts for project-isolated continuity
 destinations such as a notes application or synchronized folder. Those
 contracts do not bundle product-specific connectors or authorize network
-writes. Stable v1.5.0 behavior remains the lifecycle and optional private
+writes. Stable v1.6.0 behavior remains the lifecycle and optional private
 Git/GitHub routes documented today.
 
 ## Sharing boundary

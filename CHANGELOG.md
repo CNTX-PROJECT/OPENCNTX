@@ -2,7 +2,7 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## Unreleased - R17 local candidate
+## 1.6.0 - 2026-09-06
 
 ### Added
 
@@ -23,8 +23,8 @@ All notable OPENCNTX changes are recorded here.
 
 ### Boundaries
 
-- This is an unpublished local development candidate. Version selection,
-  public PR, release, installation, adoption, and a real pilot remain separate
+- Distribution uses the exact immutable Git tag and four verified GitHub
+  Release assets. Installation, adoption, and a real pilot remain separate
   OWNER decisions with their own evidence gates.
 
 ## 1.5.0 - 2026-09-06
