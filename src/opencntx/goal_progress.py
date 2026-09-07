@@ -160,6 +160,15 @@ def build_goal_progress(
             "goal_progress_stale", "Internal replan must retain the same request and authority."
         )
     normalized = _nodes(nodes, _text(root_id, "root_id"), request["outcome_ids"])
+    if prior is not None:
+        current = {node["id"]: node for node in normalized}
+        for node in prior["nodes"]:
+            if node["next_action"].startswith("Repair: ") and (
+                node["id"] not in current
+                or current[node["id"]]["next_action"] != node["next_action"]
+                or current[node["id"]]["parent"] != node["parent"]
+            ):
+                raise _fail("goal_recovery_invalid", "Replan cannot erase retained repair budget.")
     inherited = [] if prior is None else prior["retained_evidence"]
     retained = {(_canonical(ref)): ref for ref in inherited}
     for node in normalized + ([] if prior is None else prior["nodes"]):
@@ -347,3 +356,75 @@ def load_goal_progress(root: Path, goal: BoundGoal) -> GoalProgress:
     if progress.payload()["progress_digest"] != receipt["progress_digest"]:
         raise _fail("goal_progress_invalid", "Receipt binds different progress.")
     return progress
+
+
+def begin_recovery(
+    goal: BoundGoal,
+    progress: GoalProgress,
+    *,
+    node_id: str,
+    recovery_id: str,
+    resume_id: str,
+    reason: str,
+    test_only: bool = False,
+) -> GoalProgress:
+    """Split an open leaf into repair and resumption without replacing its goal.
+
+    A temporary test-only step is BLOCKED for execution; evidence from tests
+    can finish that repair without withdrawing the original authority.
+    The existing native checkpoint persists this structure and retains prior
+    evidence. This helper grants no additional operation or target capability.
+    """
+    value = validate_goal_progress(progress, goal)
+    nodes = value["nodes"]
+    parent = next((n for n in nodes if n["id"] == node_id), None)
+    if parent is None or parent["children"] or parent["status"] == "DELIVERED":
+        raise _fail("goal_recovery_invalid", "Recovery requires an unfinished leaf.")
+    repairs = sum(n["next_action"].startswith("Repair: ") for n in nodes)
+    if goal.payload()["execution_capsule_v1"]["recovery_round"] >= 3 or repairs >= 3:
+        raise _fail("goal_recovery_exhausted", "Native recovery budget is exhausted.")
+    reason = _text(reason, "reason")
+    child = parent | {
+        "parent": node_id,
+        "return_to": node_id,
+        "children": [],
+        "depends_on": [],
+        "evidence": [],
+        "status": "OPEN",
+    }
+    repair = child | {
+        "id": recovery_id,
+        "status": "BLOCKED" if test_only else "OPEN",
+        "next_action": f"Repair: {reason}"
+        + (" [TEST_ONLY: execution blocked]" if test_only else ""),
+    }
+    resume = child | {"id": resume_id, "depends_on": [recovery_id]}
+    parent["children"] = [recovery_id, resume_id]
+    parent["status"] = "OPEN"
+    return build_goal_progress(
+        goal, root_id=value["root_id"], nodes=[*nodes, repair, resume], previous=progress
+    )
+
+
+def finish_recovery(
+    goal: BoundGoal,
+    progress: GoalProgress,
+    *,
+    recovery_id: str,
+    evidence: Sequence[Mapping[str, str]],
+) -> GoalProgress:
+    """Finish only the repair; resumption still owns the original outcome."""
+    value = validate_goal_progress(progress, goal)
+    nodes = value["nodes"]
+    repair = next((n for n in nodes if n["id"] == recovery_id), None)
+    refs = _references(evidence)
+    if repair is None or repair["children"] or not refs or repair["parent"] is None:
+        raise _fail("goal_recovery_invalid", "Repair needs a parent and bounded evidence.")
+    resumes = [
+        n for n in nodes if recovery_id in n["depends_on"] and n["parent"] == repair["parent"]
+    ]
+    if not resumes:
+        raise _fail("goal_recovery_invalid", "Repair has no original resumption step.")
+    repair["status"] = "DELIVERED"
+    repair["evidence"] = refs
+    return build_goal_progress(goal, root_id=value["root_id"], nodes=nodes, previous=progress)

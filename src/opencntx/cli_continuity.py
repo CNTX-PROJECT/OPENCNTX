@@ -16,6 +16,7 @@ from .combo import (
     update_combo,
     write_combo,
 )
+from .connected_state import connected_status, publish_connected_state
 from .continuity import (
     FlowResult,
     _fail,
@@ -32,6 +33,7 @@ from .continuity import (
     verify_capsule,
 )
 from .continuity_sync import apply_sync, build_sync_preview, configure_sync, sync_status
+from .goal_binding import BoundGoal
 from .governance import assess_profile
 from .host_protocol import claim_host, host_status, resume_host
 from .recovery import record_failed_attempt, recovery_decision, recovery_report
@@ -56,6 +58,9 @@ def register_continuity_commands(
     start.add_argument("--approval", required=True, help='exact approval: "AUTO PILOT"')
     _root_argument(start)
     start.add_argument("--json", action="store_true", help="print machine-readable JSON")
+    start.add_argument(
+        "--connected", action="store_true", help="publish revision-bound current views"
+    )
 
     status = commands.add_parser("status", help="rebuild current state from local history")
     _root_argument(status)
@@ -114,8 +119,22 @@ def register_continuity_commands(
     inspect.add_argument("--json", action="store_true", help="print machine-readable JSON")
 
     _register_governance_commands(commands)
+    connected = commands.add_parser("current", help="inspect or rebuild connected current views")
+    connected.add_argument("--publish", action="store_true")
+    connected.add_argument(
+        "--expected-state", help="exact native state digest required for publish"
+    )
+    connected.add_argument("--goal", help="current supervisor goal JSON; never an authority grant")
+    connected.add_argument("--synthesis", help="native-bound synthesis evidence, relative to root")
+    _root_argument(connected)
     _register_capsule_commands(commands)
 
+    _register_sync_host_commands(commands)
+
+
+def _register_sync_host_commands(
+    commands: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
     sync = commands.add_parser("sync", help="preview, configure or apply an optional Git replica")
     sync_commands = sync.add_subparsers(dest="flow_sync_command", required=True)
     for name, help_text in (
@@ -250,15 +269,29 @@ def _dispatch_combo(args: argparse.Namespace) -> int:
     if operation == "init":
         request = _json_document(args.document)
         combo = new_combo(str(request["project_id"]))
-        _print(write_combo(root, combo))
+        _print(write_combo(root, combo, expected_digest=None))
     elif operation == "status":
         _print(load_combo(root))
     elif operation == "active":
         request = _json_document(args.document)
-        _print(write_combo(root, set_active_roadmaps(load_combo(root), request["entries"])))
+        current = load_combo(root)
+        _print(
+            write_combo(
+                root,
+                set_active_roadmaps(current, request["entries"]),
+                expected_digest=current["combo_digest"],
+            )
+        )
     elif operation == "update":
         request = _json_document(args.document)
-        _print(write_combo(root, update_combo(load_combo(root), request["entries"])))
+        current = load_combo(root)
+        _print(
+            write_combo(
+                root,
+                update_combo(current, request["entries"]),
+                expected_digest=current["combo_digest"],
+            )
+        )
     elif operation == "query":
         request = {} if args.document is None else _json_document(args.document)
         _print(query_combo(load_combo(root), **request))
@@ -352,13 +385,32 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
         return 0
     if command == "start":
         result = start_flow(root, Path(args.roadmap), args.approval)
+        if args.connected:
+            publish_connected_state(root, expected_state_digest=result.state_digest)
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
     if command == "status":
         result = flow_status(root)
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
+    if command == "current":
+        if args.publish:
+            if not args.expected_state:
+                raise _fail("connected_state_required", "Publish requires --expected-state.")
+            goal = None if args.goal is None else BoundGoal(json.dumps(_json_document(args.goal)))
+            _print(
+                publish_connected_state(
+                    root,
+                    expected_state_digest=args.expected_state,
+                    goal=goal,
+                    synthesis_reference=args.synthesis,
+                )
+            )
+        else:
+            _print(connected_status(root))
+        return 0
     if command == "advance":
+        binding = connected_status(root)
         result = advance_flow(
             root,
             outcome=args.outcome,
@@ -374,6 +426,11 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
             chain_coverage=args.chain_coverage,
             global_analysis_digest=args.global_analysis_digest,
         )
+        if (
+            binding.get("view", {}).get("binding") == "FLOW_CONNECTED"
+            and binding["status"] == "CURRENT"
+        ):
+            publish_connected_state(root, expected_state_digest=result.state_digest)
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
     if command == "health":

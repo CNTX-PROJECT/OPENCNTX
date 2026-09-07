@@ -15,6 +15,7 @@
 
 </div>
 
+**Local candidate: v1.6.1.** Not published or installed; Stable links below remain v1.6.0. See [candidate behavior](docs/continuity.md#connected-current-views).
 OPENCNTX gives an AI selected local context without handing over an entire project.
 It also keeps a roadmap and restart-safe evidence outside the chat.
 

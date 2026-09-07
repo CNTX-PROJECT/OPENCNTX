@@ -279,3 +279,48 @@ the returned detail and `NEXT_ACTION`. A PASS receipt records the host's
 bounded technical assertion and evidence hashes; it does not invent truth or
 OWNER acceptance. Publication, credentials, repository settings and unrelated
 projects remain outside this product route.
+
+## Connected current views
+
+Local v1.6.1 candidate only: these additions have not been published or installed.
+The v1.6.0 installation instructions remain the Stable distribution path.
+
+`flow start --connected` opts into a revision-bound current view. `flow current`
+reads status without creating a missing flow. `flow current --publish` needs
+`--expected-state` with the exact native state digest. An optional `--goal` must
+come from the host's current supervisor binding. `--synthesis` names native-bound
+final evidence. A supplied goal document never grants authority.
+
+CONFIGURED_ONLY means no continuity store; BINDING_REQUIRED means no current view.
+CURRENT and STALE compare native source and Combo digests. FLOW_CONNECTED retains
+assignments but cannot prove semantic completion. GOAL_CONNECTED additionally uses
+original outcomes and synthesis. Host enforcement remains UNPROVEN; only the closed
+Windows reference fixture demonstrates actual dispatch.
+
+Each generation contains state.json, ROADMAP.md, FOOTER.json and a hash receipt.
+CURRENT changes last. An interrupted generation retains history; source or Combo
+drift makes the old view STALE. Native writer lock and Combo CAS reject competing
+updates. Open outcomes, authority and evidence remain visible. An oversized view
+fails instead of truncating obligations.
+
+CLI advance refreshes an existing FLOW_CONNECTED view. GOAL_CONNECTED requires
+supervisor rebinding after native mutation and never silently downgrades. API hosts
+must rebind and publish after checkpoints. No universal Codex hook is installed.
+
+`begin_recovery` preserves parent outcomes and return steps. Temporary test-only
+repair uses a BLOCKED execution node while retaining original intent. The supervisor
+can finish repair with test evidence, making the original resume step ready without
+widening exclusions. The helper bounds retained repair splits to three and respects
+an exhausted native budget; native failure recording owns its ledger counter.
+It does not execute arbitrary test commands.
+
+An authorized host calls `record_export_delivery` before and after copying current
+Markdown. This records idempotent SYNC_PENDING or CURRENT receipts in the local
+views/deliveries directory without writing the destination. `export_status` remains
+read-only. Export is optional; there is no notes-application dependency.
+
+Update plan v2 binds exact project state and a managed candidate JSON profile's
+runtime_version. Active flows need UPDATE_CHECKPOINT. Active writers and profile
+drift block cutover. Existing v1 plans remain readable; v1 readers must reject v2.
+Backup/journal recovery preserves later user data. These checks neither install
+software nor invent a connected workflow in a context-only project.

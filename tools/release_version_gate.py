@@ -115,10 +115,24 @@ def inspect_current_version_surfaces(
         or not isinstance(manifest.get("surfaces"), list)
     ):
         raise ReleaseVersionError("current-version surface manifest is invalid")
+    with (repository / "pyproject.toml").open("rb") as stream:
+        release = tomllib.load(stream).get("tool", {}).get("opencntx", {}).get("release", {})
+    published = StableVersion.parse(release.get("published_version", str(selected)))
+    if published > selected or (
+        published != selected and release.get("status") != "local-candidate"
+    ):
+        raise ReleaseVersionError("candidate and published version relationship is invalid")
     checked: list[dict[str, Any]] = []
     for surface in manifest["surfaces"]:
-        if not isinstance(surface, dict) or set(surface) != {"path", "patterns", "purpose"}:
+        if not isinstance(surface, dict) or set(surface) not in (
+            {"path", "patterns", "purpose"},
+            {"path", "patterns", "purpose", "version_source"},
+        ):
             raise ReleaseVersionError("current-version surface entry is invalid")
+        source = surface.get("version_source", "package")
+        if source not in {"package", "published"}:
+            raise ReleaseVersionError("unknown version source")
+        expected = published if source == "published" else selected
         path = repository / str(surface["path"])
         patterns = surface["patterns"]
         if not isinstance(patterns, list) or not patterns:
@@ -126,23 +140,23 @@ def inspect_current_version_surfaces(
         try:
             text = path.read_text(encoding="utf-8")
         except (OSError, UnicodeError) as exc:
-            raise ReleaseVersionError(f"cannot read current-version surface {surface['path']}") from exc
+            raise ReleaseVersionError(
+                f"cannot read current-version surface {surface['path']}"
+            ) from exc
         matches = 0
         for template in patterns:
             if not isinstance(template, str) or template.count("{version}") != 1:
                 raise ReleaseVersionError("current-version surface pattern is invalid")
-            pattern = template.replace(
-                "{version}", r"(?P<version>[0-9]+\.[0-9]+\.[0-9]+)"
-            )
+            pattern = template.replace("{version}", r"(?P<version>[0-9]+\.[0-9]+\.[0-9]+)")
             match = re.search(pattern, text, flags=re.MULTILINE)
             if match is None:
                 raise ReleaseVersionError(
                     f"declared current-version claim is missing: {surface['path']}"
                 )
             found = StableVersion.parse(match.group("version"))
-            if found != selected:
+            if found != expected:
                 raise ReleaseVersionError(
-                    f"stale current version in {surface['path']}: {found} != {selected}"
+                    f"stale current version in {surface['path']}: {found} != {expected}"
                 )
             matches += 1
         checked.append(
@@ -164,13 +178,8 @@ def inspect_current_version_surfaces(
 def _is_documentation_path(path: str) -> bool:
     candidate = Path(path)
     return (
-        (
-            path == "README.md"
-            or path.startswith("docs/")
-            or path in PUBLIC_SITE_DOCUMENTATION_PATHS
-        )
-        and candidate.suffix.lower() in DOCUMENTATION_SUFFIXES
-    )
+        path == "README.md" or path.startswith("docs/") or path in PUBLIC_SITE_DOCUMENTATION_PATHS
+    ) and candidate.suffix.lower() in DOCUMENTATION_SUFFIXES
 
 
 def _post_release_documentation_paths(
@@ -182,9 +191,7 @@ def _post_release_documentation_paths(
     try:
         _git(repository, "merge-base", "--is-ancestor", tag_commit, head)
     except ReleaseVersionError as exc:
-        raise ReleaseVersionError(
-            "latest stable tag commit is not an ancestor of HEAD"
-        ) from exc
+        raise ReleaseVersionError("latest stable tag commit is not an ancestor of HEAD") from exc
 
     raw_changes = _git(
         repository,
