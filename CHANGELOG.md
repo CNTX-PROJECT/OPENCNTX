@@ -2,6 +2,16 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.6.1 - 2026-09-07
+
+Stable release target. Published availability is established by the matching GitHub Release and verified artifacts.
+
+- Connect current roadmap views, Combo and footer to native source revisions.
+- Preserve original outcomes across repair and return, with semantic completion proof.
+- Detect stale views, concurrent writers, missing bindings and pending exports.
+- Add project/profile preflight to the existing transactional updater.
+- Demonstrate the closed Windows reference host only; general host enforcement is unproven.
+
 ## 1.6.0 - 2026-09-06
 
 ### Added

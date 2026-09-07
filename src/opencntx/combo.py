@@ -11,7 +11,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from .continuity import _fail, _pretty, _value_digest
+from .continuity import _fail, _pretty, _value_digest, _writer_lock
 from .security import scan_text
 
 FORMAT = "opencntx-combo-roadmap"
@@ -116,7 +116,10 @@ def validate_combo(value: Mapping[str, Any]) -> dict[str, Any]:
     for field, maximum in limits.items():
         if not isinstance(combo[field], list) or len(combo[field]) > maximum:
             raise _fail("combo_budget_exceeded", f"{field} exceeds its fixed budget.")
-    if any(not isinstance(combo[field], list) for field in ("relations", "history_index", "source_roadmap_ids")):
+    if any(
+        not isinstance(combo[field], list)
+        for field in ("relations", "history_index", "source_roadmap_ids")
+    ):
         raise _fail("combo_record_invalid", "Combo collections are invalid.")
     return combo | {"combo_digest": str(digest)}
 
@@ -155,11 +158,11 @@ def _entry(value: Mapping[str, Any]) -> dict[str, Any]:
     if type(entry["year"]) is not int or not 2000 <= entry["year"] <= 9999:
         raise _fail("combo_record_invalid", "year is invalid.")
     source_digest = _text(entry["source_digest"], "source_digest", 64)
-    if len(source_digest) != 64 or any(character not in "0123456789abcdef" for character in source_digest):
+    if len(source_digest) != 64 or any(
+        character not in "0123456789abcdef" for character in source_digest
+    ):
         raise _fail("combo_record_invalid", "source_digest is invalid.")
-    entry["supersedes"] = [
-        _identifier(item, "supersedes") for item in entry["supersedes"]
-    ]
+    entry["supersedes"] = [_identifier(item, "supersedes") for item in entry["supersedes"]]
     if len(entry["supersedes"]) != len(set(entry["supersedes"])):
         raise _fail("combo_record_invalid", "supersedes contains duplicates.")
     privacy_text = "\n".join([entry["statement"], *entry["tags"]])
@@ -191,7 +194,9 @@ def _epoch(entries: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     return basis | {"epoch_digest": _value_digest(basis)}
 
 
-def _bounded_append(values: list[dict[str, Any]], item: dict[str, Any], maximum: int) -> list[dict[str, Any]]:
+def _bounded_append(
+    values: list[dict[str, Any]], item: dict[str, Any], maximum: int
+) -> list[dict[str, Any]]:
     combined = [entry for entry in values if _dedup_key(entry) != _dedup_key(item)]
     combined.append(item)
     return sorted(combined, key=lambda entry: (-int(entry["sequence"]), str(entry["id"])))[:maximum]
@@ -236,7 +241,9 @@ def update_combo(combo: Mapping[str, Any], entries: Sequence[Mapping[str, Any]])
         if item["kind"] == "ROADMAP" and item["status"] == "COMPLETED"
     }
     if completed_ids != roadmap_ids:
-        raise _fail("combo_roadmap_incomplete", "Only a fully completed roadmap may update history.")
+        raise _fail(
+            "combo_roadmap_incomplete", "Only a fully completed roadmap may update history."
+        )
     result = {key: value for key, value in current.items() if key != "combo_digest"}
     result["revision"] += 1
     existing_ids = {
@@ -283,9 +290,7 @@ def update_combo(combo: Mapping[str, Any], entries: Sequence[Mapping[str, Any]])
                         "year": archived["year"],
                     }
                     result["history_index"] = [
-                        prior
-                        for prior in result["history_index"]
-                        if prior["id"] != compact["id"]
+                        prior for prior in result["history_index"] if prior["id"] != compact["id"]
                     ]
                     result["history_index"].append(compact)
                 result["epochs"].append(_epoch(displaced))
@@ -317,9 +322,7 @@ def _rank(entry: Mapping[str, Any]) -> tuple[int, int, str]:
     score = {"ACTIVE": 400, "BLOCKED": 300, "COMPLETED": 200, "SUPERSEDED": 100}[
         str(entry["status"])
     ]
-    score += {"CONFLICT": 40, "DECISION": 30, "CAPABILITY": 20, "ROADMAP": 10}[
-        str(entry["kind"])
-    ]
+    score += {"CONFLICT": 40, "DECISION": 30, "CAPABILITY": 20, "ROADMAP": 10}[str(entry["kind"])]
     return (-score, -int(entry["sequence"]), str(entry["id"]))
 
 
@@ -349,7 +352,11 @@ def query_combo(
         haystack = " ".join(
             [item["id"], item["roadmap_id"], item["statement"], *item["tags"]]
         ).lower()
-        if selected_ids and item["id"] not in selected_ids and item["roadmap_id"] not in selected_ids:
+        if (
+            selected_ids
+            and item["id"] not in selected_ids
+            and item["roadmap_id"] not in selected_ids
+        ):
             continue
         if selected_tags and not selected_tags.issubset(set(item["tags"])):
             continue
@@ -457,7 +464,26 @@ def _combo_root(project_root: Path) -> Path:
     return project_root.resolve() / ".opencntx" / "combo"
 
 
-def write_combo(project_root: Path, combo: Mapping[str, Any]) -> dict[str, Any]:
+_UNSPECIFIED = object()
+
+
+def write_combo(
+    project_root: Path, combo: Mapping[str, Any], *, expected_digest: object = _UNSPECIFIED
+) -> dict[str, Any]:
+    """Serialize publication; optional CAS protects read-modify-write callers."""
+    root = _combo_root(project_root)
+    root.mkdir(parents=True, exist_ok=True)
+    with _writer_lock(root / ".writer.lock"):
+        if expected_digest is not _UNSPECIFIED:
+            current = (
+                load_combo(project_root)["combo_digest"] if (root / "CURRENT").exists() else None
+            )
+            if current != expected_digest:
+                raise _fail("combo_write_conflict", "Combo changed after preparation.")
+        return _write_combo_unlocked(project_root, combo)
+
+
+def _write_combo_unlocked(project_root: Path, combo: Mapping[str, Any]) -> dict[str, Any]:
     """Publish JSON, Markdown, and receipt through one atomic generation pointer."""
     current = validate_combo(combo)
     markdown = render_combo_markdown(current).encode("utf-8")
@@ -484,9 +510,7 @@ def write_combo(project_root: Path, combo: Mapping[str, Any]) -> dict[str, Any]:
                 "query_maximum": MAX_QUERY_LIMIT,
                 "epoch_count": len(current["epochs"]),
                 "history_index_count": len(current["history_index"]),
-                "history_shard_count": (
-                    len(current["history_index"]) + MAX_SHARD_ROADMAPS - 1
-                )
+                "history_shard_count": (len(current["history_index"]) + MAX_SHARD_ROADMAPS - 1)
                 // MAX_SHARD_ROADMAPS,
             }
             receipt["receipt_digest"] = _value_digest(receipt)
@@ -506,7 +530,9 @@ def load_combo(project_root: Path) -> dict[str, Any]:
     root = _combo_root(project_root)
     try:
         generation = (root / "CURRENT").read_text(encoding="ascii").strip()
-        value = json.loads((root / "generations" / generation / "combo.json").read_text(encoding="utf-8"))
+        value = json.loads(
+            (root / "generations" / generation / "combo.json").read_text(encoding="utf-8")
+        )
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise _fail("combo_store_invalid", "Combo store cannot be read.") from exc
     combo = validate_combo(value)
@@ -523,7 +549,9 @@ def build_history_shards(entries: Sequence[Mapping[str, Any]]) -> list[dict[str,
     for supplied in entries:
         item = _entry(supplied)
         encoded = len(json.dumps(item, ensure_ascii=False, sort_keys=True).encode("utf-8")) + 1
-        if current and (len(current) >= MAX_SHARD_ROADMAPS or current_bytes + encoded > MAX_SHARD_BYTES):
+        if current and (
+            len(current) >= MAX_SHARD_ROADMAPS or current_bytes + encoded > MAX_SHARD_BYTES
+        ):
             shards.append(_shard(len(shards) + 1, current))
             current, current_bytes = [], 2
         current.append(item)

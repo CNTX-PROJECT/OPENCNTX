@@ -117,6 +117,17 @@ class ReferenceHost:
                 reason="Trusted supervisor facts for the fixed parent fixture action.",
             )
 
+    def publish_current(self, *, synthesis_reference: str | None = None) -> dict[str, Any]:
+        """Publish from the supervisor-retained binding, never a client-supplied goal."""
+        from .connected_state import publish_connected_state
+
+        return publish_connected_state(
+            self.project_root,
+            expected_state_digest=self.expected.payload()["execution_capsule_v1"]["state_digest"],
+            goal=self.expected,
+            synthesis_reference=synthesis_reference,
+        )
+
     def dispatch(self, message: object) -> dict[str, Any]:
         """The whole client surface; no fixture mutation precedes bound validation."""
         try:

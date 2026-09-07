@@ -4,43 +4,71 @@
   "surfaces": [
     {
       "path": "src/opencntx/__init__.py",
-      "patterns": ["__version__ = \"{version}\""],
+      "patterns": [
+        "__version__ = \"{version}\""
+      ],
       "purpose": "Runtime and CLI package version"
     },
     {
       "path": "README.md",
-      "patterns": ["\\*\\*v{version} Stable release target\\*\\*", "\\| Package \\| `opencntx {version}`"],
-      "purpose": "Primary public landing page current release and package claims"
+      "patterns": [
+        "\\*\\*v{version} Stable release target\\*\\*",
+        "\\| Package \\| `opencntx {version}`"
+      ],
+      "purpose": "Primary public landing page current release and package claims",
+      "version_source": "published"
     },
     {
       "path": "site/index.html",
-      "patterns": ["releases/tag/v{version}", "@v{version}"],
-      "purpose": "Published site release link and install command"
+      "patterns": [
+        "releases/tag/v{version}",
+        "@v{version}"
+      ],
+      "purpose": "Published site release link and install command",
+      "version_source": "published"
     },
     {
       "path": "docs/start-here.md",
-      "patterns": ["instructions below target v{version}", "prints exactly `opencntx {version}`"],
-      "purpose": "Primary installation target and version readback"
+      "patterns": [
+        "instructions below target v{version}",
+        "prints exactly `opencntx {version}`"
+      ],
+      "purpose": "Primary installation target and version readback",
+      "version_source": "published"
     },
     {
       "path": "docs/continuity.md",
-      "patterns": ["current v{version} release"],
-      "purpose": "Current continuity command maturity claim"
+      "patterns": [
+        "current v{version} release"
+      ],
+      "purpose": "Current continuity command maturity claim",
+      "version_source": "published"
     },
     {
       "path": "docs/faq.md",
-      "patterns": ["immutable `v{version}` Production/Stable release"],
-      "purpose": "Current distribution answer"
+      "patterns": [
+        "immutable `v{version}` Production/Stable release"
+      ],
+      "purpose": "Current distribution answer",
+      "version_source": "published"
     },
     {
       "path": "docs/roadmap.md",
-      "patterns": ["Source release target: `v{version}`", "Package version: `{version}`"],
-      "purpose": "Public roadmap current release contract"
+      "patterns": [
+        "Source release target: `v{version}`",
+        "Package version: `{version}`"
+      ],
+      "purpose": "Public roadmap current release contract",
+      "version_source": "published"
     },
     {
       "path": "docs/release-artifacts.md",
-      "patterns": ["Stable release target is `v{version}`", "opencntx-{version}-py3-none-any\\.whl"],
-      "purpose": "Current release artifact contract"
+      "patterns": [
+        "Stable release target is `v{version}`",
+        "opencntx-{version}-py3-none-any\\.whl"
+      ],
+      "purpose": "Current release artifact contract",
+      "version_source": "published"
     }
   ]
 }

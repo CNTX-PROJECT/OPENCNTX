@@ -8,6 +8,7 @@ import shutil
 import stat
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 
@@ -48,7 +49,12 @@ def _tree_digest(root: Path) -> str:
         elif stat.S_ISREG(mode):
             content = path.read_bytes()
             records.append(
-                {"path": relative, "type": "file", "bytes": len(content), "sha256": _digest(content)}
+                {
+                    "path": relative,
+                    "type": "file",
+                    "bytes": len(content),
+                    "sha256": _digest(content),
+                }
             )
         else:
             raise _fail("update_path_invalid", "Update component contains a special entry.")
@@ -275,6 +281,7 @@ def build_update_preview(
     changelog: Sequence[str],
     risks: Sequence[str],
     available_bytes: int | None = None,
+    project_checks: Sequence[Mapping[str, object]] | None = None,
 ) -> dict[str, Any]:
     """Build a complete read-only plan; no runtime or project byte is changed."""
     root = update_root.resolve(strict=True)
@@ -284,8 +291,10 @@ def build_update_preview(
     version_to = _one_line(to_version, "to_version", 120)
     if version_from == version_to:
         raise _fail("update_plan_invalid", "Update versions must differ.")
-    companion = "NONE" if target_companion_version is None else _one_line(
-        target_companion_version, "target_companion_version", 120
+    companion = (
+        "NONE"
+        if target_companion_version is None
+        else _one_line(target_companion_version, "target_companion_version", 120)
     )
     target_tuple = {
         "context_version": _one_line(target_context_version, "target_context_version", 120),
@@ -304,9 +313,7 @@ def build_update_preview(
                 "context_version": _one_line(
                     item["context_version"], "matrix.context_version", 120
                 ),
-                "project_format": _one_line(
-                    item["project_format"], "matrix.project_format", 120
-                ),
+                "project_format": _one_line(item["project_format"], "matrix.project_format", 120),
             }
         )
     if target_tuple not in matrix:
@@ -328,7 +335,10 @@ def build_update_preview(
             raise _fail("update_path_invalid", "Active and candidate components must be separate.")
         active_capability = classify_path_capability(active)
         candidate_capability = classify_path_capability(candidate)
-        if active_capability["status"] != "READABLE" or candidate_capability["status"] != "READABLE":
+        if (
+            active_capability["status"] != "READABLE"
+            or candidate_capability["status"] != "READABLE"
+        ):
             raise _fail("update_preflight_failed", "A component path is not safely readable.")
         active_bytes = _tree_bytes(active)
         candidate_bytes = _tree_bytes(candidate)
@@ -347,7 +357,9 @@ def build_update_preview(
                 "candidate_digest": _tree_digest(candidate),
             }
         )
-    required = total_active + total_candidate + max(16 * 1_048_576, (total_active + total_candidate) // 10)
+    required = (
+        total_active + total_candidate + max(16 * 1_048_576, (total_active + total_candidate) // 10)
+    )
     available = shutil.disk_usage(root).free if available_bytes is None else available_bytes
     if isinstance(available, bool) or not isinstance(available, int) or available < 0:
         raise _fail("update_plan_invalid", "available_bytes is invalid.")
@@ -368,6 +380,9 @@ def build_update_preview(
         "available_bytes": available,
         "writes_performed": False,
     }
+    if project_checks is not None:
+        core["format_version"] = 2
+        core["project_checks"] = _project_checks(root, project_checks, version_to)
     plan_id = f"UPDATE-{_value_digest(core)[:24].upper()}"
     value = core | {
         "plan_id": plan_id,
@@ -399,15 +414,82 @@ def _validate_plan(plan: Mapping[str, object]) -> dict[str, Any]:
         "plan_digest",
     }
     if (
-        set(plan) != required
+        set(plan)
+        != (required | {"project_checks"} if plan.get("format_version") == 2 else required)
         or plan.get("format") != PLAN_FORMAT
-        or plan.get("format_version") != 1
+        or type(plan.get("format_version")) is not int
+        or plan.get("format_version") not in {1, 2}
         or plan.get("writes_performed") is not False
         or plan.get("plan_digest") != _value_digest(basis)
         or not isinstance(plan.get("components"), list)
     ):
         raise _fail("update_plan_invalid", "Update plan is invalid.")
     return dict(plan)
+
+
+def _project_checks(
+    update_root: Path,
+    checks: Sequence[Mapping[str, object]],
+    target_version: str,
+    *,
+    locks_owned: bool = False,
+) -> list[dict[str, Any]]:
+    """Inspect exact local project/profile inputs; never install or invent a store.
+
+    V2 plans are rejected by old v1 writers. A caller lists a managed candidate
+    profile explicitly; arbitrary Markdown is not rewritten as a version pin.
+    """
+    from .connected_state import connected_status
+    from .continuity import _load_store, store_path
+
+    if not isinstance(checks, (list, tuple)) or not 1 <= len(checks) <= 100:
+        raise _fail("update_project_checks_invalid", "Project checks must be bounded and nonempty.")
+    result = []
+    for item in checks:
+        fields = {"project_path", "profile_path", "require_connected"}
+        if set(item) != fields or type(item["require_connected"]) is not bool:
+            raise _fail("update_project_checks_invalid", "Project check fields differ.")
+        project = _inside(update_root, item["project_path"], "project_path")
+        profile = _inside(update_root, item["profile_path"], "profile_path")
+        try:
+            content = profile.read_bytes()
+            value = json.loads(content)
+        except (OSError, ValueError) as exc:
+            raise _fail(
+                "update_profile_invalid", "Managed candidate profile cannot be read."
+            ) from exc
+        if not isinstance(value, dict) or value.get("runtime_version") != target_version:
+            raise _fail(
+                "update_profile_version", "Managed candidate profile has a stale version pin."
+            )
+        store = store_path(project)
+        locks = [store / ".operation.lock", project / ".opencntx/combo/.writer.lock"]
+        if not locks_owned and any(path.exists() for path in locks):
+            raise _fail("update_writer_active", "A project writer must checkpoint before update.")
+        state_digest = None
+        if store.exists():
+            _, _, events, state = _load_store(project)
+            state_digest = state["state_digest"]
+            checkpointed = (
+                events[-1]["type"] == "EXECUTION_CHECKPOINT"
+                and events[-1]["payload"]["current_internal_task"] == "UPDATE_CHECKPOINT"
+            )
+            if state["status"] != "COMPLETE" and not checkpointed:
+                raise _fail(
+                    "update_flow_active", "Active project needs an explicit update checkpoint."
+                )
+        binding = connected_status(project)
+        if item["require_connected"] and binding["status"] != "CURRENT":
+            raise _fail("update_binding_required", "Project continuity is absent or stale.")
+        result.append(
+            {
+                "request": dict(item),
+                "profile_sha256": _digest(content),
+                "state_digest": state_digest,
+                "binding_status": binding["status"],
+            }
+        )
+    return result
 
 
 def _copy_or_verify(source: Path, target: Path, expected_digest: str) -> None:
@@ -457,10 +539,14 @@ def _recovery_preflight(plan: Mapping[str, object], state_root: Path) -> list[di
                     "update_recovery_required",
                     "Changed component preserved in place; explicit recovery is required.",
                 )
-        if not retired.exists() and not original.exists() and (
-            not active.exists() or _tree_digest(active) != item["active_digest"]
+        if (
+            not retired.exists()
+            and not original.exists()
+            and (not active.exists() or _tree_digest(active) != item["active_digest"])
         ):
-            raise _fail("update_recovery_required", "Missing original; remaining evidence preserved.")
+            raise _fail(
+                "update_recovery_required", "Missing original; remaining evidence preserved."
+            )
     return components
 
 
@@ -490,7 +576,11 @@ def _recover_unlocked(plan: Mapping[str, object], state_root: Path) -> dict[str,
                 _preserve_directory(active, state_root)
             os.replace(retired, active)
             restored.append(name)
-        elif active.exists() and _tree_digest(active) == item["candidate_digest"] and original.exists():
+        elif (
+            active.exists()
+            and _tree_digest(active) == item["candidate_digest"]
+            and original.exists()
+        ):
             _preserve_directory(active, state_root)
             shutil.copytree(original, active)
             restored.append(name)
@@ -529,6 +619,40 @@ def apply_update_plan(
     approval: str,
     fault_hook: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
+    """Lock declared project writers as well as the existing update transaction."""
+    selected = _validate_plan(plan)
+    if approval != f"APPLY UPDATE {selected['plan_digest']}":
+        raise _fail("update_approval_missing", "Exact update-plan approval is required.")
+    with ExitStack() as stack:
+        checks = selected.get("project_checks", [])
+        if checks:
+            root = Path(selected["update_root"])
+            requests = [item["request"] for item in checks]
+            if _project_checks(root, requests, selected["to_version"]) != checks:
+                raise _fail("update_project_drift", "Project or candidate profile changed.")
+            locks = set()
+            for request in requests:
+                project = _inside(root, request["project_path"], "project_path")
+                for relative in (
+                    ".opencntx/continuity/.operation.lock",
+                    ".opencntx/combo/.writer.lock",
+                ):
+                    path = project / relative
+                    if path.parent.exists():
+                        locks.add(path)
+            for lock in sorted(locks):
+                stack.enter_context(_writer_lock(lock))
+            if _project_checks(root, requests, selected["to_version"], locks_owned=True) != checks:
+                raise _fail("update_project_drift", "Project changed before writer lock.")
+        return _apply_update_plan_locked(selected, approval=approval, fault_hook=fault_hook)
+
+
+def _apply_update_plan_locked(
+    plan: Mapping[str, object],
+    *,
+    approval: str,
+    fault_hook: Callable[[str], None] | None = None,
+) -> dict[str, Any]:
     """Apply one exact approved plan with verified backup, rollback, and replay."""
     selected = _validate_plan(plan)
     expected_approval = f"APPLY UPDATE {selected['plan_digest']}"
@@ -541,7 +665,9 @@ def apply_update_plan(
     with _writer_lock(state_root / "writer.lock"):
         if receipt_path.exists():
             receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-            receipt_basis = {key: value for key, value in receipt.items() if key != "receipt_digest"}
+            receipt_basis = {
+                key: value for key, value in receipt.items() if key != "receipt_digest"
+            }
             if (
                 receipt.get("format") != RECEIPT_FORMAT
                 or receipt.get("plan_digest") != selected["plan_digest"]
@@ -562,10 +688,17 @@ def apply_update_plan(
         for item in selected["components"]:
             active = Path(item["active_path"])
             candidate = Path(item["candidate_path"])
-            if _tree_digest(active) != item["active_digest"] or _tree_digest(candidate) != item["candidate_digest"]:
-                raise _fail("update_source_drift", "Active or candidate component changed after preview.")
+            if (
+                _tree_digest(active) != item["active_digest"]
+                or _tree_digest(candidate) != item["candidate_digest"]
+            ):
+                raise _fail(
+                    "update_source_drift", "Active or candidate component changed after preview."
+                )
         if shutil.disk_usage(root).free < selected["required_bytes"]:
-            raise _fail("update_disk_space_insufficient", "Current free space is below the plan bound.")
+            raise _fail(
+                "update_disk_space_insufficient", "Current free space is below the plan bound."
+            )
         backup = Path(str(selected["backup_path"]))
         try:
             for item in selected["components"]:
@@ -594,7 +727,9 @@ def apply_update_plan(
                     fault_hook(f"AFTER_ACTIVATE:{name}")
             for item in selected["components"]:
                 if _tree_digest(Path(item["active_path"])) != item["candidate_digest"]:
-                    raise _fail("update_postflight_failed", "Active target digest differs after cutover.")
+                    raise _fail(
+                        "update_postflight_failed", "Active target digest differs after cutover."
+                    )
             _preserve_directory(staging_root, state_root)
             _preserve_directory(retired_root, state_root)
             receipt = {

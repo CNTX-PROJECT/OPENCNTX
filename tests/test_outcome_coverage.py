@@ -305,6 +305,20 @@ class OutcomeCoverageTests(unittest.TestCase):
         )
         self.assertEqual(closed["decision"], "COMPLETE_ROADMAP")
         self.assertEqual(closed["open_outcome_ids"], [])
+        from opencntx.connected_state import connected_status, publish_connected_state
+
+        publish_connected_state(
+            self.root,
+            goal=closed_goal,
+            expected_state_digest=closed_goal.payload()["execution_capsule_v1"]["state_digest"],
+            synthesis_reference="evidence/synthesis.json",
+        )
+        self.assertTrue(connected_status(self.root)["completion_allowed"])
+        from opencntx.combo import load_combo
+
+        combo = load_combo(self.root)
+        self.assertFalse(combo["active"])
+        self.assertEqual(combo["recent_completed"][0]["status"], "COMPLETED")
 
     def test_scale_has_exact_independent_denominator_and_findings(self) -> None:
         for count in (10, 100, 1000, 4001):

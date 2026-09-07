@@ -231,8 +231,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(68, len(executable_paths))
-        self.assertEqual(73, len(documented_paths))
+        self.assertEqual(69, len(executable_paths))
+        self.assertEqual(74, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
@@ -652,10 +652,23 @@ class PublicQualityTests(unittest.TestCase):
 
     def test_release_surfaces_are_consistent(self) -> None:
         with (ROOT / "pyproject.toml").open("rb") as project_file:
-            project = tomllib.load(project_file)["project"]
-        version = project["version"]
+            metadata = tomllib.load(project_file)
+            project = metadata["project"]
+        package_version = project["version"]
+        version = (
+            metadata.get("tool", {})
+            .get("opencntx", {})
+            .get("release", {})
+            .get("published_version", package_version)
+        )
 
-        self.assertEqual(version, __version__)
+        self.assertEqual(package_version, __version__)
+        if package_version != version:
+            self.assertEqual(metadata["tool"]["opencntx"]["release"]["status"], "local-candidate")
+            self.assertIn(
+                f"Local candidate: v{package_version}", README.read_text(encoding="utf-8")
+            )
+            self.assertIn(f"## {package_version} -", CHANGELOG.read_text(encoding="utf-8"))
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
             project["classifiers"],

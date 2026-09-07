@@ -64,9 +64,16 @@
     "continuity-sync-config-v1.schema.json",
     "host-claim-v1.schema.json",
     "sync-receipt-v1.schema.json",
-    "runtime-maturity-v1.json"
+    "runtime-maturity-v1.json",
+    "transactional-update-plan-v2.schema.json"
   ],
-  "conflict_classes": ["NO_CONFLICT", "EXTEND", "SUPERSEDE", "MIGRATE", "REMOVE"],
+  "conflict_classes": [
+    "NO_CONFLICT",
+    "EXTEND",
+    "SUPERSEDE",
+    "MIGRATE",
+    "REMOVE"
+  ],
   "error_codes": [
     "continuity_adapter_failed",
     "continuity_adapter_unavailable",
