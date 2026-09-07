@@ -4,7 +4,7 @@ All notable OPENCNTX changes are recorded here.
 
 ## 1.6.1 - 2026-09-07
 
-Local candidate only; not published or installed. Stable distribution remains v1.6.0.
+Stable release target. Published availability is established by the matching GitHub Release and verified artifacts.
 
 - Connect current roadmap views, Combo and footer to native source revisions.
 - Preserve original outcomes across repair and return, with semantic completion proof.

@@ -9,22 +9,20 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.6.0 Stable release target** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.6.1 Stable release target** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
-**Local candidate: v1.6.1.** Not published or installed; Stable links below remain v1.6.0. See [candidate behavior](docs/continuity.md#connected-current-views).
 OPENCNTX gives an AI selected local context without handing over an entire project.
 It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.
 
-## New in v1.6.0: proportional work and smarter recovery
+## New in v1.6.1: connected roadmaps and safe update preflight
 
-R17 adds proportional profiles, four-stage whole-chain recovery, and a bounded
-Combo Roadmap while preserving every authority, privacy, target, rollback, and integrity guard. See [Continuity](docs/continuity.md).
+Revision-bound views retain original outcomes through repair and return. Update preflight checks project state and version profiles while preserving authority and rollback guards. See [Continuity](docs/continuity.md).
 
 ## New in v1.5.0: keep the work tied to the goal
 
@@ -43,17 +41,17 @@ the reference writer remains limited to closed Windows fixtures. See [Goal-bound
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the exact v1.6.0 release in one command:
+`pipx` installed, install the exact v1.6.1 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.6.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.6.1"
 opencntx --version
 ```
 
 Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.6.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.6.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -152,8 +150,8 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Release target | `v1.6.0`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
-| Package | `opencntx 1.6.0`; every v1.4.0 CLI route and supported durable-format read is retained |
+| Release target | `v1.6.1`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
+| Package | `opencntx 1.6.1`; every v1.4.0 CLI route and supported durable-format read is retained |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -161,10 +159,10 @@ route—never in a public issue.
 | Distribution | exact Git tag and four verified GitHub Release assets; no PyPI/TestPyPI package |
 | License | [Apache-2.0](LICENSE) |
 
-The v1.6.0 release distribution requires exactly:
+The v1.6.1 release distribution requires exactly:
 
-- `opencntx-1.6.0-py3-none-any.whl`
-- `opencntx-1.6.0.tar.gz`
+- `opencntx-1.6.1-py3-none-any.whl`
+- `opencntx-1.6.1.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
