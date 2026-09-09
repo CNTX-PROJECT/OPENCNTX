@@ -2,8 +2,9 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page reports completed public facts. It does not promise unapproved
-features or expose private project records.
+This page separates completed public facts from planned work. It does not
+expose private project records. See [v1.7.0 scope](release-1.7.0.md): this
+release does not complete the newly proposed improvement roadmap.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
@@ -220,22 +221,31 @@ supersession, epochs, and long-horizon sharding. Existing core packaging,
 workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
 
 The v1.6.1 patch connects roadmap views and Combo to source revisions, preserves
-repair return steps, and adds project/profile update checks. The local v1.6.3
-candidate continues an already approved roadmap after an assignment completes.
+repair return steps, and adds project/profile update checks. Version v1.6.3
+continues an already approved roadmap after an assignment completes.
+Version v1.7.0 retains that runtime and aligns public version documentation.
 
-- Source release target: `v1.6.3`
-- Package version: `1.6.3`
-- Maturity: Local candidate; not published or installed
+- Source release target: `v1.7.0`
+- Package version: `1.7.0`
+- Maturity: release; new roadmap implementation and field pilot are outstanding
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: proportional local context and restart-safe governed work
-- Published availability: the exact `v1.6.1` tag and matching GitHub Release are
+- Published availability: the exact `v1.7.0` tag and matching GitHub Release are
   authoritative; source state alone is not publication. Earlier releases stay immutable.
-- Release distribution: exact `opencntx-1.6.1-py3-none-any.whl`,
-  `opencntx-1.6.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Release distribution: exact `opencntx-1.7.0-py3-none-any.whl`,
+  `opencntx-1.7.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
+
+The improvement plan covers six areas: release traceability; sync and capsule
+reliability; proportional authorization and fewer unnecessary stops; owned,
+recoverable installation/update cleanup; compact handoff and optional Markdown
+export; and measured token overhead plus a real-world pilot. These are planned,
+not new capabilities of v1.7.0. The owner requested immediate publication before
+that implementation and pilot. This is a disclosed release-scope change, not
+evidence that the original acceptance criteria passed.
 
 No future feature is promised by this page. A next item becomes active only
 after a separate bounded proposal, explicit OWNER approval, implementation,

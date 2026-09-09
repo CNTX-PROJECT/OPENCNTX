@@ -1,5 +1,8 @@
 # OPENCNTX documentation
 
+Current release: **v1.7.0**. Read [what changed and what remains planned](release-1.7.0.md)
+before assuming the new improvement roadmap is implemented.
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 You do not need to read every page. Choose what you want to do, follow the

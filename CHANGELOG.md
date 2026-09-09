@@ -2,6 +2,21 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.0 - 2026-09-09
+
+- Align package/runtime version, current public documentation, installation
+  examples, release links and artifact names on v1.7.0.
+- Publish a clear release-scope and known-limitations statement.
+- Retain v1.6.3 runtime behavior and existing data formats; no new automatic
+  updater, host integration or token-saving algorithm is implemented here.
+- The owner requested immediate publication before the new 32-task improvement
+  roadmap and field pilot. Neither is claimed complete. See
+  [release scope](docs/release-1.7.0.md).
+
+Historical clarification: v1.6.3 was subsequently published on GitHub. Its
+original candidate wording below describes its preparation state, not today's
+latest release. Earlier tags and artifacts are not rewritten.
+
 ## 1.6.3 - 2026-09-09
 
 Local candidate only; not published or installed. Stable distribution remains
