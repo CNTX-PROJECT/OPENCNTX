@@ -1,11 +1,11 @@
 # OPENCNTX documentation
 
-Current release: **v1.7.0**. Read [what changed and what remains planned](release-1.7.0.md)
+Current release: **v1.7.1**. Read [what changed and what remains planned](release-1.7.1.md)
 before assuming the new improvement roadmap is implemented.
 
 The [new public roadmap](roadmap.md) has six phases and 24 planned tasks.
 Read the [full Dutch plan](roadmap-plan.nl.md) for dependencies and acceptance
-criteria. The 1.7.1 source candidate publishes documentation, not a new software release.
+criteria. Release 1.7.1 packages this documentation; the planned features are not implemented.
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 

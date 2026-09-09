@@ -9,14 +9,14 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.7.1 Local candidate** · **v1.7.0 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.7.1 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
-**Release scope:** v1.7.0 aligns the package version and public documentation. Runtime behavior is unchanged from v1.6.3. The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.0.md).
-**Local candidate: v1.7.1.** Documentation-only reservation, not a new release. Read the [six-phase, 24-task roadmap](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). Improvements remain planned; the published software is 1.7.0 and the implementation version is undecided.
+**Release scope:** v1.7.1 publishes the new roadmap and aligned documentation. Runtime behavior is unchanged from v1.7.0 (and v1.6.3). The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.1.md).
+**Published roadmap:** read the [six-phase, 24-task overview](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). The 1.7.1 documentation release does not complete these tasks; their future implementation version remains undecided.
 OPENCNTX gives an AI selected local context without handing over an entire project. It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.
@@ -42,17 +42,17 @@ the reference writer remains limited to closed Windows fixtures. See [Goal-bound
 ## Quick start
 
 You need Python 3.11, 3.12, 3.13, or 3.14 on Windows or Ubuntu. With Git and
-`pipx` installed, install the exact v1.7.0 release in one command:
+`pipx` installed, install the exact v1.7.1 release in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.1"
 opencntx --version
 ```
 
 Prefer a full source checkout instead:
 
 ```powershell
-git clone --branch v1.7.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.7.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 ```
@@ -152,8 +152,8 @@ route—never in a public issue.
 | Item | Proven state |
 |---|---|
 | Release scope | Version/documentation alignment; roadmap implementation and pilot remain outstanding |
-| Published stable | `v1.7.0`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
-| Package | `opencntx 1.7.1`; unpublished documentation candidate; runtime behavior retained from 1.7.0 |
+| Published stable | `v1.7.1`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
+| Package | `opencntx 1.7.1`; documentation release; runtime behavior retained from 1.7.0 |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -161,10 +161,10 @@ route—never in a public issue.
 | Distribution | exact Git tag and four verified GitHub Release assets; no PyPI/TestPyPI package |
 | License | [Apache-2.0](LICENSE) |
 
-The v1.7.0 release distribution requires exactly:
+The v1.7.1 release distribution requires exactly:
 
-- `opencntx-1.7.0-py3-none-any.whl`
-- `opencntx-1.7.0.tar.gz`
+- `opencntx-1.7.1-py3-none-any.whl`
+- `opencntx-1.7.1.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 

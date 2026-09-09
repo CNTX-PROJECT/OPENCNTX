@@ -23,25 +23,25 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
-The instructions below target v1.7.0. Check the matching
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0)
+The instructions below target v1.7.1. Check the matching
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1)
 for published availability; a source checkout or PR is not a release.
 
 ## 2. Install the Stable release
 
-Install immutable `v1.7.0` only after its exact Git tag and matching
+Install immutable `v1.7.1` only after its exact Git tag and matching
 GitHub Release are published. OPENCNTX is not published on PyPI or
 TestPyPI.
 
 With `pipx` and Git available, install the exact tag in one command:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.0"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.1"
 opencntx --version
 opencntx --help
 ```
 
-Do not remove `@v1.7.0` or replace it with `main`. The pin is what binds the
+Do not remove `@v1.7.1` or replace it with `main`. The pin is what binds the
 installation to the named release. The following source-checkout routes remain
 available when `pipx` is not the intended environment.
 
@@ -50,7 +50,7 @@ available when `pipx` is not the intended environment.
 Open PowerShell:
 
 ```powershell
-git clone --branch v1.7.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.7.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -65,7 +65,7 @@ launcher is available in PowerShell. Do not use unofficial installers.
 Open a terminal:
 
 ```bash
-git clone --branch v1.7.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.7.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python3 -m pip install .
 opencntx --help
@@ -86,7 +86,7 @@ opencntx --help
 opencntx --version
 ```
 
-The Stable release prints exactly `opencntx 1.7.0`.
+The Stable release prints exactly `opencntx 1.7.1`.
 
 ## 4. Open a small project
 
@@ -185,14 +185,14 @@ with [Workspace](workspace.md). Those concepts are optional
 and are not prerequisites for a first package.
 
 For the provider-neutral host, AUTO PILOT behavior and visual presentation
-introduced in v1.4.0 and retained in v1.7.0, read the
+introduced in v1.4.0 and retained in v1.7.1, read the
 [Adaptive AI workflow](adaptive-ai-workflow.md).
 
 ## Upgrade or remove OPENCNTX
 
 The new [roadmap](roadmap.md) plans owned, recoverable clean updates; that
-algorithm is not delivered by publishing the plan. The 1.7.1 documentation
-candidate is not a new published install target. The examples above remain pinned to 1.7.0.
+algorithm is not delivered by publishing the plan. Release 1.7.1 packages the
+documentation, not that algorithm. The examples above target the exact 1.7.1 release.
 
 For an upgrade, clone the next approved tag into a fresh directory and install
 it there. Replacing files in an old clone is not a clean-upgrade proof.
@@ -212,8 +212,8 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The immutable `v1.7.0` GitHub Release contains exactly
-`opencntx-1.7.0-py3-none-any.whl`, `opencntx-1.7.0.tar.gz`, `SHA256SUMS`,
+The immutable `v1.7.1` GitHub Release contains exactly
+`opencntx-1.7.1-py3-none-any.whl`, `opencntx-1.7.1.tar.gz`, `SHA256SUMS`,
 and `BUILD-RECORD.json`. OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local candidate builds,
 checksums, reproducibility limits, and the separate publication gate.

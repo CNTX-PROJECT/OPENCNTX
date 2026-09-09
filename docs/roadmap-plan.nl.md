@@ -9,6 +9,7 @@ planning_revision: 2
 source_version: 1.7.0
 source_commit: 654c110b59c7df33bdb223c163c5783c79848c30
 published_baseline: 1.7.0
+documentation_release: 1.7.1
 target_version: null
 public_overview: "roadmap.md"
 ---
@@ -27,6 +28,7 @@ Dit is de volledige publieke Nederlandstalige planning op basis van de beoordeli
 | Broncommit | 654c110b59c7df33bdb223c163c5783c79848c30 |
 | Brontree | 1c2de502fd9c7580d2025f779ced68c7f64adc84 |
 | Betekenis van 1.7.0 | Versie-/documentatieafstemming; runtimegedrag behouden uit 1.6.3 |
+| Documentatierelease 1.7.1 | Bundelt deze roadmap; geen implementatie van N01–N24 |
 | Nieuwe planning | 24 taken, N01–N24 |
 | Afgeronde nieuwe taken | 0 van 24 |
 | Actieve taak | Geen |
