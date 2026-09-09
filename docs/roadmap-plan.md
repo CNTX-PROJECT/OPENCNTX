@@ -498,16 +498,17 @@ unbounded scalability claim. The historical 437 files and approximately
 
 - [ ] **Status: Deferred outside the 1.7.3 base scope**
 
-**Work:** before broad cost, interruption or host-handoff claims, run at least
-two full weeks and 25 real tasks, with at least three genuine restarts/handoffs,
-appropriate measurement authority and a comparable baseline.
+**Work:** the local R17 implementation is historical groundwork, not proof of
+the new improvements. A broad pilot remains a separate decision for one exact
+non-production-critical project, with reversible scope and a comparable baseline.
+Before broad cost, interruption or host-handoff claims, run at least two weeks
+and 25 real tasks, including at least three genuine restart or handoff events.
 
-Use one exact non-production-critical project with reversible scope. Preserve
-evidence when restoring its selected previous route. Measurement does not grant
-publication, installation or adoption authority.
+Synthetic tasks may test the harness but never count as pilot success.
+Rollback restores the project's selected prior route and preserves evidence.
+Measurement completion grants no publication, installation, or adoption authority.
 
 **Done when:** real outcomes, missing data and limitations are reported.
-Synthetic tasks may test the harness but never count as real pilot success.
 New CLI processes do not automatically count as chats or host handoffs.
 
 **Depends on:** N16/N17 and every claimed capability; N18 for host claims.
