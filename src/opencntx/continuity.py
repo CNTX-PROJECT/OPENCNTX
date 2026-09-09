@@ -55,6 +55,8 @@ _EVENT_CACHE: dict[Path, tuple[bytes, list[dict[str, Any]]]] = {}
 _JSON_CACHE: dict[Path, tuple[str, dict[str, Any]]] = {}
 _ROADMAP_CACHE: dict[Path, tuple[str, dict[str, Any]]] = {}
 _STORE_ACCESS_LOCK = threading.RLock()
+_ACTIVE_WRITER_LOCKS: set[Path] = set()
+_WRITER_CONDITION = threading.Condition()
 _Key = TypeVar("_Key")
 _Input = TypeVar("_Input")
 _Output = TypeVar("_Output")
@@ -1046,23 +1048,97 @@ def _load_store(
 
 
 @contextmanager
-def _writer_lock(path: Path):
-    with _STORE_ACCESS_LOCK:
+def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
+    """Hold an operating-system lock whose ownership ends with the process.
+
+    The file is a stable coordination object, not evidence that a writer is
+    alive.  A legacy non-empty marker is still treated as unknown/active until
+    it is migrated deliberately; empty files left by older hard-crashed writers
+    can safely be adopted because the OS lock is authoritative.
+    """
+    identity = path.absolute()
+    with _WRITER_CONDITION:
+        while identity in _ACTIVE_WRITER_LOCKS:
+            if reject_local_overlap:
+                raise _fail("continuity_write_conflict", "Another continuity writer is active.")
+            _WRITER_CONDITION.wait()
+        _ACTIVE_WRITER_LOCKS.add(identity)
+    _STORE_ACCESS_LOCK.acquire()
+    descriptor: int | None = None
+    try:
         try:
-            descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-            os.close(descriptor)
-        except FileExistsError as exc:
-            raise _fail(
-                "continuity_write_conflict", "Another continuity writer is active."
-            ) from exc
-        except OSError as exc:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            descriptor = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
+            legacy = os.read(descriptor, 128)
+            if legacy and legacy != b"OPENCNTX_OS_LOCK_V2\n":
+                raise _fail(
+                    "continuity_write_conflict",
+                    "A legacy writer marker requires a controlled migration.",
+                )
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            if os.name == "nt":
+                import msvcrt
+
+                if not legacy:
+                    os.write(descriptor, b"OPENCNTX_OS_LOCK_V2\n")
+                    os.fsync(descriptor)
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+            else:
+                import importlib
+
+                fcntl = importlib.import_module("fcntl")
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                if not legacy:
+                    os.write(descriptor, b"OPENCNTX_OS_LOCK_V2\n")
+                    os.fsync(descriptor)
+        except ContinuityError:
+            raise
+        except (OSError, BlockingIOError) as exc:
+            if (
+                isinstance(exc, (BlockingIOError, PermissionError))
+                or getattr(exc, "errno", None) in {11, 13}
+                or getattr(exc, "winerror", None) in {32, 33, 36}
+            ):
+                raise _fail(
+                    "continuity_write_conflict", "Another continuity writer is active."
+                ) from exc
             raise _fail(
                 "continuity_write_failed", "Cannot acquire the continuity writer lock."
             ) from exc
-        try:
-            yield
-        finally:
-            path.unlink(missing_ok=True)
+        yield
+    finally:
+        if descriptor is not None:
+            try:
+                if os.name == "nt":
+                    import msvcrt
+
+                    os.lseek(descriptor, 0, os.SEEK_SET)
+                    msvcrt.locking(descriptor, msvcrt.LK_UNLCK, 1)
+                else:
+                    import importlib
+
+                    fcntl = importlib.import_module("fcntl")
+                    fcntl.flock(descriptor, fcntl.LOCK_UN)
+            except OSError:
+                pass
+            finally:
+                os.close(descriptor)
+        _STORE_ACCESS_LOCK.release()
+        with _WRITER_CONDITION:
+            _ACTIVE_WRITER_LOCKS.discard(identity)
+            _WRITER_CONDITION.notify_all()
+
+
+def _writer_lock_is_active(path: Path) -> bool:
+    """Probe the OS lock; the persistent coordination file alone is not activity."""
+    try:
+        with _writer_lock(path, reject_local_overlap=True):
+            return False
+    except ContinuityError as exc:
+        if exc.code == "continuity_write_conflict":
+            return True
+        raise
 
 
 def _append_events(
@@ -1751,22 +1827,87 @@ def advance_flow(
     """Record one result atomically and trigger the next dependency-ready detail."""
     root = _root(project_root)
     store = store_path(root)
-    with _writer_lock(store / ".operation.lock"):
-        result = _advance_local(
-            root,
-            outcome=outcome,
-            evidence_paths=evidence_paths,
-            reason=reason,
-            handoff_path=handoff_path,
-            host_id=host_id,
-            claim_digest=claim_digest,
-            dependency_class=dependency_class,
-            failure_layer=failure_layer,
-            scope_fingerprint=scope_fingerprint,
-            approach_fingerprint=approach_fingerprint,
-            chain_coverage=chain_coverage,
-            global_analysis_digest=global_analysis_digest,
-        )
+    request = {
+        "outcome": outcome.strip().upper(),
+        "evidence_paths": list(evidence_paths),
+        "reason": reason,
+        "handoff_path": handoff_path,
+        "host_id": host_id,
+        "claim_digest": claim_digest,
+        "dependency_class": dependency_class,
+        "failure_layer": failure_layer,
+        "scope_fingerprint": scope_fingerprint,
+        "approach_fingerprint": approach_fingerprint,
+        "chain_coverage": list(chain_coverage or ()),
+        "global_analysis_digest": global_analysis_digest,
+    }
+    request_digest = _value_digest(request)
+    pending_path = store / "operations" / "pending-return.json"
+    replayed = False
+    with _writer_lock(store / ".operation.lock", reject_local_overlap=True):
+        if pending_path.is_file():
+            try:
+                pending = json.loads(pending_path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                raise _fail(
+                    "continuity_store_invalid", "Pending operation result is invalid."
+                ) from exc
+            basis = {key: value for key, value in pending.items() if key != "pending_digest"}
+            if pending.get("pending_digest") != _value_digest(basis):
+                raise _fail("continuity_store_invalid", "Pending operation result digest differs.")
+            if pending.get("request_digest") != request_digest:
+                raise _fail(
+                    "continuity_operation_pending",
+                    "Read the committed prior result before starting a different operation.",
+                )
+            saved = pending["result"]
+            result = FlowResult(
+                status=saved["status"],
+                current_assignment=saved["current_assignment"],
+                completed=tuple(saved["completed"]),
+                total=saved["total"],
+                next_action=saved["next_action"],
+                minimum_action=saved["minimum_action"],
+                state_digest=saved["state_digest"],
+            )
+            pending_path.unlink()
+            replayed = True
+        else:
+            result = _advance_local(
+                root,
+                outcome=outcome,
+                evidence_paths=evidence_paths,
+                reason=reason,
+                handoff_path=handoff_path,
+                host_id=host_id,
+                claim_digest=claim_digest,
+                dependency_class=dependency_class,
+                failure_layer=failure_layer,
+                scope_fingerprint=scope_fingerprint,
+                approach_fingerprint=approach_fingerprint,
+                chain_coverage=chain_coverage,
+                global_analysis_digest=global_analysis_digest,
+            )
+            pending_basis = {
+                "format": "opencntx-pending-operation-result",
+                "format_version": 1,
+                "request_digest": request_digest,
+                "result": {
+                    "status": result.status,
+                    "current_assignment": result.current_assignment,
+                    "completed": list(result.completed),
+                    "total": result.total,
+                    "next_action": result.next_action,
+                    "minimum_action": result.minimum_action,
+                    "state_digest": result.state_digest,
+                },
+            }
+            _write_atomic(
+                pending_path,
+                _pretty(pending_basis | {"pending_digest": _value_digest(pending_basis)}),
+            )
+    if replayed:
+        return result
     checkpoint_kind = "BLOCKED" if result.status == "BLOCKED" else outcome.strip().upper()
     checkpoint = {
         "format": "opencntx-continuity-checkpoint",
@@ -1788,6 +1929,8 @@ def advance_flow(
         from .continuity_sync import record_sync_error
 
         record_sync_error(root, exc, checkpoint=checkpoint)
+    with _writer_lock(store / ".operation.lock"):
+        pending_path.unlink(missing_ok=True)
     return result
 
 
@@ -2254,10 +2397,16 @@ def verify_capsule(path: Path) -> dict[str, Any]:
             if not isinstance(files, list):
                 raise _fail("continuity_capsule_invalid", "Capsule file inventory is invalid.")
             expected_names = {"manifest.json"}
+            inventory_names: set[str] = set()
             for item in files:
                 if not isinstance(item, dict) or set(item) != {"path", "bytes", "sha256"}:
                     raise _fail("continuity_capsule_invalid", "Capsule file record is invalid.")
                 name = f"continuity/{_safe_relative(item['path'], 'capsule.path')}"
+                if name in inventory_names:
+                    raise _fail(
+                        "continuity_capsule_invalid", "Capsule manifest paths are duplicate."
+                    )
+                inventory_names.add(name)
                 content = archive.read(name)
                 if len(content) != item["bytes"] or _digest(content) != item["sha256"]:
                     raise _fail("continuity_capsule_invalid", "Capsule file digest differs.")

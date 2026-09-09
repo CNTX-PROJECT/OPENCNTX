@@ -101,7 +101,7 @@ def assess_profile(value: Mapping[str, Any]) -> dict[str, Any]:
     promote: list[str] = []
     if not facts["authority_present"]:
         hard.append("AUTHORITY_MISSING")
-    if facts["writes"] and facts["target_count"] != 1:
+    if facts["writes"] and facts["target_count"] < 1:
         hard.append("TARGET_UNBOUND")
     if not facts["privacy_clear"]:
         hard.append("PRIVACY_UNCLEAR")
@@ -215,7 +215,7 @@ def assess_profile_with_lease(
     basis["promotion_reasons"] = sorted(
         {*basis["promotion_reasons"], "VERIFICATION_LEASE_INVALID"}
     )
-    basis["writes_allowed"] = basis["status"] == "READY"
+    basis["writes_allowed"] = basis["status"] == "READY" and not facts["answer_only"]
     basis["evidence_level"] = "FULL"
     return basis | {"decision_digest": _value_digest(basis)}
 
@@ -260,7 +260,12 @@ def promote_governance_decision(
     prior = dict(envelope["decision"])
     candidate = assess_profile(facts)
     ranks = {"ANSWER_ONLY": 0, "LIGHT_TASK": 1, "GOVERNED_FLOW": 2}
-    downgrade = ranks[candidate["profile"]] < ranks[prior["profile"]]
+    restored_authority = (
+        prior["status"] == "BLOCKED"
+        and candidate["status"] == "READY"
+        and bool(facts.get("authority_present"))
+    )
+    downgrade = ranks[candidate["profile"]] < ranks[prior["profile"]] and not restored_authority
     selected = prior if downgrade else candidate
     basis = {
         "format": "opencntx-governance-envelope",
@@ -281,9 +286,29 @@ def sidecar_decision(
     advances_roadmap: bool,
 ) -> dict[str, Any]:
     """Allow parallel side work only when it cannot overlap or advance the writer."""
-    active = set(active_touches)
-    sidecar = set(sidecar_touches)
-    overlap = sorted(active & sidecar)
+    def canonical(value: str) -> tuple[str, ...]:
+        normalized = value.replace("\\", "/").strip("/").casefold()
+        return tuple(part for part in normalized.split("/") if part)
+
+    def overlaps(first: tuple[str, ...], second: tuple[str, ...]) -> bool:
+        common = min(len(first), len(second))
+        for index in range(common):
+            left, right = first[index], second[index]
+            if left == right:
+                continue
+            if "*" in left or "?" in left or "*" in right or "?" in right:
+                import fnmatch
+
+                if fnmatch.fnmatchcase(left, right) or fnmatch.fnmatchcase(right, left):
+                    continue
+            return False
+        return True
+
+    active = [(value, canonical(value)) for value in active_touches]
+    sidecar = [(value, canonical(value)) for value in sidecar_touches]
+    overlap = sorted(
+        {f"{left} <-> {right}" for left, left_id in active for right, right_id in sidecar if overlaps(left_id, right_id)}
+    )
     status = "BLOCKED" if overlap or advances_roadmap else "ISOLATED"
     return {
         "status": status,

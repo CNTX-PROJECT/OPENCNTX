@@ -800,7 +800,14 @@ def _local_matches(
 ) -> tuple[list[dict[str, Any]], int]:
     matches = []
     scanned = 0
-    for record_id, record in sorted(state["records"].items()):
+    records = state["records"]
+    exact_id = query["exact"] if query["exact"] in records else None
+    candidates = (
+        [(str(exact_id), records[str(exact_id)])]
+        if exact_id is not None
+        else sorted(records.items())
+    )
+    for record_id, record in candidates:
         if scanned >= _int_value(query["scan_budget"], "scan budget"):
             break
         scanned += 1

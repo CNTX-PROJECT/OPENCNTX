@@ -7,12 +7,14 @@ import os
 import shutil
 import stat
 import tempfile
+import time
 from collections.abc import Callable, Mapping, Sequence
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import Any
 
 from .continuity import (
+    ContinuityError,
     _digest,
     _fail,
     _identifier,
@@ -20,6 +22,7 @@ from .continuity import (
     _value_digest,
     _write_atomic,
     _writer_lock,
+    _writer_lock_is_active,
 )
 from .contracts import ContractError, validate_durable_record
 from .integrity import UNBOUND_EXPECTED_DIGEST, doctor_workspace
@@ -322,6 +325,7 @@ def build_update_preview(
     total_active = 0
     total_candidate = 0
     names: set[str] = set()
+    declared_paths: list[tuple[str, Path]] = []
     for component in components:
         if set(component) != {"name", "active_path", "candidate_path", "from_format", "to_format"}:
             raise _fail("update_plan_invalid", "Update component fields differ.")
@@ -333,6 +337,20 @@ def build_update_preview(
         candidate = _inside(root, component["candidate_path"], "candidate_path")
         if active == candidate or active in candidate.parents or candidate in active.parents:
             raise _fail("update_path_invalid", "Active and candidate components must be separate.")
+        for prior_label, prior_path in declared_paths:
+            if (
+                active == prior_path
+                or active in prior_path.parents
+                or prior_path in active.parents
+                or candidate == prior_path
+                or candidate in prior_path.parents
+                or prior_path in candidate.parents
+            ):
+                raise _fail(
+                    "update_path_invalid",
+                    f"Component paths overlap the previously declared {prior_label} path.",
+                )
+        declared_paths.extend(((f"{name} active", active), (f"{name} candidate", candidate)))
         active_capability = classify_path_capability(active)
         candidate_capability = classify_path_capability(candidate)
         if (
@@ -464,7 +482,9 @@ def _project_checks(
             )
         store = store_path(project)
         locks = [store / ".operation.lock", project / ".opencntx/combo/.writer.lock"]
-        if not locks_owned and any(path.exists() for path in locks):
+        if not locks_owned and any(
+            path.exists() and _writer_lock_is_active(path) for path in locks
+        ):
             raise _fail("update_writer_active", "A project writer must checkpoint before update.")
         state_digest = None
         if store.exists():
@@ -645,6 +665,96 @@ def apply_update_plan(
             if _project_checks(root, requests, selected["to_version"], locks_owned=True) != checks:
                 raise _fail("update_project_drift", "Project changed before writer lock.")
         return _apply_update_plan_locked(selected, approval=approval, fault_hook=fault_hook)
+
+
+@contextmanager
+def _managed_reader_lock(path: Path, *, timeout_seconds: float = 30.0):
+    """Wait a bounded time for one coherent managed generation."""
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        lock = _writer_lock(path)
+        try:
+            lock.__enter__()
+            break
+        except ContinuityError as exc:
+            if exc.code != "continuity_write_conflict" or time.monotonic() >= deadline:
+                raise
+            time.sleep(0.01)
+    try:
+        yield
+    finally:
+        lock.__exit__(None, None, None)
+
+
+def read_update_generation(
+    plan: Mapping[str, object],
+    *,
+    relative_paths: Sequence[str] = (),
+) -> dict[str, Any]:
+    """Read one coherent component generation through the managed entry point.
+
+    Managed readers share the update writer lock for the complete operation, so
+    one observation cannot combine components from opposite sides of a cutover.
+    Direct reads of individual active paths remain an unmanaged legacy route.
+    """
+    selected = _validate_plan(plan)
+    root = Path(str(selected["update_root"])).resolve(strict=True)
+    state_root = root / ".opencntx-update"
+    state_root.mkdir(exist_ok=True)
+    requested = [_one_line(item, "relative_path", 1_000) for item in relative_paths]
+    if len(requested) != len(set(requested)) or len(requested) > 100:
+        raise _fail("update_read_invalid", "Managed relative paths must be unique and bounded.")
+    safe_paths: list[Path] = []
+    for item in requested:
+        relative = Path(item)
+        if (
+            relative.is_absolute()
+            or not relative.parts
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise _fail(
+                "update_read_invalid", "Managed relative paths must stay within components."
+            )
+        safe_paths.append(relative)
+    with _managed_reader_lock(state_root / "writer.lock"):
+        components = []
+        for item in selected["components"]:
+            active = Path(item["active_path"])
+            digest = _tree_digest(active)
+            if digest == item["active_digest"]:
+                generation = "SOURCE"
+            elif digest == item["candidate_digest"]:
+                generation = "TARGET"
+            else:
+                raise _fail(
+                    "update_read_invalid", "Active component is outside the planned generations."
+                )
+            files = []
+            for relative in safe_paths:
+                path = active / relative
+                if path.is_file() and not path.is_symlink():
+                    content = path.read_bytes()
+                    files.append(
+                        {
+                            "path": relative.as_posix(),
+                            "bytes": len(content),
+                            "sha256": _digest(content),
+                        }
+                    )
+            components.append(
+                {"name": item["name"], "generation": generation, "digest": digest, "files": files}
+            )
+        generations = {item["generation"] for item in components}
+        if len(generations) != 1:
+            raise _fail("update_generation_mixed", "Managed components do not form one generation.")
+        value = {
+            "format": "opencntx-update-generation-read",
+            "format_version": 1,
+            "plan_id": selected["plan_id"],
+            "generation": next(iter(generations)),
+            "components": components,
+        }
+        return value | {"read_digest": _value_digest(value)}
 
 
 def _apply_update_plan_locked(

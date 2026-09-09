@@ -1,4 +1,4 @@
-"""Publication checks for the planned roadmap, not runtime feature tests."""
+"""Publication checks for the release-aware continuing roadmap."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ class PublicRoadmapTests(unittest.TestCase):
         self.assertIn("S01", text)
         self.assertIn("target_version: 1.7.3", text)
         self.assertIn("planning_revision: 4", text)
-        self.assertIn("not software release 1.7.3", text)
+        self.assertIn("Reliability set shipped in v1.7.3", text)
         self.assertNotIn("- [x]", text.lower())
 
     def test_only_explicit_extensions_are_deferred(self) -> None:
@@ -61,14 +61,14 @@ class PublicRoadmapTests(unittest.TestCase):
         self.assertIn("N06A — early", text)
         self.assertIn("N06B — later", text)
 
-    def test_planning_and_published_software_are_distinct(self) -> None:
+    def test_release_scope_and_continuing_plan_are_distinct(self) -> None:
         plan = (ROOT / "docs/roadmap-plan.md").read_text(encoding="utf-8")
         overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
         releases = (ROOT / "docs/releases.md").read_text(encoding="utf-8")
-        self.assertIn("published_baseline: 1.7.1", plan)
-        self.assertIn("Package version: `1.7.2`", releases)
-        self.assertIn("Next implementation target: **1.7.3**", releases)
-        self.assertIn("not implemented", releases)
+        self.assertIn("published_baseline: 1.7.3", plan)
+        self.assertIn("Package version: `1.7.3`", releases)
+        self.assertIn("release scope", releases)
+        self.assertIn("remaining work", releases.lower())
         self.assertIn("twelve failed tasks out of one hundred", overview)
         self.assertIn("two long routes of 100 tasks each", overview)
 

@@ -14,7 +14,7 @@ privacy, integrity, and evidence checks.
 
 ## Fast route
 
-The commands in this guide remain Stable in the current v1.7.1 release. The
+The commands in this guide remain Stable in the current v1.7.3 release. The
 [adaptive AI workflow](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice
 without changing authority. It does not add a released CLI command.
@@ -282,14 +282,14 @@ projects remain outside this product route.
 
 ## Connected current views
 
-For planned improvements to authority reuse, compact resume and host behavior,
-see the [roadmap for 1.7.3](roadmap.md). Those new tasks are not implemented
-by the 1.7.1 documentation release.
+For the precise authority, compact-resume and managed-update behavior delivered
+in 1.7.3, see its [release scope](release-1.7.3.md). Broader host integration
+and measurement work remains on the [roadmap](roadmap.md).
 
-These existing features are retained in v1.7.1 from the v1.6.x line.
+These existing features are retained in v1.7.3 from the v1.6.x line.
 The matching GitHub Release establishes published availability;
 installation never activates a host hook. The new improvement roadmap is
-not implemented by this version bump; see [release scope](release-1.7.1.md).
+implemented only where stated in the [1.7.3 release scope](release-1.7.3.md).
 
 `flow start --connected` opts into a revision-bound current view. `flow current`
 reads status without creating a missing flow. `flow current --publish` needs

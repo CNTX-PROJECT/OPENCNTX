@@ -19,16 +19,15 @@ OPENCNTX turns selected local files into a compact context package. For longer
 projects, optional workspace and continuity tools keep tasks and evidence
 outside the chat. No account, API key or built-in AI model is required.
 
-**Available now:** [v1.7.1 Stable release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1).
-**Next planned update:** [1.7.3 roadmap](docs/roadmap.md).
-The roadmap is a plan, not a software release; its improvements are not yet implemented.
+**Available now:** [v1.7.3 Stable release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.3).
+[Release scope](docs/release-1.7.3.md) · [Next roadmap](docs/roadmap.md)
 
 ## Start in minutes
 
 With Python 3.11–3.14, Git and pipx available, install the published release:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.1"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.3"
 opencntx --version
 ```
 

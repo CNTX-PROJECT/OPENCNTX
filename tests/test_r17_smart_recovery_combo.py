@@ -130,12 +130,18 @@ class GovernanceProfileTests(unittest.TestCase):
                 self.assertIn(expected, result["hard_blocks"])
                 self.assertEqual("HARD_BLOCK", classify_check(expected))
 
+    def test_multiple_concrete_local_targets_promote_without_refusal(self) -> None:
+        result = assess_profile(
+            _facts(answer_only=False, writes=2, target_count=2, dependent_steps=2)
+        )
+        self.assertEqual("GOVERNED_FLOW", result["profile"])
+        self.assertEqual("READY", result["status"])
+        self.assertIn("MULTIPLE_TARGETS", result["promotion_reasons"])
+
     def test_warn_is_allowlisted_and_cannot_hide_material_drift(self) -> None:
         warning = assess_profile(_facts(warnings=["START_HERE_SOFT_BUDGET"]))
         self.assertEqual("READY", warning["status"])
-        blocked = assess_profile(
-            _facts(privacy_clear=False, warnings=["START_HERE_SOFT_BUDGET"])
-        )
+        blocked = assess_profile(_facts(privacy_clear=False, warnings=["START_HERE_SOFT_BUDGET"]))
         self.assertEqual("BLOCKED", blocked["status"])
         with self.assertRaises(ContinuityError):
             classify_check("UNKNOWN_WARNING")
@@ -249,9 +255,7 @@ class CliIntegrationTests(unittest.TestCase):
                 "STANDARD_ATTEMPT_1",
                 self._run(["flow", "recovery", "record", str(request)])["stage"],
             )
-            receipt = self._run(
-                ["flow", "combo", "init", str(combo), "--root", str(root)]
-            )
+            receipt = self._run(["flow", "combo", "init", str(combo), "--root", str(root)])
             self.assertEqual(0, receipt["history_index_count"])
             self.assertEqual(
                 "opencntx-combo-roadmap",
@@ -288,17 +292,40 @@ class SmartRecoveryTests(unittest.TestCase):
         self.assertEqual(history, validate_recovery_history(restarted))
         self.assertEqual("BLOCKED_CHAIN", recovery_decision(restarted)["status"])
         report = recovery_report(
-            restarted, rollback="Restore the prior candidate tree", minimum_continuation="Resolve platform access"
+            restarted,
+            rollback="Restore the prior candidate tree",
+            minimum_continuation="Resolve platform access",
         )
         self.assertEqual(4, len(report["attempt_timeline"]))
         self.assertTrue(report["open_required_outcomes"])
 
-    def test_second_global_round_requires_new_evidence_and_wider_scope(self) -> None:
+    def test_second_global_round_accepts_new_evidence_and_changed_approach_in_full_scope(
+        self,
+    ) -> None:
+        history = []
+        for number in range(3):
+            history = self._append(history, number)
+        completed = self._append(history, 3, coverage=["TASK_1"])
+        self.assertEqual(4, len(completed))
+        self.assertEqual("GLOBAL_RECOVERY_2", completed[-1]["stage"])
+
+    def test_second_global_round_rejects_unchanged_evidence_and_scope(self) -> None:
         history = []
         for number in range(3):
             history = self._append(history, number)
         with self.assertRaises(ContinuityError):
-            self._append(history, 3, coverage=["TASK_1"])
+            record_failed_attempt(
+                history,
+                assignment_id="TASK_1",
+                dependency_class="CHAIN",
+                failure_layer="CONTROL_PLANE",
+                reason="No new evidence or scope",
+                evidence_digest=history[-1]["evidence_digest"],
+                scope_fingerprint=history[-1]["scope_fingerprint"],
+                approach_fingerprint=_sha("different-approach"),
+                chain_coverage=["TASK_1"],
+                global_analysis_digest=_sha("different-analysis"),
+            )
 
     def test_global_approach_cannot_be_repeated(self) -> None:
         history = []
@@ -332,8 +359,18 @@ class SmartRecoveryTests(unittest.TestCase):
     def test_global_analysis_keeps_history_and_current_rules_win(self) -> None:
         conflicts = [{"id": "CONFLICT_1", "status": "OPEN", "source_digest": _sha("conflict")}]
         rules = [
-            {"id": "RULE_CURRENT", "status": "CURRENT", "approved": True, "source_digest": _sha("current")},
-            {"id": "RULE_OLD", "status": "SUPERSEDED", "approved": True, "source_digest": _sha("old")},
+            {
+                "id": "RULE_CURRENT",
+                "status": "CURRENT",
+                "approved": True,
+                "source_digest": _sha("current"),
+            },
+            {
+                "id": "RULE_OLD",
+                "status": "SUPERSEDED",
+                "approved": True,
+                "source_digest": _sha("old"),
+            },
         ]
         first = build_global_analysis(
             round_number=1,
@@ -407,29 +444,47 @@ class ComboRoadmapTests(unittest.TestCase):
         combo = update_combo(new_combo("OPENCNTX"), [_entry(1)])
         query = query_combo(combo, tags=["continuity"])
         self.assertEqual(1, query["match_count"])
-        self.assertEqual("CLEAR", compare_roadmap(combo, {
-            "roadmap_id": "R002",
-            "references": ["R001"],
-            "tags": ["continuity"],
-            "touches": ["src"],
-            "supersedes": [],
-        })["status"])
-        self.assertEqual("RECONCILE_REQUIRED", compare_roadmap(combo, {
-            "roadmap_id": "R002",
-            "references": ["UNKNOWN"],
-            "tags": [],
-            "touches": [],
-            "supersedes": [],
-        })["status"])
+        self.assertEqual(
+            "CLEAR",
+            compare_roadmap(
+                combo,
+                {
+                    "roadmap_id": "R002",
+                    "references": ["R001"],
+                    "tags": ["continuity"],
+                    "touches": ["src"],
+                    "supersedes": [],
+                },
+            )["status"],
+        )
+        self.assertEqual(
+            "RECONCILE_REQUIRED",
+            compare_roadmap(
+                combo,
+                {
+                    "roadmap_id": "R002",
+                    "references": ["UNKNOWN"],
+                    "tags": [],
+                    "touches": [],
+                    "supersedes": [],
+                },
+            )["status"],
+        )
         conflict = _entry(1, kind="CONFLICT", status="BLOCKED")
         blocked_combo = update_combo(new_combo("OPENCNTX"), [_entry(1), conflict])
-        self.assertEqual("BLOCKED", compare_roadmap(blocked_combo, {
-            "roadmap_id": "R002",
-            "references": ["R001"],
-            "tags": ["continuity"],
-            "touches": ["src"],
-            "supersedes": [],
-        })["status"])
+        self.assertEqual(
+            "BLOCKED",
+            compare_roadmap(
+                blocked_combo,
+                {
+                    "roadmap_id": "R002",
+                    "references": ["R001"],
+                    "tags": ["continuity"],
+                    "touches": ["src"],
+                    "supersedes": [],
+                },
+            )["status"],
+        )
         replacement = _entry(2)
         replacement["supersedes"] = ["R001_ROADMAP"]
         combo = update_combo(combo, [replacement])
@@ -521,16 +576,18 @@ class ContinuityGenerationTests(unittest.TestCase):
             "project_id": "OPENCNTX",
             "roadmap_id": identifier,
             "title": f"Roadmap {identifier}",
-            "assignments": [{
-                "id": f"{identifier}_TASK",
-                "title": "Complete one task",
-                "detail": "Use the bound evidence and complete this task.",
-                "depends_on": [],
-                "touches": [],
-                "conflict": "NO_CONFLICT",
-                "migration": "No migration.",
-                "definition_of_done": ["Evidence is bound"],
-            }],
+            "assignments": [
+                {
+                    "id": f"{identifier}_TASK",
+                    "title": "Complete one task",
+                    "detail": "Use the bound evidence and complete this task.",
+                    "depends_on": [],
+                    "touches": [],
+                    "conflict": "NO_CONFLICT",
+                    "migration": "No migration.",
+                    "definition_of_done": ["Evidence is bound"],
+                }
+            ],
         }
 
     def test_new_flow_archives_only_a_verified_complete_generation(self) -> None:
@@ -557,16 +614,18 @@ class ContinuityGenerationTests(unittest.TestCase):
         roadmap = self._roadmap("ROADMAP_CLASSIFIED")
         first = roadmap["assignments"][0]
         first["detail"] = "STANDALONE. Complete an independent task."
-        roadmap["assignments"].append({
-            "id": "ROADMAP_CLASSIFIED_NEXT",
-            "title": "Independent next task",
-            "detail": "CHAIN. Complete the remaining required task.",
-            "depends_on": [],
-            "touches": [],
-            "conflict": "NO_CONFLICT",
-            "migration": "No migration.",
-            "definition_of_done": ["Evidence is bound"],
-        })
+        roadmap["assignments"].append(
+            {
+                "id": "ROADMAP_CLASSIFIED_NEXT",
+                "title": "Independent next task",
+                "detail": "CHAIN. Complete the remaining required task.",
+                "depends_on": [],
+                "touches": [],
+                "conflict": "NO_CONFLICT",
+                "migration": "No migration.",
+                "definition_of_done": ["Evidence is bound"],
+            }
+        )
         with tempfile.TemporaryDirectory() as temp_name:
             root = Path(temp_name)
             path = root / "roadmap.json"
@@ -627,9 +686,7 @@ class ContinuityGenerationTests(unittest.TestCase):
                     ),
                     global_analysis_digest=None if number < 2 else _sha(f"analysis-{number}"),
                 )
-                self.assertEqual(
-                    "BLOCKED" if number == 3 else "RECOVERY_REQUIRED", result.status
-                )
+                self.assertEqual("BLOCKED" if number == 3 else "RECOVERY_REQUIRED", result.status)
 
     def test_recovery_handoff_persists_byte_equal_across_restart_readback(self) -> None:
         roadmap = self._roadmap("ROADMAP_HANDOFF")

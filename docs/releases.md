@@ -6,21 +6,22 @@ Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
 
-## Published software — v1.7.1 Stable
+## Published software — v1.7.3 Stable
 
-[Download v1.7.1](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1) ·
-[Release scope and limitations](release-1.7.1.md) ·
+[Download v1.7.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.3) ·
+[Release scope and limitations](release-1.7.3.md) ·
 [Installation and removal](start-here.md)
 
-Version 1.7.1 published the earlier roadmap and aligned documentation.
-Runtime behavior is retained from 1.7.0 and 1.6.3. The proposed progress,
-memory, friction and clean-update improvements are not implemented by that
-documentation release.
+Version 1.7.3 implements the highest-priority findings from the 1.7.2 stress
+assessment: crash-recoverable writer exclusion, safe retry return, conservative
+target overlap, bounded durable decisions, exact memory lookup, exact sync-byte
+verification, compact resumption, strict capsule validation, and a managed
+coherent-generation reader for multi-component updates.
 
 The published distribution contains exactly:
 
-- `opencntx-1.7.1-py3-none-any.whl`
-- `opencntx-1.7.1.tar.gz`
+- `opencntx-1.7.3-py3-none-any.whl`
+- `opencntx-1.7.3.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
@@ -29,14 +30,13 @@ verification. There is no published PyPI/TestPyPI package.
 
 ## Development source and next plan
 
-- Local candidate: v1.7.2.
-- Source candidate: `v1.7.2`.
-- Package version: `1.7.2`.
-- Next implementation target: **1.7.3**, described on the [roadmap page](roadmap.md).
+- Local candidate: v1.7.3.
+- Source candidate: `v1.7.3`.
+- Package version: `1.7.3`.
+- Remaining work is tracked on the [roadmap page](roadmap.md).
 
-The source version and the planning target are different on purpose: publishing
-a plan does not claim that its runtime changes exist. No software release
-1.7.2 or 1.7.3 is created by this roadmap publication.
+The release scope distinguishes implemented behavior from deferred extensions;
+a roadmap checkbox is never a substitute for release evidence.
 
 Contributors who deliberately need current, unreleased source can use:
 
@@ -68,8 +68,7 @@ real-host cost claim.
 - [1.7.0 scope](release-1.7.0.md) — earlier runtime and publication limitations.
 - [Product roadmap](roadmap.md) — latest plan and earlier English plan snapshot.
 
-The following diagram records historical foundation milestones, not completion
-of the current N01–N24 work.
+The following diagram records historical foundation milestones.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">

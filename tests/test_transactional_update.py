@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +17,7 @@ from opencntx.transactional_update import (
     classify_path_capability,
     export_legacy_transaction_history,
     migration_readiness,
+    read_update_generation,
     recover_interrupted_update,
     update_postflight,
 )
@@ -109,9 +112,7 @@ class TransactionalUpdateTests(unittest.TestCase):
         init_workspace(workspace)
         with writer_transaction(workspace, "legacy-source"):
             pass
-        transaction = next(
-            (workspace / ".opencntx" / "transactions" / "completed").iterdir()
-        )
+        transaction = next((workspace / ".opencntx" / "transactions" / "completed").iterdir())
         intent_path = transaction / "intent.json"
         value = json.loads(intent_path.read_text(encoding="utf-8"))
         value["expected_digest"] = None
@@ -135,9 +136,7 @@ class TransactionalUpdateTests(unittest.TestCase):
         readable = self.root / "readable.txt"
         readable.write_text("safe\n", encoding="utf-8")
         self.assertEqual(classify_path_capability(readable)["status"], "READABLE")
-        self.assertEqual(
-            classify_path_capability(self.root / "missing")["status"], "MISSING"
-        )
+        self.assertEqual(classify_path_capability(self.root / "missing")["status"], "MISSING")
         self.assertEqual(
             classify_path_capability(readable, declared_sandbox_denied=True)["status"],
             "SANDBOX_DENIED",
@@ -155,7 +154,9 @@ class TransactionalUpdateTests(unittest.TestCase):
     def test_preview_is_read_only_and_requires_compatible_tuple_and_space(self) -> None:
         root, components = self.update_fixture()
         before = {
-            Path(item["active_path"]): sorted(path.name for path in Path(item["active_path"]).iterdir())
+            Path(item["active_path"]): sorted(
+                path.name for path in Path(item["active_path"]).iterdir()
+            )
             for item in components
         }
         plan = self.plan(root, components)
@@ -196,9 +197,7 @@ class TransactionalUpdateTests(unittest.TestCase):
         plan = self.plan(root, components)
         with self.assertRaisesRegex(WorkspaceError, "approval"):
             apply_update_plan(plan, approval="yes")
-        receipt = apply_update_plan(
-            plan, approval=f"APPLY UPDATE {plan['plan_digest']}"
-        )
+        receipt = apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}")
         self.assertEqual(receipt["status"], "COMPLETED")
         for item in components:
             active = Path(item["active_path"])
@@ -207,10 +206,106 @@ class TransactionalUpdateTests(unittest.TestCase):
             self.assertTrue((active / "new-only.txt").is_file())
         self.assertTrue(Path(str(receipt["backup_path"])).is_dir())
         self.assertEqual(update_postflight(plan)["status"], "GREEN")
-        replay = apply_update_plan(
-            plan, approval=f"APPLY UPDATE {plan['plan_digest']}"
-        )
+        replay = apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}")
         self.assertEqual(replay, receipt)
+
+    def test_managed_reader_observes_one_complete_generation(self) -> None:
+        root, components = self.update_fixture("managed-reader")
+        plan = self.plan(root, components)
+        before = read_update_generation(plan, relative_paths=["version.txt"])
+        self.assertEqual("SOURCE", before["generation"])
+        self.assertEqual({"SOURCE"}, {item["generation"] for item in before["components"]})
+        apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}")
+        after = read_update_generation(plan, relative_paths=["version.txt"])
+        self.assertEqual("TARGET", after["generation"])
+        self.assertEqual({"TARGET"}, {item["generation"] for item in after["components"]})
+
+    def test_managed_subprocess_reader_never_observes_mixed_cutover(self) -> None:
+        root, components = self.update_fixture("managed-reader-race")
+        plan = self.plan(root, components)
+        plan_path = root / "plan.json"
+        plan_path.write_text(json.dumps(plan), encoding="utf-8")
+        program = """
+import json
+import sys
+from pathlib import Path
+from opencntx.transactional_update import read_update_generation
+plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+print(json.dumps(read_update_generation(plan, relative_paths=["version.txt"])))
+"""
+        readers = []
+        first = plan["components"][0]["name"]
+
+        def launch(phase: str) -> None:
+            if phase == f"AFTER_ACTIVATE:{first}":
+                readers.append(
+                    subprocess.Popen(
+                        [sys.executable, "-c", program, str(plan_path)],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True,
+                    )
+                )
+
+        apply_update_plan(
+            plan,
+            approval=f"APPLY UPDATE {plan['plan_digest']}",
+            fault_hook=launch,
+        )
+        stdout, stderr = readers[0].communicate(timeout=35)
+        self.assertEqual("", stderr)
+        observation = json.loads(stdout)
+        self.assertEqual("TARGET", observation["generation"])
+        self.assertEqual({"TARGET"}, {item["generation"] for item in observation["components"]})
+
+    def test_hard_exit_recovery_needs_no_manual_lock_removal(self) -> None:
+        program = """
+import json
+import os
+import sys
+from pathlib import Path
+from opencntx.transactional_update import apply_update_plan
+plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+def crash(phase):
+    if phase == sys.argv[2]:
+        os._exit(91)
+apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}", fault_hook=crash)
+"""
+        for phase_type, index in (
+            ("AFTER_RETIRE", 0),
+            ("AFTER_ACTIVATE", 0),
+            ("AFTER_ACTIVATE", 1),
+        ):
+            with self.subTest(phase=phase_type, component=index):
+                root, components = self.update_fixture(f"hard-{phase_type}-{index}")
+                plan = self.plan(root, components)
+                phase = f"{phase_type}:{plan['components'][index]['name']}"
+                plan_path = root / "plan.json"
+                plan_path.write_text(json.dumps(plan), encoding="utf-8")
+                child = subprocess.run(
+                    [sys.executable, "-c", program, str(plan_path), phase],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                )
+                self.assertEqual(91, child.returncode)
+                self.assertEqual("ROLLED_BACK", recover_interrupted_update(plan)["status"])
+                self.assertEqual(
+                    {"old"},
+                    {
+                        (Path(item["active_path"]) / "version.txt")
+                        .read_text(encoding="utf-8")
+                        .strip()
+                        for item in plan["components"]
+                    },
+                )
+
+    def test_preview_rejects_cross_component_path_overlap(self) -> None:
+        root, components = self.update_fixture("overlap")
+        components[1]["active_path"] = components[0]["active_path"]
+        with self.assertRaisesRegex(WorkspaceError, "overlap"):
+            self.plan(root, components)
 
     def test_failure_during_second_component_restores_every_active_component(self) -> None:
         root, components = self.update_fixture("failure")
@@ -304,14 +399,15 @@ class TransactionalUpdateTests(unittest.TestCase):
                 raise RuntimeError("injected after later user work")
 
         with self.assertRaisesRegex(WorkspaceError, "preserved"):
-            apply_update_plan(
-                plan, approval=f"APPLY UPDATE {plan['plan_digest']}", fault_hook=fail
-            )
+            apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}", fault_hook=fail)
         self.assertTrue(later.is_file(), "Rollback must not erase later user work")
         self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
         retired = root / ".opencntx-update" / "retired" / str(plan["plan_id"]) / "RUNTIME"
         self.assertEqual((retired / "version.txt").read_bytes(), original_bytes)
-        self.assertEqual((Path(str(plan["backup_path"])) / "RUNTIME" / "version.txt").read_bytes(), original_bytes)
+        self.assertEqual(
+            (Path(str(plan["backup_path"])) / "RUNTIME" / "version.txt").read_bytes(),
+            original_bytes,
+        )
         with self.assertRaisesRegex(WorkspaceError, "preserved"):
             recover_interrupted_update(plan)
         self.assertEqual(later.read_bytes(), b"irreplaceable later work\n")
@@ -335,15 +431,11 @@ class TransactionalUpdateTests(unittest.TestCase):
             "legacy-transaction-export-v1.schema.json",
         }
         catalog = json.loads(
-            (ROOT / "src/opencntx/schemas/continuity-contract-v1.json").read_text(
-                encoding="utf-8"
-            )
+            (ROOT / "src/opencntx/schemas/continuity-contract-v1.json").read_text(encoding="utf-8")
         )
         self.assertTrue(names.issubset(catalog["schemas"]))
         for name in names:
-            schema = json.loads(
-                (ROOT / "src/opencntx/schemas" / name).read_text(encoding="utf-8")
-            )
+            schema = json.loads((ROOT / "src/opencntx/schemas" / name).read_text(encoding="utf-8"))
             self.assertFalse(schema["additionalProperties"])
 
 

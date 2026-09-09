@@ -6,17 +6,17 @@ This page always points to the latest OPENCNTX development plan.
 Looking for the feature that manages your own project tasks?
 Use [Workflow continuity](continuity.md) instead.
 
-## Latest roadmap — 1.7.3
+## Latest release and roadmap
 
-**Revision 4 · Planned · Published software remains v1.7.1 Stable.**
+**Revision 4 · v1.7.3 Stable reliability release published · remaining work tracked.**
 
 **[Read the complete 1.7.3 roadmap →](roadmap-plan.md)**
 
-The plan retains 24 tasks (N01–N24). Twenty-one remain planned for the base
-delivery and release process; three extensions are explicitly deferred.
-Publishing the roadmap does not implement it or create a software release.
+Version 1.7.3 ships the bounded reliability set documented in the
+[release scope](release-1.7.3.md). The complete plan retains unfinished and
+deferred work; publication status is based on the GitHub Release, not the plan.
 
-## What 1.7.3 is intended to improve
+## What 1.7.3 improves
 
 | Priority | Intended result |
 |---|---|
@@ -27,8 +27,9 @@ Publishing the roadmap does not implement it or create a software release.
 | Crash-safe updates | Recover after process death; each reader sees a compatible generation |
 | Measured overhead | Separate real outcomes, context bytes, retries and actual host costs |
 
-These are targets, not delivered capabilities. Host policies, legitimate safety
-boundaries, missing access and explicit user stops continue to apply.
+These claims apply only to the tested native routes in the release scope. Host
+policies, legitimate safety boundaries, missing access and explicit user stops
+continue to apply.
 
 ## Delivery sequence
 
@@ -41,7 +42,7 @@ boundaries, missing access and explicit user stops continue to apply.
 | E — Measurement | Compare equivalent workloads and keep feature claims honest |
 | F — Release | Verify final source, CI and artifacts; publish software only when requested |
 
-Extra host integration (N18), one-way Obsidian export (N19) and the broad
+Extra host integration (N18), one-way notes export (N19) and the broad
 real-project pilot (N21) remain outside the base scope. Broad savings and host
 claims still require the corresponding evidence.
 
