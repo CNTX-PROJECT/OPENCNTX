@@ -283,7 +283,7 @@ projects remain outside this product route.
 ## Connected current views
 
 For planned improvements to authority reuse, compact resume and host behavior,
-see the [new public roadmap](roadmap.md). Those new tasks are not implemented
+see the [roadmap for 1.7.2](roadmap.md). Those new tasks are not implemented
 by the 1.7.1 documentation release.
 
 These existing features are retained in v1.7.1 from the v1.6.x line.

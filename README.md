@@ -9,14 +9,14 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.7.1 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.7.1 Stable release** · **Local candidate: v1.7.2** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
 **Release scope:** v1.7.1 publishes the new roadmap and aligned documentation. Runtime behavior is unchanged from v1.7.0 (and v1.6.3). The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.1.md).
-**Published roadmap:** read the [six-phase, 24-task overview](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). The 1.7.1 documentation release does not complete these tasks; their future implementation version remains undecided.
+**Roadmap for 1.7.2:** read the [six-phase, 24-task overview](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). Revision 3 incorporates the deeper 1.7.0/1.7.1 review. All tasks remain planned; this publishes the plan, not software release 1.7.2.
 OPENCNTX gives an AI selected local context without handing over an entire project. It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.
@@ -153,7 +153,7 @@ route—never in a public issue.
 |---|---|
 | Release scope | Version/documentation alignment; roadmap implementation and pilot remain outstanding |
 | Published stable | `v1.7.1`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
-| Package | `opencntx 1.7.1`; documentation release; runtime behavior retained from 1.7.0 |
+| Package | `opencntx 1.7.2`; unreleased source candidate; runtime behavior retained from 1.7.1 |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |

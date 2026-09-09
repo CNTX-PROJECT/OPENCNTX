@@ -1,641 +1,487 @@
 ---
-title: OPENCNTX — Roadmap na de 1.7.0-analyse
+title: OPENCNTX 1.7.2 — Herstel, vereenvoudiging en gerichte verbetering
 project: OPENCNTX
 type: roadmap
 status: planned
 created: 2026-09-09
 updated: 2026-09-09
-planning_revision: 2
-source_version: 1.7.0
-source_commit: 654c110b59c7df33bdb223c163c5783c79848c30
-published_baseline: 1.7.0
-documentation_release: 1.7.1
-target_version: null
-public_overview: "roadmap.md"
+planning_revision: 3
+source_versions: ["1.7.0", "1.7.1"]
+source_commit: 6b80cc41529653eac0b16b4238a4b7692eebb4f7
+published_baseline: 1.7.1
+target_version: 1.7.2
+analysis_basis: "Deep review of versions 1.7.0 and 1.7.1"
+publication_scope: roadmap-only
 ---
 
-# OPENCNTX — Roadmap na de 1.7.0-analyse
+# OPENCNTX 1.7.2 — Herstel, vereenvoudiging en gerichte verbetering
 
-## 1. Doel en actuele stand
+[English overview](roadmap.md) · [README](../README.md) · [Current release](release-1.7.1.md)
 
-**Doel:** de bestaande contextkern betrouwbaar eenvoudiger maken: minder onnodige vragen en stops, geen onterechte eigen weigeringen, meetbaar zuinige context en voorspelbare updates die gebruikersdata behouden.
+## 1. Richting en actuele stand
 
-Dit is de volledige publieke Nederlandstalige planning op basis van de beoordeling van 1.7.0. Zie het [Engelstalige overzicht](roadmap.md) en de [release-inhoud en bekende beperkingen](release-1.7.0.md). Privépaden, lokale bewijsbestanden en persoonlijke herstelgegevens zijn niet opgenomen. Taken en acceptatiecriteria zijn behouden; publicatie betekent niet dat de verbeteringen uitgevoerd zijn.
+**Doel:** de nuttige technieken behouden en hun samenwerking betrouwbaarder en eenvoudiger maken. Minder onnodige stops en vragen, minder verspilde context, geen eigen onterechte blokkades en voorspelbare updates zonder onbekende actieve restanten.
 
-| Onderdeel | Actuele stand |
+De hoofdregel is: **maak overgangen slimmer, niet de verzameling regels groter.** Toestemming, controlebewijs, native voortgang, geheugenweergave en actieve installatie krijgen ieder een duidelijke verantwoordelijkheid. Een fout in een optioneel onderdeel mag niet de hele taak opnieuw laten beginnen.
+
+Deze revisie vervangt het vorige publieke plan. Zij verwerkt de diepteanalyse van 1.7.0 en 1.7.1, behoudt de eerdere herstelpunten en houdt de bestaande taakcodes N01–N24 aan. Het is één uitvoeringslijst; de analyses blijven bronnen, geen concurrerende taakadministraties.
+
+| Onderdeel | Stand |
 |---|---|
-| Onderzochte en gepubliceerde basis | OPENCNTX 1.7.0 |
-| Broncommit | 654c110b59c7df33bdb223c163c5783c79848c30 |
-| Brontree | 1c2de502fd9c7580d2025f779ced68c7f64adc84 |
-| Betekenis van 1.7.0 | Versie-/documentatieafstemming; runtimegedrag behouden uit 1.6.3 |
-| Documentatierelease 1.7.1 | Bundelt deze roadmap; geen implementatie van N01–N24 |
-| Nieuwe planning | 24 taken, N01–N24 |
-| Afgeronde nieuwe taken | 0 van 24 |
-| Actieve taak | Geen |
-| Eerstvolgende taak | N01 — Werkbasis, bewijs en wijzigingsscope vastleggen |
-| Volgende implementatie-/releaseversie | Nog niet gekozen; 1.7.0 wordt niet hergebruikt |
-| Nieuwe publicatie | Niet gestart |
-| Installatie/activering | Geen onderdeel van deze roadmap-publicatie |
+| Onderzochte basis | 1.7.0 en 1.7.1; runtime identiek afgezien van het versienummer |
+| Laatst vastgelegde publicatiebasis | 1.7.1, commit `6b80cc41529653eac0b16b4238a4b7692eebb4f7` |
+| Betekenis van 1.7.1 | Gepubliceerde documentatie en roadmap, niet de implementatie daarvan |
+| Planning | Revisie 3; 24 taken; 0 nieuwe taken afgerond |
+| Actieve taak | Geen — uitsluitend de roadmap opgesteld |
+| Eerstvolgende uitvoeringsstap | N01; daarna de gerichte regressiebasis N02 |
+| Volgende versie | 1.7.2 — vastgelegde doelversie voor de volgende update; bestaande tags en releases blijven ongewijzigd |
+| GitHub-publicatie van deze revisie | Gepubliceerd als plan; geen software-release 1.7.2 |
+| Lokale installatie en activering | Geen onderdeel van roadmappublicatie |
 
-**Status is niet hetzelfde als resultaat.** Deze roadmap is opgesteld, niet uitgevoerd. Publicatie van de roadmap is geen automatische uitvoering van de taken, nieuwe software-release of installatie.
+Een fase is een groepering, geen verplichte pauze. De roadmap opstellen geeft geen opdracht om haar uit te voeren. Zodra uitvoering wordt opgedragen, zijn normale implementatie- en verificatiestappen binnen die opdracht geen reden voor nieuwe toestemmingsrondes. Publiceren, installeren en brede activering blijven afzonderlijke effecten met hun eigen concrete opdracht.
 
-### Reeds aanwezig bewijs — behouden, niet opnieuw uitvinden
+### Bestaand bewijs gebruiken
 
-De 1.7.0-publicatie heeft een correct gebonden tag/buildrecord, vier geverifieerde downloads en acht geslaagde CI-jobs op de exacte releasecommit. De CI was afgerond vóór publicatie. De analyse bevestigt vier nog aanwezige problemen met gerichte fixtures: syncbytes buiten de preview, governanceblokkades, overlappende updatecomponenten en dubbele capsulemanifestrecords.
+De diepteanalyse bevat acht nieuw gereproduceerde gedragingen D01–D08 en twee bron-/architectuurbevindingen D09–D10. De resultaten zijn op beide releases gelijk. Op 1.7.1 slaagden daarnaast opnieuw 60 bestaande gerichte tests. Dat bewijst behoud van die tests, niet dat de nieuwe problemen opgelost zijn.
 
-Dat bewijs dient als nulmeting. Het maakt de nieuwe implementatietaken niet automatisch klaar. Reeds geldige resultaten worden hergebruikt zolang bron en relevante omstandigheden ongewijzigd zijn. Een nieuw bewijs is nodig bij een relevante wijziging of een nog onbeantwoorde vraag, niet bij iedere nieuwe gesprekssessie.
+Eerdere F04–F16 blijven relevante herstelpunten waar hun code ongewijzigd is. F01–F03 betreffen onder meer releaseherkomst, versiecommunicatie en publicatievolgorde: de concrete publicaties zijn verbeterd, structurele automatisering blijft gepland. Bestaand geldig bewijs hoeft niet iedere sessie opnieuw volledig te worden verzameld.
 
-**Ontwerples:** achtergebleven globale hosthooks kunnen ongewenste stoplussen veroorzaken. Package, hostkoppelingen en projectdata krijgen daarom een eigen levenscyclus. Geen algemene stopmarker, geen nieuwe laag die iedere afronding onderschept en geen brede opruimactie om één defect onderdeel te herstellen.
+**Historische les:** de beschreven stoplus kwam van achtergebleven gebruikersbrede hooks. De roadmap introduceert daarom geen algemene stopmarker, geen verplichte globale afrondhook en geen systeemwijde schoonmaak.
 
-## 2. Vijf bindende gebruikseisen
+## 2. Wat behouden blijft en wat niet wordt toegevoegd
 
-| Eis | Gewenst gedrag | Toetsbare uitkomst |
+| Behouden techniek | Nieuwe grens |
+|---|---|
+| Lokale contextpakketten, bronselectie en hashes | Bewijzen bytes, niet waarheid of toestemming |
+| Ledger, receipts, oorspronkelijke outcomes en AUTO PILOT | Eén gezaghebbende voortgang; iedere mutatie gebonden aan dezelfde bedoelde taak |
+| Drie proportionele werkprofielen | Bewijszwaarte geeft nooit extra bevoegdheid |
+| Verification leases en herbruikbare controles | Alleen relevante wijzigingen maken een controle ongeldig |
+| Recovery met bewijs en fingerprints | Nieuwe aanpak binnen geldige scope; geen verplichte scopegroei |
+| Combo, supersession en compacte kennis | Weergavelimieten verwijderen geen nog geldige beslissing |
+| Adaptive storage, deduplicatie en optionele index | Zoekdekking en actuele bronbinding zijn zichtbaar |
+| Connected state en compacte hervatinformatie | Afgeleide weergave, geen tweede planner of voortgangsautoriteit |
+| Updatejournal, staging en generaties | Eén reader ziet één combinatie; data en koppelingen hebben eigen compatibiliteit |
+| Providerneutrale adapters | Optioneel en alleen als bewezen integratie gepresenteerd wanneer aangesloten |
+
+Geen volledige herschrijving, nieuwe algemene policy-engine, verplichte modelcall, vectorserver, extra coördinatieagent, daemon, cloudstack of grote GUI. Een extra component komt alleen in beeld als een gemeten probleem niet eenvoudiger met de bestaande bouwstenen is op te lossen.
+
+Dit document is een productplan, geen nieuwe gebruikersbrede hostinstructie. Historische analyses, oude regels en deze notitie worden niet automatisch als extra uitvoeringsbeleid in iedere AI-beurt geladen.
+
+## 3. Vijf gebruikseisen en acht vaste correctheidscriteria
+
+| Eis | Gewenst resultaat | Beoordeling |
 |---|---|---|
-| U1 — Minder stops en goedkeuringen | Doorgaan binnen een duidelijke opdracht en geldige scope | Geen overbodige eigen vragen of fasegebonden stops in de vaste positieve scenarioset |
-| U2 — Geen onnodige tokenkosten | Kleine relevante context, hergebruik en deterministische administratie | Geen modelcalls uitsluitend voor boekhouding; geen dubbele beleidsinjectie of onverklaarde verbruiksregressie |
-| U3 — Proportioneel eigen beleid | Eén actuele beslisroute; een optionele fout raakt alleen het betreffende onderdeel | Gezonde kern blijft bruikbaar; oude beleidskopieën krijgen geen cumulatieve beslismacht |
-| U4 — Toegestane opdrachten uitvoeren | Concrete autoriteit en doelen correct herkennen | Nul onterechte eigen weigeringen in de geteste toegestane scenario's; echte ontbrekende voorwaarden blijven zichtbaar |
-| U5 — Schone versieovergangen | Eén duidelijke actieve runtime, eigendomsgebonden opruiming en herstel | Geen onverklaarde eigen actieve restanten, geen dubbele registraties en behoud van gebruikersdata binnen de geteste scope |
-
-Deze eisen betreffen gedrag dat OPENCNTX zelf veroorzaakt of kan sturen. Het product kan providerbeleid, hostbevoegdheden, quota of ontbrekende toegang niet opheffen. Een dergelijke externe beperking wordt apart benoemd en leidt niet tot nutteloze retries of een algemene blokkade van onafhankelijk toegestaan werk.
-
-### Werkregels zonder nieuwe bureaucratie
-
-- Normale leesacties, implementatiestappen en controles binnen de actuele opdracht vragen geen extra OPENCNTX-goedkeuringsronde.
-- Geldige toestemming blijft bruikbaar binnen haar concrete scope. Opnieuw lezen of een gewijzigde bestandshash betekent niet automatisch opnieuw toestemming vragen.
-- Een fasegrens, een geslaagde test of een afgeronde subtaak is geen zelfstandige reden om te stoppen wanneer opgedragen werk resteert.
-- Vraag alleen om werkelijk ontbrekende beslisinformatie, bevoegdheid of een wezenlijk nieuw effect buiten de opdracht. Bundel tegelijk bekende vragen.
-- Respecteer een expliciete stop of gewijzigde opdracht. Blokkeer bij een deelprobleem alleen de afhankelijke route.
-- Beperk automatische herstelpogingen. Als werkdefault: hoogstens één automatische herstelpoging na dezelfde mislukking zonder nieuwe informatie; daarna pas verder proberen bij een relevante toestandswijziging. Verschillende nuttige diagnosehandelingen zijn niet hetzelfde als dezelfde actie herhalen.
-- Gebruik eventgedreven wachten waar beschikbaar. Vermijd identieke statusherhaling en ongewijzigde volledige rapporten in de modelcontext; respecteer wel de communicatieregels van de gebruikte host.
-- Leg bewijs compact vast: commit, testresultaat en relevante beperking. Geen apart dossier per toolcall en geen extra modelcall om tellers of status te formuleren.
-
-### Voortgang bijhouden
-
-Taakstatussen: **Gepland**, **Bezig**, **Geblokkeerd**, **Klaar**, **Uitgesteld**. Vink alleen Klaar aan. Uitgesteld betekent expliciet buiten de actuele scope, niet geleverd. Noteer bij Geblokkeerd oorzaak en kleinste vervolgstap; onafhankelijk werk kan doorgaan.
-
-Elke taak heeft doel, werk, acceptatie en afhankelijkheden. Werk na een betekenisvolle afronding de actuele stand en het log bij. De analyse blijft onderzoeksbron; alleen deze notitie is de actieve uitvoeringslijst.
-
-## 3. Fasen en afhankelijkheden
-
-| Fase | Doel | Taken | Mijlpaal |
-|---|---|---|---|
-| A — Werkbasis | Bestaand bewijs benutten en fouten reproduceerbaar vastleggen | N01–N02 | M-A: bekende bron en vaste regressiebasis |
-| B — Defecten en frictie | Autoriteit, routes, sync, updatepreflight en capsules verbeteren | N03–N09 | M-B: aantoonbare fouten opgelost, juiste routekeuze |
-| C — Installatie en diagnose | Onderdelen beheren, herstellen en begrijpelijk controleren | N10–N13 | M-C: schone, geteste installatielevenscyclus |
-| D — Context en gebruik | Compact hervatten, kosten meten en eenvoudig starten | N14–N17 | M-D: hervatbewijs en eerste gebruiks-/kostenvergelijking |
-| E — Gerichte vervolgstappen | Optionele integraties, schaalmeting en bredere pilot | N18–N21 | M-E: gekozen uitbreidingen en praktijkclaims onderbouwd |
-| F — Release | Herkomst automatiseren en een werkelijk afgebakende release opleveren | N22–N24 | M-F: geverifieerde publicatie wanneer opgedragen |
-
-Dit is een logische volgorde, geen verplichte wachtrij voor ieder bestand. N03, N05, N07 en N08 kunnen na hun benodigde basis onafhankelijk worden aangepakt. N22 kan vanaf N01 worden voorbereid. N16 begint zodra de benodigde context- en routingfuncties meetbaar zijn; een optionele export hoeft daarvoor niet klaar te zijn.
-
-**Twee opleveringsniveaus:** een afgebakende technische herstelrelease hoeft niet op alle optionele uitbreidingen of twee weken pilot te wachten. Een brede claim over bewezen hostgedrag, kostenwinst of algemene adoptie vereist wel passend praktijkbewijs. N23 legt vast welk niveau werkelijk wordt geleverd.
-
-## 4. Fase A — Werkbasis en reproduceerbaar bewijs
-
-### N01 — Werkbasis, bewijs en wijzigingsscope vastleggen
-
-- [ ] **Status: Gepland**
-
-**Doel:** ontwikkelen vanuit een bekende bron, zonder publicatiebewijs te verwarren met voltooide productverbetering.
-
-**Werk:**
-
-- Controleer de werkelijke repositorytoestand, gekozen bron en bestaande wijzigingen. Behoud de analysebron en gebruikerswijzigingen.
-- Kies een afzonderlijke ontwikkelbasis; gebruik de tag 1.7.0 als vergelijkingspunt.
-- Neem de bestaande release-, CI- en auditbewijzen over met hun precieze grenzen.
-- Leg vast welke voorstellen bij de eerstvolgende wijzigingsset horen en welke optioneel blijven. Nog geen ononderbouwde datum of versiebelofte.
-- Gebruik N-codes voor de nieuwe planning; R-codes in eerdere analyses verwijzen naar de vervangen roadmap.
-
-**Acceptatie:** bron en werkdirectory zijn ondubbelzinnig; alle F01–F16 en V01–V12 hebben een bestemming in §12; bestaand bewijs staat los van nieuwe acceptatie.
-
-**Afhankelijk van:** geen. **Bron:** analyse hoofdstukken 1, 2.7 en 5.1; V09–V10.
-
-### N02 — Herhaalproeven opnemen als officiële regressietests
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Zet de vier begrensde auditproeven om in onderhoudbare tests voor sync, governance, updatepreview en capsuleverificatie.
-- Maak positieve en negatieve gevallen expliciet; gebruik onschuldige fixtures en tijdelijke lokale repositories.
-- Voeg een kleine gebruikersscenarioset toe voor gewone vraag, lokale wijziging, meerdere doelen, vooraf toegestaan extern schrijven, faseovergang, optionele fout, sessiehervatting en gebruikersstop.
-- Bewaar het verschil tussen codebewijs, fixturegedrag en live hostgedrag.
-
-**Acceptatie:** de bestaande fouten zijn op de ongewijzigde basis aantoonbaar reproduceerbaar; bij iedere fix gaat het bijbehorende negatieve geval over naar het correcte resultaat. Een oude fout als verwacht gedrag testen telt niet als oplossen. Diagnostische nog-falende regressies mogen de gewone CI niet ongemerkt onbruikbaar maken; integreer ze samen met de fix of zichtbaar apart.
-
-**Afhankelijk van:** N01. **Bron:** actuele auditproeven, F04/F07/F08/F09, U1–U5.
-
-**M-A:** de implementatie kan starten zonder opnieuw de hele eerdere analyse te maken.
-
-## 5. Fase B — Concrete defecten en onnodige frictie
-
-### N03 — Concrete actie- en toestemmingsbinding implementeren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Beschrijf operatie, afzonderlijke doelen of benoemde doelverzameling, effectklasse, opdrachtbron en relevante revisie.
-- Scheid een verificatielease van autoriteit: broncontrole vernieuwen is niet hetzelfde als toestemming verliezen.
-- Maak expliciet toegestaan extern schrijven onderscheidbaar van ontbrekende toestemming.
-- Ondersteun meerdere afzonderlijk gebonden doelen; verwijder niet alleen een blokkade zonder het contract te verbeteren.
-- Behoud correcte intrekking en detectie van wezenlijk nieuwe scope.
-
-**Acceptatie:** de F07-proeven blokkeren niet meer uitsluitend wegens extern schrijven of meerdere doelen wanneer concrete geldige bindings bestaan. Dezelfde opdracht vraagt geen herbevestiging per bestand. Een andere bestemming of ingetrokken toestemming wordt wel herkend. Hervatten behoudt de herkomst van autoriteit, niet slechts een algemene goedgekeurd-boolean.
-
-**Afhankelijk van:** N01 en de relevante N02-scenario's. **Bron:** V01, F07.
-
-### N04 — De drie eenvoudige gebruikersroutes werkelijk aansluiten
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Gebruik ANSWER_ONLY voor gewone antwoorden zonder duurzame procesadministratie.
-- Laat kleine omkeerbare wijzigingen LIGHT_TASK gebruiken en behoud GOVERNED_FLOW waar afhankelijkheden of hervatbehoefte dit vragen.
-- Maak waarschuwing, herstelbare verouderde projectie, optionele fout en echte bronintegriteitsfout onderscheidbaar.
-- Koppel beslissingen aan de daadwerkelijke CLI-/libraryroute; een classifier alleen is niet voldoende.
-- Vervang concurrerende eigen beleidskopieën door één actuele beslisbron met duidelijke herkomst.
-
-**Acceptatie:** nul overbodige eigen toestemmingsvragen, onterechte eigen weigeringen of voortijdige eigen stops in de positieve scenarioset. Een optionele fout blokkeert geen gezonde onafhankelijke route. Een expliciete stop wordt gerespecteerd. De live-hostclaim blijft open tot N18 die onderbouwt.
-
-**Afhankelijk van:** N03. **Bron:** V01/V10, F07/F13/F16, U1/U3/U4.
-
-### N05 — Sync aan één onveranderlijke snapshot binden
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Gebruik dezelfde vastgelegde bytes voor preview, scan, materialisatie en staged Git-tree.
-- Maak de behandeling van een gewijzigde bron expliciet: de goedgekeurde snapshot leveren of opnieuw beoordelen.
-- Controleer vóór push de inhoudsbinding en na aflevering de bedoelde bestemming en commit.
-- Behoud bruikbare lokale voortgang onafhankelijk van extern afleveringsbewijs.
-
-**Acceptatie:** de sync-raceproef kan geen gewijzigde bronbytes onder de oude preview publiceren. Receipt, preview en geleverde inhoud zijn controleerbaar gebonden. Een nieuwe bronrevisie is geen reden om de gehele gebruikersopdracht opnieuw te laten goedkeuren als de scope gelijk blijft.
-
-**Afhankelijk van:** N01 en de relevante N02-proef. **Bron:** V02, F04.
-
-### N06 — Git begrenzen en privacystatus juist benoemen
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Geef lokale Git-inspectie en netwerkoperaties passende, geteste tijdsbudgetten.
-- Voorkom verborgen interactieve prompts en beheer afgebroken subprocessen, relevante descendants en tijdelijke resources per ondersteund platform.
-- Onderscheid timeout, ontbrekende authenticatie, conflict en afwijzing; gebruik begrensd retrygedrag.
-- Scheid door de gebruiker gedeclareerde privacy van providergecontroleerde privacy en onbekende zichtbaarheid.
-- Maak een provideradapter optioneel; geen nieuwe netwerkvoorwaarde voor de lokale kern.
-
-**Acceptatie:** een hang eindigt binnen de gedocumenteerde en geteste routegrens; het lokale checkpoint blijft bruikbaar. Een ongewijzigde fout veroorzaakt geen lus. Een privacyverklaring wordt niet als live providerbewijs gepresenteerd. Test een gewijzigde bestemming en een bekende publieke bestemming.
-
-**Afhankelijk van:** N05 voor geïntegreerd syncbewijs. **Bron:** V02, F05/F06.
-
-### N07 — Overlap van updatepaden volledig vooraf controleren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Vergelijk active-, candidate-, backup- en statepaden paarsgewijs, ook tussen verschillende componenten.
-- Test gelijkheid, ongeoorloofde nesting, Windows-casevarianten en relevante reparse-/normalisatiegevallen.
-- Controleer concrete eigendoms- en directorygrenzen voordat iets wordt gewijzigd.
-- Gebruik een begrijpelijke volledige vergelijking binnen de begrensde componentlijst.
-
-**Acceptatie:** twee componenten met hetzelfde activepad worden vóór de eerste mutatie afgewezen. Geldige gescheiden plannen blijven werken. Een afgewezen plan maakt geen staging, backup of journal aan en verandert geen gebruikersdata.
-
-**Afhankelijk van:** N01 en de relevante N02-proef. **Bron:** V03, F08.
-
-### N08 — Capsuleverificatie uniek, strikt en begrensd maken
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Weiger dubbele genormaliseerde manifestpaden en ongeldige veldtypen.
-- Begrens manifest, memberaantal, individuele uitgepakte bytes en totaal zowel vóór als tijdens verwerking.
-- Gebruik streaming hashing waar volledige geheugeninlezing onnodig is.
-- Test padvarianten, ontbrekende/extra members en kleine synthetische grensgevallen.
-- Bewaar standalone archive-verify en volledige import-health als aparte bewijsstappen.
-
-**Acceptatie:** de dubbele-recordproef faalt terecht; te grote input stopt vroeg zonder onbegrensde verwerking; geldige ondersteunde historische capsules blijven bruikbaar. Een groen archieflabel claimt niet zonder meer een gezonde geïmporteerde projecttoestand.
-
-**Afhankelijk van:** N01 en de relevante N02-proef. **Bron:** V04, F09/F10.
-
-### N09 — Kritieke JSON- en bestandscontroles harmoniseren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Inventariseer verschillen bij records die import, update, herstel en duurzame voortgang sturen.
-- Maak behandeling van dubbele keys, veldtypen, onbekende velden en formatversies expliciet.
-- Hergebruik bestaande correcte validators en behoud bedoelde oude leesroutes.
-- Leg per route de relevante symlink-/reparse- en concurrentiegrenzen vast.
-
-**Acceptatie:** dezelfde soort kritieke ongeldige input wordt niet toevallig via de ene ingang geaccepteerd en via de andere geweigerd. Nieuwe beperkingen zijn getest en gedocumenteerd; niet-geteste races worden niet als opgelost gepresenteerd.
-
-**Afhankelijk van:** N07–N08. **Bron:** V04, F11.
-
-**M-B:** de vier aangetoonde defecten zijn opgelost in de betrokken routes, Git is begrensd en de positieve/negatieve autoriteitsscenario's slagen. Uitgebreide live hostwerking is nog een aparte claim.
-
-## 6. Fase C — Schone installatielevenscyclus en diagnose
-
-### N10 — Installatie-eigenaarschap en compatibiliteit vastleggen
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Scheid runtimeversie, dataformat en hostadapterversie.
-- Kies één eerste concrete ondersteunde installatievorm en test de gebruikte package-managerinterface.
-- Registreer alleen eigen onderdelen: locatie, component, versie, digest of configuratiewaarde en scope.
-- Behandel gedeelde configuratie per eigen entry; laat package-manageronderdelen bij de package manager.
-- Detecteer meerdere executables en gewijzigde eigen bestanden. Maak installatieherhaling idempotent.
-
-**Acceptatie:** elk eigen onderdeel is herleidbaar; gebruikersdata en onbekende onderdelen zijn niet automatisch verwijderbaar. De gekozen runtime en compatibiliteitscombinatie zijn uitlegbaar. Een ontbrekend oud manifest veroorzaakt geen brede schoonmaak.
-
-**Afhankelijk van:** N01 en N07. **Bron:** V03, F12/F13, U5.
-
-### N11 — De update-toestandsmachine met herstel implementeren
-
-- [ ] **Status: Gepland**
-
-**Werk:** verbind bestaande preview, staging en journalbouwstenen tot onderstaande route. De machine beslist deterministisch op manifests, actuele inhoud en herstelstatus; geen model bepaalt welke bestanden weg mogen.
-
-1. **Inventariseren:** actieve runtime, eigen registraties, oud manifest, nieuwe manifestversie en dataformats bepalen.
-2. **Verschilplan:** behouden, toevoegen, vervangen, eigen ongewijzigd verouderd verwijderen, aangepast/onbekend bewaren.
-3. **Preflight:** overlap, compatibiliteit, ruimte, locks en relevante uitvoerbevoegdheid controleren; één updater krijgt mutatie-eigenaarschap.
-4. **Voorbereiden:** geïsoleerde kandidaat en herstelbare journalovergangen; een datamigratie behoudt een bruikbare herstelbasis.
-5. **Kandidaat testen:** inhoudsbinding, import/CLI-rooktests en de gekozen compatibiliteitsroute controleren.
-6. **Activeren:** expliciet readercontract uitvoeren; voor de eerste route bij voorkeur korte gecontroleerde stilstand van deelnemende readers. Geen totaalatomiciteit claimen als niet alle betrokken readers meedoen.
-7. **Readback:** werkelijk gestarte executable, versie, leesbare data en actieve eigen verwijzingen controleren.
-8. **Opruimen:** alleen eigen ongewijzigde verouderde onderdelen binnen opnieuw gecontroleerde grenzen verwijderen; vervolgens definitief resultaat registreren.
-
-Bij falen vóór gezonde activering wordt een consistente vorige toestand hersteld. Bij alleen een opruimfout blijft een gezonde nieuwe runtime bruikbaar met een expliciete nog-op-te-ruimen-status. Hervatten met hetzelfde plan herhaalt voltooide mutaties niet blind.
-
-**Bewaarbeleid:** standaard maximaal één benoemde rollbackgeneratie buiten actieve zoekpaden. Verwijder een oudere eigen generatie pas als de nieuwe herstelbasis geverifieerd is. Noodzakelijke migratiebackups zijn geen wegwerpbare cache. Aangepaste/ongekende bestanden blijven verklaarde uitzonderingen, geen verborgen restanten.
-
-**Acceptatie:** onderbreking bij iedere relevante journalovergang is herstelbaar; er ontstaat geen ongeldige mix voor deelnemende readers. Test twee updaters, stale lock, filelock, weinig ruimte, gewijzigd bestand en hervatten. Geen dubbele eigen hook/launcher en geen onverklaarde actieve oude verwijzing in een geslaagde schone route.
-
-**Afhankelijk van:** N07, N09 en N10. **Bron:** V03, F08/F12.
-
-### N12 — Upgrade, uninstall en het oude hookincident bewijzen
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Test schone installatie, 1.7.0 naar de gekozen kandidaat, herinstallatie, mislukte upgrade, ondersteunde rollback en uninstall.
-- Leg voor eerdere ondersteunde versies een migratiepad of een vroege concrete incompatibiliteitsmelding vast.
-- Test een ontbrekend oud manifest, gedeelde configuratie en later toegevoegde gebruikersdata.
-- Maak een fixture met een eigen hook die naar een verdwenen script wijst en een oude algemene stopmarker.
-- Laat ontkoppelen uitsluitend de exact bedoelde eigen integratie verwijderen; geen globale configuratiereset.
-
-**Acceptatie:** ongewijzigde gebruikersdata blijven bytegelijk; bedoelde migraties slagen inhoudelijk én op herstel. Uninstall verwijdert alleen eigen gekozen onderdelen. De verdwenen hook veroorzaakt geen recursieve stoplus. Geen bewijsclaim dat een verse clone alleen de actieve installatie schoonmaakt.
-
-**Afhankelijk van:** N11. **Bron:** V03/V08, historisch hookscenario, U5.
-
-### N13 — Eén read-only diagnose met bruikbare uitleg leveren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Bundel bestaande controles voor executable, package, project, dataformats, bronintegriteit, eigen hooks, sync en export.
-- Toon één begrijpelijke hoofdstatus met component, oorzaak, impact en kleinste vervolgstap per relevante afwijking.
-- Gebruik NOT_CHECKED voor niet-gecontroleerde onderdelen.
-- Maak een machineleesbare uitvoer naast korte mensentekst, zonder modelcall.
-- Toon actieve generatie, rollbackset en pending cleanup uit het manifest.
-
-**Voorgestelde interface:** opencntx doctor --project <pad> --json. Dit commando is ontwerp, geen reeds beschikbare functie.
-
-**Acceptatie:** diagnose schrijft niets en initialiseert geen ontbrekende store. Een optionele fout maakt de gezonde kern niet defect. Test meerdere executables, verkeerd dataformat, ontbrekend script en stale projectie. Herstel blijft een concrete operatie, niet een verborgen neveneffect van lezen.
-
-**Afhankelijk van:** N04, N06 en N10; update-/herstelgevallen uit N11–N12 voor volledige afronding. **Bron:** V05, X01/X04.
-
-**M-C:** het gekozen installatiepad is aantoonbaar te installeren, bij te werken, te herstellen en te verwijderen; de hoofdstatus is te begrijpen zonder een tweede uitgebreide AI-analyse.
-
-## 7. Fase D — Compacte context, hervatten en eerste gebruiksmetingen
-
-### N14 — Eén compact en betrouwbaar hervatpakket aansluiten
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Hergebruik bestaande velden voor doel, uitkomst, relevante besluiten, onzekerheden, bewijs en volgende uitvoerbare stap.
-- Maak één actuele projectie; onderscheid historische en vervangen besluiten.
-- Lees lange achtergrond alleen wanneer die nodig is.
-- Bewaar de oorspronkelijke outcomes na een tijdelijke reparatie.
-- Verwijs alleen naar een bestaande contextbasis wanneer de ontvangende sessie die daadwerkelijk heeft.
-
-**Acceptatie:** een nieuwe sessie zonder oude chat vervolgt het juiste doel zonder herhaling van bekende beslissingen. Test bronwijziging, vervangen besluit, ontbrekend bewijs en terugkeer na herstel. Geen verborgen volledige archiefdump en geen ontbrekende basis achter een cacheverwijzing.
-
-**Afhankelijk van:** N04 en relevante kritieke-recordafspraken uit N09. **Bron:** V07, F13/F15.
-
-### N15 — Token-/contextbudgetten en metingen implementeren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Scheid nuttige broncontext, eigen instructies/metadata, historie, tooluitvoer en opnieuw verzonden inhoud.
-- Tel bytes; gebruik exacte tokens alleen met betrouwbare tokenizer/usagegegevens. Label schattingen en onbekende waarden.
-- Voeg geen modelcall toe voor telling, autoriteitscontrole, formattering of statusadministratie.
-- Voorkom dubbele beleidsbundels en selecteer context op relevantie en actuele revisie.
-- Begin met de onderstaande meetbudgetten; stel ze vóór vergelijkingen vast en pas ze alleen zichtbaar aan.
-
-| Route | Startvoorstel voor eigen extra context |
-|---|---|
-| Gewoon antwoord | 0–300 instructietokens |
-| Kleine taak | 300–800 instructietokens |
-| Hervatten | 800–1.500 tokens voor het compacte hervatpakket |
-
-Deze intervallen zijn ontwerpbegrotingen, geen minimumverbruik, bewezen besparing of harde grens op noodzakelijke broninhoud. Minder is goed wanneer het resultaat correct blijft. Overschrijding leidt eerst tot selectie/compactie, niet tot stilzwijgend verlies van verplichtingen of een automatische extra goedkeuringsvraag.
-
-**Acceptatie:** geen administratieve modelcalls; geen dubbele beleidsinjectie in één overdracht; essentiële doelen en bronbinding blijven behouden. Exacte usage, schatting en onbekend zijn zichtbaar verschillend. Euroclaims vereisen een bekende afrekenvorm en toepasselijke tarieven.
-
-**Afhankelijk van:** N04 en N14. **Bron:** V06, U2.
-
-### N16 — Vroeg frictie en kosten vergelijken
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Gebruik eerst de vaste onschuldige scenarioset; voor een echte taak pas een concreet passend, niet-kritisch project.
-- Vergelijk gelijkwaardige taken met hetzelfde model, instellingen en kwaliteitscriterium, met en zonder OPENCNTX.
-- Registreer tokens per correct afgeronde taak, tijd, extra vragen, onterechte stops, dubbel onderzoek en herstelwerk.
-- Houd OPENCNTX-, host-, provider- en externe-foutoorzaken apart.
-- Wissel waar mogelijk volgorde en rapporteer kleine steekproeven als indicatie.
-
-**Acceptatie:** reproduceerbare nulmeting en eerste vergelijking bestaan. Geen onverklaarde regressie in eigen overhead en geen verborgen kwaliteitsverlies. Bevestigde eigen frictiefouten krijgen gerichte regressies. Ontbrekende hostusage betekent onbekend, niet nul. Deze ontwikkelproef claimt niet de brede pilot te vervangen.
-
-**Afhankelijk van:** N14–N15; een echte hostclaim vereist aanvullend N18. **Bron:** V06/V07, F15, X03.
-
-### N17 — Quickstart, upgrade-uitleg en featurestatus vereenvoudigen
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Geef één kort standaardpad naar init, preview, pack en verify.
-- Introduceer workspace, governed flow en host pas waar nodig.
-- Beschrijf de werkelijk ondersteunde installatiemethode, actieve executable en readback na upgrade.
-- Label CLI, library, contract, fixture, experimenteel en gepland correct.
-- Controleer niet alleen het versienummer maar ook welke functies daadwerkelijk geleverd zijn.
-- Houd gewijzigde webinhoud, automatische structuurchecks en echte visuele review als verschillende bewijzen herkenbaar.
-
-**Acceptatie:** een nieuwe gebruiker kan de route zonder ontbrekende mondelinge stappen volgen. Uitleg suggereert geen onbewezen schone upgrade, kostenbesparing of algemene hostwerking. Huidige en historische documentatie spreken niet als concurrerende actuele instructies.
-
-**Afhankelijk van:** N04 en N13; relevante gebruikswaarnemingen uit N16. **Bron:** V10, F02/F13/F16.
-
-**M-D:** compact hervatten en eerste gebruiksmetingen werken. De bewijsgrens voor eventuele kosten-/hostclaims blijft expliciet.
-
-## 8. Fase E — Selectieve uitbreidingen en praktijkbewijs
-
-### N18 — Eén optionele hostadapter aantonen
-
-- [ ] **Status: Gepland — optionele uitbreiding**
-
-**Werk:**
-
-- Kies één concrete host voor de eerste integratie; beperk de koppeling tot context/status lezen, opdracht doorgeven en checkpoints terugmelden.
-- Hergebruik actie-/autoriteitsbinding en installatie-eigenaarschap.
-- Test aansluiten, herstarten, loskoppelen en werken zonder adapter.
-- Test expliciete stop, faseovergang, verdwenen script en optionele fout.
-- Scheid adviserend gedrag van daadwerkelijk afgedwongen hostgedrag.
-
-**Acceptatie:** de vaste positieve en negatieve scenario's slagen in de gekozen host; geldige scope vraagt geen herbevestiging; een defecte koppeling veroorzaakt geen globale stoplus. De lokale kern blijft zelfstandig werken. Geen algemene installatie op alle projecten.
-
-**Afhankelijk van:** N03–N04, N12–N15. **Bron:** V08, F13, U1/U3/U4.
-
-**Scopegrens:** alleen nodig voor releases die deze nieuwe hostintegratie leveren of haar gedragswinst claimen. Een hosttest gebruikt een overeengekomen geïsoleerde testomgeving; publicatie activeert geen host.
-
-### N19 — Eenrichtings-Obsidian-export implementeren
-
-- [ ] **Status: Gepland — optionele uitbreiding**
-
-**Werk:**
-
-- Bind export aan één gekozen bestand of herkenbare gegenereerde sectie en bronrevisie.
-- Behoud menselijke inhoud en detecteer gelijktijdige edits.
-- Lees geschreven inhoud terug vóór aflevering als geslaagd geldt.
-- Test offline bestemming, filelock, herhaalde aflevering en conflictgedrag van de gekozen synchronisatiemap.
-- Houd machine-store en menselijke projectie gescheiden.
-
-**Acceptatie:** menselijke edits worden niet stilzwijgend overschreven; een mislukte export is geen groen ontvangstbewijs en maakt lokale taakvoortgang niet onbruikbaar. Geen brede vaultscan, automatische tweerichtingssynchronisatie of impliciete toegang tot andere notities.
-
-**Afhankelijk van:** N10 en N14; foutuitleg sluit aan op N13. **Bron:** V12.
-
-**Scopegrens:** een kernherstelrelease hoeft niet op deze uitbreiding te wachten. Deze roadmap zelf wordt niet automatisch een machinegestuurd exportdoel.
-
-### N20 — Schaalgedrag meten en alleen bewezen bottlenecks oplossen
-
-- [ ] **Status: Gepland — meting verplicht, optimalisatie conditioneel**
-
-**Werk:**
-
-- Meet koude/warme status, pakketopbouw, voortgang en hervatten bij 10, 100 en 1.000 representatieve taken.
-- Registreer tijd, gelezen/geschreven bytes en writes; test lokale opslag en de gekozen synchronisatieroute apart.
-- Onderzoek ledgersegmenten, snapshots of caching alleen bij aantoonbaar nut.
-- Behoud detectie van drift, historische leesbaarheid en crash-/herstelbetekenis.
-- Neem optionele export alleen in de benchmark op als die daadwerkelijk geleverd wordt.
-
-**Acceptatie:** een herhaalbare baseline en gemotiveerde beslissing bestaan. Eventuele optimalisatie heeft vergelijkbaar voor/na-bewijs zonder correctheidsverlies. Een onderbouwd besluit om niets te wijzigen kan deze taak afronden; het is geen claim dat iedere denkbare schaal getest is.
-
-**Afhankelijk van:** N14–N15 voor de contextbasis; betrokken gewijzigde routes moeten testbaar zijn. **Bron:** V11, F14.
-
-### N21 — Brede praktijkpilot en adoptiebeoordeling
-
-- [ ] **Status: Gepland — vereist voor brede praktijkclaims**
-
-**Werk:**
-
-- Selecteer één echt niet-productiekritisch project, kandidaatversie, optionele onderdelen en terugkeerroute.
-- Leg de meetcriteria vóór de pilot vast, voortbouwend op N16.
-- Voer gewone werkzaamheden uit; registreer alleen betekenisvolle resultaten en incidenten.
-- Test minstens drie echte herstarts/overdrachten.
-- Behoud de brede evaluatiegrens van minstens twee volledige weken én minstens 25 echte taken.
-- Markeer relevante tussentijdse wijzigingen en herneem waar nodig de vergelijking; tel niet ongemerkt verschillende kandidaten samen.
-
-**Acceptatie:** beide minimumgrenzen en de overdrachten zijn gehaald, met een eerlijk oordeel over frictie, kosten, kwaliteit en onderhoud. Geen verloren vereiste outcomes of onbedoelde wijzigingen buiten scope. Een ernstig incident pauzeert de getroffen route tot herstel; onafhankelijk werk hoeft niet stil te vallen. Bevestigde onopgeloste eigen regressies verhinderen een positieve brede adoptieclaim.
-
-**Afhankelijk van:** N12–N17 en de tijdens de pilot gebruikte uitbreidingen. N20 levert relevante schaalinformatie, geen vervanging voor de pilot. **Bron:** F15, analyse hoofdstuk 5, U1–U5.
-
-**Scopegrens:** deze pilot is geen automatische kalenderblokkade voor iedere kleine technische bugfixrelease. Zonder pilot blijven brede claims over bewezen praktijkwinst open.
-
-**M-E:** de geselecteerde uitbreidingen en praktijkclaims hebben passend bewijs. Niet geselecteerde uitbreidingen blijven zichtbaar Gepland of Uitgesteld, niet geleverd.
-
-## 9. Fase F — Releaseherkomst, kandidaat en publicatie
-
-### N22 — De correcte releaseketen automatiseren
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Bind pakketversie, uiteindelijke tagcommit, tree en artifactdigests aan dezelfde bron.
-- Controleer de vereiste CI op de uiteindelijke commit vóór publicatie; geen testmerge als onverklaarde vervanging voor releasecommitbewijs.
-- Bouw/verifieer wheel en sdist en test hun geïnstalleerde routes in geïsoleerde omgevingen.
-- Maak een herstart na gedeeltelijke upload idempotent en voorkom dubbele publicatie.
-- Automatiseer readback van tag, metadata en downloadbytes.
-- Hergebruik de bestaande publicatieopdracht binnen scope; geen extra goedkeuringsvraag per asset.
-
-**Acceptatie:** negatieve tests ontdekken verkeerde commit met gelijke tree, pending/failed CI, afwijkend artifact en ontbrekende/partiële aflevering. Dry-run, gepubliceerd en geïnstalleerd zijn afzonderlijke statussen. Bestaande tags en assets blijven intact. De core blijft zonder release-infrastructuur bruikbaar.
-
-**Afhankelijk van:** N01; kan vroeg worden ontwikkeld, definitief kandidaatbewijs via N23. **Bron:** V09, F01/F03.
-
-### N23 — Afgebakende kandidaat en releasegereedheid beoordelen
-
-- [ ] **Status: Gepland**
-
-**Werk:**
-
-- Leg de exacte geleverde scope vast en kies een passend nieuw versienummer; 1.7.0 blijft onveranderd.
-- Selecteer de toepasselijke N-taken en U-eisen. Noem niet geleverde onderdelen expliciet.
-- Controleer dat fixes werkelijke gedragstests hebben en actuele functionele claims bij de code passen.
-- Gebruik N17 voor documentatie, N22 voor bron-/buildbinding en vers bewijs voor de definitieve kandidaat.
-- Beoordeel skips, testplatformen, beperkingen en relevante frictie-/kostenmetingen.
-- Maak een upgrade- en herstelbeschrijving passend bij wat daadwerkelijk verandert.
-
-**Acceptatie:** voor iedere geclaimde verbetering bestaat een geïmplementeerd resultaat en actueel bewijs. Geen materiële onopgeloste fout wordt groen verklaard. Een afgebakende release kan gereed zijn terwijl optionele taken openstaan, maar niet door ze als uitgevoerd te presenteren. Releasegereed betekent nog niet gepubliceerd of hier geïnstalleerd.
-
-**Afhankelijk van:** N17, N22 en alle taken die bij de vastgelegde release-inhoud horen; voor een integrale herstelrelease in ieder geval N01–N17 en N20. Brede praktijkclaims vereisen N21; host-/exportclaims respectievelijk N18/N19.
-
-### N24 — Publiceren en publieke pagina's verifiëren wanneer opgedragen
-
-- [ ] **Status: Gepland — publicatiestap, niet nu uitgevoerd**
-
-**Werk:**
-
-- Gebruik de dan geldige concrete publicatieopdracht voor de gekozen kandidaat.
-- Publiceer exact de geverifieerde tag en assets; bevestig de bedoelde latest-/release-status.
-- Werk actuele README, changelog, installatie-/release-informatie en betrokken publieke websitebron consequent bij.
-- Claim geen gehoste site of wiki wanneer alleen repositorybron bestaat; een nieuwe hostingdienst is geen impliciet onderdeel.
-- Download de echte assets en controleer bytes, commit/tree, metadata en beschikbaarheid.
-- Registreer publicatie afzonderlijk van lokale installatie en brede activering.
-
-**Acceptatie:** releasepagina, huidige publieke claims en downloads zijn live gecontroleerd en verwijzen naar de juiste kandidaat. Zonder daadwerkelijke publicatie blijft N24 open. Publicatie is geen installatie of activering.
-
-**Afhankelijk van:** N23 en een geldige opdracht om de volgende concrete release te publiceren. **Bron:** V09/V10.
-
-**M-F:** de geselecteerde inhoud is eerlijk gepubliceerd en teruggelezen. Dit markeert niet automatisch alle optionele onderdelen of de volledige roadmap als voltooid.
-
-## 10. Optionele uitbreidingsthema's zonder extra infrastructuur
-
-De analyse noemt vier uitbreidingsthema's. Zij worden waar passend binnen bovenstaande taken opgenomen, niet als een tweede backlog met eigen verplichte documenten.
-
-| Thema | Verwerking | Bewijsgrens |
+| U1 — Minder stops en vragen | Doorgaan binnen duidelijke bestaande scope | Nul overbodige eigen herbevestigingen in de vastgelegde positieve scenarioset |
+| U2 — Geen onnodige tokenkosten | Relevante context, controlehergebruik en compacte output | Geen modelcalls voor administratie; geen onverklaarde overheadregressie bij gelijke taakcorrectheid |
+| U3 — Proportionele bescherming | Eén actuele beslisroute en geïsoleerde optionele fouten | Oude beleidskopieën krijgen geen extra beslismacht; gezonde kern blijft bruikbaar |
+| U4 — Geen onterechte eigen weigeringen | Correcte actie-/doelbinding en herstel van verouderde blokkades | Nul eigen foutieve weigeringen in de toegestane scenarioset; externe oorzaken apart benoemd |
+| U5 — Schone updates | Eén verklaarde actieve generatie met veilige terugkeer | Geen verweesde eigen actieve koppelingen; gebruikersdata behouden; rollback en cleanup verklaarbaar |
+
+OPENCNTX kan hostbeleid, providerlimieten en ontbrekende toegang niet opheffen. Het kan wel zijn eigen onterechte weigeringen oplossen, nutteloze herhalingen vermijden en onafhankelijk toegestaan werk laten doorgaan. “Nooit meer weigeren” wordt geen onhoudbare algemene garantie.
+
+De onderstaande criteria zijn testinvarianten, geen acht nieuwe goedkeuringsschermen:
+
+1. **I1:** een antwoordtaak krijgt door geen enkele promotie of cachemiss schrijfrecht.
+2. **I2:** ingetrokken of gewijzigde autoriteit wordt niet via oud bewijs hergebruikt.
+3. **I3:** dezelfde operatie-ID kan nooit twee verschillende opdrachten afronden.
+4. **I4:** een optionele fout verandert een geslaagde native commit niet achteraf in “niets gebeurd”.
+5. **I5:** iedere open verplichting blijft canoniek aanwezig en gericht bereikbaar.
+6. **I6:** iedere nog geldige beslissing blijft op ID vindbaar en correct vervangbaar.
+7. **I7:** onvolledig zoeken wordt niet als volledige afwezigheid gepresenteerd.
+8. **I8:** een reader ziet één compatibele runtimegeneratie; cleanup raakt geen vreemde of nog benodigde data.
+
+### Uitvoeren zonder extra bureaucratie
+
+- Stel alleen een vraag bij werkelijk ontbrekende beslisinformatie of een wezenlijk nieuw effect buiten de opdracht. Bundel tegelijk bekende keuzes.
+- Een geslaagde test, subtaak of fasegrens is geen zelfstandige stopreden.
+- Gebruik één budget voor herhaalde pogingen per concrete operatie; meerdere lagen mogen hun eigen retries niet ongemerkt vermenigvuldigen.
+- Zonder relevante verandering wordt dezelfde mislukte aanpak onderdrukt. Wel mogen nieuwe, begrensde diagnosehandelingen nuttige informatie verzamelen.
+- Een echte stop of scopewijziging wordt gerespecteerd. Blokkeer alleen de afhankelijke route.
+- Houd lange ruwe logs buiten de standaardcontext. Bewaar één verwijzing plus uitslag en beperking.
+- Geen apart dossier per toolcall, geen nieuwe beleidsnotitie per fout en geen modelcall om tellers bij te houden.
+- Relevante verplichte CI blijft gelden. Lokale testselectie en bewijshergebruik zijn geen omweg om repositoryregels uit te schakelen.
+
+## 4. Uitvoeringsvolgorde en opleveringen
+
+| Fase | Resultaat | Taken |
 |---|---|---|
-| X01 — Waarom staat dit stil? | N03/N13: concrete beslisreden en kleinste vervolgstap | Geen tweede policy-engine |
-| X02 — Contextverschillen tonen | Later verfijnen binnen N14/N15 | Alleen delta als de ontvanger de juiste basis bezit; anders volledige compacte context |
-| X03 — Lokaal frictie-overzicht | N16: kleine deterministische samenvatting | Geen standaard externe telemetrie of extra modelcalls |
-| X04 — Gezondheid over generaties | N10–N13: actieve runtime, rollbackset en pending cleanup | Leesvenster op eigen manifest; geen systeemwijde schoonmaak |
+| A — Bekende basis | Herbruikbaar bewijs, echte regressies en een vroege nulmeting | N01–N02; nulmeting N16 |
+| B — Correcte overgangen | Juiste bevoegdheid, herhaalveilige voortgang, begrensde neveneffecten en kritieke inputcontrole | N03–N09 |
+| C — Begrijpelijk dagelijks werk | Diagnose, betrouwbaar geheugen, compact hervatten en aantoonbare efficiëntie | N13–N17; N20 waar nodig |
+| D — Schone levenscyclus | Kanaaleigenaarschap, generaties, readers, datacompatibiliteit en herstel | N10–N12 |
+| E — Gekozen praktijkverbreding | Eén echte adapter, optionele export en passende pilot | N18–N21 |
+| F — Eerlijke release | Brongebonden build, aantoonbare inhoud en geverifieerde publicatie | N22–N24 |
 
-Een build-attestatie blijft een mogelijke latere verbetering van N22. Zij versterkt herkomstbewijs, niet functionele correctheid, en wordt geen voorwaarde om de lokale kern te gebruiken.
+**Eerste herstelvolgorde:** N01 → gerichte basis N02 → N03 → N04. D01/D02 krijgen voorrang in N03; D06 krijgt een expliciete implementatie-eenheid in N04. Werk daarna de relevante sync-, recovery-, input- en isolatieproblemen af. De nulmeting uit N16 gebeurt vóór wijzigingen aan het te meten gedrag, niet pas aan het einde.
 
-## 11. Eindcriteria per soort resultaat
+Dit is geen bevel tot parallelle agents. Onafhankelijke taken mogen logisch naast elkaar worden voorbereid, mits dezelfde bestanden en verantwoordelijkheden niet conflicteren. N05/N06, N07/N08 en N22 hoeven niet op alle latere functies te wachten.
 
-### A. Technische herstelkwaliteit
+### Vier mogelijke opleveringen
 
-- [ ] De relevante auditreproducties zijn als regressies opgenomen en de afgesproken defecten zijn opgelost.
-- [ ] Geldige concrete autoriteit wordt hergebruikt; echte scope-uitbreiding en intrekking blijven herkenbaar.
-- [ ] De kern werkt zonder optionele host-/notitiekoppeling.
-- [ ] Betrokken externe processen en herstelpogingen zijn begrensd.
-- [ ] Updateclaims zijn bewezen met de gekozen installatievorm, onderbrekingen en gebruikersdatabehoud.
-- [ ] Diagnose is read-only, compact en geeft een bruikbare vervolgstap.
-- [ ] Hervatten behoudt het doel en verplichte outcomes.
-- [ ] Contextmeting veroorzaakt geen eigen administratieve modelcalls en geen onverklaarde regressie.
-- [ ] De geleverde functies, versies en beperkingen zijn in de documentatie consistent.
+- **Herstelkern:** concrete defectfixes en herhaalveilige overgangen. Geen claim dat de complete updater of alle hostintegraties klaar zijn.
+- **Dagelijkse eenvoud:** aangesloten lichte routes, diagnose, geheugen/hervatten en eerste vergelijkbare metingen.
+- **Schone update:** één volledig bewezen installatieroute met reader- en data-rollbackgrens.
+- **Praktijkuitbreiding:** uitsluitend gekozen adapter/exportfuncties en onderbouwde gebruiksclaims.
 
-### B. Brede gebruiks- en adoptieclaims
+Dit zijn scopekeuzes, geen vier verplichte releases. N01 kiest bij de latere uitvoering één eerste afgebakende inhoud op basis van de opdracht; N23 beoordeelt precies die inhoud. Ongeleverde onderdelen blijven open. Een beperkte defectfix hoeft niet op een tweeweekse pilot te wachten; brede besparings- of adoptieclaims wel op passend praktijkbewijs.
 
-- [ ] De gekozen echte hostscenario's zijn bewezen als er hostwerking wordt geclaimd.
-- [ ] De echte pilot voldoet aan de afgesproken duur, taken en overdrachten.
-- [ ] Een claim over besparing gebruikt vergelijkbare taken, kwaliteit en betrouwbare usage of gelabelde schattingen.
-- [ ] Bevestigde eigen frictieregressies zijn opgelost; onmeetbare zaken blijven expliciet onbekend.
+## 5. Taken N01–N09 — Werkbasis en correcte overgangen
 
-### C. Publicatie
+### N01 — Bron, eerste opleveringsscope en nulmeting vastleggen
 
-- [ ] De definitieve commit, tag, buildrecord en artifacts zijn aan elkaar gebonden.
-- [ ] Vereiste CI op de releasecommit is geslaagd vóór publicatie.
-- [ ] Publieke downloads en actuele pagina's zijn teruggelezen.
-- [ ] Publicatie, installatie en activering worden niet met elkaar verward.
+- [ ] **Status: Gepland**
 
-Alleen criteria die horen bij de daadwerkelijk gekozen scope bepalen die releasegereedheid. De niet-toepasselijke criteria blijven zichtbaar en worden niet als geslaagd afgevinkt. Een scopewijziging wordt kort gemotiveerd in het log; zij mag geen kapotte geclaimde functie verhullen.
+**Werk:** bevestig de echte checkout en wijzigingen; gebruik de onderzochte 1.7.1-commit als referentie. Leg één eerste opleveringsscope en de relevante U-/I-criteria vast. Koppel bestaand auditbewijs in plaats van het over te schrijven. Kies de vaste scenario's en leg de minimale nulmeting voor de eerste scope vast vóór gedragswijzigingen; N16 breidt die meting later uit. Ontwerpkeuzes blijven in het taaklog of bestaande code/documentatie.
 
-## 12. Traceerbaarheid naar de analyse
+**Klaar wanneer:** bron en opdracht zijn eenduidig, gebruikerswijzigingen behouden, geclaimde inhoud afgebakend en de nulmeting voor die inhoud beschikbaar of expliciet beperkt. Geen nieuwe release- of installatiestatus gesuggereerd.
 
-### Voorstellen V01–V12
+**Afhankelijk van:** geen. **Bron:** diepteanalyse hoofdstuk 1; F01–F03.
 
-| Analysevoorstel | Nieuwe taken |
-|---|---|
-| V01 — Autoriteit en weinig vragen | N03–N04, N18 |
-| V02 — Snapshot en begrensde sync | N05–N06 |
-| V03 — Schone updates | N07, N10–N12 |
-| V04 — Kritieke inputcontrole | N08–N09 |
-| V05 — Diagnose | N13 |
-| V06 — Zuinige context | N15–N16 |
-| V07 — Compact hervatten | N14 |
-| V08 — Optionele host | N18 |
-| V09 — Releaseketen | N01, N22–N24 |
-| V10 — Uitleg en status | N01, N04, N17, N23–N24 |
-| V11 — Opslagoptimalisatie | N20 |
-| V12 — Obsidian-export | N19 |
+### N02 — Auditproeven omzetten naar echte regressies en toestandstests
 
-### Bevindingen F01–F16
+- [ ] **Status: Gepland**
+
+**Werk:** neem D01–D08 en relevante F04/F07/F08/F09 over als begrensde regressies. Test gewenste invarianten, niet het blijvend bestaan van een fout. Maak de red/green-uitkomst lokaal zichtbaar; houd de uiteindelijke wijziging coherent met de fix. Voeg actiereeksen toe: begin, herhaal, wijzig feiten, trek in, crash en hervat. Gebruik de bestaande testinfrastructuur.
+
+**Klaar wanneer:** iedere betrokken fix een proef heeft die de oude fout detecteert en de gewenste uitkomst controleert. De gedeelde harness is klaar; aanvullende taakgerichte gevallen groeien mee met hun implementatie. Tests schrijven uitsluitend in eigen tijdelijke fixtures; een helperproef wordt niet als echte hostproef geteld.
+
+**Afhankelijk van:** N01. **Bron:** D01–D08, I1–I8.
+
+### N03 — Toestemming, bewijszwaarte en blokkades uit elkaar halen
+
+- [ ] **Status: Gepland**
+
+**Werk:** herstel D01 en D02. Bind acties aan concrete doelen en actuele opdracht; ondersteun expliciet gebonden meerdere doelen en toegestane externe acties. Risicoprofiel, actuele blokkeerredenen en toegestane acties worden afzonderlijk berekend. Een herstelde bevoegdheid vereist geldige herbinding; een gewijzigde boolean is geen zelfstandig autoriteitsbewijs. Hergebruik bestaande padbouwstenen; nieuwe controles worden bij N09 geharmoniseerd.
+
+**Klaar wanneer:** antwoordtaken nooit writes toestaan; een stale lease alleen relevante hercontrole veroorzaakt; aantoonbaar herstelde blokkades verdwijnen; scope-uitbreiding en intrekking worden correct verwerkt. Positieve meerdoelscenario's vragen niet telkens opnieuw toestemming.
+
+**Afhankelijk van:** N02. **Bron:** D01–D02, F07; I1–I2, U1/U3/U4.
+
+### N04 — Lichte routes aansluiten én voortgang herhaalveilig maken
+
+- [ ] **Status: Gepland**
+
+**Werk, expliciet als één kritieke mutatieketen:**
+
+1. Bind iedere voortgangsmutatie aan operatie-ID, verwachte opdracht, relevante parameters en verwachte revisie.
+2. Leg operationele uitkomst en voortgang onder dezelfde bewezen lokale vastleggrens vast.
+3. Dezelfde ID met dezelfde parameters geeft het eerdere resultaat; dezelfde ID met andere parameters wordt afgewezen.
+4. Scheid native resultaat van latere sync-/weergave-/diagnosefouten.
+5. Sluit ANSWER_ONLY, LIGHT_TASK en GOVERNED_FLOW aan op echte gebruikersroutes, met werkelijk gemeten writes en output.
+6. Herstel D08: nieuw relevant bewijs en een andere aanpak mogen binnen dezelfde reeds volledig onderzochte keten worden beoordeeld.
+
+**Klaar wanneer:** de D06-proef bij responsverlies nooit de volgende taak afvinkt; retries na crash dezelfde operatie hervatten; antwoordtaken nul projectmutaties veroorzaken; lichte taken geen volledig dossier afdwingen. Alle retrylagen delen één begrensde operatietoestand. Recovery vergroot geen bevoegdheid en vraagt niet verplicht om meer taken.
+
+**Afhankelijk van:** N03. **Bron:** D06/D08/D09, F13/F16; I1–I4.
+
+### N05 — Sync aan onveranderlijke bytes en een eigen levering binden
+
+- [ ] **Status: Gepland**
+
+**Werk:** maak de beoordeelde snapshot de bron van verzending. Controleer bestemming, bronidentiteit en privacyverklaring met de juiste betekenis. Een mutatie tussen preview en levering leidt tot dezelfde snapshot of een gerichte driftmelding. Bewaar een kleine leveringsintentie en herhaalidentiteit; maak geen tweede voortgangsledger. Bouw geen daemon zonder concrete gebruikseis.
+
+**Klaar wanneer:** iedere verzonden byte bij het juiste beoordeelde manifest hoort; de lokale sync-race als regressie slaagt; herhaalde levering geen andere snapshot of dubbele logische operatie oplevert. Extern onbekende uitkomsten worden eerst teruggelezen of via ondersteunde idempotentie afgehandeld.
+
+**Afhankelijk van:** N04. Voorbereidende snapshotproeven kunnen na N02. **Bron:** F04, D06; I3–I4.
+
+### N06 — Externe processen en optionele fouten begrenzen
+
+- [ ] **Status: Gepland**
+
+**Werk:** begrens Git/subprocessduur, output, retryaantal en relevante procesbomen per ondersteund platform. Onderscheid lokale commit, levering en foutregistratie. Een onbeschikbare adapter veroorzaakt geen globale stoplus. Gebruik alleen waar nodig een eenvoudige adapterpauze na herhaalde fouten. Een bevestiging “privérepository” is geen zelfstandig providerbewijs.
+
+**Klaar wanneer:** hangende fixtureprocessen eindigen binnen de vastgelegde grens; dubbele foutinjectie na commit bewaart het native resultaat; onafhankelijk lokaal werk blijft mogelijk. Een foutmelding die zelf niet kan worden opgeslagen wordt compact gemeld, niet opnieuw onbeperkt geprobeerd.
+
+**Afhankelijk van:** N04–N05. **Bron:** F05/F06, D06; I4, U1/U3.
+
+### N07 — Doelidentiteit en update-/sidecaroverlap vooraf controleren
+
+- [ ] **Status: Gepland**
+
+**Werk:** maak concrete doelidentiteit en scope-overlap gemeenschappelijk bruikbaar. Behandel gelijke paden, ouder/kind, patronen, kandidaat/active/backup-overlap, hoofdlettergedrag, symlinks en Windows-reparsepunten. Onopgeloste scope krijgt geen bewezen-isolatielabel. Zij vereist oplossing of een gerichte fout, geen optimistische stringvergelijking.
+
+**Klaar wanneer:** D03 en de eerdere overlappende updatecomponenten worden gedetecteerd vóór writes. Disjuncte concrete doelen blijven toegestaan. Tests onderscheiden bestandspaden, mapbereik, platformidentiteit en toekomstige nog ontbrekende doelen. Niet elk platform wordt geforceerd hoofdletterongevoelig behandeld.
+
+**Afhankelijk van:** N02. **Bron:** D03, F08/F11; I2/I8.
+
+### N08 — Capsules uniek, strikt en resourcebegrensd maken
+
+- [ ] **Status: Gepland**
+
+**Werk:** controleer unieke genormaliseerde manifestpaden én unieke archiefmembers, juiste veldtypes en een eenduidige mapping. Begrens aantallen, manifestgrootte, individuele en totale uitgepakte bytes vóór en tijdens lezen. Hash zo nodig streaming. Houd archiefintegriteit apart van valide geïmporteerde projecttoestand.
+
+**Klaar wanneer:** de duplicaatproef wordt afgewezen; onverwachte members, ongeldige paden/types en overschrijdingen veilig eindigen; normale bestaande capsules blijven leesbaar volgens de compatibiliteitsafspraak. Fixtures zijn klein en bewijzen grensgedrag zonder de machine uit te putten.
+
+**Afhankelijk van:** N02. **Bron:** F09–F11.
+
+### N09 — Kritieke primitives harmoniseren zonder grote herschrijving
+
+- [ ] **Status: Gepland**
+
+**Werk:** inventariseer alleen de controles die N03–N08 en de updater daadwerkelijk gebruiken. Harmoniseer kritieke JSON-, digest-, pad- en schrijfhelpers in de bestaande lichte utilitylaag. Scheid domeinfouten van pure hulpmiddelen. Houd waar nodig tijdelijke compatibele re-exports; verander duurzame formaten niet stilzwijgend. Verminder de D10-verknoping op echte wijzigingspaden.
+
+**Klaar wanneer:** de gewijzigde routes dezelfde bedoelde validatie hebben, bestaande compatibiliteitsfixtures slagen en ongewenste nieuwe afhankelijkheidscycli uitblijven. Minder private imports is ondersteunend bewijs, geen doel dat gedrag mag breken. Onverwante modules worden niet “voor de zekerheid” herschreven.
+
+**Afhankelijk van:** N03, N07, N08. **Bron:** F11, D10.
+
+## 6. Taken N10–N12 — De schone updatelevenscyclus
+
+### N10 — Eén installatieroute, eigenaarschap en compatibiliteit vastleggen
+
+- [ ] **Status: Gepland**
+
+**Werk:** kies één concrete installatieroute voor de eerste update-oplevering. Leg vast wie pakketbestanden beheert; gebruik een passende kanaaladapter in plaats van willekeurig beheer door elkaar. Inventariseer installatie-ID, actieve executable/generatie, eigen registraties, gebruikersdata en reader-/writercompatibiliteit. Beschrijf de datamigratie- en rollbackgrens vóór mutaties worden gebouwd.
+
+**Klaar wanneer:** het eigendomsmanifest eigen beheerde bestanden onderscheidt van vreemde en aangepaste inhoud; een nieuwe clone niet als bewijs van een nieuwe actieve installatie geldt; ondersteunde oude formaten en terugkeergrenzen expliciet zijn. Eén kanaal is concreet gekozen, onbekende kanalen niet stilzwijgend ondersteund.
+
+**Afhankelijk van:** N01, N07. **Bron:** F12/F13, diepteanalyse hoofdstuk 5; U5/I8.
+
+### N11 — Generationele updater met herhaalbare overgang implementeren
+
+- [ ] **Status: Gepland**
+
+**Werk:** inventariseren → plannen → complete kandidaat voorbereiden → controleren → één generatie selecteren → actieve toestand bevestigen → eigendomsgebonden cleanup. Bouw op bestaande staging/journal/receipt-technieken. Een reader bindt één keer aan zijn generatie. Bestaande readers mogen een oude generatie tijdelijk behouden. Maak identieke updates een echte no-op.
+
+**Klaar wanneer:** fasegewijze crashinjectie consistent herstel geeft; dezelfde update niet dubbel wordt toegepast; één reader geen gemengde combinatie ziet. Data-rollback past bij de gebruikte formats. Open Windows-bestanden leiden tot verklaarde uitgestelde cleanup, niet blind verwijderen. Atomiciteit en duurzaamheid worden apart en alleen binnen bewezen filesystemgrenzen geclaimd.
+
+**Afhankelijk van:** N04, N07, N09, N10. **Bron:** F08/F12; I3/I8.
+
+### N12 — Upgrade, rollback, uninstall en hookrestanten bewijzen
+
+- [ ] **Status: Gepland**
+
+**Werk:** test verse installatie, herhaling, upgrade met reader actief, crashes rond selectie, schijfruimtegebrek, ontbrekende kandidaat, veranderde eigen configuratie, vreemde entries, incompatibele data, rollback en uninstall. Voeg een historische-hookfixture toe met een eigen registratie naar een verdwenen versiepad. Test op de bedoelde Windows-/Linuxroutes, uitsluitend geïsoleerd.
+
+**Klaar wanneer:** gebruikersdata behouden blijven; verwijdering alleen aantoonbaar eigen ongebruikte onderdelen raakt; één gekozen rollbackset en noodzakelijke readergeneraties verklaard zijn. Geen verweesde eigen actieve koppelingen. “Geen rommel” betekent geen onverklaarde toestand, niet dat noodzakelijk herstelbewijs onmiddellijk verdwijnt.
+
+**Afhankelijk van:** N11. **Bron:** herstelnotitie, U5/I8. **Grens:** geen installatie in een bestaande gebruikersomgeving door het uitvoeren van fixtures.
+
+## 7. Taken N13–N17 — Eenvoud, geheugen en gemeten efficiëntie
+
+### N13 — Eén read-only diagnose met herkomst en vervolgstap
+
+- [ ] **Status: Gepland**
+
+**Werk:** toon opdracht/scope, eigen blokkeerreden, native resultaat, optionele leveringen, actieve runtime en relevante configuratieherkomst in één compacte ingang. Onderscheid kerncorruptie, stale view, onbereikbare adapter en ontbrekende autoriteit. Geen systeemwijde scan; geen automatische globale configuratie-reset.
+
+**Klaar wanneer:** diagnose geen project- of hostmutaties verricht en geen ontbrekende store aanmaakt. D06 en D07 leveren begrijpelijke deelsuccessen op, geen misleidende totale fout. Eén probleem krijgt één actuele verklaring en kleinste vervolgstap. Installatievelden worden uitgebreid wanneer N10–N12 beschikbaar zijn; niet verzonnen.
+
+**Afhankelijk van:** N04, N06. **Bron:** V05, D02/D06/D07, U1/U3/U4.
+
+### N14 — Canoniek geheugen en compact hervatten zonder informatieverlies
+
+- [ ] **Status: Gepland**
+
+**Werk:** scheid canonieke beslissingen en verplichtingen van Combo-/connected-presentatie. Bewaar stabiele ID's, bron, scope en levenscyclus; actieve beslissingen verdwijnen niet door een recentheidslimiet. Zorg voor gerichte details en gecontroleerde supersession. Maak een klein startpakket met doel, scope, actuele taak, open outcomes, blokkades en eerstvolgende handeling.
+
+**Klaar wanneer:** D04 en D07 zijn opgelost; de 33e beslissing verdringt geen actuele waarheid uit zoekbaarheid; expliciete vervanging blijft mogelijk. Grote roadmaps passen via compacte root plus gecontroleerde detailverwijzingen. Na chatreset blijven alle oorspronkelijke outcomes bereikbaar. Een weergavefout blokkeert geen reeds geslaagde native mutatie.
+
+**Afhankelijk van:** N04, N09. **Bron:** D04/D07, V07; I5–I6.
+
+### N15 — Zoekdekking, contextbudget en gerichte controlecache
+
+- [ ] **Status: Gepland**
+
+**Werk:** herstel D05 met expliciete volledigheid en een bronversiegebonden scancursor. Zoek exacte record-ID's rechtstreeks waar mogelijk. Houd resultaatlimiet, scanwerk en tijdsbudget uit elkaar. Selecteer context op relevante huidige taak en bronverwijzingen. Een delta vereist een bekende basis; anders een volledig compact startpakket. Hergebruik controles per werkelijk relevante afhankelijkheid, los van autorisatie.
+
+**Klaar wanneer:** Z uit de audit niet als afwezig wordt gesuggereerd na een afgebroken scan; een hervatte query niet stilzwijgend een gewijzigde store combineert. Ongewijzigde controles worden hergebruikt, relevante veranderingen ongeldig verklaard. Bytes, tokenraming en echte hostusage zijn duidelijk verschillende metingen. Geen modelcall voor selectieboekhouding.
+
+**Afhankelijk van:** N03, N09, N14. **Bron:** D01/D05, V06; I1/I2/I7, U2.
+
+### N16 — Frictie en taakresultaat vóór en na wijzigingen vergelijken
+
+- [ ] **Status: Gepland**
+
+**Werk:** begin de nulmeting met N01. Gebruik vaste taken voor antwoord, kleine wijziging, meerdere doelen, hervatten, ingetrokken scope, adapterfout en begrensde recovery. Meet werkelijke writes, context-/tooloutputomvang, herhaalde controles, vragen, retries, tijd en taakcorrectheid. Voeg betrouwbare hostusage toe wanneer beschikbaar; geen verborgen externe telemetrie of volledige promptarchieven.
+
+**Klaar wanneer:** nul- en nameting vergelijkbare bron-/hostcondities hebben, uitschieters zichtbaar zijn en kostenramingen als zodanig zijn gelabeld. Geen verlies van correctheid of gebruikersdata wordt weggemiddeld tegen snelheid. Onverklaarde regressies in gekozen claims zijn opgelost; zonder betrouwbare usage geen euro-/percentageclaim.
+
+**Afhankelijk van:** starten na N01; nameting na de gewijzigde routes, in ieder geval N04/N14/N15 voor brede eenvoudclaims. **Bron:** U1–U4, F15.
+
+### N17 — Gebruikersroute en featureclaims laten overeenkomen met code
+
+- [ ] **Status: Gepland**
+
+**Werk:** vereenvoudig quickstart en uitleg rond antwoord, kleine taak, hervatten en update. Koppel claims aan de concrete route en bewijssoort: contract aanwezig, lokaal aangesloten, adapter bewezen of praktijk gemeten. Benoem release-, installatie- en activeringsstatus afzonderlijk. Een berekend shard-aantal bewijst geen werkelijk aangesloten opslagroute.
+
+**Klaar wanneer:** voorbeelden uitvoerbaar zijn op de gekozen kandidaat en ieder geclaimd voordeel passend bewijs heeft. Open roadmapwerk is nergens een geleverd feature. Er is één korte startplaats met detailverwijzingen; geen herhaling van het complete beleids-/historiearchief.
+
+**Afhankelijk van:** N04, N13–N16; updateclaims ook N12. **Bron:** D09, F02/F16.
+
+## 8. Taken N18–N21 — Optionele verbreding en praktijkbewijs
+
+### N18 — Eén kleine echte hostadapter bewijzen
+
+- [ ] **Status: Gepland — scopeafhankelijk**
+
+**Werk:** kies één beschikbare host en adaptercontract. Sluit alleen benodigde capabilities aan op de bewezen native routes. Geen globale Stop-hook als standaard. Test werkelijke toestemming, antwoord zonder writes, lichte taak, hervatten, intrekking, adapteruitval en operatieherhaling. Ontbreekt echte hosttoegang, presenteer fixtures uitsluitend als fixtures.
+
+**Klaar wanneer:** de gekozen echte adapter aantoonbaar werkt en uitval alleen die koppeling raakt; de lokale kern zonder adapter bruikbaar blijft. Native hostbevoegdheden blijven leidend. Geen providerbrede belofte afgeleid uit één werkende host.
+
+**Afhankelijk van:** N04, N06, N13–N15; N10 bij beheerde registratie. **Bron:** F13/D09, U1/U4.
+
+### N19 — Gecontroleerde eenrichtingsexport naar Obsidian
+
+- [ ] **Status: Gepland — scopeafhankelijk**
+
+**Werk:** exporteer afgeleide leesbare informatie uitsluitend naar de gekozen doelmap. Bind export aan bronrevisie, doel en operatie-ID; beheer alleen eigen gegenereerde bestanden. Behoud menselijke wijzigingen met een conflictstatus of aparte conflictcopy. Gebruik geen live transactionele machine-store in een gedeelde notitiemap als impliciete oplossing.
+
+**Klaar wanneer:** herhalen geen duplicaten maakt, vreemde notities onaangeraakt blijven, bronwijziging zichtbaar is en onbereikbare export de kern niet stopt. Geen brede vaulttoegang, bidirectionele sync of extra geïnstalleerde integratie zonder concrete scope.
+
+**Afhankelijk van:** N05–N07, N14. **Bron:** V12, I3–I6.
+
+### N20 — Alleen bewezen opslag- en afhankelijkheidsproblemen optimaliseren
+
+- [ ] **Status: Gepland**
+
+**Werk:** meet ledgerlezen/-schrijven, Combo-generaties, indexconsistentie en querywerk op kleine en grotere vaste datasets. Een veranderde zoekindex blijft een afgeleide van de juiste canonieke bron. Onderzoek gerichte impactkaarten en symbolenselectie alleen na een eenvoudige basisvergelijking. Verminder D10-verknoping op gemeten of foutgevoelige paden.
+
+**Klaar wanneer:** een wijziging aan een vooraf gemeten bottleneck gekoppeld is en herhaalbare winst toont zonder semantische regressie. Geen verplichte databank, daemon of embeddings toegevoegd zonder noodzaak. Als er geen relevante bottleneck is, volstaat gedocumenteerde meting met besluit “geen wijziging nodig”.
+
+**Afhankelijk van:** N01 voor meting; N09/N14/N15 voor beoordeling van die nieuwe routes. **Bron:** D05/D10, F14.
+
+### N21 — Praktijkpilot voor brede gebruiksclaims
+
+- [ ] **Status: Gepland — vereist voor brede adoptieclaims**
+
+**Werk:** behoud de eerdere pilotbasis: minstens twee weken, 25 echte taken en drie echte restart-/handoffmomenten. Kies representatieve taken en leg vooraf vast welke host- en efficiëntieclaims worden getoetst. Gebruik N16-metingen, registreer ook mislukte en afgebroken taken en onderscheid product-, host- en externe oorzaken.
+
+**Klaar wanneer:** de feitelijke pilot aan de afgesproken omvang voldoet, de claimrelevante problemen opgelost of als beperking afgebakend zijn en echte resultaten terugleesbaar zijn. Synthetische taken testen de harness maar tellen niet als pilotsucces. Onvoldoende praktijkdata blijft onbekend, niet groen.
+
+**Afhankelijk van:** N16–N17 en alle geclaimde functies; N18 bij hostclaims, N12 bij updateclaims. **Bron:** F15, U1–U5.
+
+## 9. Taken N22–N24 — Een release die haar inhoud bewijst
+
+### N22 — Correcte releaseherkomst automatiseren
+
+- [ ] **Status: Gepland**
+
+**Werk:** automatiseer de keten van definitieve bronidentiteit naar tests, build, exact gebonden tag/artifacts en verificatie. Houd vier huidige distributiebestanden als uitgangspunt. Bouw van de definitieve commit/tree, niet van een eerdere PR-head. Gebruik bestaande geslaagde checks alleen met aantoonbare geldigheid en binnen de repositoryregels; voorkom onnodige lokale volledige herhalingen.
+
+**Klaar wanneer:** bronmismatch, verkeerd versienummer en ontbrekende vereiste eind-CI publicatie van die kandidaat verhinderen; buildrecord en distributie naar dezelfde definitieve bron verwijzen. Unsigned provenance blijft als unsigned benoemd. Ondertekening/TUF is mogelijke latere downloadketenversterking, geen verplichte extra infrastructuur voor de herstelkern.
+
+**Afhankelijk van:** N01. **Bron:** F01–F03, V09.
+
+### N23 — Geleverde scope en kandidaat beoordelen
+
+- [ ] **Status: Gepland**
+
+**Werk:** bereid de kandidaat voor de vastgelegde doelversie 1.7.2 voor op basis van de werkelijk geleverde inhoud. Verbind iedere releaseclaim aan geïmplementeerd gedrag, actuele tests en relevante meting. Beoordeel platformskips, compatibiliteit, migratie-/rollbackuitleg en bekende beperkingen. Neem alleen passende N-taken mee; geen onbewezen voordelen via het woord Stable.
+
+**Klaar wanneer:** alle taken en criteria binnen de gekozen opleveringsscope aantoonbaar gereed zijn, geen bekende materiële fout een geclaimde werking tegenspreekt en niet geleverde onderdelen expliciet openstaan. Een beperkte fixrelease kan gereed zijn zonder brede pilot, maar claimt dan geen bewezen algemene besparing of hostadoptie.
+
+**Afhankelijk van:** N22, relevante N17-documentatie en alle taken van de gekozen scope; brede praktijkclaims vereisen N21. **Bron:** D09, U1–U5 naar gekozen scope.
+
+### N24 — Publiceren en publieke readback uitvoeren wanneer opgedragen
+
+- [ ] **Status: Gepland — geen actuele publicatiestap**
+
+**Werk:** gebruik de concrete publicatieopdracht voor de dan gekozen kandidaat. Publiceer exact de geverifieerde tag en vier assets; controleer latest-/release-status. Werk actuele README, changelog, roadmap, installatie-/release-informatie en betrokken publieke websitebron bij. Maak een private notitie niet rechtstreeks publiek: verwijder lokale paden en persoonlijke herstelcontext uit de afgeleide publieke versie.
+
+**Klaar wanneer:** echte downloads bytegelijk zijn gecontroleerd, commit/tree en metadata passen en publieke claims teruggelezen zijn. Geen gehoste website of wiki claimen wanneer alleen bron bestaat. Publicatie betekent niet lokale installatie, hookactivatie of voltooiing van optionele roadmaptaken.
+
+**Afhankelijk van:** N23 en een concrete publicatieopdracht. **Bron:** F01–F03, V09/V10.
+
+## 10. Acceptatiescenario's per oplevering
+
+| Scenario | Minimale verwachte uitkomst | Eigenaarstaak |
+|---|---|---|
+| Antwoord plus verlopen lease | Geen writes; alleen relevante hercontrole | N03–N04 |
+| Blokkade herstellen / autoriteit intrekken | Actuele redenen; geldige herbinding respectievelijk blokkade | N03 |
+| Meerdere toegestane doelen | Eén gebonden scope; geen kunstmatige één-doelweigering | N03 |
+| Respons verloren na voortgangscommit | Dezelfde taakuitkomst terug; volgende taak niet afgevinkt | N04 |
+| Sync én foutregistratie falen | Native resultaat blijft zichtbaar; retry beperkt | N04/N06 |
+| Volledige keten al onderzocht, nieuw bewijs | Nieuwe begrensde aanpak mogelijk zonder meer taakdekking | N04 |
+| Map/patroon/alias naast actieve writer | Overlap opgelost of afgewezen; nooit onbewezen ISOLATED | N07 |
+| Dubbele capsule / grensoverschrijding | Gerichte afwijzing vóór ongecontroleerde verwerking | N08 |
+| 33e actuele beslissing | Oudere actuele beslissing nog vindbaar en vervangbaar | N14 |
+| Grote roadmap en nieuwe chat | Alle outcomes bereikbaar via compacte root en details | N14 |
+| Z ligt buiten onderzocht zoekdeel | Gedeeltelijke dekking plus veilige vervolgroute | N15 |
+| Irrelevante wijziging versus autoriteitswijziging | Passend controlehergebruik versus verplichte invalidatie | N15 |
+| Update met oude reader en crash | Eén generatie per reader; verklaarde terugkeer/cleanup | N11–N12 |
+| Eigen kapotte hook naast vreemde configuratie | Gerichte diagnose; vreemd materiaal onaangeraakt | N12–N13 |
+| Echte hosttaak en optionele exportfout | Kern bruikbaar; fout blijft bij de adapter | N18–N19 |
+
+Testniveaus blijven gescheiden: pure contractproef, tijdelijke native fixture, proces-/filesystemproef, echte adapter en praktijkpilot. Geen niveau krijgt automatisch de claims van een hoger niveau. De samenhangende toestandstests uit N02 bewaken I1–I8 over meerdere stappen.
+
+## 11. Volledige traceerbaarheid
+
+### Nieuwe diepteanalyse
 
 | Bevinding | Verwerking |
 |---|---|
-| F01 — Buildrecord/tag | Bestaand 1.7.0-bewijs behouden; structurele borging N22–N24 |
-| F02 — Versiecommunicatie | Bestaande correctie behouden; N17/N23 voor actuele featureclaims |
-| F03 — CI/publicatievolgorde | Bestaand 1.7.0-bewijs behouden; N22–N24 |
-| F04 — Sync-race | N02, N05 |
-| F05 — Git hangt | N06 |
-| F06 — Privacyverklaring | N06 |
-| F07 — Governance | N02–N04 |
-| F08 — Overlappende updatepaden | N02, N07, N11 |
-| F09 — Dubbele capsules | N02, N08 |
-| F10 — Capsule-resourcegrenzen | N08 |
-| F11 — Kritieke JSON-/padvalidatie | N09 |
-| F12 — Samengestelde update/atomiciteit | N10–N12 |
-| F13 — Contract versus integratie | N04, N13–N14, N17–N18 |
-| F14 — Ledgergroei | N20 |
-| F15 — Praktijkwinst | N16, N21, N23 |
-| F16 — Onboarding | N04, N13, N17 |
-| Historisch hookincident | N10–N13, N18 |
+| D01 — Stale lease geeft antwoordtaak write-indicatie | N02–N04, N15 |
+| D02 — Verouderde blokkade blijft hangen | N02–N04, N13 |
+| D03 — Sidecar vergelijkt alleen strings | N02, N07, N09 |
+| D04 — Actieve Combo-beslissing verdwijnt uit zoeklaag | N02, N14 |
+| D05 — Zoekbudget verbergt onvolledigheid | N02, N15, N20 |
+| D06 — Retry kan volgende opdracht afronden | N02, expliciete mutatieketen N04, N05–N06 |
+| D07 — Geldige grotere roadmap past niet in current view | N02, N04, N13–N14 |
+| D08 — Recovery vereist onmogelijke verplichte verbreding | N02, N04 |
+| D09 — Contract versus aangesloten gebruikersroute | N04, N17–N18, N23 |
+| D10 — Algemene helpers en productlogica verknoopt | N09, N20 |
 
-### Verhouding tot de vervangen roadmap
+### Eerdere analyse — niets stilzwijgend laten vallen
 
-De eerdere R01–R32-codes in notitie 31/32 zijn historische verwijzingen, geen actuele taaknummers. De inhoud is herverdeeld: releasebasis naar N01/N22–N24; defecten naar N02–N09; gebruikersroute naar N03–N04/N13/N17; installatie en host naar N10–N13/N18; handoff en export naar N14–N15/N19; metingen en pilot naar N16/N20–N21. Er zijn geen oude open taken stilzwijgend als klaar overgenomen.
+| Bevindingen | Verwerking |
+|---|---|
+| F01 build/tag, F02 versieclaims, F03 CI/publicatie | N01, N17, N22–N24 |
+| F04 syncbytes, F05 Git-timeout, F06 privacyverklaring | N05–N06 |
+| F07 autoriteit/doelen | N03–N04 |
+| F08 updatepad-overlap | N07, N11–N12 |
+| F09 capsuleduplicaten, F10 resourcegrenzen | N08 |
+| F11 kritieke JSON-/padvalidatie | N07–N09 |
+| F12 samengestelde update/atomiciteit | N10–N12 |
+| F13 hostcontract versus integratie | N04, N13, N17–N18 |
+| F14 ledger-/opslaggroei | N20 |
+| F15 onbewezen praktijkwinst | N16, N21, N23 |
+| F16 zware onboarding | N04, N13, N17 |
+| Historisch globaal hookincident | N10–N13, N18 |
 
-## 13. Buiten scope en bewaarde grenzen
+| Eerder voorstel | Behouden taakruimte |
+|---|---|
+| V01 autoriteit en minder vragen | N03–N04, N18 |
+| V02 betrouwbare sync | N05–N06 |
+| V03 schone updatelevenscyclus | N07, N10–N12 |
+| V04 capsule/inputcontrole | N08–N09 |
+| V05 diagnose | N13 |
+| V06 zuinige context | N15–N16 |
+| V07 compact hervatten | N14 |
+| V08 optionele host | N18 |
+| V09 releaseherkomst | N01, N22–N24 |
+| V10 uitleg en featurestatus | N04, N17, N23–N24 |
+| V11 opslagoptimalisatie | N20 |
+| V12 Obsidian-export | N19 |
 
-Geen volledige herschrijving, verplichte vector-/cloudstack, algemene ingebouwde AI-agent, globale stopguard, onbeperkte-toestemmingsmodus, systeemwijde schoonmaak, brede vaultkoppeling of grote GUI. Een database, daemon of extra agentrol wordt alleen overwogen bij een aantoonbaar probleem dat niet eenvoudig met de bestaande bouwstenen kan worden opgelost.
+De uitbreidingsthema's krijgen geen tweede backlog: uitleg van effectieve toestand valt onder N13; geheugen-/contextverschillen onder N14–N15; lokaal frictie-overzicht onder N16; gezondheid over generaties onder N10–N13; een impactkaart onder N20. De oude R01–R32-verwijzingen blijven historische verwijzingen in eerdere analyses, geen actieve taaknummers.
 
-Deze publicatie betreft de roadmap en bijbehorende publieke documentatie. Daarmee wordt geen roadmapfunctie geïmplementeerd, volgende software-release uitgebracht of lokale installatie uitgevoerd. Bij latere uitvoering gelden de actuele opdracht en geldige bestaande scope, zonder onnodige herbevestigingen.
+## 12. Voortgang, beslissingen en hervatten
 
-## 14. Voortgangslog en hervatpunt
+Statussen: **Gepland**, **Bezig**, **Geblokkeerd**, **Klaar**, **Uitgesteld**. Alleen Klaar krijgt een vinkje. Een taak is pas Klaar wanneer haar gekozen acceptatiecriteria werkelijk zijn bewezen; “de helper bestaat” of “de testlijst is groen” volstaat niet voor een bredere claim.
 
-| Datum | Gebeurtenis | Resultaat | Volgende stap |
+Bij scopeafhankelijke taken betekent Uitgesteld: niet in deze oplevering, met korte reden. Geen stilzwijgende omzetting naar geleverd. Een geblokkeerde taak vermeldt oorzaak en kleinste benodigde verandering. Onafhankelijk opgedragen werk kan doorgaan.
+
+Gebruik dit log voor betekenisvolle resultaten en keuzes. Bewaar geen tweede actuele roadmap, apart statusbestand of omvangrijk beslisdossier wanneer een kort logitem en bestaand bewijs volstaan.
+
+| Datum | Gebeurtenis | Resultaat | Hervatpunt |
 |---|---|---|---|
-| 2026-09-09 | Roadmap volledig herschreven vanuit analyse 1.7.0 | N01–N24 gepland; geen nieuwe implementatie gestart; historische publicatiebasis apart vastgelegd | N01 |
+| 2026-09-09 | Planning revisie 3 vanuit diepteanalyse 1.7.0/1.7.1 | N01–N24 behouden en verdiept; D01–D10 plus eerdere F/V-punten verwerkt; geen implementatie gestart | N01 bij latere uitvoeringsopdracht |
+| 2026-09-09 | Doelversie expliciet vastgesteld | Volgende update wordt 1.7.2; publicatiebasis blijft 1.7.1; geen uitvoering of publicatie gestart | N01 bij latere uitvoeringsopdracht |
 
-**Hervatten:** lees §1, het laatste logitem en de actieve/eerstvolgende taak. Controleer daarna de werkelijke repositorytoestand. Open alleen de relevante analyseparagrafen en bestaande bewijsbestanden; de volledige oude chat hoeft niet opnieuw in context.
+**Compact hervatrecord:** actuele opdracht en scope; actieve taak; laatste geverifieerde resultaat; relevante bestanden/commit; resterend werk; blokkade indien aanwezig; volgende concrete stap. Lees daarna alleen de relevante analyseparagrafen en bewijsbestanden. De hele oude chat, alle policies en alle analyses hoeven niet opnieuw de context in.
 
-**Compact overdrachtsrecord:** actieve taak; laatste gecontroleerde resultaat; gewijzigde bestanden/commit; resterend werk; blokkade indien aanwezig; eerstvolgende concrete handeling. Bewaar dit bij voorkeur in het log met verwijzing naar bestaand bewijs.
+**Geen automatische model-/kostenclaims:** deze roadmap schrijft geen model voor en belooft geen aantal uren of tokens. Modelkeuze volgt de actuele opdracht/host. Efficiëntie wordt met N16 aangetoond, niet uit profielnamen afgeleid.
 
-## 15. Publieke bronnen
+## 13. Bronnen en geldigheidsgrenzen
 
-- [OPENCNTX 1.7.0 release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0).
-- [Release-inhoud en bekende beperkingen](release-1.7.0.md).
-- [Release-CI](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/34386717966).
-- [Tagvergelijking 1.6.3–1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/compare/v1.6.3...v1.7.0).
-- [Historische roadmap bij 1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.0/docs/roadmap.md).
-- [Engelstalig overzicht van deze planning](roadmap.md).
+- [Release 1.7.1](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1) en [definitieve CI](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/34395546489) — publicatiebasis, geen bewijs dat deze roadmap is geïmplementeerd.
+- [Verschillen 1.7.0–1.7.1](https://github.com/CNTX-PROJECT/OPENCNTX/compare/v1.7.0...v1.7.1) — runtimeverschil beperkt tot het versienummer.
+- [Governance](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/governance.py), [voortgang](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/continuity.py) en [recovery](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/recovery.py) — onderzochte contracten en overgangen.
+- [Combo](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/combo.py), [adaptive storage](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/adaptive_storage.py) en [connected state](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/connected_state.py) — geheugen, zoekdekking en afgeleide weergaven.
+- [Updater](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/transactional_update.py) en [sync](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.1/src/opencntx/continuity_sync.py) — bestaande implementatiebouwstenen.
+- [Bekende releasebeperkingen](release-1.7.0.md) en [scope van 1.7.1](release-1.7.1.md) — eerdere bevindingen en publicatiegrenzen.
+- [Voorgaande roadmap op de vaste 1.7.1-commit](https://github.com/CNTX-PROJECT/OPENCNTX/blob/6b80cc41529653eac0b16b4238a4b7692eebb4f7/docs/roadmap-plan.nl.md) — historische N01–N24-context.
 
-Deze roadmap beschrijft gepland werk. Een publicatiebewijs bevestigt alleen de publicatie; een testbewijs alleen de geteste route; een pilot alleen de daadwerkelijk beoordeelde praktijk.
+De D-bevindingen komen uit de onderliggende gerichte analyse; de bijbehorende auditproeven moeten in N02 als publieke regressietests worden opgenomen. Private notities en lokale bewijsbestanden worden niet meegepubliceerd.
+
+Deze publicatie levert alleen de roadmap voor 1.7.2. Zij levert geen nieuwe runtimefunctionaliteit, release-assets, installatie of hostactivering. De huidige gepubliceerde software blijft 1.7.1.
