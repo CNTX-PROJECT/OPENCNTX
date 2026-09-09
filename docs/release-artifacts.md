@@ -126,12 +126,10 @@ current distribution route. Adding either one requires a materially changed
 situation and a new exact OWNER decision; a local build or green test cannot
 grant that authority.
 
-Documentation-only commits after a stable release do not replace or mutate the
-release. The CI release-version gate accepts them only when the stable tag is
-an ancestor and every changed path is explicitly classified as documentation
-or exact gate-verification support. Any runtime, package, release, workflow,
-deletion, rename, or unknown path still requires a newer package version and a
-separate release decision.
+Every post-release change requires a newer package version before GitHub review,
+including documentation, metadata, tests, gate code, deletions and release
+material. A stable tag is immutable; a newer version permits review but still
+does not grant a release decision.
 
 ## Related pages
 
