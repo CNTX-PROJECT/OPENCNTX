@@ -143,6 +143,40 @@ class GoalProgressTests(unittest.TestCase):
             set(self.args["outcome_ids"]),
         )
 
+    def test_completed_repair_must_return_to_the_original_roadmap_leaf(self) -> None:
+        progress = p.begin_recovery(
+            self.goal,
+            self.build(),
+            node_id="WRITE",
+            recovery_id="WRITE-REPAIR",
+            resume_id="WRITE-RESUME",
+            reason="Temporary local failure",
+        )
+        completed = p.finish_recovery(
+            self.goal,
+            progress,
+            recovery_id="WRITE-REPAIR",
+            evidence=[{"reference": "repair.txt", "sha256": "c" * 64}],
+        )
+        result = p.recovery_resumption(self.goal, completed, recovery_id="WRITE-REPAIR")
+        self.assertEqual(result["decision"], "CONTINUE_PARENT_ROADMAP")
+        self.assertEqual(result["reason"], "RECOVERY_RESOLVED_RETURN_TO_PARENT")
+        self.assertEqual(result["resume_node_id"], "WRITE-RESUME")
+        self.assertEqual(result["return_to_node_id"], "WRITE")
+        self.assertEqual(result["next_action"], "Continue exact outcome")
+
+    def test_unfinished_repair_cannot_present_a_parent_resumption(self) -> None:
+        progress = p.begin_recovery(
+            self.goal,
+            self.build(),
+            node_id="WRITE",
+            recovery_id="WRITE-REPAIR",
+            resume_id="WRITE-RESUME",
+            reason="Temporary local failure",
+        )
+        with self.assertRaises(ContinuityError):
+            p.recovery_resumption(self.goal, progress, recovery_id="WRITE-REPAIR")
+
 
 @unittest.skipUnless(sys.platform == "win32", "Closed Windows reference host integration")
 class NativeGoalProgressTests(unittest.TestCase):

@@ -37,14 +37,31 @@ MAX_VIEW_BYTES = 20 * 1024
 
 def _view_path(root: Path, relative: str = "") -> Path:
     """Reject existing alias components before any view read or write."""
-    base = root.resolve(strict=True)
-    path = base / ".opencntx" / "continuity" / "views" / relative
-    current = base
-    for part in path.relative_to(base).parts:
-        current = current / part
-        if current.is_symlink() or (current.exists() and _is_reparse(current)):
-            raise _fail("connected_path_unsafe", "Connected paths cannot contain aliases.")
-    return path
+    try:
+        base = root.resolve(strict=True)
+    except FileNotFoundError as exc:
+        raise _fail(
+            "connected_root_missing",
+            "The selected project root does not exist.",
+        ) from exc
+    except OSError as exc:
+        raise _fail(
+            "connected_path_inaccessible",
+            "Connected paths cannot be accessed in this environment.",
+        ) from exc
+    try:
+        path = base / ".opencntx" / "continuity" / "views" / relative
+        current = base
+        for part in path.relative_to(base).parts:
+            current = current / part
+            if current.is_symlink() or (current.exists() and _is_reparse(current)):
+                raise _fail("connected_path_unsafe", "Connected paths cannot contain aliases.")
+        return path
+    except OSError as exc:
+        raise _fail(
+            "connected_path_inaccessible",
+            "Connected paths cannot be accessed in this environment.",
+        ) from exc
 
 
 def compile_connected_state(
@@ -252,7 +269,12 @@ def publish_connected_state(
         return value
 
 
-def connected_status(root: Path) -> dict[str, Any]:
+def connected_status(
+    root: Path,
+    *,
+    goal: BoundGoal | None = None,
+    synthesis_reference: str | None = None,
+) -> dict[str, Any]:
     """Non-mutating preflight. Missing binding is a finding, not a fake empty flow."""
     _view_path(root)
     store = store_path(root)
@@ -291,6 +313,20 @@ def connected_status(root: Path) -> dict[str, Any]:
         combo = load_combo(root)
     except (OSError, ValueError, KeyError, TypeError, AttributeError, ContinuityError) as exc:
         raise _fail("connected_view_invalid", "Connected bundle cannot be verified.") from exc
+    if goal is not None:
+        if value["binding"] != "GOAL_CONNECTED":
+            raise _fail(
+                "connected_goal_required",
+                "The current view is not bound to the expected goal.",
+            )
+        expected_context = compile_goal_context(
+            root, goal, synthesis_reference=synthesis_reference
+        )
+        if value["goal_context"] != expected_context:
+            raise _fail(
+                "connected_goal_mismatch",
+                "The current view belongs to another goal or revision.",
+            )
     current = (
         value["source_digest"] == state["state_digest"]
         and value["combo_digest"] == combo["combo_digest"]

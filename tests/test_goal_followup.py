@@ -21,7 +21,12 @@ from opencntx.goal_followup import (
     recovery_decision,
     recovery_observation,
 )
-from opencntx.goal_progress import build_goal_progress, persist_goal_progress
+from opencntx.goal_progress import (
+    begin_recovery,
+    build_goal_progress,
+    finish_recovery,
+    persist_goal_progress,
+)
 from opencntx.output_contract import (
     build_output_contract,
     extract_bound_session_metrics,
@@ -201,6 +206,36 @@ class NativeFollowupTests(unittest.TestCase):
                 compile_goal_context(self.root, self.host.expected, **kwargs)
         with self.assertRaises(ContinuityError):
             self.output(context, external_action=True, exact_human_action="Unrelated action")
+
+    def test_completed_repair_rebinds_to_the_parent_roadmap(self) -> None:
+        repair_content = b"Verified temporary repair"
+        (self.root / "evidence" / "repair.txt").write_bytes(repair_content)
+        initial = build_goal_progress(self.host.expected, root_id="MAIN", nodes=self.nodes)
+        recovering = begin_recovery(
+            self.host.expected,
+            initial,
+            node_id="WRITE",
+            recovery_id="WRITE-REPAIR",
+            resume_id="WRITE-RESUME",
+            reason="Temporary local failure",
+        )
+        completed = finish_recovery(
+            self.host.expected,
+            recovering,
+            recovery_id="WRITE-REPAIR",
+            evidence=[{"reference": "evidence/repair.txt", "sha256": _digest(repair_content)}],
+        )
+        persist_goal_progress(
+            self.root,
+            self.host.expected,
+            completed,
+            evidence_directory=self.evidence_directory,
+        )
+        self.host = host_fixture.host(self.root, progress_node_id="WRITE-RESUME")
+        context = compile_goal_context(self.root, self.host.expected)
+        self.assertEqual(context["decision"], "CONTINUE")
+        self.assertEqual(context["reason"], "RECOVERY_RESOLVED_RETURN_TO_PARENT")
+        self.assertEqual(context["next_outcome_id"], "PARENT-RESULT")
 
     def test_stale_context_and_forged_completion_refused(self) -> None:
         context = compile_goal_context(self.root, self.host.expected)

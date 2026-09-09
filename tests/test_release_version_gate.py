@@ -42,7 +42,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
         self.assertEqual("v1.1.0", result["latest_tag"])
         self.assertEqual("UNRELEASED_VERSION_AHEAD", result["result"])
 
-    def test_equal_version_rejects_non_documentation_change(self) -> None:
+    def test_equal_version_rejects_source_change(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:
             repository = self._repository(Path(temp_name), "1.1.0")
             responses = {
@@ -67,7 +67,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
                 ),
                 self.assertRaisesRegex(
                     release_version_gate.ReleaseVersionError,
-                    "not docs-only",
+                    "require a new version: src/opencntx/cli.py",
                 ),
             ):
                 release_version_gate.inspect_release_version(repository)
@@ -90,7 +90,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
         self.assertEqual("TAG_ALIGNED", result["result"])
         self.assertEqual([], result["post_release_paths"])
 
-    def test_equal_version_allows_documentation_and_exact_gate_support(self) -> None:
+    def test_equal_version_rejects_documentation_and_gate_support(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:
             repository = self._repository(Path(temp_name), "1.1.0")
             tag_commit = "a" * 40
@@ -118,27 +118,20 @@ class ReleaseVersionGateTests(unittest.TestCase):
                     head,
                 ): changes,
             }
-            with mock.patch.object(
-                release_version_gate,
-                "_git",
-                side_effect=lambda _repository, *arguments: responses[arguments],
+            with (
+                mock.patch.object(
+                    release_version_gate,
+                    "_git",
+                    side_effect=lambda _repository, *arguments: responses[arguments],
+                ),
+                self.assertRaisesRegex(
+                    release_version_gate.ReleaseVersionError,
+                    "require a new version: README.md",
+                ),
             ):
-                result = release_version_gate.inspect_release_version(repository)
-        self.assertEqual("POST_RELEASE_DOCS_ONLY", result["result"])
-        self.assertEqual(
-            [
-                "README.md",
-                "assets/design-system/visual-baseline-v1.json",
-                "docs/start-here.md",
-                "site/index.html",
-                "tests/test_quality.py",
-                "tests/test_release_version_gate.py",
-                "tools/release_version_gate.py",
-            ],
-            result["post_release_paths"],
-        )
+                release_version_gate.inspect_release_version(repository)
 
-    def test_equal_version_rejects_unclassified_site_asset(self) -> None:
+    def test_equal_version_rejects_metadata_change(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:
             repository = self._repository(Path(temp_name), "1.1.0")
             tag_commit = "a" * 40
@@ -155,7 +148,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
                     "-z",
                     tag_commit,
                     head,
-                ): "M\0docs/start-here.md\0M\0site/assets/opencntx.css\0",
+                ): "M\0pyproject.toml\0",
             }
             with (
                 mock.patch.object(
@@ -165,7 +158,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
                 ),
                 self.assertRaisesRegex(
                     release_version_gate.ReleaseVersionError,
-                    "site/assets/opencntx.css",
+                    "require a new version: pyproject.toml",
                 ),
             ):
                 release_version_gate.inspect_release_version(repository)
@@ -197,7 +190,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
                 ),
                 self.assertRaisesRegex(
                     release_version_gate.ReleaseVersionError,
-                    "not docs-only",
+                    "require a new version: docs/removed.md",
                 ),
             ):
                 release_version_gate.inspect_release_version(repository)
@@ -229,7 +222,7 @@ class ReleaseVersionGateTests(unittest.TestCase):
                 ),
                 self.assertRaisesRegex(
                     release_version_gate.ReleaseVersionError,
-                    "requires a documentation path",
+                    "require a new version: tools/release_version_gate.py",
                 ),
             ):
                 release_version_gate.inspect_release_version(repository)

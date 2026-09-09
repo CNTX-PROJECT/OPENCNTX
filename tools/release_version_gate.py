@@ -11,21 +11,6 @@ from pathlib import Path
 from typing import Any
 
 STABLE_VERSION = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
-DOCUMENTATION_SUFFIXES = frozenset(
-    {".gif", ".html", ".jpeg", ".jpg", ".md", ".png", ".svg", ".webp"}
-)
-PUBLIC_SITE_DOCUMENTATION_PATHS = frozenset(
-    {"site/README.md", "site/components.html", "site/index.html"}
-)
-GATE_SUPPORT_PATHS = frozenset(
-    {
-        "assets/design-system/visual-baseline-v1.json",
-        "tests/test_quality.py",
-        "tests/test_release_version_gate.py",
-        "tools/release_version_gate.py",
-    }
-)
-ALLOWED_POST_RELEASE_STATUSES = frozenset({"A", "M"})
 CURRENT_SURFACES = Path("tests/fixtures/quality/current-version-surfaces-v1.json")
 
 
@@ -175,14 +160,7 @@ def inspect_current_version_surfaces(
     }
 
 
-def _is_documentation_path(path: str) -> bool:
-    candidate = Path(path)
-    return (
-        path == "README.md" or path.startswith("docs/") or path in PUBLIC_SITE_DOCUMENTATION_PATHS
-    ) and candidate.suffix.lower() in DOCUMENTATION_SUFFIXES
-
-
-def _post_release_documentation_paths(
+def _post_release_paths(
     repository: Path,
     *,
     tag_commit: str,
@@ -208,8 +186,6 @@ def _post_release_documentation_paths(
     if not tokens or len(tokens) % 2:
         raise ReleaseVersionError("cannot determine post-release changed paths")
 
-    documentation: list[str] = []
-    rejected: list[str] = []
     changed_paths: list[str] = []
     for index in range(0, len(tokens), 2):
         status, path = tokens[index : index + 2]
@@ -219,23 +195,9 @@ def _post_release_documentation_paths(
             and not path.startswith("/")
             and all(part not in {"", ".", ".."} for part in path.split("/"))
         )
-        if status not in ALLOWED_POST_RELEASE_STATUSES or not safe_path:
-            rejected.append(f"{status}:{path}")
-            continue
+        if not status or not safe_path:
+            raise ReleaseVersionError(f"cannot determine post-release changed path: {status}:{path}")
         changed_paths.append(path)
-        if _is_documentation_path(path):
-            documentation.append(path)
-        elif path not in GATE_SUPPORT_PATHS:
-            rejected.append(f"{status}:{path}")
-
-    if rejected:
-        raise ReleaseVersionError(
-            "post-release changes are not docs-only: " + ", ".join(sorted(rejected))
-        )
-    if not documentation:
-        raise ReleaseVersionError(
-            "post-release docs-only maintenance requires a documentation path"
-        )
     return sorted(changed_paths)
 
 
@@ -281,12 +243,15 @@ def inspect_release_version(
             result = "TAG_ALIGNED"
             post_release_paths: list[str] = []
         else:
-            post_release_paths = _post_release_documentation_paths(
+            post_release_paths = _post_release_paths(
                 repository,
                 tag_commit=tag_commit,
                 head=head,
             )
-            result = "POST_RELEASE_DOCS_ONLY"
+            raise ReleaseVersionError(
+                "post-release changes require a new version: "
+                + ", ".join(post_release_paths)
+            )
     else:
         result = "UNRELEASED_VERSION_AHEAD"
         post_release_paths = []

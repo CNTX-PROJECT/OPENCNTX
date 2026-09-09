@@ -249,6 +249,45 @@ class ConnectedTests(unittest.TestCase):
             with self.assertRaisesRegex(ContinuityError, "aliases"):
                 self.publish()
 
+    def test_cli_reports_inaccessible_view_without_traceback(self):
+        self.start()
+        self.publish()
+        output = io.StringIO()
+        with (
+            patch.object(Path, "is_symlink", side_effect=PermissionError("denied")),
+            contextlib.redirect_stderr(output),
+        ):
+            self.assertEqual(main(["flow", "current", "--root", str(self.root)]), 2)
+        self.assertIn("connected_path_inaccessible", output.getvalue())
+        self.assertNotIn("Traceback", output.getvalue())
+
+    def test_cli_missing_root_is_distinct_from_inaccessible_view(self):
+        output = io.StringIO()
+        missing = self.root / "missing"
+        with contextlib.redirect_stderr(output):
+            self.assertEqual(main(["flow", "current", "--root", str(missing)]), 2)
+        self.assertIn("connected_root_missing", output.getvalue())
+
+    def test_cli_missing_goal_is_not_ignored(self):
+        self.start()
+        self.publish()
+        output = io.StringIO()
+        with contextlib.redirect_stderr(output):
+            self.assertEqual(
+                main(
+                    [
+                        "flow",
+                        "current",
+                        "--root",
+                        str(self.root),
+                        "--goal",
+                        str(self.root / "missing-goal.json"),
+                    ]
+                ),
+                2,
+            )
+        self.assertIn("continuity_input_invalid", output.getvalue())
+
     def test_real_directory_link_cannot_redirect_views(self):
         self.start()
         self.publish()
@@ -465,6 +504,29 @@ class ConnectedHostTests(unittest.TestCase):
         value = self.host.publish_current()
         self.assertNotEqual(value["goal_context"]["goal_status"], "TECHNICALLY_COMPLETE")
         self.assertFalse(connected_status(self.root)["completion_allowed"])
+
+    def test_cli_reads_matching_goal_and_rejects_changed_goal(self):
+        progress_fixture.NativeGoalProgressTests.prepare(self)
+        self.host.publish_current()
+        goal_path = self.root / "goal.json"
+        goal_path.write_text(json.dumps(self.host.expected.payload()), encoding="utf-8")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(
+                main(["flow", "current", "--root", str(self.root), "--goal", str(goal_path)]),
+                0,
+            )
+        self.assertEqual(json.loads(output.getvalue())["view"]["binding"], "GOAL_CONNECTED")
+        changed = self.host.expected.payload()
+        changed["request"]["id"] = "OTHER-REQUEST"
+        goal_path.write_text(json.dumps(changed), encoding="utf-8")
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            self.assertEqual(
+                main(["flow", "current", "--root", str(self.root), "--goal", str(goal_path)]),
+                2,
+            )
+        self.assertRegex(error.getvalue(), "goal_binding_mismatch|goal_progress_stale")
 
 
 if __name__ == "__main__":

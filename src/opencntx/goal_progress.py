@@ -254,6 +254,49 @@ def progress_readiness(progress: GoalProgress, goal: BoundGoal) -> dict[str, Any
     }
 
 
+def recovery_resumption(
+    goal: BoundGoal, progress: GoalProgress, *, recovery_id: str
+) -> dict[str, str]:
+    """Require a finished repair to return to its original roadmap leaf.
+
+    A repair is a temporary side branch.  Its successful completion is never a
+    terminal condition for the parent assignment: exactly one sibling resume
+    leaf must become ready and remains responsible for the original outcome.
+    """
+    value = validate_goal_progress(progress, goal)
+    nodes = {node["id"]: node for node in value["nodes"]}
+    repair = nodes.get(_text(recovery_id, "recovery_id"))
+    if (
+        repair is None
+        or repair["children"]
+        or repair["parent"] is None
+        or repair["status"] != "DELIVERED"
+        or not repair["next_action"].startswith("Repair: ")
+    ):
+        raise _fail("goal_recovery_invalid", "Completed repair branch is required.")
+    resumes = [
+        node
+        for node in nodes.values()
+        if node["parent"] == repair["parent"]
+        and node["depends_on"] == [repair["id"]]
+        and node["outcome_ids"] == repair["outcome_ids"]
+    ]
+    if len(resumes) != 1:
+        raise _fail("goal_recovery_invalid", "Repair requires one exact resumption leaf.")
+    resume = resumes[0]
+    readiness = progress_readiness(progress, goal)
+    if resume["id"] not in readiness["ready_nodes"]:
+        raise _fail("goal_recovery_invalid", "Resumption is not ready after completed repair.")
+    return {
+        "decision": "CONTINUE_PARENT_ROADMAP",
+        "reason": "RECOVERY_RESOLVED_RETURN_TO_PARENT",
+        "completed_side_branch_id": repair["id"],
+        "resume_node_id": resume["id"],
+        "return_to_node_id": resume["return_to"],
+        "next_action": resume["next_action"],
+    }
+
+
 def persist_goal_progress(
     root: Path, goal: BoundGoal, progress: GoalProgress, *, evidence_directory: Path
 ) -> dict[str, Any]:

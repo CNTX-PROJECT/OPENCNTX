@@ -2,6 +2,18 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.6.2 - 2026-09-09
+
+Local candidate only; not published or installed. Stable distribution remains
+v1.6.1 until a separately approved GitHub Release is created.
+
+- Resume the original roadmap only after an exact temporary repair is delivered
+  and its ready sibling retains the original outcome obligations.
+- Reject ambiguous, unfinished, blocked or changed recovery instead of claiming
+  that the parent roadmap has completed.
+- Reserve a new version for every GitHub-reviewable change; an existing stable
+  version is never reused.
+
 ## 1.6.1 - 2026-09-07
 
 Stable release target. Published availability is established by the matching GitHub Release and verified artifacts.
