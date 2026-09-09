@@ -2,6 +2,16 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.6.3 - 2026-09-09
+
+Local candidate only; not published or installed. Stable distribution remains
+v1.6.1 until a separately approved GitHub Release is created.
+
+- Continue directly to the next bound roadmap assignment when AUTO PILOT is
+  still valid, instead of requesting an unnecessary new OWNER prompt.
+- Keep true roadmap completion, OWNER gates, blockers and recovery limits as
+  explicit stop boundaries.
+
 ## 1.6.2 - 2026-09-09
 
 Local candidate only; not published or installed. Stable distribution remains

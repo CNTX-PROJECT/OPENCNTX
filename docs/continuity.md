@@ -282,7 +282,7 @@ projects remain outside this product route.
 
 ## Connected current views
 
-These additions target the local v1.6.2 candidate. Published availability remains
+These additions target the local v1.6.3 candidate. Published availability remains
 v1.6.1 until a matching GitHub tag, Release and verified artifacts exist;
 installation never activates a host hook.
 

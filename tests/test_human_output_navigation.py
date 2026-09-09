@@ -260,6 +260,28 @@ class HumanOutputNavigationTests(unittest.TestCase):
         self.assertEqual(contract["next_action_state"], "OWNER_DECISION_REQUIRED")
         self.assertFalse(contract["authority_changed"])
 
+    def test_completed_auto_pilot_assignment_continues_to_bound_successor(self) -> None:
+        project = self.flow_project()
+        capsule = self.changed_capsule(
+            project,
+            assignment_status="COMPLETED",
+            continuation_mode="STOP_COMPLETE",
+            next_assignment_after_completion="TASK-2",
+        )
+        contract = build_output_contract(
+            execution_capsule=capsule,
+            roadmap_label="R11 — assignment transition",
+            summary="De eerste opdracht is bewezen.",
+            language="nl",
+            metrics=self.metrics(),
+            required_capability="STANDARD",
+            reasoning_level="LOW",
+        )
+        self.assertEqual(contract["next_action_state"], "CONTINUE_AUTOMATICALLY")
+        self.assertEqual(contract["next_assignment"], "TASK-2")
+        self.assertIsNone(contract["exact_human_action"])
+        self.assertIn("CONTINUE_AUTOMATICALLY", render_output(contract))
+
     def test_blocked_complete_and_external_states_are_unambiguous(self) -> None:
         project = self.flow_project()
         blocked = self.changed_capsule(
