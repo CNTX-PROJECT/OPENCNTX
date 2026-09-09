@@ -2,298 +2,159 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page separates completed public facts from planned work. It does not
-expose private project records. See [v1.7.0 scope](release-1.7.0.md): this
-release does not complete the newly proposed improvement roadmap.
+[Release scope](release-1.7.0.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
+
+## Current status
+
+The new roadmap is published as a plan, not as implemented functionality.
+It contains **six phases and 24 tasks (N01–N24)**. All tasks are planned;
+none of these new implementation tasks is marked complete.
+
+- Published Stable software baseline: **v1.7.0**.
+- Source release target: `v1.7.1` (unpublished documentation candidate only).
+- Package version: `1.7.1`.
+- The version increment is required by the existing repository rule for
+  post-release documentation changes. It is not a new GitHub Release.
+- The implementation release/version for the roadmap remains undecided.
+- No installation, host activation or roadmap implementation is performed
+  by publishing this documentation.
+
+The [complete Dutch plan](roadmap-plan.nl.md) contains the detailed work,
+acceptance criteria, dependencies, five user requirements, evidence mapping
+and restart instructions. This English page is an overview of that plan,
+not an independently maintained task ledger.
+
+The existing 1.7.0 distribution contains exactly
+opencntx-1.7.0-py3-none-any.whl, opencntx-1.7.0.tar.gz, SHA256SUMS and
+BUILD-RECORD.json. Those release files are not replaced by this roadmap publication.
+
+## What the plan must achieve
+
+| Requirement | Intended result |
+|---|---|
+| U1 — Fewer stops and approval requests | Continue within valid task scope; do not ask again for every file or phase |
+| U2 — No unnecessary token spending | Compact relevant context, deterministic administration and measured overhead |
+| U3 — Proportional product policies | One current decision route; optional failures do not disable the healthy core |
+| U4 — No incorrect product refusals | Express concrete authorized actions and multiple targets correctly |
+| U5 — Clean version transitions | Owned installation inventory, bounded cleanup, recoverability and preserved user data |
+
+These requirements apply to OPENCNTX-controlled behavior. They do not override
+provider policies, host capabilities, quotas or missing access. Valid authority
+is reused, real scope changes remain visible, and an explicit user stop is respected.
+
+## Six phases
+
+| Phase | Tasks | Outcome |
+|---|---|---|
+| A — Baseline and evidence | N01–N02 | Known source and reproducible regression cases |
+| B — Defects and friction | N03–N09 | Correct authority, useful routing, snapshot sync and strict input handling |
+| C — Installation and diagnosis | N10–N13 | Owned, recoverable updates and one read-only diagnosis |
+| D — Context and usability | N14–N17 | Compact resume context, measurements and a clear quickstart |
+| E — Selected extensions | N18–N21 | Optional host/export, scale evidence and broader pilot |
+| F — Release | N22–N24 | Automated provenance, scoped readiness and verified publication when requested |
+
+This is not a requirement to stop after each phase. Independent work can
+proceed once its actual dependencies are satisfied. Release automation can
+start early. Initial usability measurements do not wait for optional exports.
+
+## Task index
+
+| Task | Deliverable |
+|---|---|
+| N01 | Establish development source, reusable evidence and change scope |
+| N02 | Turn the four reproduced defects into official regression tests |
+| N03 | Bind concrete actions, authority and multiple targets |
+| N04 | Connect ANSWER_ONLY, LIGHT_TASK and GOVERNED_FLOW to real routes |
+| N05 | Bind sync preview and delivery to one immutable snapshot |
+| N06 | Bound Git operations and distinguish declared from verified privacy |
+| N07 | Reject cross-component update-path overlap before mutation |
+| N08 | Enforce unique capsule records and resource-bounded verification |
+| N09 | Harmonize critical JSON and filesystem checks |
+| N10 | Define installation ownership and supported compatibility |
+| N11 | Implement a journaled update state machine with recovery |
+| N12 | Prove upgrade, uninstall, rollback and orphaned-hook behavior |
+| N13 | Provide one read-only diagnosis with actionable explanations |
+| N14 | Deliver one compact, source-bound resume package |
+| N15 | Measure and budget actual context without bookkeeping model calls |
+| N16 | Compare friction, cost and quality early on equivalent tasks |
+| N17 | Simplify quickstart, upgrade guidance and capability status |
+| N18 | Demonstrate one optional host adapter |
+| N19 | Implement optional one-way Markdown/Obsidian export |
+| N20 | Benchmark scale and optimize only demonstrated bottlenecks |
+| N21 | Run the broader real-project pilot for broad adoption claims |
+| N22 | Automate exact release provenance and publication order |
+| N23 | Evaluate a concrete candidate against its actual scope |
+| N24 | Publish and verify public surfaces when the next release is requested |
+
+## Evidence and remaining work
+
+Release 1.7.0 has a matching tag/build-record commit, verified download assets,
+and eight successful CI jobs before publication. Runtime behavior remains
+that of 1.6.3 apart from the version string. These release facts are a baseline,
+not evidence that the roadmap improvements are complete.
+
+The review retained findings about sync snapshot drift, unbounded Git waits,
+declaration-only privacy, coarse authority/target classification, update-path
+overlap, capsule validation/resource limits, multi-component cutover semantics
+and unproven broad host/usability claims. The
+[release limitations](release-1.7.0.md) and full plan explain their boundaries.
+
+## Updates, context and practical acceptance
+
+The proposed updater inventories owned components, plans differences, checks
+paths/compatibility/locks, stages a candidate, tests it, activates under an
+explicit reader contract, reads back the active runtime and performs bounded
+cleanup. Unknown or user-modified content is preserved, not guessed away.
+A named rollback generation is not unexplained installation debris.
+
+Context measurements distinguish useful source material, product instructions,
+history, tool output and repeated content. Token estimates are labelled;
+unknown usage is not zero. No extra model call is required merely to count,
+format status or check mechanical authority. Quality must remain comparable
+when reporting savings.
+
+The full plan preserves a broad pilot of at least two full weeks **and**
+25 real tasks, including at least three genuine restarts/handoffs. This is
+required for the corresponding broad practice claims, not an automatic
+calendar gate for every narrowly scoped technical bugfix release. Optional
+host and export work is required only when that functionality is being delivered
+or claimed.
+
+## Scope boundaries
+
+No full rewrite, mandatory cloud/vector service, global stop guard,
+unlimited-authority mode, system-wide cleanup or automatic broad vault
+integration is part of this plan. Extensions reuse existing data and small
+interfaces rather than adding another general policy or agent layer.
+
+A plan, implemented functionality, release readiness, publication,
+installation and broad adoption are different statuses. Open or deferred work
+must never be reported as delivered.
+
+## Historical releases and references
+
+The diagram below describes the historical foundation milestones, not completion
+of the new N01–N24 plan.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
-  <img src="../assets/docs/roadmap.svg" alt="Four foundation milestones from the three-command core through the version 1.0.0 Production Stable line; later completed releases are listed below">
+  <img src="../assets/docs/roadmap.svg" alt="Historical foundation milestones through version 1.0.0, not the new planned tasks">
 </picture>
 
-## Completed foundation
+### Preserved broad-pilot safeguards
 
-### Reset and small runnable core
+The local R17 implementation is historical runtime groundwork, not proof of the
+new N-task improvements. A broad pilot remains a separate decision for one exact
+non-production-critical project, with a recorded baseline and reversible scope.
+It runs for at least two weeks and 25 real tasks, with at least
+three genuine restart or handoff events. Synthetic tasks may test the harness
+but never count as pilot success. Rollback restores the project's selected prior
+route and preserves evidence. Measurement completion grants no publication,
+installation, or adoption authority. These safeguards apply to N21 and its broad
+claims, not automatically to every narrowly scoped bugfix release.
 
-- established the OPENCNTX project and provider-neutral boundary;
-- added `init`, `pack`, and `verify`;
-- proved the core flow on Windows and Ubuntu.
-
-### Public v0.1.0
-
-- released the deterministic three-command context package flow;
-- documented explicit includes, exclusions, budgets, hashes, and drift;
-- kept AI, network, cloud, GUI, and provider integrations out of scope.
-
-### Workspace foundation
-
-- byte-exact source capture and receipts;
-- chapter revisions and replaceable local catalog;
-- append-only tasks with separate OWNER gates;
-- deterministic task-bound context navigation;
-- safe registration of already derived UTF-8 text;
-- proposed and approved playbooks and roles;
-- bounded executor packages that do not start execution;
-- compact current control snapshot for large roadmaps.
-
-### Public v0.2.0
-
-- released the complete current workspace foundation;
-- activated six-job Windows and Ubuntu CI;
-- added strict `main` protection and immutable release evidence;
-- published security, community, documentation, and brand surfaces.
-
-### Verifiable release preparation
-
-- added clean, independent wheel and sdist candidate builds;
-- separated byte-identical wheel proof from content-identical sdist proof;
-- added exact SHA-256 and unsigned build-record verification;
-- exercised install, core smoke, and uninstall on all six existing CI jobs;
-- documented one pinned `pipx` route and kept publication behind a separate
-  explicit decision.
-
-### Local workspace transaction integrity
-
-- added local single-writer workspace and task locks with exact state CAS;
-- added durable transaction intent, phase, completion, and recovery evidence;
-- added read-only interrupted-state diagnosis and explicit backup-first
-  recovery bound to transaction ID and intent SHA-256;
-- added real multiprocess conflict and forced-process-crash tests;
-- centralized symlink, junction/reparse, containment, and directory-flush
-  handling without adding a runtime dependency.
-
-### Objective attempt and deadloop evidence
-
-- replaced new free-text failure signatures with deterministic fingerprints
-  from command, target, input-digest, exit-status, and error-class facts;
-- bound attempts to one verified executor package, context manifest, allowed
-  action, and copied local evidence;
-- required digest-backed changed input or unique new evidence for a later
-  attempt;
-- added fixed semantic-repeat, total-attempt, cumulative-action, and
-  cumulative-duration blocks with read-only status explanations;
-- kept historical text attempts readable and kept execution, retry, truth
-  attestation, and cryptographic identity outside the product claim.
-
-### Privacy, storage, and format lifecycle
-
-- added read-only trust, permission, privacy, storage, and compatibility
-  evidence without printing original source paths or content;
-- added owner-private creation defaults and physical disk-space preflights for
-  bounded local writes;
-- packaged versioned schemas and a compatibility matrix while keeping existing
-  version-1 records unchanged and unknown future formats fail-closed;
-- added explicit allowlisted cleanup with a verified external checkpoint,
-  digest-bound restore, writer locking, compare-and-swap, and failure rollback;
-- kept encryption, team identities, distributed locking, automatic cleanup,
-  publication, and release changes outside the product claim.
-
-### Behavior-preserving internal simplification
-
-- retained `opencntx.cli` as the stable facade while separating six internal
-  command families and reducing every function to at most 180 lines;
-- centralized only byte-equivalent low-level helpers and kept domain errors,
-  formats, OWNER gates, paths, output, and exit behavior unchanged;
-- added exact CLI goldens, deterministic properties, selected typing, and
-  branch-coverage ratchets with pinned development-only tools;
-- kept the same six Windows/Ubuntu CI checks, no runtime dependency, and no
-  publication, upload, product expansion, or security-audit claim.
-
-### v0.3.0 Alpha line
-
-- versioned the integrated post-v0.2.0 work as package `0.3.0` while retaining
-  the `Development Status :: 3 - Alpha` maturity;
-- kept Python `>=3.11`, zero runtime dependencies, and the existing local,
-  provider-neutral product boundary;
-- defined the exact-tag installation route
-  `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v0.3.0"`
-  and exactly four GitHub Release assets: `opencntx-0.3.0-py3-none-any.whl`,
-  `opencntx-0.3.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`;
-- published v0.3.0 through its exact Git tag and matching GitHub Release.
-
-### v1.0.0 Production/Stable line
-
-- freezes the existing v1 public surface without adding product behavior;
-- versions the package as `1.0.0` with
-  `Development Status :: 5 - Production/Stable` maturity;
-- keeps Python `>=3.11`, zero runtime dependencies, and the existing local,
-  provider-neutral product boundary;
-- defines the exact-tag installation route
-  `pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.0.0"`
-  and exactly four GitHub Release assets:
-  `opencntx-1.0.0-py3-none-any.whl`, `opencntx-1.0.0.tar.gz`,
-  `SHA256SUMS`, and `BUILD-RECORD.json`;
-- published v1.0.0 through its exact Git tag and immutable GitHub Release;
-- aligned the complete documented CLI, including the optional workspace, with
-  the Production/Stable contract.
-
-### v1.1.0 universal roadmap continuity
-
-- added one local-first `flow` route for a complete bounded roadmap under one
-  explicit `AUTO PILOT` approval;
-- added a short check of only assignment-relevant existing files before every
-  detail, with explicit conflict and migration classification;
-- added restart-safe roadmap return and next-assignment triggering from a
-  hash-chained event ledger;
-- added automatic local storage for roadmaps, details, information,
-  documentation, compact context, receipts and history;
-- added deterministic capsule export, independent verification and restore;
-- added read-only file, Git, Markdown and JSON adapters;
-- added an optional filtered private Git/GitHub replica with preview,
-  non-force push, conflict stop and exact remote readback;
-- published exactly `opencntx-1.1.0-py3-none-any.whl`,
-  `opencntx-1.1.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`;
-- kept `v1.0.0` immutable and preserved all existing core and workspace routes.
-
-### v1.1.1 continuity correction
-
-- bound roadmap, detail, and context bytes to the original flow evidence;
-- counted recovery rounds per assignment and latched failed automatic sync;
-- generated English-only assignment details and expanded the language guard;
-- detected JSON passwords, `DB_PASSWORD`, and credential-bearing PostgreSQL
-  URLs before optional private synchronization;
-- added a latest-stable-tag version gate to prevent unreleased source changes
-  from reusing an immutable release version;
-- published exactly `opencntx-1.1.1-py3-none-any.whl`,
-  `opencntx-1.1.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
-  the immutable `v1.1.0` and `v1.0.0` releases.
-
-### v1.2.0 bounded continuity and order
-
-- added a read-only BOUNDED PERFECTION order contract and deterministic layout
-  planning with exact changed-base refusal;
-- added content-addressed handoffs, checkpoint receipts, capsule restoration,
-  and a provider-neutral host status/claim/resume protocol;
-- made optional replica behavior explicit at every PASS, FAIL, and BLOCKED
-  checkpoint while preserving the canonical local store after sync failure;
-- expanded universal-English and secret-policy coverage across generated
-  output, database URL families, environment assignments, and exports;
-- passed 459 local tests plus 100 assignments, 200 process restarts, eight
-  concurrent writers, bounded recovery, and 120 layout-chaos scenarios;
-- published exactly `opencntx-1.2.0-py3-none-any.whl`,
-  `opencntx-1.2.0.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
-  every earlier immutable release.
-
-### v1.2.1 feature-freeze optimization
-
-- optimized the existing dependency graph, continuity ledger, security scan,
-  and large-layout audit without adding a command, schema, product layer,
-  runtime dependency, distribution route, or mandatory migration;
-- reduced the accepted 1,000-assignment Windows stress profile from 493.199 to
-  289.977 seconds, approximately 41.2 percent, with complete and healthy final
-  state;
-- passed 477 tests, 72 of 72 R9 checks, the complete R10 stress profile,
-  concurrent-writer refusal, restart recovery, and a deterministic 20,000-file
-  layout audit;
-- published exactly `opencntx-1.2.1-py3-none-any.whl`,
-  `opencntx-1.2.1.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json` while preserving
-  every earlier immutable release.
-
-### v1.3.0 R11 adaptive workflow
-
-- locally proved durable execution state, restart and rollover continuity,
-  plain-language presentation and equivalent interactive or CLI start choices;
-- locally proved transactional updates, adaptive storage, a 4,000+ scale bridge
-  and risk-based assurance in one composed synthetic simulation;
-- added opt-in specification-companion and external-continuity contracts while
-  keeping the core local, provider-neutral and free of new runtime dependencies;
-- published immutable v1.3.0 after separate Draft-PR, merge, CI and release
-  gates while preserving v1.2.1 and all earlier history; no package-index
-  publication was added.
-
-### v1.4.0 R12 visual system release
-
-- added the provider-neutral VISUAL_ARTIST and joint bounded-perfection review
-  contract without granting either role OWNER authority;
-- added canonical tokens, component states, content order, surface inventory,
-  a dependency-free local website and deterministic visual quality gate;
-- passed the representative visual/core pilot and received explicit OWNER
-  acceptance of the visual direction;
-- integrated v1.4.0 through its separate GitHub and release gates while
-  preserving immutable Stable v1.3.0 and all earlier history.
-
-## Current state
-
-The v1.6.0 R17 release added proportional answer-only, light-task, and governed
-profiles; four-stage recovery with whole-chain analysis; restart-safe recovery
-handoff; and a bounded Combo Roadmap with atomic generations, query, comparison,
-supersession, epochs, and long-horizon sharding. Existing core packaging,
-workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
-
-The v1.6.1 patch connects roadmap views and Combo to source revisions, preserves
-repair return steps, and adds project/profile update checks. Version v1.6.3
-continues an already approved roadmap after an assignment completes.
-Version v1.7.0 retains that runtime and aligns public version documentation.
-
-- Source release target: `v1.7.0`
-- Package version: `1.7.0`
-- Maturity: release; new roadmap implementation and field pilot are outstanding
-- Runtime dependencies: none
-- CI: `CI_ACTIVE`
-- Product focus: proportional local context and restart-safe governed work
-- Published availability: the exact `v1.7.0` tag and matching GitHub Release are
-  authoritative; source state alone is not publication. Earlier releases stay immutable.
-- Release distribution: exact `opencntx-1.7.0-py3-none-any.whl`,
-  `opencntx-1.7.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
-  TestPyPI package
-
-## Future work
-
-The improvement plan covers six areas: release traceability; sync and capsule
-reliability; proportional authorization and fewer unnecessary stops; owned,
-recoverable installation/update cleanup; compact handoff and optional Markdown
-export; and measured token overhead plus a real-world pilot. These are planned,
-not new capabilities of v1.7.0. The owner requested immediate publication before
-that implementation and pilot. This is a disclosed release-scope change, not
-evidence that the original acceptance criteria passed.
-
-No future feature is promised by this page. A next item becomes active only
-after a separate bounded proposal, explicit OWNER approval, implementation,
-tests, review, and merge.
-
-Ideas are evaluated against the product boundary. AI calls, automatic agents,
-cloud synchronization, OCR, transcription, embeddings, databases, GUI, MCP,
-or other expansion are not implied roadmap commitments.
-
-### Later real-project pilot protocol
-
-A real R17 pilot can begin only after the local R17 implementation and its
-Windows, Ubuntu, package-only, recovery, privacy, rollback, and scale evidence
-are green. The pilot itself remains a separate decision. The OWNER must choose
-one exact existing project and approve its scope before any project state is
-changed.
-
-The selected project must contain real multi-step work over at least two weeks,
-have a known private-data boundary, permit a reversible return to its prior
-OPENCNTX route, and avoid a production-critical first trial. A baseline is
-recorded before activation. Synthetic tasks may test the harness but never
-count as pilot success.
-
-The pilot records these measures per route and for the whole period:
-
-- time to the first useful answer and to a completed task;
-- safety checks, durable artifacts, and state writes by profile;
-- automatic promotions, warnings, hard blocks, and any incorrect route choice;
-- recovery stage, failure layer, repeated approach rejection, and final result;
-- restart and handoff readback, unresolved outcomes, and rollback use;
-- Combo size, query result limit, lookup time, supersession, and epoch growth;
-- OWNER interventions and any avoidable friction on simple work.
-
-The review point is the later of two full weeks or 25 real tasks, with at least
-three genuine restart or handoff events. Stop immediately on an authority,
-privacy, integrity, single-writer, or rollback failure. Rollback restores the
-project's pinned pre-pilot route and preserves the evidence needed to explain
-the stop. Completion of the measurements grants no publication, installation,
-or adoption authority; the OWNER evaluates the result separately.
-
-The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
-retained from Stable v1.4.0 in the v1.6.1 release target.
-
-## Related pages
-
-- [How it works](how-it-works.md)
-- [Platforms](platforms.md)
+- [Full roadmap — Dutch](roadmap-plan.nl.md)
+- [Release v1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0)
+- [CI for the 1.7.0 release commit](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/34386717966)
+- [Historical roadmap as shipped with 1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.0/docs/roadmap.md)
 - [Changelog](../CHANGELOG.md)
-- [Contribution guide](../CONTRIBUTING.md)
-
-[Documentation home](README.md)

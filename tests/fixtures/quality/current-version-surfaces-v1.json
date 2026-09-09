@@ -12,10 +12,10 @@
     {
       "path": "README.md",
       "patterns": [
-        "\\*\\*v{version} Stable release\\*\\*",
+        "\\*\\*v{version} Local candidate\\*\\*",
         "\\| Package \\| `opencntx {version}`"
       ],
-      "purpose": "Primary public landing page release and package claims"
+      "purpose": "Primary public landing page source candidate and package claims"
     },
     {
       "path": "site/index.html",

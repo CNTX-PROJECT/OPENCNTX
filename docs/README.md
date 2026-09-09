@@ -3,6 +3,10 @@
 Current release: **v1.7.0**. Read [what changed and what remains planned](release-1.7.0.md)
 before assuming the new improvement roadmap is implemented.
 
+The [new public roadmap](roadmap.md) has six phases and 24 planned tasks.
+Read the [full Dutch plan](roadmap-plan.nl.md) for dependencies and acceptance
+criteria. The 1.7.1 source candidate publishes documentation, not a new software release.
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 You do not need to read every page. Choose what you want to do, follow the

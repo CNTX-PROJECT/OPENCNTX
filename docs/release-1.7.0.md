@@ -17,6 +17,10 @@ number and Stable distribution label do not certify those new acceptance criteri
 
 ## Planned, not delivered in 1.7.0
 
+The current [public roadmap](roadmap.md) now provides six phases and 24 tasks,
+with a [full Dutch implementation plan](roadmap-plan.nl.md). This living link
+does not change the contents or claims of the immutable 1.7.0 tag and artifacts.
+
 - Fewer unnecessary approvals and stops through precise reusable authorization.
 - Measured context/token budgets and reduced duplicate context or model calls.
 - Simplified product policies without overriding provider or host boundaries.

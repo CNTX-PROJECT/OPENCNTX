@@ -111,6 +111,11 @@ gate.
 
 ## Where should I start?
 
+For planned improvements, read the [new roadmap overview](roadmap.md) and
+[full Dutch plan](roadmap-plan.nl.md). All 24 new tasks are planned, not delivered.
+The published software remains 1.7.0; the 1.7.1 source candidate only reserves
+a post-release documentation version. It is not an implementation release.
+
 Use [Start here](start-here.md) for installation and your first package.
 
 [Documentation home](README.md)
