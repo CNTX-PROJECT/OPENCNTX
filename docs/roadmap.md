@@ -213,22 +213,25 @@ features or expose private project records.
 
 ## Current state
 
-The v1.6.0 R17 release adds proportional answer-only, light-task, and governed
+The v1.6.0 R17 release added proportional answer-only, light-task, and governed
 profiles; four-stage recovery with whole-chain analysis; restart-safe recovery
 handoff; and a bounded Combo Roadmap with atomic generations, query, comparison,
 supersession, epochs, and long-horizon sharding. Existing core packaging,
 workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
 
-- Source release target: `v1.6.0`
-- Package version: `1.6.0`
+The v1.6.1 patch connects roadmap views and Combo to source revisions, preserves
+repair return steps, and adds project/profile update checks.
+
+- Source release target: `v1.6.1`
+- Package version: `1.6.1`
 - Maturity: Production/Stable
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: proportional local context and restart-safe governed work
-- Published availability: the exact `v1.6.0` tag and matching GitHub Release are
+- Published availability: the exact `v1.6.1` tag and matching GitHub Release are
   authoritative; source state alone is not publication. Earlier releases stay immutable.
-- Release distribution: exact `opencntx-1.6.0-py3-none-any.whl`,
-  `opencntx-1.6.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
+- Release distribution: exact `opencntx-1.6.1-py3-none-any.whl`,
+  `opencntx-1.6.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`; no PyPI or
   TestPyPI package
 
 ## Future work
@@ -273,7 +276,7 @@ the stop. Completion of the measurements grants no publication, installation,
 or adoption authority; the OWNER evaluates the result separately.
 
 The [adaptive AI workflow](adaptive-ai-workflow.md) and R12 visual system are
-retained from Stable v1.4.0 in the v1.6.0 release target.
+retained from Stable v1.4.0 in the v1.6.1 release target.
 
 ## Related pages
 

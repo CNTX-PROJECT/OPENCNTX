@@ -14,7 +14,7 @@ privacy, integrity, and evidence checks.
 
 ## Fast route
 
-The commands in this guide remain Stable in the current v1.6.0 release. The
+The commands in this guide remain Stable in the current v1.6.1 release. The
 [adaptive AI workflow](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice
 without changing authority. It does not add a released CLI command.
@@ -282,8 +282,8 @@ projects remain outside this product route.
 
 ## Connected current views
 
-Local v1.6.1 candidate only: these additions have not been published or installed.
-The v1.6.0 installation instructions remain the Stable distribution path.
+These additions target v1.6.1. Published availability requires the matching
+GitHub tag, Release and verified artifacts; installation never activates a host hook.
 
 `flow start --connected` opts into a revision-bound current view. `flow current`
 reads status without creating a missing flow. `flow current --publish` needs
