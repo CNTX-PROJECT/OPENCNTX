@@ -1,3 +1,3 @@
 """OPENCNTX public package."""
 
-__version__ = "1.6.2"
+__version__ = "1.6.3"

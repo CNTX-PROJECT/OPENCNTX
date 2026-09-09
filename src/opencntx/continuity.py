@@ -1975,10 +1975,17 @@ def decide_finalization(
                 decision = "COMPLETE_ROADMAP"
                 reason = "ROADMAP_TERMINAL_PROOF"
                 next_action = "NONE"
+            elif capsule.get("current_assignment"):
+                decision = "CONTINUE"
+                reason = "APPROVED_NEXT_ASSIGNMENT"
+                next_action = (
+                    "Continue the exact next approved roadmap assignment: "
+                    f"{capsule['next_assignment_after_completion']}."
+                )
             else:
                 decision = "COMPLETE_ASSIGNMENT"
-                reason = "ASSIGNMENT_TERMINAL_PROOF"
-                next_action = "Request authority for the next roadmap assignment."
+                reason = "ASSIGNMENT_IDENTITY_MISSING"
+                next_action = "Request the missing assignment identity before continuation."
         elif (
             capsule.get("assignment_status") in {"ACTIVE", "RECOVERY_REQUIRED"}
             and capsule.get("current_assignment")
