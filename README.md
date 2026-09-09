@@ -9,21 +9,21 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.6.1 Stable release target** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.6.2 Local candidate** · **v1.6.1 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
-**Local candidate: v1.6.1.** Not published or installed; Stable links below remain v1.6.0. See [candidate behavior](docs/continuity.md#connected-current-views).
+**Local candidate: v1.6.2.** Not published or installed; published Stable links below remain v1.6.1. See [candidate behavior](docs/continuity.md#connected-current-views).
 OPENCNTX gives an AI selected local context without handing over an entire project.
 It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.
 
-## New in v1.6.1: connected roadmaps and safe update preflight
+## New in v1.6.2: return to the original roadmap after a solved repair
 
-Revision-bound views retain original outcomes through repair and return. Update preflight checks project state and version profiles while preserving authority and rollback guards. See [Continuity](docs/continuity.md).
+An exact solved repair resumes its ready parent-roadmap step; ambiguous or changed recovery fails closed. See [Continuity](docs/continuity.md).
 
 ## New in v1.5.0: keep the work tied to the goal
 
@@ -151,8 +151,9 @@ route—never in a public issue.
 
 | Item | Proven state |
 |---|---|
-| Release target | `v1.6.1`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
-| Package | `opencntx 1.6.1`; every v1.4.0 CLI route and supported durable-format read is retained |
+| Candidate target | `v1.6.2`; local only, not published or installed |
+| Published stable | `v1.6.1`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
+| Package | `opencntx 1.6.2`; every v1.4.0 CLI route and supported durable-format read is retained |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |

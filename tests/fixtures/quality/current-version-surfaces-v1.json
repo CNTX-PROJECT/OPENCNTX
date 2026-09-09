@@ -12,11 +12,10 @@
     {
       "path": "README.md",
       "patterns": [
-        "\\*\\*v{version} Stable release target\\*\\*",
+        "\\*\\*v{version} Local candidate\\*\\*",
         "\\| Package \\| `opencntx {version}`"
       ],
-      "purpose": "Primary public landing page current release and package claims",
-      "version_source": "published"
+      "purpose": "Primary public landing page local candidate and package claims"
     },
     {
       "path": "site/index.html",
@@ -58,17 +57,15 @@
         "Source release target: `v{version}`",
         "Package version: `{version}`"
       ],
-      "purpose": "Public roadmap current release contract",
-      "version_source": "published"
+      "purpose": "Public roadmap current candidate contract"
     },
     {
       "path": "docs/release-artifacts.md",
       "patterns": [
-        "Stable release target is `v{version}`",
-        "opencntx-{version}-py3-none-any\\.whl"
+        "local release helper emits exactly four v{version} candidate files",
+        "--expected-version {version}"
       ],
-      "purpose": "Current release artifact contract",
-      "version_source": "published"
+      "purpose": "Current candidate artifact contract"
     }
   ]
 }

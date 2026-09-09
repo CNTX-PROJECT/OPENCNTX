@@ -282,8 +282,9 @@ projects remain outside this product route.
 
 ## Connected current views
 
-These additions target v1.6.1. Published availability requires the matching
-GitHub tag, Release and verified artifacts; installation never activates a host hook.
+These additions target the local v1.6.2 candidate. Published availability remains
+v1.6.1 until a matching GitHub tag, Release and verified artifacts exist;
+installation never activates a host hook.
 
 `flow start --connected` opts into a revision-bound current view. `flow current`
 reads status without creating a missing flow. `flow current --publish` needs

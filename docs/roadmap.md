@@ -220,11 +220,12 @@ supersession, epochs, and long-horizon sharding. Existing core packaging,
 workspace routes, durable v1 reads, and the v1.5.0 goal-bound workflow remain.
 
 The v1.6.1 patch connects roadmap views and Combo to source revisions, preserves
-repair return steps, and adds project/profile update checks.
+repair return steps, and adds project/profile update checks. The local v1.6.2
+candidate adds explicit return to the parent roadmap after a solved repair.
 
-- Source release target: `v1.6.1`
-- Package version: `1.6.1`
-- Maturity: Production/Stable
+- Source release target: `v1.6.2`
+- Package version: `1.6.2`
+- Maturity: Local candidate; not published or installed
 - Runtime dependencies: none
 - CI: `CI_ACTIVE`
 - Product focus: proportional local context and restart-safe governed work
