@@ -37,14 +37,20 @@ MAX_VIEW_BYTES = 20 * 1024
 
 def _view_path(root: Path, relative: str = "") -> Path:
     """Reject existing alias components before any view read or write."""
-    base = root.resolve(strict=True)
-    path = base / ".opencntx" / "continuity" / "views" / relative
-    current = base
-    for part in path.relative_to(base).parts:
-        current = current / part
-        if current.is_symlink() or (current.exists() and _is_reparse(current)):
-            raise _fail("connected_path_unsafe", "Connected paths cannot contain aliases.")
-    return path
+    try:
+        base = root.resolve(strict=True)
+        path = base / ".opencntx" / "continuity" / "views" / relative
+        current = base
+        for part in path.relative_to(base).parts:
+            current = current / part
+            if current.is_symlink() or (current.exists() and _is_reparse(current)):
+                raise _fail("connected_path_unsafe", "Connected paths cannot contain aliases.")
+        return path
+    except OSError as exc:
+        raise _fail(
+            "connected_path_inaccessible",
+            "Connected paths cannot be accessed in this environment.",
+        ) from exc
 
 
 def compile_connected_state(

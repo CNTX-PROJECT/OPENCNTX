@@ -249,6 +249,18 @@ class ConnectedTests(unittest.TestCase):
             with self.assertRaisesRegex(ContinuityError, "aliases"):
                 self.publish()
 
+    def test_cli_reports_inaccessible_view_without_traceback(self):
+        self.start()
+        self.publish()
+        output = io.StringIO()
+        with (
+            patch.object(Path, "is_symlink", side_effect=PermissionError("denied")),
+            contextlib.redirect_stderr(output),
+        ):
+            self.assertEqual(main(["flow", "current", "--root", str(self.root)]), 2)
+        self.assertIn("connected_path_inaccessible", output.getvalue())
+        self.assertNotIn("Traceback", output.getvalue())
+
     def test_real_directory_link_cannot_redirect_views(self):
         self.start()
         self.publish()
