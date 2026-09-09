@@ -1077,8 +1077,9 @@ def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
                 )
             os.lseek(descriptor, 0, os.SEEK_SET)
             if os.name == "nt":
-                import msvcrt
+                import importlib
 
+                msvcrt = importlib.import_module("msvcrt")
                 if not legacy:
                     os.write(descriptor, b"OPENCNTX_OS_LOCK_V2\n")
                     os.fsync(descriptor)
@@ -1111,8 +1112,9 @@ def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
         if descriptor is not None:
             try:
                 if os.name == "nt":
-                    import msvcrt
+                    import importlib
 
+                    msvcrt = importlib.import_module("msvcrt")
                     os.lseek(descriptor, 0, os.SEEK_SET)
                     msvcrt.locking(descriptor, msvcrt.LK_UNLCK, 1)
                 else:
