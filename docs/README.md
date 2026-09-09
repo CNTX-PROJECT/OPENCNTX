@@ -3,9 +3,9 @@
 Current release: **v1.7.1**. Read [what changed and what remains planned](release-1.7.1.md)
 before assuming the new improvement roadmap is implemented.
 
-The [new public roadmap](roadmap.md) has six phases and 24 planned tasks.
+The [roadmap for 1.7.2](roadmap.md) has six phases and 24 planned tasks.
 Read the [full Dutch plan](roadmap-plan.nl.md) for dependencies and acceptance
-criteria. Release 1.7.1 packages this documentation; the planned features are not implemented.
+criteria. Revision 3 incorporates the deeper 1.7.0/1.7.1 review; this publishes the plan, not software release 1.7.2.
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 

@@ -2,6 +2,18 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.2 - Unreleased roadmap candidate
+
+- Publish planning revision 3 for the 1.7.2 update, based on the deeper review
+  of 1.7.0 and 1.7.1. Retain N01–N24 and map all ten additional findings.
+- Prioritize precise authority, idempotent progress, isolated optional failures,
+  durable decisions, complete search coverage and generation-based updates.
+- Align the public overview, Dutch plan and landing-page references. Omit
+  private notes and local evidence paths.
+- Reserve source version 1.7.2 under the post-release version rule. All roadmap
+  tasks remain planned; runtime behavior and published release 1.7.1 are unchanged.
+  No software release, installation or host activation is performed.
+
 ## 1.7.1 - 2026-09-09
 
 - Publish the detailed Dutch roadmap with six phases, 24 tasks, dependencies,

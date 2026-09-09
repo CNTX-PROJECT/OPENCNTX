@@ -18,7 +18,11 @@ class PublicRoadmapTests(unittest.TestCase):
             self.assertIn(f"V{index:02d}", text)
         for index in range(1, 17):
             self.assertIn(f"F{index:02d}", text)
-        self.assertIn("target_version: null", text)
+        self.assertIn("target_version: 1.7.2", text)
+        self.assertIn("planning_revision: 3", text)
+        for index in range(1, 11):
+            self.assertIn(f"D{index:02d}", text)
+        self.assertIn("geen software-release 1.7.2", text)
         self.assertEqual(24, len(re.findall(r"^- \[ \] \*\*Status: Gepland", text, re.MULTILINE)))
 
     def test_public_plan_has_no_private_note_or_drive_links(self) -> None:
