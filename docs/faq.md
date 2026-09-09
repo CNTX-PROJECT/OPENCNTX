@@ -112,7 +112,7 @@ gate.
 ## Where should I start?
 
 For planned improvements, read the [1.7.2 roadmap overview](roadmap.md) and
-[full Dutch plan](roadmap-plan.nl.md). All 24 new tasks are planned, not delivered.
+[full English plan](roadmap-plan.md). All 24 new tasks are planned, not delivered.
 The published software is 1.7.1, a documentation release with the same runtime
 behavior as 1.7.0. It is not an implementation of the new roadmap.
 
