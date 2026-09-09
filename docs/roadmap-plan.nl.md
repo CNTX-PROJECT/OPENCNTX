@@ -19,7 +19,7 @@ public_overview: "roadmap.md"
 
 **Doel:** de bestaande contextkern betrouwbaar eenvoudiger maken: minder onnodige vragen en stops, geen onterechte eigen weigeringen, meetbaar zuinige context en voorspelbare updates die gebruikersdata behouden.
 
-Dit is de volledige publieke Nederlandstalige planning op basis van de beoordeling van 1.7.0. Zie het [Engelstalige overzicht](roadmap.md) en de [release-inhoud en bekende beperkingen](release-1.7.0.md). Privépaden, lokale bewijsbestanden en persoonlijke historisch hookscenarios zijn niet opgenomen. Taken en acceptatiecriteria zijn behouden; publicatie betekent niet dat de verbeteringen uitgevoerd zijn.
+Dit is de volledige publieke Nederlandstalige planning op basis van de beoordeling van 1.7.0. Zie het [Engelstalige overzicht](roadmap.md) en de [release-inhoud en bekende beperkingen](release-1.7.0.md). Privépaden, lokale bewijsbestanden en persoonlijke herstelgegevens zijn niet opgenomen. Taken en acceptatiecriteria zijn behouden; publicatie betekent niet dat de verbeteringen uitgevoerd zijn.
 
 | Onderdeel | Actuele stand |
 |---|---|
@@ -422,7 +422,7 @@ Deze intervallen zijn ontwerpbegrotingen, geen minimumverbruik, bewezen besparin
 - Bind export aan één gekozen bestand of herkenbare gegenereerde sectie en bronrevisie.
 - Behoud menselijke inhoud en detecteer gelijktijdige edits.
 - Lees geschreven inhoud terug vóór aflevering als geslaagd geldt.
-- Test offline bestemming, filelock, herhaalde aflevering en OneDrive-conflictgedrag.
+- Test offline bestemming, filelock, herhaalde aflevering en conflictgedrag van de gekozen synchronisatiemap.
 - Houd machine-store en menselijke projectie gescheiden.
 
 **Acceptatie:** menselijke edits worden niet stilzwijgend overschreven; een mislukte export is geen groen ontvangstbewijs en maakt lokale taakvoortgang niet onbruikbaar. Geen brede vaultscan, automatische tweerichtingssynchronisatie of impliciete toegang tot andere notities.

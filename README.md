@@ -16,15 +16,8 @@
 </div>
 
 **Release scope:** v1.7.0 aligns the package version and public documentation. Runtime behavior is unchanged from v1.6.3. The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.0.md).
-
-**New public roadmap:** [six phases and 24 planned tasks](docs/roadmap.md), with the
-[full detailed plan in Dutch](docs/roadmap-plan.nl.md). It covers fewer unnecessary
-stops/approvals, measured token overhead, reliable sync, recoverable clean updates
-and compact handoff. Publishing the plan does not implement it. The 1.7.1 source
-candidate is a documentation-only version reservation required by the repository;
-the published software remains 1.7.0 and the roadmap implementation version is undecided.
-OPENCNTX gives an AI selected local context without handing over an entire project.
-It also keeps a roadmap and restart-safe evidence outside the chat.
+**Local candidate: v1.7.1.** Documentation-only reservation, not a new release. Read the [six-phase, 24-task roadmap](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). Improvements remain planned; the published software is 1.7.0 and the implementation version is undecided.
+OPENCNTX gives an AI selected local context without handing over an entire project. It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.
 

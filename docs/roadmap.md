@@ -1,6 +1,8 @@
 # Public roadmap
 
-[Overview](../README.md) · [Documentation](README.md) · [Release scope](release-1.7.0.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+
+[Release scope](release-1.7.0.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
 
 ## Current status
 
@@ -8,7 +10,7 @@ The new roadmap is published as a plan, not as implemented functionality.
 It contains **six phases and 24 tasks (N01–N24)**. All tasks are planned;
 none of these new implementation tasks is marked complete.
 
-- Published software baseline: **v1.7.0**.
+- Published Stable software baseline: **v1.7.0**.
 - Source release target: `v1.7.1` (unpublished documentation candidate only).
 - Package version: `1.7.1`.
 - The version increment is required by the existing repository rule for
@@ -21,6 +23,10 @@ The [complete Dutch plan](roadmap-plan.nl.md) contains the detailed work,
 acceptance criteria, dependencies, five user requirements, evidence mapping
 and restart instructions. This English page is an overview of that plan,
 not an independently maintained task ledger.
+
+The existing 1.7.0 distribution contains exactly
+opencntx-1.7.0-py3-none-any.whl, opencntx-1.7.0.tar.gz, SHA256SUMS and
+BUILD-RECORD.json. Those release files are not replaced by this roadmap publication.
 
 ## What the plan must achieve
 
@@ -126,6 +132,26 @@ installation and broad adoption are different statuses. Open or deferred work
 must never be reported as delivered.
 
 ## Historical releases and references
+
+The diagram below describes the historical foundation milestones, not completion
+of the new N01–N24 plan.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
+  <img src="../assets/docs/roadmap.svg" alt="Historical foundation milestones through version 1.0.0, not the new planned tasks">
+</picture>
+
+### Preserved broad-pilot safeguards
+
+The local R17 implementation is historical runtime groundwork, not proof of the
+new N-task improvements. A broad pilot remains a separate decision for one exact
+non-production-critical project, with a recorded baseline and reversible scope.
+It runs for at least two weeks and 25 real tasks, with at least
+three genuine restart or handoff events. Synthetic tasks may test the harness
+but never count as pilot success. Rollback restores the project's selected prior
+route and preserves evidence. Measurement completion grants no publication,
+installation, or adoption authority. These safeguards apply to N21 and its broad
+claims, not automatically to every narrowly scoped bugfix release.
 
 - [Full roadmap — Dutch](roadmap-plan.nl.md)
 - [Release v1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0)
