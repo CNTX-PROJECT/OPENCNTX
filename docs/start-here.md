@@ -190,6 +190,10 @@ introduced in v1.4.0 and retained in v1.7.0, read the
 
 ## Upgrade or remove OPENCNTX
 
+The new [roadmap](roadmap.md) plans owned, recoverable clean updates; that
+algorithm is not delivered by publishing the plan. The 1.7.1 documentation
+candidate is not a new published install target. The examples above remain pinned to 1.7.0.
+
 For an upgrade, clone the next approved tag into a fresh directory and install
 it there. Replacing files in an old clone is not a clean-upgrade proof.
 

@@ -9,13 +9,20 @@
 
 **Turn selected local files into a small, reviewable context package—with exact byte evidence.**
 
-**v1.7.0 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
+**v1.7.1 Local candidate** · **v1.7.0 Stable release** · **Local first** · **Any model** · **Zero runtime dependencies**
 
 [Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · [Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · [Commands](docs/commands.md) · [Security](docs/security.md) · [All guides](docs/README.md)
 
 </div>
 
 **Release scope:** v1.7.0 aligns the package version and public documentation. Runtime behavior is unchanged from v1.6.3. The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.0.md).
+
+**New public roadmap:** [six phases and 24 planned tasks](docs/roadmap.md), with the
+[full detailed plan in Dutch](docs/roadmap-plan.nl.md). It covers fewer unnecessary
+stops/approvals, measured token overhead, reliable sync, recoverable clean updates
+and compact handoff. Publishing the plan does not implement it. The 1.7.1 source
+candidate is a documentation-only version reservation required by the repository;
+the published software remains 1.7.0 and the roadmap implementation version is undecided.
 OPENCNTX gives an AI selected local context without handing over an entire project.
 It also keeps a roadmap and restart-safe evidence outside the chat.
 
@@ -153,7 +160,7 @@ route—never in a public issue.
 |---|---|
 | Release scope | Version/documentation alignment; roadmap implementation and pilot remain outstanding |
 | Published stable | `v1.7.0`; [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases) is authoritative for published availability; earlier releases stay immutable |
-| Package | `opencntx 1.7.0`; every v1.4.0 CLI route and supported durable-format read is retained |
+| Package | `opencntx 1.7.1`; unpublished documentation candidate; runtime behavior retained from 1.7.0 |
 | Python | 3.11, 3.12, 3.13, and 3.14 |
 | Tested systems | Windows and Ubuntu |
 | CI | `CI_ACTIVE`; eight required live Windows/Ubuntu and Python jobs |
@@ -177,4 +184,4 @@ for the exact build, checksum and verification boundary.
 - Changes and release history: [CHANGELOG.md](CHANGELOG.md)
 - Questions and reproducible bugs: [SUPPORT.md](SUPPORT.md)
 - Contributions and local checks: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Completed milestones: [Public roadmap](docs/roadmap.md)
+- Planned improvements and release baseline: [Public roadmap](docs/roadmap.md)

@@ -2,6 +2,16 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.1 - Unreleased documentation candidate
+
+- Publish the detailed Dutch roadmap with six phases, 24 tasks, dependencies,
+  acceptance criteria and explicit separation of release, installation and adoption.
+- Replace the public roadmap overview and update current README, documentation
+  and website references. Private paths and personal recovery notes are omitted.
+- Reserve this source version because the repository requires a newer version
+  for post-release documentation. No new software release or roadmap feature is
+  delivered; the published distribution remains 1.7.0.
+
 ## 1.7.0 - 2026-09-09
 
 - Align package/runtime version, current public documentation, installation

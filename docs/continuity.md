@@ -282,6 +282,10 @@ projects remain outside this product route.
 
 ## Connected current views
 
+For planned improvements to authority reuse, compact resume and host behavior,
+see the [new public roadmap](roadmap.md). Those new tasks are not implemented
+by the current documentation candidate.
+
 These existing features are retained in v1.7.0 from the v1.6.x line.
 The matching GitHub Release establishes published availability;
 installation never activates a host hook. The new improvement roadmap is
