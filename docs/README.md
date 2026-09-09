@@ -1,122 +1,80 @@
-# OPENCNTX documentation
+# Documentation
 
-Current release: **v1.7.1**. Read [what changed and what remains planned](release-1.7.1.md)
-before assuming the new improvement roadmap is implemented.
+[Project home](../README.md) · [Get started](start-here.md) · [Roadmap](roadmap.md) · [Releases](releases.md) · [Support](../SUPPORT.md)
 
-The [roadmap for 1.7.2](roadmap.md) has six phases and 24 planned tasks.
-Read the [full English plan](roadmap-plan.md) for dependencies and acceptance
-criteria. Revision 3 incorporates the deeper 1.7.0/1.7.1 review; this publishes the plan, not software release 1.7.2.
+Choose the smallest route that matches your task. You do not need to read
+every guide.
 
-[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+The default route remains [Get started](start-here.md): initialize, preview,
+pack, inspect and verify. Workspace and continuity are optional.
 
-You do not need to read every page. Choose what you want to do, follow the
-smallest matching route, and open the technical reference only when you need
-more detail.
+## Start here
 
-The default route remains [Get started](start-here.md): `init`, `pack
---preview`, `pack`, inspect, and `verify`. Workspace, layout, and continuity are
-optional routes for projects that already need those existing controls.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
-  <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review and verify a small context package, then decide whether to share it">
-</picture>
-
-## Start with a goal
-
-| I want to… | Best page |
+| You need… | Read |
 |---|---|
-| install OPENCNTX and build a first package | [Get started](start-here.md) |
-| understand the product in five minutes | [How it works](how-it-works.md) |
-| learn the three-command core | [Core commands](core.md) |
-| organize a longer project | [Workspace](workspace.md) |
-| audit roots, naming, ownership, and duplicates without writes | [Bounded workspace order](layout.md) |
-| keep a complete roadmap moving with one approval | [Roadmap continuity](continuity.md) |
-| understand the Stable v1.6.0 AI and visual workflow | [Adaptive AI workflow](adaptive-ai-workflow.md) |
-| look up an exact command | [Command reference](commands.md) |
-| solve a failure | [Troubleshooting](troubleshooting.md) |
-| understand what stays local | [Security in plain language](security.md) |
-| understand the visual system and its boundaries | [Visual system](visual-system.md) |
+| Installation, a first package, updates or removal | [Get started](start-here.md) |
+| A short explanation of the product | [How it works](how-it-works.md) |
+| The latest development plan | [Roadmap](roadmap.md) — 1.7.3; [complete plan](roadmap-plan.md) |
+| Published software versus future work | [Releases and current status](releases.md) |
+| Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
+
+Current software: **v1.7.1**. The 1.7.3 roadmap is planned work, not a release.
+See [release scope](release-1.7.1.md) before assuming an improvement is implemented.
 
 ## Core package guides
 
-The core route is the shortest path: choose files, preview, pack, inspect, and
-verify.
+For selecting local files and preparing reviewable context.
 
-- [Core commands](core.md) — exact behavior of `init`, `pack`, and `verify`.
-- [Context packages](context-packets.md) — package files, limits, hashes, and
-  source drift.
-- [Contracts and compatibility](contracts-and-compatibility.md) — the frozen
-  1.0 public surface and durable-format rules.
+- [Core commands](core.md) — initialize, preview, pack and verify.
+- [Context packages](context-packets.md) — files, budgets, hashes and source drift.
+- [Security in plain language](security.md) — privacy, exclusions and limitations.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
+  <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review a small context package, verify exact bytes and choose whether to share">
+</picture>
 
 ## Stable workspace guides
 
-The workspace is optional. Use it when a project needs more structure than one
-context package.
+For longer projects that need more structure than one context package.
 
-- [Workspace](workspace.md) — create the directory, capture sources, diagnose
-  writes, and understand the normal project flow.
-- [Chapters and catalog](chapters-and-catalog.md) — turn supplied sources into
-  reviewed knowledge and rebuild the local index.
-- [Context navigation](context-navigation.md) — include only the approved hot
-  and warm context for one task.
-- [Media and derived text](media.md) — register text that another tool already
-  produced without confusing it with the original file.
-- [Privacy, storage, and format lifecycle](privacy-storage-lifecycle.md) — audit
-  local access, compatibility, migration, cleanup, and restore.
-- [Bounded workspace order](layout.md) — verify registered roots, folder roles,
-  naming, path ownership, duplicates, and the objective stop rule read-only.
+- [Workspace](workspace.md) — project structure, source capture and recovery.
+- [Chapters and catalog](chapters-and-catalog.md) — reviewed knowledge and local indexing.
+- [Context navigation](context-navigation.md) — relevant context for one task.
+- [Media and derived text](media.md) — register externally produced text.
+- [Privacy, storage and lifecycle](privacy-storage-lifecycle.md) — compatibility, cleanup and restore.
+- [Bounded workspace order](layout.md) — read-only root, ownership and duplicate audits.
 
-## Universal roadmap continuity
+## Workflow and resumption
 
-- [Roadmap continuity and AUTO PILOT](continuity.md) — keep the roadmap,
-  current detail, evidence and next trigger in a restart-safe local store;
-  export a portable capsule and optionally mirror filtered records to private
-  Git or GitHub.
+These guides describe your project workflow, not OPENCNTX's development roadmap.
 
-## Stable v1.6.0 workflow
+- [Roadmap continuity and AUTO PILOT](continuity.md) — native task state, evidence and handoff.
+- [Goal-bound workflows](goal-bound-workflows.md) — request, action and outcome binding.
+- [Adaptive AI workflow](adaptive-ai-workflow.md) — existing host contracts, storage and presentation boundaries.
+- [Playbooks and roles](playbooks-and-roles.md) — methods and permitted actions.
+- [OWNER flow](owner-flow.md) — proposal, authority, review and closure.
 
-- [Adaptive AI workflow](adaptive-ai-workflow.md) — plain-language
-  host behavior, two-scope start authority, durable state, adaptive storage,
-  large-workload gates, voluntary companion or continuity adapters and the
-  visual presentation contract, retained by the v1.6.0 release target.
-  The matching GitHub Release is the authority for published availability.
+Existing contracts do not imply that every host has a connected adapter or
+that the new roadmap improvements are implemented.
 
-## Decisions and bounded work
+## Reference and maintenance
 
-- [Goal-bound workflows](goal-bound-workflows.md) — R15 request/action/outcome
-  binding, proportionate plans, source coverage and handoff, with explicit
-  host-activation, compatibility and physical-execution limits.
-
-- [Playbooks and roles](playbooks-and-roles.md) — define a method and the
-  actions an executor may use.
-- [OWNER flow](owner-flow.md) — move from goal to proposal, approval, result,
-  review, and closure without letting the tool approve itself.
-
-## Project and technical reference
-
-- [Platforms and CI](platforms.md) — supported Python versions, Windows/Ubuntu
-  coverage, and what green CI really proves.
-- [Release artifacts](release-artifacts.md) — wheel, sdist, checksums, build
-  record, and the exact publication boundary.
-- [Public roadmap](roadmap.md) — completed milestones and current state, with no
-  promises about future features.
-- [FAQ](faq.md) — short answers to common questions.
-- [Glossary](glossary.md) — plain meanings of fixed project terms.
-- [Brand guide](brand.md) — official colors, wordmarks, diagrams, and visual
-  rules.
-- [Visual system](visual-system.md) — VISUAL_ARTIST, tokens, components,
-  accessibility, product-wide coverage, and text fallbacks.
+- [Commands](commands.md) — exact CLI syntax.
+- [FAQ](faq.md) · [Glossary](glossary.md) — short answers and terminology.
+- [Contracts and compatibility](contracts-and-compatibility.md) — public surface and durable formats.
+- [Platforms and CI](platforms.md) — supported environments and evidence limits.
+- [Release artifacts](release-artifacts.md) — builds, checksums and provenance.
+- [Visual system](visual-system.md) · [Brand guide](brand.md) — accessible presentation and assets.
+- [Contributing](../CONTRIBUTING.md) · [Changelog](../CHANGELOG.md) — development and history.
 
 ## Product boundary
 
-OPENCNTX creates local, explicit, verifiable files. It does not call an AI
-model, choose a provider, upload context, run an agent, execute supplied
-content, or replace human review. **Any model** means that reviewed output can
-be used with a tool that accepts text or files.
+OPENCNTX creates local, explicit, verifiable files. It does not call an AI,
+choose a provider, upload context or execute supplied content. Reviewed output
+can be used with tools that accept text or files.
 
-Use `opencntx --help` and the relevant nested `--help` route for exact command
-options. Use the root [Security Policy](../SECURITY.md) as the canonical
-technical safety boundary.
+Use [Security Policy](../SECURITY.md) for the exact safety boundary and private
+vulnerability reporting. Use [Support](../SUPPORT.md) for ordinary questions.
 
-[Back to the project overview](../README.md)
+[Back to project home](../README.md)

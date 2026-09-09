@@ -61,6 +61,7 @@ GUIDES = {
     "privacy-storage-lifecycle.md",
     "roadmap.md",
     "release-artifacts.md",
+    "releases.md",
     "security.md",
     "start-here.md",
     "platforms.md",
@@ -87,10 +88,8 @@ PRIMARY_NAVIGATION = (
     "[Commands](commands.md) · [Security](security.md) · [All guides](README.md)"
 )
 README_NAVIGATION = (
-    "[Get started](docs/start-here.md) · [How it works](docs/how-it-works.md) · "
-    "[Visual system](docs/visual-system.md) · [Workspace](docs/workspace.md) · "
-    "[Commands](docs/commands.md) · "
-    "[Security](docs/security.md) · [All guides](docs/README.md)"
+    "[Get started](docs/start-here.md) · [Documentation](docs/README.md) · "
+    "[Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)"
 )
 
 EXPECTED_ACTION_USES = {
@@ -262,7 +261,7 @@ class PublicQualityTests(unittest.TestCase):
 
     def test_readme_is_compact_and_links_the_docs(self) -> None:
         lines = README.read_text(encoding="utf-8").splitlines()
-        self.assertLessEqual(len(lines), 180)
+        self.assertLessEqual(len(lines), 100)
         text = README.read_text(encoding="utf-8")
         self.assertIn('srcset="assets/brand/opencntx-wordmark-dark.svg"', text)
         self.assertIn('src="assets/brand/opencntx-wordmark-light.svg"', text)
@@ -276,6 +275,8 @@ class PublicQualityTests(unittest.TestCase):
             "docs/commands.md",
             "docs/security.md",
             "docs/README.md",
+            "docs/roadmap.md",
+            "docs/releases.md",
         }
         self.assertTrue(required.issubset(targets))
 
@@ -602,7 +603,7 @@ class PublicQualityTests(unittest.TestCase):
         self.assertEqual(1, text.count("${{ matrix.os }} / Python ${{ matrix.python-version }}"))
 
     def test_public_ci_status_is_active_and_unambiguous(self) -> None:
-        status_documents = (README, CHANGELOG, DOCS / "platforms.md")
+        status_documents = (DOCS / "releases.md", CHANGELOG, DOCS / "platforms.md")
         for document in status_documents:
             with self.subTest(document=document.name):
                 text = document.read_text(encoding="utf-8")
@@ -663,11 +664,10 @@ class PublicQualityTests(unittest.TestCase):
         )
 
         self.assertEqual(package_version, __version__)
+        releases = (DOCS / "releases.md").read_text(encoding="utf-8")
         if package_version != version:
             self.assertEqual(metadata["tool"]["opencntx"]["release"]["status"], "local-candidate")
-            self.assertIn(
-                f"Local candidate: v{package_version}", README.read_text(encoding="utf-8")
-            )
+            self.assertIn(f"Local candidate: v{package_version}", releases)
             self.assertIn(f"## {package_version} -", CHANGELOG.read_text(encoding="utf-8"))
         self.assertIn(
             "Development Status :: 5 - Production/Stable",
@@ -690,7 +690,7 @@ class PublicQualityTests(unittest.TestCase):
         self.assertRegex(changelog, rf"(?m)^## {re.escape(version)} - \d{{4}}-\d{{2}}-\d{{2}}$")
         self.assertIn(
             "git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
-            readme,
+            releases,
         )
         self.assertIn(f"v{version} Stable", readme)
         self.assertNotIn(f"v{version} candidate", readme)
@@ -726,7 +726,7 @@ class PublicQualityTests(unittest.TestCase):
             "BUILD-RECORD.json",
         ):
             with self.subTest(asset=asset_name):
-                for public_surface in (readme, faq, roadmap, release_artifacts):
+                for public_surface in (releases, faq, release_artifacts):
                     self.assertIn(asset_name, public_surface)
 
         release_surfaces = (
