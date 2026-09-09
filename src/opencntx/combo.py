@@ -21,7 +21,8 @@ MAX_QUERY_LIMIT = 20
 MAX_MARKDOWN_WORDS = 2_500
 MAX_MARKDOWN_BYTES = 20 * 1024
 MAX_CURRENT_ITEMS = 12
-MAX_DECISIONS = 32
+MAX_DECISIONS = 1_000
+MAX_RENDERED_DECISIONS = 32
 MAX_CONFLICTS = 24
 MAX_CAPABILITIES = 24
 MAX_RECENT_COMPLETED = 3
@@ -439,10 +440,18 @@ def render_combo_markdown(combo: Mapping[str, Any]) -> str:
         if not current[field]:
             lines.append("- None.")
         else:
-            for item in sorted(current[field], key=_rank):
+            rendered_items = sorted(current[field], key=_rank)
+            if field == "decisions":
+                rendered_items = rendered_items[:MAX_RENDERED_DECISIONS]
+            for item in rendered_items:
                 lines.append(
                     f"- `{item['id']}` [{item['status']}] {item['statement']} "
                     f"(source `{item['roadmap_id']}`)"
+                )
+            hidden = len(current[field]) - len(rendered_items)
+            if hidden:
+                lines.append(
+                    f"- {hidden} additional canonical decisions remain available through query."
                 )
         lines.append("")
     lines.extend(["## Epochs", ""])

@@ -2,19 +2,30 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## Unreleased — documentation
+## 1.7.3 - 2026-09-10
 
-- Publish roadmap revision 4 for the planned 1.7.3 update. Retain N01–N24,
-  incorporate candidate stress findings and prioritize crash-safe recovery,
-  operation-bound retries, reachable memory and coherent update generations.
-- Keep N18, N19 and N21 explicitly deferred outside the base scope; separate
-  two completed 100-task routes from twelve unmet targeted fault criteria.
-- Simplify the project home and group documentation into clear routes.
-  Use one roadmap home for the latest plan and historical snapshots, and a
-  dedicated releases page for downloads, source status and technical details.
-- Keep public content English. Source package 1.7.2 and published release
-  v1.7.1 remain unchanged. No runtime implementation, software release,
-  installation or host activation is included.
+- Replace stale marker-file exclusion with a stable OS-backed writer lock that
+  survives hard process termination without permitting simultaneous writers.
+- Preserve a committed flow result across optional sync or diagnostic failure,
+  so an identical retry cannot advance the next assignment.
+- Keep stale answer-only verification read-only, restore a governed route after
+  valid authority returns, and permit multiple concrete local targets.
+- Detect parent, child, pattern and case-equivalent sidecar overlap and reject
+  duplicate or overlapping transactional-update component paths.
+- Retain up to 1,000 canonical Combo decisions while rendering a compact view;
+  make exact adaptive-storage IDs reachable independently of scan order.
+- Refuse sync materialization when source bytes differ from the reviewed digest,
+  and reject duplicate capsule manifest paths.
+- Keep connected resumption below its byte bound by linking full acceptance
+  detail instead of copying every criterion into the current view.
+- Add a managed generation reader that shares the update lock, plus hard-exit,
+  retry, overlap, sync-drift, retention and compact-view regression evidence.
+- Publish the matching English documentation, source tag, wheel, sdist,
+  checksums and build record. Installation and host activation remain separate.
+
+## Unreleased
+
+- Continue the roadmap items explicitly not claimed by the 1.7.3 release scope.
 
 ## 1.7.2 - Unreleased roadmap candidate
 

@@ -12,7 +12,9 @@ import unittest
 import zipfile
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
+from opencntx import continuity_sync
 from opencntx.continuity import (
     ContinuityError,
     advance_flow,
@@ -593,6 +595,35 @@ class ContinuityTests(unittest.TestCase):
         self.assertEqual(status["last_receipt"]["checkpoint_policy"], "EVERY_CHECKPOINT")
         self.assertEqual(status["last_receipt"]["trigger"], "CHECKPOINT")
         self.assertEqual(status["last_receipt"]["checkpoint"]["checkpoint"], "PASS")
+
+    def test_sync_refuses_bytes_changed_after_preview(self) -> None:
+        project, roadmap_path = self._project()
+        start_flow(project, roadmap_path, "AUTO PILOT")
+        _, mirror = self._private_replica("preview-drift")
+        note = project / ".opencntx" / "continuity" / "information" / "audit.md"
+        note.write_text("Reviewed content\n", encoding="utf-8")
+        options = {
+            "remote": "origin",
+            "branch": "main",
+            "private_repository_confirmed": False,
+        }
+        preview = build_sync_preview(project, mirror, **options)
+        original = continuity_sync._materialize
+
+        def change_then_materialize(clone, project_id, candidates):
+            note.write_text("Changed after preview\n", encoding="utf-8")
+            return original(clone, project_id, candidates)
+
+        with (
+            mock.patch.object(continuity_sync, "_materialize", side_effect=change_then_materialize),
+            self.assertRaisesRegex(ContinuityError, "changed before materialization"),
+        ):
+            apply_sync(
+                project,
+                mirror,
+                expected_preview_digest=preview["preview_digest"],
+                **options,
+            )
 
     def test_automatic_sync_failure_is_latched_until_explicit_rearm(self) -> None:
         project, roadmap_path = self._project()

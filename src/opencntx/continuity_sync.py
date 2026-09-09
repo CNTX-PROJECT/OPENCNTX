@@ -332,12 +332,22 @@ def _materialize(clone: Path, project_id: str, candidates: list[dict[str, Any]])
     if target_root.exists():
         shutil.rmtree(target_root)
     for item in candidates:
+        try:
+            content = item["source"].read_bytes()
+        except OSError as exc:
+            raise _fail(
+                "continuity_sync_preview_drift", "A sync candidate changed before materialization."
+            ) from exc
+        if len(content) != item["bytes"] or _digest(content) != item["sha256"]:
+            raise _fail(
+                "continuity_sync_preview_drift", "A sync candidate changed before materialization."
+            )
         relative = PurePosixPath(str(item["path"]))
         destination = clone.joinpath(*relative.parts)
         resolved_parent = destination.parent.resolve()
         resolved_parent.relative_to(clone.resolve())
         resolved_parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(item["source"], destination)
+        destination.write_bytes(content)
 
 
 def apply_sync(

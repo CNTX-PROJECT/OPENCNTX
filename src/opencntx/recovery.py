@@ -96,12 +96,16 @@ def validate_recovery_history(records: Sequence[Mapping[str, Any]]) -> list[dict
         current_assignment = _text(record["assignment_id"], "assignment_id", 80)
         current_class = _text(record["dependency_class"], "dependency_class", 20)
         if current_class not in DEPENDENCY_CLASSES:
-            raise _fail("recovery_dependency_invalid", "Dependency class must be fixed before attempts.")
+            raise _fail(
+                "recovery_dependency_invalid", "Dependency class must be fixed before attempts."
+            )
         if assignment_id not in {None, current_assignment} or dependency_class not in {
             None,
             current_class,
         }:
-            raise _fail("recovery_dependency_changed", "Assignment dependency class changed after failure.")
+            raise _fail(
+                "recovery_dependency_changed", "Assignment dependency class changed after failure."
+            )
         assignment_id, dependency_class = current_assignment, current_class
         _digest(record["evidence_digest"], "evidence_digest")
         _digest(record["scope_fingerprint"], "scope_fingerprint")
@@ -115,9 +119,13 @@ def validate_recovery_history(records: Sequence[Mapping[str, Any]]) -> list[dict
             raise _fail("recovery_coverage_invalid", "Chain coverage omits the failed assignment.")
         prior = list(record["prior_failure_digests"])
         if prior != [item["record_digest"] for item in validated]:
-            raise _fail("recovery_history_invalid", "Prior failure evidence is incomplete or reordered.")
+            raise _fail(
+                "recovery_history_invalid", "Prior failure evidence is incomplete or reordered."
+            )
         if index < 2 and record["global_analysis_digest"] is not None:
-            raise _fail("recovery_analysis_invalid", "Standard attempts cannot claim global analysis.")
+            raise _fail(
+                "recovery_analysis_invalid", "Standard attempts cannot claim global analysis."
+            )
         if index >= 2:
             _digest(record["global_analysis_digest"], "global_analysis_digest")
             prior_global = validated[2:] if len(validated) > 2 else []
@@ -128,13 +136,13 @@ def validate_recovery_history(records: Sequence[Mapping[str, Any]]) -> list[dict
                 raise _fail("recovery_approach_repeated", "A global recovery must change approach.")
         if index == 3:
             previous = validated[-1]
-            if (
-                record["evidence_digest"] == previous["evidence_digest"]
-                or not set(previous["chain_coverage"]) < set(coverage)
+            if record["evidence_digest"] == previous["evidence_digest"] or (
+                not set(previous["chain_coverage"]) < set(coverage)
+                and record["scope_fingerprint"] == previous["scope_fingerprint"]
             ):
                 raise _fail(
                     "recovery_scope_not_widened",
-                    "The second global recovery needs new evidence and strictly wider coverage.",
+                    "The second global recovery needs new evidence and wider coverage or scope.",
                 )
         validated_record = record | {"record_digest": str(digest)}
         validated.append(validated_record)
@@ -324,19 +332,22 @@ def build_global_analysis(
     if round_number == 2:
         if previous is None:
             raise _fail("recovery_analysis_invalid", "Round two requires the first analysis.")
-        previous_basis = {
-            key: value for key, value in previous.items() if key != "analysis_digest"
-        }
+        previous_basis = {key: value for key, value in previous.items() if key != "analysis_digest"}
         if previous.get("analysis_digest") != _value_digest(previous_basis):
             raise _fail("recovery_analysis_invalid", "The first global analysis is invalid.")
+        # New evidence can invalidate the prior diagnosis even when the first
+        # analysis already covered the complete dependency chain. Requiring a
+        # fictitious extra target in that case made a legitimate second global
+        # approach impossible. The immutable prior digest still proves lineage.
+        scope_widened = set(previous.get("chain_coverage", [])) <= set(coverage)
         if (
             previous.get("round_number") != 1
-            or not set(previous.get("chain_coverage", [])) < set(coverage)
+            or not scope_widened
             or previous.get("evidence_digest") == evidence_digest
         ):
             raise _fail(
                 "recovery_scope_not_widened",
-                "Round two needs wider chain coverage and new evidence.",
+                "Round two needs new evidence without narrowing chain coverage.",
             )
         prior_analysis_digest = previous["analysis_digest"]
     elif previous is not None:
@@ -354,9 +365,7 @@ def build_global_analysis(
         "rules": sorted(normalized_rules, key=lambda item: str(item["id"])),
         "effective_rule_ids": effective,
         "superseded_rule_ids": sorted(
-            str(item["id"])
-            for item in normalized_rules
-            if item["status"] == "SUPERSEDED"
+            str(item["id"]) for item in normalized_rules if item["status"] == "SUPERSEDED"
         ),
         "previous_analysis_digest": prior_analysis_digest,
         "provider_call_required": False,

@@ -134,9 +134,16 @@ def render_current(value: dict[str, Any]) -> str:
         "## Outcomes",
         "",
     ]
-    for item in value["assignments"]:
-        lines.append(f"- {item['id']} - {item['status']}: {item['title']}")
-        lines.extend(f"  - {criterion}" for criterion in item["definition_of_done"])
+    completed = sum(item["status"] == "DELIVERED" for item in value["assignments"])
+    lines.append(f"- Progress: {completed}/{len(value['assignments'])}")
+    current_id = value["capsule"]["current_assignment"]
+    current = next((item for item in value["assignments"] if item["id"] == current_id), None)
+    if current is not None:
+        lines.append(f"- Current: {current['id']} - {current['title']}")
+        lines.append(
+            "- Complete requirements: ../../../roadmaps/roadmap.json "
+            "(revision-bound by the source digest above)"
+        )
     context = value["goal_context"]
     if context:
         lines += ["", "## Original outcomes", ""]
@@ -191,7 +198,7 @@ def publish_connected_state(
             raise _fail("connected_state_stale", "Native state changed after preparation.")
         markdown = render_current(value)
         combo_root = root.resolve() / ".opencntx" / "combo"
-        if combo_root.exists():
+        if (combo_root / "CURRENT").exists():
             combo = load_combo(root)  # A damaged existing store is never silently reset.
         else:
             combo = new_combo(value["project_id"])

@@ -2,28 +2,28 @@
 title: OPENCNTX 1.7.3 — Reliable progress, memory and updates
 project: OPENCNTX
 type: roadmap
-status: planned
+status: partially-delivered
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-10
 planning_revision: 4
 source_versions: ["1.7.0", "1.7.1", "1.7.2 local-candidate"]
 source_commit: f6edbbf6d9d81310c37a55036f7d9794e38e109b
 source_tree: 4ab2857f55861247c326694940518c25204b1675
-published_baseline: 1.7.1
+published_baseline: 1.7.3
 target_version: 1.7.3
-publication_scope: roadmap-only
+publication_scope: release-and-continuing-roadmap
 ---
 
 # OPENCNTX 1.7.3 — Reliable progress, memory and updates
 
 [Roadmap home](roadmap.md) · [Documentation](README.md) · [Releases](releases.md) · [Project home](../README.md)
 
-**Revision 4 · Target: 1.7.3 · Published software: v1.7.1.**
+**Revision 4 · Reliability set shipped in v1.7.3 · Continuing backlog.**
 
-This publishes the plan, **not software release 1.7.3**. No new runtime
-functionality, installation or host activation is delivered by this document.
-The source package remains the unreleased 1.7.2 candidate until implementation
-prepares an actual new candidate.
+The bounded reliability set is now delivered by the software release described
+in [1.7.3 release scope](release-1.7.3.md). Unchecked work in this complete plan
+remains a backlog and is not implied by the release number. Installation and
+host activation remain separate user actions.
 
 ## Contents
 
@@ -54,13 +54,13 @@ single implementation backlog; the roadmap home is its summary.
 
 | Item | Evidence snapshot on September 9, 2026 |
 |---|---|
-| Published baseline | v1.7.1; publishing documentation did not implement the planned runtime work |
+| Published baseline | v1.7.3 reliability release; see its exact release scope |
 | Reviewed candidate | 1.7.2 at commit `f6edbbf6d9d81310c37a55036f7d9794e38e109b` |
-| Next implementation target | 1.7.3; historical test results are not relabeled as 1.7.3 results |
+| Release implementation | Targeted regression, crash and managed-reader evidence rerun for 1.7.3 |
 | Long simulations | Two routes each completed 100 tasks |
 | Targeted shortcomings | Twelve unmet criteria in separate fault probes |
 | Additional update evidence | Mixed-generation reads and recovery blocked after hard process termination |
-| Current implementation status | Base tasks planned; N18, N19 and N21 explicitly deferred |
+| Current implementation status | Bounded reliability set shipped; broader plan remains open; N18, N19 and N21 deferred |
 
 **This is not an 88/100 result.** The twelve targeted criteria are not twelve
 failed tasks from one hundred. Long-route completion, fault probes and update
@@ -709,11 +709,11 @@ must not require a fresh start.
 | Revision | Record | Implementation |
 |---|---|---|
 | 3 — Historical | 1.7.0/1.7.1 deep review; target 1.7.2 | Not evidence that the planned runtime work shipped |
-| 4 — Current | Candidate stress findings, research and T01–T12; target 1.7.3 | Plan only; base tasks remain planned and three extensions are deferred |
+| 4 — Current | Candidate stress findings, research and T01–T12; target 1.7.3 | Reliability set shipped; unchecked work remains; three extensions are deferred |
 
-When implementation is requested, start N01, then N02/N09A. Follow early with
-N06A and N07 so crash recovery and concrete identity support later changes.
-No software release or local installation is created by this publication.
+The next revision should retire or split completed acceptance criteria and keep
+only genuinely unfinished work. The v1.7.3 release does not install or activate
+OPENCNTX on a local host.
 
 ## 13. Evidence and design references
 
@@ -723,7 +723,7 @@ published by this roadmap. External references support design principles;
 they do not prove that OPENCNTX implements them.
 
 - [Fixed reviewed source](https://github.com/CNTX-PROJECT/OPENCNTX/commit/f6edbbf6d9d81310c37a55036f7d9794e38e109b) and [CI for that source](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/34404307842).
-- [Current release scope](release-1.7.1.md) and [earlier limitations](release-1.7.0.md).
+- [Current release scope](release-1.7.3.md) and [earlier limitations](release-1.7.0.md).
 - [AWS: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) — caller intent and retry identity.
 - [LangGraph: Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts) — resumed execution and idempotent side effects.
 - [Microsoft: Transactional Outbox](https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos) — commit state and delivery intent together.

@@ -18,8 +18,8 @@ pack, inspect and verify. Workspace and continuity are optional.
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 
-Current software: **v1.7.1**. The 1.7.3 roadmap is planned work, not a release.
-See [release scope](release-1.7.1.md) before assuming an improvement is implemented.
+Current software: **v1.7.3**. See the [1.7.3 release scope](release-1.7.3.md)
+for the implemented reliability work and its explicit boundaries.
 
 ## Core package guides
 
