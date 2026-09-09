@@ -248,6 +248,18 @@ def _json_document(path: str | None) -> dict[str, Any]:
     return value
 
 
+def _bound_goal(path: str) -> BoundGoal:
+    """Read a goal as its canonical binding bytes, never caller formatting."""
+    return BoundGoal(
+        json.dumps(
+            _json_document(path),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+    )
+
+
 def _dispatch_recovery(args: argparse.Namespace) -> int:
     request = _json_document(args.document)
     operation = args.operation
@@ -394,10 +406,10 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
         _print(_flow_value(result)) if args.json else print(format_flow(result))
         return 0
     if command == "current":
+        goal = None if args.goal is None else _bound_goal(args.goal)
         if args.publish:
             if not args.expected_state:
                 raise _fail("connected_state_required", "Publish requires --expected-state.")
-            goal = None if args.goal is None else BoundGoal(json.dumps(_json_document(args.goal)))
             _print(
                 publish_connected_state(
                     root,
@@ -407,7 +419,13 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
                 )
             )
         else:
-            _print(connected_status(root))
+            _print(
+                connected_status(
+                    root,
+                    goal=goal,
+                    synthesis_reference=args.synthesis,
+                )
+            )
         return 0
     if command == "advance":
         binding = connected_status(root)
