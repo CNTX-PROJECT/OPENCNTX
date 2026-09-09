@@ -12,10 +12,10 @@
     {
       "path": "README.md",
       "patterns": [
-        "Local candidate: v{version}",
-        "\\| Package \\| `opencntx {version}`"
+        "v{version} Stable release"
       ],
-      "purpose": "Primary public landing page source candidate and package claims"
+      "purpose": "Primary public landing page published software claim",
+      "version_source": "published"
     },
     {
       "path": "site/index.html",
@@ -52,12 +52,13 @@
       "version_source": "published"
     },
     {
-      "path": "docs/roadmap.md",
+      "path": "docs/releases.md",
       "patterns": [
-        "Source release target: `v{version}`",
+        "Local candidate: v{version}",
+        "Source candidate: `v{version}`",
         "Package version: `{version}`"
       ],
-      "purpose": "Public roadmap current candidate contract"
+      "purpose": "Dedicated release page current source candidate contract"
     },
     {
       "path": "docs/release-artifacts.md",

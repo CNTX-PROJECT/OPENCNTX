@@ -190,7 +190,7 @@ introduced in v1.4.0 and retained in v1.7.1, read the
 
 ## Upgrade or remove OPENCNTX
 
-The [1.7.2 roadmap](roadmap.md) plans owned, recoverable clean updates; that
+The [1.7.3 roadmap](roadmap.md) plans owned, recoverable clean updates; that
 algorithm is not delivered by publishing the plan. Release 1.7.1 packages the
 documentation, not that algorithm. The examples above target the exact 1.7.1 release.
 

@@ -106,7 +106,7 @@ class DistributionDecisionTests(unittest.TestCase):
 class PilotProtocolTests(unittest.TestCase):
     def test_real_pilot_remains_separate_measured_and_reversible(self) -> None:
         text = " ".join(
-            (ROOT / "docs" / "roadmap.md").read_text(encoding="utf-8").split()
+            (ROOT / "docs" / "roadmap-plan.md").read_text(encoding="utf-8").split()
         )
         for required in (
             "local R17 implementation",

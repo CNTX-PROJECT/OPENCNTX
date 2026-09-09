@@ -20,8 +20,10 @@ or status. Each template has exactly one primary message and one visible next
 safe action. A status may describe evidence but never implies OWNER approval.
 
 The install command and immutable Release link on `index.html` must match the
-current package version in `pyproject.toml`. The public quality checks derive
-that version from the package metadata so this route cannot silently drift.
+published version in `tool.opencntx.release.published_version` in `pyproject.toml`,
+not an unreleased source candidate or future roadmap target. Public quality
+checks keep these roles separate. The roadmap card links to `docs/roadmap.md`,
+which points to the latest complete plan; release details live in `docs/releases.md`.
 
 ## Local preview
 

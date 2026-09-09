@@ -2,7 +2,24 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## Unreleased — documentation
+
+- Publish roadmap revision 4 for the planned 1.7.3 update. Retain N01–N24,
+  incorporate candidate stress findings and prioritize crash-safe recovery,
+  operation-bound retries, reachable memory and coherent update generations.
+- Keep N18, N19 and N21 explicitly deferred outside the base scope; separate
+  two completed 100-task routes from twelve unmet targeted fault criteria.
+- Simplify the project home and group documentation into clear routes.
+  Use one roadmap home for the latest plan and historical snapshots, and a
+  dedicated releases page for downloads, source status and technical details.
+- Keep public content English. Source package 1.7.2 and published release
+  v1.7.1 remain unchanged. No runtime implementation, software release,
+  installation or host activation is included.
+
 ## 1.7.2 - Unreleased roadmap candidate
+
+Historical planning entry: revision 3 is superseded by the 1.7.3 plan above.
+The source candidate version remains 1.7.2; this entry is not a software release.
 
 - Publish planning revision 3 for the 1.7.2 update, based on the deeper review
   of 1.7.0 and 1.7.1. Retain N01–N24 and map all ten additional findings.
