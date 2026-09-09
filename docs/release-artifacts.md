@@ -2,25 +2,25 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page defines the four files for the `v1.7.0` GitHub Release and
+This page defines the four files for the `v1.7.1` GitHub Release and
 explains how contributors reproduce a local candidate. It does not grant
 authority to publish a new release or package-index upload.
 
 ## Current public distribution
 
-The Stable release target is `v1.7.0`; published availability is established only by its
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0).
+The Stable release target is `v1.7.1`; published availability is established only by its
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1).
 After publication, install it from
 the exact public Git tag as described in [Get started](start-here.md):
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.1"`.
 
 - OPENCNTX is not published on PyPI or TestPyPI.
 - The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
   build record attached to it.
-- The v1.7.0 GitHub Release must contain exactly the four files named below.
+- The v1.7.1 GitHub Release must contain exactly the four files named below.
 
-Its published artifacts are `opencntx-1.7.0-py3-none-any.whl`,
-`opencntx-1.7.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`.
+Its published artifacts are `opencntx-1.7.1-py3-none-any.whl`,
+`opencntx-1.7.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`.
 
 Any file built locally is an unpublished candidate unless it is one of the
 four exact assets attached to the immutable GitHub Release.

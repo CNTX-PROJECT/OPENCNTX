@@ -92,17 +92,17 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.7.0` Production/Stable release is installed from its
+No. The immutable `v1.7.1` Production/Stable release is installed from its
 exact Git tag. The exact isolated route is
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.0"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.1"`.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.7.0` Release has
-exactly `opencntx-1.7.0-py3-none-any.whl`,
-`opencntx-1.7.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The historical `v0.2.0` Release has none. The immutable `v1.7.1` Release has
+exactly `opencntx-1.7.1-py3-none-any.whl`,
+`opencntx-1.7.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain unpublished candidates unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for
@@ -113,8 +113,8 @@ gate.
 
 For planned improvements, read the [new roadmap overview](roadmap.md) and
 [full Dutch plan](roadmap-plan.nl.md). All 24 new tasks are planned, not delivered.
-The published software remains 1.7.0; the 1.7.1 source candidate only reserves
-a post-release documentation version. It is not an implementation release.
+The published software is 1.7.1, a documentation release with the same runtime
+behavior as 1.7.0. It is not an implementation of the new roadmap.
 
 Use [Start here](start-here.md) for installation and your first package.
 

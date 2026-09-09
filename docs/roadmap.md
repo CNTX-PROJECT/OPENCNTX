@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-[Release scope](release-1.7.0.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
+[Release scope](release-1.7.1.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
 
 ## Current status
 
@@ -10,11 +10,12 @@ The new roadmap is published as a plan, not as implemented functionality.
 It contains **six phases and 24 tasks (N01–N24)**. All tasks are planned;
 none of these new implementation tasks is marked complete.
 
-- Published Stable software baseline: **v1.7.0**.
-- Source release target: `v1.7.1` (unpublished documentation candidate only).
+- Published Stable software release: **v1.7.1**, retaining the v1.7.0 runtime.
+- Reviewed implementation baseline: **v1.7.0**.
+- Source release target: `v1.7.1` (documentation release).
 - Package version: `1.7.1`.
-- The version increment is required by the existing repository rule for
-  post-release documentation changes. It is not a new GitHub Release.
+- Release 1.7.1 packages this roadmap and aligned documentation. It does not
+  implement the new N01–N24 improvements.
 - The implementation release/version for the roadmap remains undecided.
 - No installation, host activation or roadmap implementation is performed
   by publishing this documentation.
@@ -24,9 +25,9 @@ acceptance criteria, dependencies, five user requirements, evidence mapping
 and restart instructions. This English page is an overview of that plan,
 not an independently maintained task ledger.
 
-The existing 1.7.0 distribution contains exactly
-opencntx-1.7.0-py3-none-any.whl, opencntx-1.7.0.tar.gz, SHA256SUMS and
-BUILD-RECORD.json. Those release files are not replaced by this roadmap publication.
+The 1.7.1 distribution contains exactly
+opencntx-1.7.1-py3-none-any.whl, opencntx-1.7.1.tar.gz, SHA256SUMS and
+BUILD-RECORD.json. Earlier release tags and files remain unchanged.
 
 ## What the plan must achieve
 

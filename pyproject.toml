@@ -78,5 +78,5 @@ fail_under = 78
 show_missing = true
 
 [tool.opencntx.release]
-published_version = "1.7.0"
-status = "local-candidate"
+published_version = "1.7.1"
+status = "release"
