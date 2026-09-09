@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-[Release scope](release-1.7.1.md) · [Full roadmap in Dutch](roadmap-plan.nl.md)
+[Release scope](release-1.7.1.md) · [Full roadmap in English](roadmap-plan.md)
 
 ## Current status
 
@@ -20,7 +20,7 @@ none of these new implementation tasks is marked complete.
 - No installation, host activation or roadmap implementation is performed
   by publishing this documentation.
 
-The [complete Dutch plan](roadmap-plan.nl.md) contains the detailed work,
+The [complete plan](roadmap-plan.md) contains the detailed work,
 acceptance criteria, dependencies, five user requirements, evidence mapping
 and restart instructions. This English page is an overview of that plan,
 not an independently maintained task ledger.
@@ -179,7 +179,7 @@ route and preserves evidence. Measurement completion grants no publication,
 installation, or adoption authority. These safeguards apply to N21 and its broad
 claims, not automatically to every narrowly scoped bugfix release.
 
-- [Full roadmap — Dutch](roadmap-plan.nl.md)
+- [Full roadmap — English](roadmap-plan.md)
 - [Release v1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.0)
 - [CI for the 1.7.0 release commit](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/34386717966)
 - [Historical roadmap as shipped with 1.7.0](https://github.com/CNTX-PROJECT/OPENCNTX/blob/v1.7.0/docs/roadmap.md)

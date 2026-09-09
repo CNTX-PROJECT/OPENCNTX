@@ -16,7 +16,7 @@
 </div>
 
 **Release scope:** v1.7.1 publishes the new roadmap and aligned documentation. Runtime behavior is unchanged from v1.7.0 (and v1.6.3). The proposed friction, token-budget and clean-update improvements are **not implemented in this release**. Read the [release scope and known limitations](docs/release-1.7.1.md).
-**Roadmap for 1.7.2:** read the [six-phase, 24-task overview](docs/roadmap.md) and [full Dutch plan](docs/roadmap-plan.nl.md). Revision 3 incorporates the deeper 1.7.0/1.7.1 review. All tasks remain planned; this publishes the plan, not software release 1.7.2.
+**Roadmap for 1.7.2:** read the [six-phase, 24-task overview](docs/roadmap.md) and [full English plan](docs/roadmap-plan.md). Revision 3 incorporates the deeper 1.7.0/1.7.1 review. All tasks remain planned; this publishes the plan, not software release 1.7.2.
 OPENCNTX gives an AI selected local context without handing over an entire project. It also keeps a roadmap and restart-safe evidence outside the chat.
 
 It needs no account, API key, cloud service, database, or built-in AI model and never uploads files or sends a prompt for you.

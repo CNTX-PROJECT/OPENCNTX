@@ -1,11 +1,11 @@
 # OPENCNTX 1.7.1 — Documentation release
 
-[Overview](../README.md) · [Public roadmap](roadmap.md) · [Full Dutch plan](roadmap-plan.nl.md) · [Changelog](../CHANGELOG.md)
+[Overview](../README.md) · [Public roadmap](roadmap.md) · [Full English plan](roadmap-plan.md) · [Changelog](../CHANGELOG.md)
 
 ## What changed
 
 This release packages the new public roadmap: six phases, 24 planned tasks,
-dependencies and acceptance criteria. It includes the complete Dutch plan,
+dependencies and acceptance criteria. It includes the complete plan,
 an English overview and aligned README, documentation and website references.
 Private note references and local filesystem paths are not published.
 
