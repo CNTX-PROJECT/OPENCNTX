@@ -18,7 +18,7 @@ from .continuity import (
     decide_finalization,
 )
 from .goal_binding import BoundGoal, _sha, _text
-from .goal_progress import load_goal_progress, progress_readiness
+from .goal_progress import load_goal_progress, progress_readiness, recovery_resumption
 
 
 def recovery_observation(goal: BoundGoal, *, error_class: str) -> dict[str, Any]:
@@ -219,9 +219,26 @@ def compile_goal_context(
                 if exc.code != "goal_progress_missing":
                     raise
             else:
-                ready = progress_readiness(progress, goal)["ready_nodes"]
+                readiness = progress_readiness(progress, goal)
+                ready = readiness["ready_nodes"]
                 if not ready and matrix["status"] != "TECHNICALLY_COMPLETE":
                     decision, reason = "BLOCKED", "NO_READY_ORIGINAL_OUTCOME"
+                else:
+                    nodes = {node["id"]: node for node in progress.payload()["nodes"]}
+                    resumptions = []
+                    for ready_id in ready:
+                        node = nodes[ready_id]
+                        for dependency in node["depends_on"]:
+                            dependency_node = nodes[dependency]
+                            if (
+                                dependency_node["status"] == "DELIVERED"
+                                and dependency_node["next_action"].startswith("Repair: ")
+                            ):
+                                resumptions.append(
+                                    recovery_resumption(goal, progress, recovery_id=dependency)
+                                )
+                    if len(resumptions) == 1:
+                        reason = resumptions[0]["reason"]
     if base["decision"] == "CONTINUE" and recovery in {"SUPPRESS_UNCHANGED", "RECOVERY_EXHAUSTED"}:
         progress = load_goal_progress(root, goal)
         ready = progress_readiness(progress, goal)["ready_nodes"]

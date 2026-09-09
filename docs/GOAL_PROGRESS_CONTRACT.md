@@ -12,6 +12,15 @@ block independent work; an ancestor/dependency blocker does. Child labels do not
 prove complete parent coverage. The parent remains PARTIAL pending separate
 outcome and synthesis evidence. This is not a second scheduling database.
 
+`recovery_resumption` makes a completed repair an explicit non-terminal event.
+It accepts only a delivered `Repair:` leaf with exactly one ready sibling that
+depends on that repair, retains the same outcome obligations and returns to the
+same original parent leaf. Its only successful decision is
+`CONTINUE_PARENT_ROADMAP` with reason
+`RECOVERY_RESOLVED_RETURN_TO_PARENT`. A missing, ambiguous, blocked or altered
+resume leaf is rejected fail-closed. Consequently, a solved temporary side
+branch cannot be presented as the end of its parent roadmap.
+
 `persist_goal_progress` uses existing compressed evidence objects, then writes
 a content-addressed reference receipt in an explicitly allocated, already
 existing supervisor evidence directory. The existing execution checkpoint CAS
