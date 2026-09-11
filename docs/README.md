@@ -14,12 +14,12 @@ pack, inspect and verify. Workspace and continuity are optional.
 |---|---|
 | Installation, a first package, updates or removal | [Get started](start-here.md) |
 | A short explanation of the product | [How it works](how-it-works.md) |
-| The latest development plan | [Roadmap](roadmap.md) — 1.7.3; [complete plan](roadmap-plan.md) |
+| The latest development plan | [Roadmap](roadmap.md) — 1.7.4; [complete historical plan](roadmap-plan.md) |
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 
-Current software: **v1.7.3**. See the [1.7.3 release scope](release-1.7.3.md)
-for the implemented reliability work and its explicit boundaries.
+Current software: **v1.7.4**. See the [1.7.4 release scope](release-1.7.4.md)
+for project-aware routing, context economy, and explicit host boundaries.
 
 ## Core package guides
 
@@ -50,13 +50,14 @@ For longer projects that need more structure than one context package.
 These guides describe your project workflow, not OPENCNTX's development roadmap.
 
 - [Roadmap continuity and AUTO PILOT](continuity.md) — native task state, evidence and handoff.
+- [Project roadmap routing](project-roadmaps.md) — small steps, child roadmaps, return anchors, and bounded context.
 - [Goal-bound workflows](goal-bound-workflows.md) — request, action and outcome binding.
 - [Adaptive AI workflow](adaptive-ai-workflow.md) — existing host contracts, storage and presentation boundaries.
 - [Playbooks and roles](playbooks-and-roles.md) — methods and permitted actions.
 - [OWNER flow](owner-flow.md) — proposal, authority, review and closure.
 
-Existing contracts do not imply that every host has a connected adapter or
-that the new roadmap improvements are implemented.
+The routing rules are implemented as a provider-neutral Python API. They do not
+imply that every host has connected that API to its own chat interface.
 
 ## Reference and maintenance
 

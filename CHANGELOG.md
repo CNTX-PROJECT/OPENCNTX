@@ -2,6 +2,22 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.4 - 2026-09-11
+
+- Add deterministic project-aware task routing: short related work becomes a
+  step immediately, related larger work extends the current child roadmap, and
+  each distinct large outcome receives a new child roadmap under one master.
+- Preserve exact roadmap and step return anchors when a side topic or rollover
+  interrupts current work.
+- Prefer continued safe execution while work remains; stop only for missing
+  authority, a material owner choice, exhausted recovery, or bounded handoff.
+- Add a byte-budgeted context load plan that always retains current anchors,
+  references unchanged sources by SHA-256, and reports measured byte savings.
+- Keep the routing layer host-supplied and provider-neutral: it neither guesses
+  human intent nor starts an AI, host hook, or external action.
+- Publish matching English guides, verified release assets, and immutable
+  installation instructions for the exact `v1.7.4` tag.
+
 ## 1.7.3 - 2026-09-10
 
 - Replace stale marker-file exclusion with a stable OS-backed writer lock that
@@ -25,7 +41,7 @@ All notable OPENCNTX changes are recorded here.
 
 ## Unreleased
 
-- Continue the roadmap items explicitly not claimed by the 1.7.3 release scope.
+- Continue the roadmap items explicitly not claimed by the 1.7.4 release scope.
 
 ## 1.7.2 - Unreleased roadmap candidate
 

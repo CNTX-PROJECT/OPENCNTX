@@ -6,22 +6,23 @@ Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
 
-## Published software — v1.7.3 Stable
+## Published software — v1.7.4 Stable
 
-[Download v1.7.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.3) ·
-[Release scope and limitations](release-1.7.3.md) ·
+[Download v1.7.4](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.4) ·
+[Release scope and limitations](release-1.7.4.md) ·
 [Installation and removal](start-here.md)
 
-Version 1.7.3 implements the highest-priority findings from the 1.7.2 stress
-assessment: crash-recoverable writer exclusion, safe retry return, conservative
-target overlap, bounded durable decisions, exact memory lookup, exact sync-byte
-verification, compact resumption, strict capsule validation, and a managed
-coherent-generation reader for multi-component updates.
+Version 1.7.4 adds deterministic project-aware routing: small related work is
+attached as a step, related large work extends the current child roadmap, and a
+distinct large outcome creates a new child roadmap under one master. Exact
+return anchors survive side topics and rollover. A byte-budgeted context plan
+references unchanged sources by digest, and safe authorized work continues
+until evidence is complete or an explicit stop condition is reached.
 
 The published distribution contains exactly:
 
-- `opencntx-1.7.3-py3-none-any.whl`
-- `opencntx-1.7.3.tar.gz`
+- `opencntx-1.7.4-py3-none-any.whl`
+- `opencntx-1.7.4.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
@@ -30,9 +31,9 @@ verification. There is no published PyPI/TestPyPI package.
 
 ## Development source and next plan
 
-- Local candidate: v1.7.3.
-- Source candidate: `v1.7.3`.
-- Package version: `1.7.3`.
+- Local candidate: v1.7.4.
+- Source candidate: `v1.7.4`.
+- Package version: `1.7.4`.
 - Remaining work is tracked on the [roadmap page](roadmap.md).
 
 The release scope distinguishes implemented behavior from deferred extensions;
@@ -66,6 +67,7 @@ real-host cost claim.
 
 - [Changelog](../CHANGELOG.md) — dated release history and unreleased documentation changes.
 - [1.7.0 scope](release-1.7.0.md) — earlier runtime and publication limitations.
+- [1.7.3 scope](release-1.7.3.md) — reliability work retained by 1.7.4.
 - [Product roadmap](roadmap.md) — latest plan and earlier English plan snapshot.
 
 The following diagram records historical foundation milestones.

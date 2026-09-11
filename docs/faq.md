@@ -92,17 +92,17 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.7.3` Production/Stable release is installed from its
+No. The immutable `v1.7.4` Production/Stable release is installed from its
 exact Git tag. The exact isolated route is
-`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.3"`.
+`pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.4"`.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.7.3` Release has
-exactly `opencntx-1.7.3-py3-none-any.whl`,
-`opencntx-1.7.3.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The historical `v0.2.0` Release has none. The immutable `v1.7.4` Release has
+exactly `opencntx-1.7.4-py3-none-any.whl`,
+`opencntx-1.7.4.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain unpublished candidates unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for
@@ -112,7 +112,7 @@ gate.
 ## Where should I start?
 
 For completed and planned work, read the [roadmap overview](roadmap.md),
-[full English plan](roadmap-plan.md), and [1.7.3 release scope](release-1.7.3.md).
+[full English plan](roadmap-plan.md), and [1.7.4 release scope](release-1.7.4.md).
 
 Use [Start here](start-here.md) for installation and your first package.
 

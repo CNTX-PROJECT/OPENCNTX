@@ -8,24 +8,25 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 4 · v1.7.3 Stable reliability release published · remaining work tracked.**
+**Revision 5 · v1.7.4 Stable project-routing release published · remaining work tracked.**
 
-**[Read the complete 1.7.3 roadmap →](roadmap-plan.md)**
+**[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.7.3 ships the bounded reliability set documented in the
-[release scope](release-1.7.3.md). The complete plan retains unfinished and
-deferred work; publication status is based on the GitHub Release, not the plan.
+Version 1.7.4 ships project-aware task routing, explicit child-roadmap creation,
+return anchors, continuation decisions, and bounded changed-context loading as
+documented in its [release scope](release-1.7.4.md). The complete historical
+plan retains unfinished work; publication status is based on the GitHub Release.
 
-## What 1.7.3 improves
+## What 1.7.4 improves
 
 | Priority | Intended result |
 |---|---|
-| Reliable progress | Retrying one operation cannot complete a different task |
-| Fewer unnecessary stops | Current, concrete authority; optional failures stay separate from core success |
-| Durable memory | Valid decisions and unfinished work remain reachable beyond compact view limits |
-| Compact resumption | Small current context with complete, revision-bound detail references |
-| Crash-safe updates | Recover after process death; each reader sees a compatible generation |
-| Measured overhead | Separate real outcomes, context bytes, retries and actual host costs |
+| Small project work | Attach it immediately as a step in the active child roadmap |
+| Independent large work | Create the next child roadmap under one project master |
+| Fewer unnecessary stops | Continue safe authorized work until a real stop condition exists |
+| Return after interruption | Retain the exact roadmap and step anchor |
+| Compact resumption | Load anchors and changed sources; reference unchanged bytes by digest |
+| Measured economy | Report naive and loaded bytes without making universal token claims |
 
 These claims apply only to the tested native routes in the release scope. Host
 policies, legitimate safety boundaries, missing access and explicit user stops
@@ -62,7 +63,8 @@ than adding global policy layers.
 
 | Record | Where to read it |
 |---|---|
-| Current 1.7.3 plan, revision 4 | [Complete roadmap](roadmap-plan.md) |
+| Current 1.7.4 release scope | [Project routing release](release-1.7.4.md) |
+| 1.7.3 plan, revision 4 | [Complete historical roadmap](roadmap-plan.md) |
 | Previous 1.7.2 plan, revision 3 | [Fixed historical English snapshot](https://github.com/CNTX-PROJECT/OPENCNTX/blob/f6edbbf6d9d81310c37a55036f7d9794e38e109b/docs/roadmap-plan.md) |
 | Shipped software and known limitations | [Releases](releases.md) |
 | Change history | [Changelog](../CHANGELOG.md) |

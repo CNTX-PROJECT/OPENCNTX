@@ -19,15 +19,15 @@ OPENCNTX turns selected local files into a compact context package. For longer
 projects, optional workspace and continuity tools keep tasks and evidence
 outside the chat. No account, API key or built-in AI model is required.
 
-**Available now:** [v1.7.3 Stable release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.3).
-[Release scope](docs/release-1.7.3.md) · [Next roadmap](docs/roadmap.md)
+**Available now:** [v1.7.4 Stable release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.4).
+[Release scope](docs/release-1.7.4.md) · [Next roadmap](docs/roadmap.md)
 
 ## Start in minutes
 
 With Python 3.11–3.14, Git and pipx available, install the published release:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.3"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.4"
 opencntx --version
 ```
 
@@ -53,6 +53,7 @@ Windows/Ubuntu installation, updates and removal.
 | Create a small context package | [Get started](docs/start-here.md) |
 | Organize a longer project | [Workspace](docs/workspace.md) |
 | Resume a bounded task roadmap | [Workflow continuity](docs/continuity.md) |
+| Route small and large project work | [Project roadmap routing](docs/project-roadmaps.md) |
 | Find exact syntax or resolve an error | [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
 | See what is planned next | [Product roadmap](docs/roadmap.md) |
 | Check what has actually shipped | [Releases and current status](docs/releases.md) |
