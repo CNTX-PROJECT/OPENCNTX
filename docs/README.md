@@ -23,6 +23,9 @@ for project-aware routing, context economy, and explicit host boundaries.
 
 ## Core package guides
 
+New to the workflow? Start with the [visual tour](visual-tour.md) for local
+knowledge, an optional GitHub copy, readable notes and small-to-mega task planning.
+
 For selecting local files and preparing reviewable context.
 
 - [Core commands](core.md) — initialize, preview, pack and verify.
