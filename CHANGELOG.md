@@ -2,15 +2,6 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## 1.7.5 - Unreleased
-
-- Replace the duplicate README title with the existing wordmark.
-- Explain local knowledge, optional GitHub copies and notes-app views with
-  original diagrams and a beginner-friendly visual tour.
-- Describe small, medium, large and mega work under one project master roadmap.
-- Advance the source candidate as required by the post-release version policy;
-  the published release and installation target remain v1.7.4.
-
 ## 1.7.4 - 2026-09-11
 
 - Add deterministic project-aware task routing: short related work becomes a

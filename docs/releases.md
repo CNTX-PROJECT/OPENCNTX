@@ -31,10 +31,9 @@ verification. There is no published PyPI/TestPyPI package.
 
 ## Development source and next plan
 
-- Local candidate: v1.7.5.
-- Source candidate: `v1.7.5`.
-- Package version: `1.7.5`.
-- The candidate contains the visual documentation refresh; no v1.7.5 release is published.
+- Local candidate: v1.7.4.
+- Source candidate: `v1.7.4`.
+- Package version: `1.7.4`.
 - Remaining work is tracked on the [roadmap page](roadmap.md).
 
 The release scope distinguishes implemented behavior from deferred extensions;
