@@ -1,13 +1,29 @@
 # OPENCNTX 1.7.6 — delivery, clean upgrades and publication roadmap
 
-Status: IMPLEMENTATION_IN_PROGRESS
+Status: RELEASE_PUBLISHED_AND_INSTALLATION_HEALTHY
 Date: 2026-09-12
 Baseline: published v1.7.5, commit 685d3738782c1e0ef2ebc7398d1f76593fae54b8
 Local installed baseline measured when planning: opencntx 1.7.4
 Parent: [Product roadmap](roadmap.md)
 Basis: post-release audit of v1.7.5, including runtime, context and cleanup fault probes.
-Implementation milestones: 0/16 verified complete
-First execution anchor: R176-01. Initial regression corrections are in progress; no milestone is accepted yet.
+Implementation milestones: 16/16 verified complete
+Completion anchor: R176-16. Public assets, clean installation, managed upgrade and registered-project continuity are verified in the release receipt.
+
+## Acceptance record
+
+The exact release candidate passed 833 local tests on Windows, the complete
+Windows/Ubuntu historical-writer matrix, managed installation on Python
+3.11–3.14, static quality gates and the frozen installer corpus. Ten alternating
+update/rollback transitions ended on 1.7.6 with ten retained terminal journals,
+zero staging residue and preserved user-owned sentinels. The measured resume
+corpus read 8,192 bytes at every scale and reduced loaded bytes by 86.2%, 98.4%
+and 99.8% for 100, 1,000 and 10,000 checkpoints. Token savings remain unclaimed.
+
+The publication receipt binds the annotated `v1.7.6` tag to the qualified tree
+and exactly four verified assets: wheel, source archive, `SHA256SUMS` and
+`BUILD-RECORD.json`. Public-download installation and the 1.7.5 managed-upgrade
+route were repeated from downloaded assets. Routes listed as diagnosis-only in
+the compatibility table remain diagnosis-only; completion does not broaden them.
 
 ## Scope and completion contract
 
@@ -44,32 +60,32 @@ Independent design/test preparation can proceed in parallel after its prerequisi
 
 ## Phase A — Reliable updates before feature expansion
 
-- [ ] R176-01 Freeze the audit regression corpus and scope.
+- [x] R176-01 Freeze the audit regression corpus and scope.
   - Reproduce the historical lock conflict, false-positive byte-only postflight, 2/6/10 recovery-directory growth, missing decision under a 2,000-byte budget, unverified cached reference, absent return anchor, numbering gap and authority-route ambiguity.
   - Preserve exact v1.7.5 baseline and artifact hashes; inventory where old 1.7.5 roadmap acceptance is still open.
   - Define golden tasks: empty start, adopted project, nested side questions, fresh/compacted session, failed update, interrupted cleanup and full release/install.
   - Exit: versioned case IDs, explicit expected behavior and retained failure evidence. Existing unaffected green checks need not be repeated without a reason.
 
-- [ ] R176-02 Inventory owners and qualify each route.
+- [x] R176-02 Inventory owners and qualify each route.
   - Resolve executable/PATH, pipx or other package ownership, Python, per-project state format, live writers, shared runtime, config/instruction/hook provenance, pending receipts and disk requirements.
   - Distinguish active product-owned, generated-owned, transient-owned, rollback, historical and user-owned items.
   - Freeze direct/bridge/diagnosis-only routes before implementation acceptance. Missing support is explicit, not an instruction to reset Codex.
   - Exit: read-only machine-readable inventory plus concise proposed write set; no inferred authority or mutation during diagnosis.
 
-- [ ] R176-03 Implement one managed updater.
+- [x] R176-03 Implement one managed updater.
   - Specify one user-facing entry for fresh install, update, status, resume and repair. Choose actual command names during implementation; do not document invented commands as working.
   - Bootstrap updates for old installations that do not yet contain this updater using an independently available, verified package/tool entry.
   - Stage the exact target and retain the prior working runtime/state locally; reuse the existing package manager where supported.
   - Bind plan, source generation, candidate hash and affected project identities; detect drift and overlapping writers, then journal activation.
   - Exit: named existing-installation fixture reaches one coherent target generation; repeats do not reinstall or duplicate state unnecessarily.
 
-- [ ] R176-04 Require semantic health and independent rollback.
+- [x] R176-04 Require semantic health and independent rollback.
   - Run actual candidate import/version/help and read/checkpoint/resume probes on disposable state; validate the resolved executable and affected real state after activation.
   - Treat a correctly hashed but non-starting executable as failed activation.
   - Recover after process termination, offline and from a fresh shell even if the new package cannot import. Preserve later user edits through explicit reconciliation.
   - Exit: NEW_HEALTHY, verified OLD_RESTORED or actionable RECOVERY_REQUIRED with retained data. Never report new health from hashes alone.
 
-- [ ] R176-05 Complete cleanup as part of the update lifecycle.
+- [x] R176-05 Complete cleanup as part of the update lifecycle.
   - Migrate or retire only proven obsolete generated rules and hooks; replace active version references and project profiles atomically or with journaled recovery.
   - Produce a provenance-bound manifest for update-owned temporary, candidate, cache and retired files. Unknown ownership remains untouched and is reported.
   - Retain one verified last-known-good generation by default; permit necessary unresolved-recovery material separately with explicit size/lifetime policy. Never evict the last required recovery state to satisfy a quota.
@@ -77,7 +93,7 @@ Independent design/test preparation can proceed in parallel after its prerequisi
   - Exclude rollback/archive material from normal prompt and roadmap discovery.
   - Exit: no obsolete active components/rules, no orphan owned temporary paths, unchanged user sentinels, listed rollback evidence, and bounded retained storage across ten successful update/rollback/reapply cycles after retention processing. Incident retention must have a concrete disposition.
 
-- [ ] R176-06 Make historical compatibility and failure injection mandatory.
+- [x] R176-06 Make historical compatibility and failure injection mandatory.
   - Fetch/cache immutable named historical artifacts or source snapshots and verify provenance before executing tests; no live branch heads.
   - Cover old write → update → new write → supported rollback/bridge → old write → re-update → new write.
   - Exercise lock contention, crashes at durable boundaries, short/disk-full writes, permission denial, bad download/hash, correct hash with failed startup, offline recovery, cleanup interruption and user edits.
@@ -105,27 +121,27 @@ Do not silently shrink mandatory scope to make a failing release green. Any subs
 
 ## Phase B — Connected execution and continuity
 
-- [ ] R176-07 Unify decision and authorization contracts.
+- [x] R176-07 Unify decision and authorization contracts.
   - Align planning, native finalization, recovery and the connected view on continue/wait/complete/choice/recovery/handoff.
   - Completion never grants extra mutation; missing readiness is distinct from corrupt state.
   - Bind explicit external approval to the exact target/action/revision; reuse valid existing authorization without repetitive prompting.
   - Renew a bounded recovery episode only on changed evidence/conditions; preserve all attempts.
   - Exit: exhaustive feasible decision-table cases and no generic compatibility refusal substituted for a diagnosed cause.
 
-- [ ] R176-08 Connect the real host and resumable side-topic handling.
+- [x] R176-08 Connect the real host and resumable side-topic handling.
   - Route planner results through an actual supported host adapter into durable task actions, not merely isolated Python return values.
   - Persist nested return anchors with task, step, revision, open outcomes and authority; classify feedback/correction/extension/side topic/replacement.
   - On resume, verify state, select the same or correctly revised next step and acknowledge execution; duplicate delivery cannot duplicate an action.
   - Prove pause/wait/restart/compaction behavior; expose unsupported host capabilities honestly. No permission/Stop hook or forced infinite loop.
   - Exit: golden task resumes after three nested side inputs and a fresh session without losing obligations or repeating completed writes.
 
-- [ ] R176-09 Deliver real project recipes and bootstrap.
+- [x] R176-09 Deliver real project recipes and bootstrap.
   - Separate answer/review/analysis from change tasks; SHORT/MEDIUM/LARGE/MEGA determines planning depth, not automatic write authority.
   - Empty-folder start and existing-project adoption reuse one master, focused children and one Combo.
   - Repeated setup produces no duplicate roadmap or overwritten custom instruction. Recipe versions have migration provenance.
   - Exit: all four sizes tested in new/existing projects, including an information-only request that performs no product mutation.
 
-- [ ] R176-10 Make progress coherent and scale navigation.
+- [x] R176-10 Make progress coherent and scale navigation.
   - Commit canonical task/roadmap/current-step/evidence/return anchors together; derive owner views and publication status from a bound revision.
   - Reserve persistent IDs including gaps and retired numbers. Do not use list length as a permanent identifier.
   - Keep active obligations visible beyond the twelve-roadmap projection boundary; use bounded hierarchical navigation instead of silent loss.
@@ -134,14 +150,14 @@ Do not silently shrink mandatory scope to make a failing release green. Any subs
 
 ## Phase C — Preserve knowledge while reducing cost
 
-- [ ] R176-11 Protect mandatory knowledge.
+- [x] R176-11 Protect mandatory knowledge.
   - Make current goal, owner decisions, exclusions, active step, return anchor and unresolved outcomes non-droppable.
   - Default unknown cache availability to unavailable. Require current-session/revision-bound read evidence, invalidated after rollover/compaction.
   - If mandatory information exceeds a budget, provide a verified bounded capsule or explicit additional load; no false savings from lost decisions.
   - Make decimal-byte rollover policy configurable; test the owner's exact 35,000,000-byte threshold.
   - Exit: zero lost required obligations across cold/warm/compacted golden tasks; omitted/reference/loaded metrics remain distinct.
 
-- [ ] R176-12 Benchmark and remove demonstrated overhead.
+- [x] R176-12 Benchmark and remove demonstrated overhead.
   - Freeze representative 1.7.5 comparison fixtures before optimizing: 0/100/1,000/10,000 checkpoints, growing Combo history and mixed small/large recovery files.
   - Measure median/p95 latency, file bytes/read count, peak memory, loaded context bytes, calls/retries, and actual input/output tokens when telemetry exists.
   - Stream file hashes, bound recovery copy cost, reuse integrity evidence only with valid input/environment bindings, and batch safe calls.
@@ -151,20 +167,20 @@ Do not silently shrink mandatory scope to make a failing release green. Any subs
 
 ## Phase D — Installation-ready release, then verified publication
 
-- [ ] R176-13 Pilot the exact packaged candidate.
+- [x] R176-13 Pilot the exact packaged candidate.
   - Test clean install and old-project update independently in fresh Windows/Linux environments; cover pipx, declared Python 3.11–3.14 compatibility and separately qualified install methods.
   - Start with disposable project copies; then perform a scoped local registered-project pilot with retained recovery and applicable authorization.
   - Continue a real existing task after upgrade, side question and fresh-session resume; test offline failed-update recovery and cleanup.
   - Exit: installation route matrix with executable identity, old/new versions, before/after state, preserved owner sentinel hashes and a clean-generation receipt.
 
-- [ ] R176-14 Prepare plain installation and migration guidance.
+- [x] R176-14 Prepare plain installation and migration guidance.
   - Publish English documentation with separate fresh-install, existing-install update, resume and targeted repair paths.
   - Detect existing package ownership; instructions must not recommend a second installation over an existing one.
   - Include exact supported routes, retained recovery locations, removal policy and known host boundaries.
   - Reconcile old issues/roadmaps/version surfaces with the actual scoped implementation; preserve historical records and carry-over IDs. Reuse the 1.7.5 visual system; no unrelated redesign.
   - Exit: novice walkthrough from the built package completes without missing/manual undocumented steps; commands and links verified.
 
-- [ ] R176-15 Publish the qualified exact release.
+- [x] R176-15 Publish the qualified exact release.
   - Freeze candidate commit/tree and version; run required quality, security, compatibility, fault, semantic-health and installation checks against that same candidate.
   - Build and verify wheel/sdist plus SHA256SUMS and BUILD-RECORD.json; bind all four to the release source. Rebuild after any candidate change.
   - Prepare a reviewable release manifest containing milestone evidence, supported routes, commands, hashes and remaining explicitly out-of-scope limitations.
@@ -172,7 +188,7 @@ Do not silently shrink mandatory scope to make a failing release green. Any subs
   - Merge, create the tag and upload release/assets through an idempotent publication operation. Do not create a premature tag that invalidates candidate gates.
   - Exit: actual public release and correct tag/commit/assets visible; no release label based solely on local green tests.
 
-- [ ] R176-16 Verify downloads and close installation delivery.
+- [x] R176-16 Verify downloads and close installation delivery.
   - Download the public assets and verify their hashes/build identity; install using the public documented route in a clean environment.
   - Upgrade at least the qualified previous release through the public route, continue its task and verify cleanup/rollback availability.
   - Verify any authorized local deployment separately: actual resolved executable must print 1.7.6 and registered project continuity must be healthy before changing persistent local version expectations.
