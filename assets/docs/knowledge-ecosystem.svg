@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">Your knowledge, connected</title><desc id="desc">Local project files are canonical. A reviewed push creates an optional GitHub copy. Summaries provide an optional notes-app view.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#20172c"/></linearGradient><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10" fill="none" stroke="#DDA0DD" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="680" rx="24" fill="url(#bg)"/>
+<style>text{font-family:Segoe UI,Arial,sans-serif;fill:#F8FAFC}.small{font-size:19px;fill:#CBD5E1}.label{font-size:17px;letter-spacing:2px;fill:#DDA0DD;font-weight:700}.heading{font-size:29px;font-weight:700}.body{font-size:22px}.line{fill:none;stroke:#DDA0DD;stroke-width:2;marker-end:url(#arrow)}</style>
+
+<text x="54" y="65" class="label">01 / A HOME FOR YOUR PROJECT</text>
+<text x="54" y="118" font-size="42" font-weight="700">Your knowledge, connected.</text>
+<text x="54" y="155" class="body" fill="#CBD5E1">Keep the original close. Make the overview easy to read.</text>
+<rect x="54" y="203" width="525" height="381" rx="18" fill="#172033" stroke="#DDA0DD"/>
+<text x="82" y="247" class="label">THE SOURCE OF TRUTH</text>
+<text x="82" y="292" class="heading">Your local workspace</text>
+<text x="82" y="337" class="body">Context + source files</text>
+<text x="82" y="377" class="body">Technical knowledge + decisions</text>
+<text x="82" y="417" class="body">Skills + agent-role instructions</text>
+<text x="82" y="457" class="body">Roadmaps + checked results</text>
+<path d="M82 480H548" stroke="#334155"/>
+<text x="82" y="518" class="small">Plain files you can inspect, organize</text>
+<text x="82" y="547" class="small">and carry into the next conversation.</text>
+<path d="M580 302H666" class="line"/><path d="M580 494H666" class="line"/>
+<rect x="680" y="203" width="466" height="177" rx="18" fill="#172033" stroke="#475569"/>
+<text x="708" y="243" class="label">RECOMMENDED / CONFIGURE SYNC</text>
+<text x="708" y="286" class="heading">GitHub copy</text>
+<text x="708" y="323" class="small">Reviewed files + version history</text>
+<text x="708" y="352" class="small">Private project? Use a private repository.</text>
+<rect x="680" y="406" width="466" height="178" rx="18" fill="#172033" stroke="#475569"/>
+<text x="708" y="446" class="label">OPTIONAL / CONFIGURE A VIEW</text>
+<text x="708" y="489" class="heading">Your notes app</text>
+<text x="708" y="526" class="small">Clear knowledge + readable roadmaps</text>
+<text x="708" y="555" class="small">Obsidian or another Markdown-friendly app</text>
+<text x="54" y="634" class="small">Only committed and pushed files reach GitHub. Keep a separate backup for other data.</text></svg>
