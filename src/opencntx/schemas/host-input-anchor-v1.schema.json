@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/host-input-anchor-v1.schema.json",
+  "title": "OPENCNTX host input anchor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "format_version", "input_id", "classification", "project_id", "roadmap_id", "roadmap_revision", "task_id", "step_id", "open_outcome_ids", "authority", "host_id", "claim_digest", "state_digest", "event_head", "parent_input_id", "sequence", "action", "execution", "input_digest"],
+  "properties": {
+    "format": {"const": "opencntx-host-input-anchor"},
+    "format_version": {"const": 1},
+    "input_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9._-]{1,79}$"},
+    "classification": {"enum": ["FEEDBACK", "CORRECTION", "EXTENSION", "SIDE_TOPIC", "REPLACEMENT"]},
+    "project_id": {"type": "string"}, "roadmap_id": {"type": "string"},
+    "roadmap_revision": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "task_id": {"type": "string"}, "step_id": {"type": "string"},
+    "open_outcome_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "authority": {"const": "AUTO PILOT"}, "host_id": {"type": "string"},
+    "claim_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_head": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parent_input_id": {"type": ["string", "null"]}, "sequence": {"type": "integer", "minimum": 1},
+    "action": {"type": "string"}, "execution": {"const": "RECORDED"},
+    "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

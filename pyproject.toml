@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.7.5"
+version = "1.7.6"
 description = "Create small, explicit, verifiable context packages for one AI task."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -35,6 +35,7 @@ Documentation = "https://github.com/CNTX-PROJECT/OPENCNTX/tree/main/docs"
 
 [project.scripts]
 opencntx = "opencntx.cli:main"
+opencntx-install = "opencntx.install_manager:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -51,9 +52,11 @@ target-version = "py311"
 "src/opencntx/cli_workspace.py" = ["S101"] # Assert narrows an internal optional dispatch result.
 "src/opencntx/adaptive_storage.py" = ["S608"] # Bound question-mark placeholders keep record values parameterized.
 "src/opencntx/continuity.py" = ["S603"] # Read-only Git adapters execute only the discovered Git binary with bounded arguments.
+"src/opencntx/install_manager.py" = ["S310", "S603"] # Runs only validated HTTPS GitHub downloads and closed package-manager argv.
 "src/opencntx/continuity_sync.py" = ["S603"] # Private sync executes only bounded Git commands and never invokes a shell.
 "src/opencntx/layout_plan.py" = ["S603"] # Planning executes only fixed read-only Git identity queries.
 "src/opencntx/integrity.py" = ["BLE001"] # Transaction rollback must cover every process-termination exception class.
+"src/opencntx/installation.py" = ["S603"] # The explicitly selected interpreter runs fixed probes without a shell.
 "src/opencntx/primitives.py" = ["TRY004"] # Preserve the established ValueError contract.
 "tests/*.py" = ["S101", "S603"] # Tests use assertions and only fixed local executables.
 "tests/test_integrity.py" = ["BLE001", "S101", "S603"] # The subprocess recorder must report every child failure class.
@@ -62,6 +65,8 @@ target-version = "py311"
 "tools/r8_hardening.py" = ["BLE001", "E402", "S310", "S603"] # A child reports every failure class; the fixed bootstrap, HTTPS URL, and local executables are trusted.
 "tools/release_artifacts.py" = ["S603"] # Runs only controlled local build and install commands.
 "tools/release_version_gate.py" = ["S603"] # Runs only the discovered Git binary with closed read-only arguments.
+"tools/legacy_compatibility.py" = ["S603"] # Runs only fixed read-only Git identity and source cleanliness checks.
+"tools/managed_install_acceptance.py" = ["S603"] # Runs only the selected local Python and package installer.
 "tools/render_brand.py" = ["S314"] # Parses only SVG bytes generated inside this repository.
 
 [tool.mypy]
@@ -78,5 +83,5 @@ fail_under = 78
 show_missing = true
 
 [tool.opencntx.release]
-published_version = "1.7.5"
+published_version = "1.7.6"
 status = "published"

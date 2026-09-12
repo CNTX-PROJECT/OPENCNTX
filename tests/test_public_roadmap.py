@@ -69,8 +69,12 @@ class PublicRoadmapTests(unittest.TestCase):
         plan = (ROOT / "docs/roadmap-plan.md").read_text(encoding="utf-8")
         overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
         releases = (ROOT / "docs/releases.md").read_text(encoding="utf-8")
+        with (ROOT / "pyproject.toml").open("rb") as project_file:
+            published = tomllib.load(project_file)["tool"]["opencntx"]["release"][
+                "published_version"
+            ]
         self.assertIn("published_baseline: 1.7.3", plan)
-        self.assertIn("Published software — v1.7.5 Stable", releases)
+        self.assertIn(f"Published software — v{published} Stable", releases)
         self.assertIn("release scope", releases)
         self.assertIn("remaining work", releases.lower())
         self.assertIn("twelve failed tasks out of one hundred", overview)

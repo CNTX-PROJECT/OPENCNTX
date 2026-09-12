@@ -8,18 +8,18 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 6 · v1.7.5 Stable engine and visual release published · remaining work tracked.**
+**Revision 7 · v1.7.6 Stable managed delivery release published · remaining work tracked.**
 
 **[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.7.5 ships the engine and visual roadmaps: deterministic task-size
-recipes, safe-action gating, durable rollback resumption, legacy-safe staging,
-and the responsive English knowledge-and-roadmap guide. It retains the 1.7.4
-project-aware routing documented in its [release scope](release-1.7.5.md). The
-complete historical plan retains unfinished work; publication status is based
-on the GitHub Release.
+Version 1.7.6 adds an independent managed installer, semantic runtime health,
+offline rollback, bounded owned cleanup, durable nested return anchors and
+measured context planning. It retains the 1.7.5 engine and visual release and
+the 1.7.4 project-aware routing. Read its [release scope](release-1.7.6.md) and
+[delivery roadmap](roadmap-1.7.6.md). The complete historical plan retains
+unfinished work; publication status is based on the GitHub Release.
 
-## What 1.7.5 improves
+## What 1.7.6 improves
 
 | Priority | Intended result |
 |---|---|
@@ -67,7 +67,8 @@ than adding global policy layers.
 
 | Record | Where to read it |
 |---|---|
-| Current 1.7.5 release scope | [Engine and visual release](release-1.7.5.md) |
+| Current 1.7.6 release scope | [Managed delivery release](release-1.7.6.md) |
+| 1.7.5 release scope | [Engine and visual release](release-1.7.5.md) |
 | 1.7.3 plan, revision 4 | [Complete historical roadmap](roadmap-plan.md) |
 | Previous 1.7.2 plan, revision 3 | [Fixed historical English snapshot](https://github.com/CNTX-PROJECT/OPENCNTX/blob/f6edbbf6d9d81310c37a55036f7d9794e38e109b/docs/roadmap-plan.md) |
 | Shipped software and known limitations | [Releases](releases.md) |

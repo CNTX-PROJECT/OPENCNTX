@@ -86,13 +86,16 @@ class ContextEconomyTests(unittest.TestCase):
         result = plan_context_load(
             sources,
             previous_digests={"old-analysis": "c" * 64, "changed-decision": "e" * 64},
+            available_source_ids=("old-analysis",),
             max_bytes=4000,
         )
         self.assertEqual(
             ["current-step", "return-anchor", "changed-decision"], result["load_source_ids"]
         )
         self.assertEqual(["old-analysis"], result["reference_source_ids"])
-        self.assertEqual(["current-step", "return-anchor"], result["required_source_ids"])
+        self.assertEqual(
+            ["current-step", "return-anchor", "changed-decision"], result["required_source_ids"]
+        )
         self.assertEqual(0, result["omitted_bytes"])
         self.assertEqual(6000, result["referenced_bytes"])
         self.assertEqual(0.0, result["omission_percent"])

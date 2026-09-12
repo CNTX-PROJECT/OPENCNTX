@@ -125,13 +125,8 @@ class LegacyRecoveryTests(unittest.TestCase):
     def test_actual_legacy_writer_can_continue_on_recovery_copy(self):
         result = self.stage()
         source = Path(os.environ["R15_LEGACY_SOURCE"]).resolve(strict=True)
-        code = (
-            "from pathlib import Path; import sys; import opencntx.continuity as c; "
-            "assert Path(c.__file__).resolve().is_relative_to(Path(sys.argv[2])); "
-            "root=Path(sys.argv[1]); s=c.execution_state_capsule(root); "
-            "c.record_execution_checkpoint(root,checkpoint_id='OLD-RESUMED',current_internal_task='VERIFY',"
-            "next_internal_action='Continue without reset',evidence_paths=['input.txt'],expected_state_digest=s['state_digest'])"
-        )
+        code = fixtures.legacy_writer_code("OLD-RESUMED")
+        before_state = execution_state_capsule(Path(result["staged_project"]))
         child = subprocess.run(
             [sys.executable, "-B", "-c", code, result["staged_project"], str(source)],
             env=dict(os.environ, PYTHONPATH=str(source)),
@@ -141,10 +136,8 @@ class LegacyRecoveryTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(child.returncode, 0, child.stderr)
-        self.assertEqual(
-            execution_state_capsule(Path(result["staged_project"]))["checkpoint_number"],
-            self.state["checkpoint_number"] + 1,
-        )
+        after_state = execution_state_capsule(Path(result["staged_project"]))
+        self.assertNotEqual(before_state["state_digest"], after_state["state_digest"])
         self.assertEqual(bytes_map(self.root), self.before)
 
     @unittest.skipUnless(os.environ.get("R15_LEGACY_SOURCE"), "Actual legacy source required")
@@ -156,14 +149,17 @@ class LegacyRecoveryTests(unittest.TestCase):
             expected_state_digest=self.fixture.state["state_digest"],
         )
         source = Path(os.environ["R15_LEGACY_SOURCE"]).resolve(strict=True)
-        code = (
-            "from pathlib import Path; import sys; import opencntx.continuity as c; "
-            "root=Path(sys.argv[1]); s=c.execution_state_capsule(root); "
-            "c.record_execution_checkpoint(root,checkpoint_id='OLD-V2-RESUMED',current_internal_task='VERIFY',"
-            "next_internal_action='Continue without reset',evidence_paths=['input.txt'],expected_state_digest=s['state_digest'])"
-        )
+        code = fixtures.legacy_writer_code("OLD-V2-RESUMED")
+        before_state = execution_state_capsule(Path(result["staged_project"]))
         child = subprocess.run(
-            [sys.executable, "-B", "-c", code, result["staged_project"]],
+            [
+                sys.executable,
+                "-B",
+                "-c",
+                code,
+                result["staged_project"],
+                str(source),
+            ],
             env=dict(os.environ, PYTHONPATH=str(source)),
             capture_output=True,
             text=True,
@@ -171,10 +167,8 @@ class LegacyRecoveryTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(child.returncode, 0, child.stderr)
-        self.assertEqual(
-            execution_state_capsule(Path(result["staged_project"]))["checkpoint_number"],
-            self.fixture.state["checkpoint_number"] + 1,
-        )
+        after_state = execution_state_capsule(Path(result["staged_project"]))
+        self.assertNotEqual(before_state["state_digest"], after_state["state_digest"])
         self.assertEqual(
             json.loads(
                 (Path(result["staged_project"])

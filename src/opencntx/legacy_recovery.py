@@ -7,6 +7,7 @@ actual legacy runtime on the staged copy before switching any active path.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -18,7 +19,6 @@ from typing import Any
 
 from .continuity import (
     ContinuityError,
-    _digest,
     _fail,
     _value_digest,
     _writer_lock,
@@ -46,7 +46,9 @@ def _project_digest(root: Path) -> str:
         if stat.S_ISDIR(info.st_mode):
             records.append([relative, "directory"])
         elif stat.S_ISREG(info.st_mode):
-            records.append([relative, _digest(path.read_bytes())])
+            with path.open("rb") as stream:
+                digest = hashlib.file_digest(stream, "sha256").hexdigest()
+            records.append([relative, digest])
         else:
             raise _fail("legacy_recovery_path_invalid", "Project contains a special file.")
     return _value_digest(records)

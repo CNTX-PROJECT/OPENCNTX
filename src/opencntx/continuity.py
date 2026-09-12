@@ -560,21 +560,24 @@ def _function_batch(
 
 def _selection_artifacts(
     value: tuple[Path, dict[str, Any], str],
-) -> tuple[dict[str, Any], bytes, bytes]:
+) -> tuple[dict[str, Any], tuple[bytes, ...], bytes]:
     store, assignment, identifier = value
     check = _read_json(
         store / "receipts" / f"{identifier}-existing-check.json",
         failure_kind="continuity_store_invalid",
     )
     try:
-        expected_detail = _detail_bytes(assignment, check["result"])
+        expected_details = (
+            _detail_bytes(assignment, check["result"]),
+            _legacy_detail_bytes_v1_1(assignment, check["result"]),
+        )
         actual_detail = (store / "details" / f"{identifier}.md").read_bytes()
     except (KeyError, OSError, TypeError) as exc:
         raise _fail(
             "continuity_store_invalid",
             "Bound assignment detail is unavailable or invalid.",
         ) from exc
-    return check, expected_detail, actual_detail
+    return check, expected_details, actual_detail
 
 
 def _handoff_artifacts(
@@ -706,7 +709,7 @@ def _validate_store_bindings(
         selection_inputs, selection_payloads, selection_files, strict=True
     ):
         _, _, identifier = selection_input
-        check, expected_detail, actual_detail = artifacts
+        check, expected_details, actual_detail = artifacts
         check_digest = check.get("check_digest")
         check_basis = {key: value for key, value in check.items() if key != "check_digest"}
         if (
@@ -718,7 +721,7 @@ def _validate_store_bindings(
                 "continuity_store_invalid",
                 "Existing-check receipt differs from its selected assignment binding.",
             )
-        if actual_detail != expected_detail:
+        if actual_detail not in expected_details:
             raise _fail(
                 "continuity_store_invalid",
                 "Assignment detail differs from its bound roadmap and existing check.",
@@ -1262,6 +1265,40 @@ def _detail_bytes(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
 - Rev4 result: the objective in this detail wins within the bound scope.
 - Migration/compatibility: {migration}
 - Files: {check["file_count"]}
+- Bytes: {check["byte_count"]}
+
+{paths}
+
+## Definition of Done
+
+{done}
+"""
+    return text.encode("utf-8")
+
+
+def _legacy_detail_bytes_v1_1(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
+    """Reproduce the exact v1.1.0 detail format for authenticated old stores."""
+    paths = (
+        "\n".join(
+            f"- `{item['path']}` — {item['bytes']} bytes — `{item['sha256']}`"
+            for item in check["included"]
+        )
+        or "- Geen bestaand geraakt bestand gevonden."
+    )
+    done = "\n".join(f"- [ ] {item}" for item in assignment["definition_of_done"])
+    migration = assignment["migration"] or "Niet nodig."
+    text = f"""# {assignment["id"]} — {assignment["title"]}
+
+## Detail
+
+{assignment["detail"]}
+
+## Korte bestaande-check
+
+- Conflictklasse: `{assignment["conflict"]}`
+- Rev4-uitkomst: het doel in dit detail wint binnen de gebonden scope.
+- Migratie/compatibility: {migration}
+- Bestanden: {check["file_count"]}
 - Bytes: {check["byte_count"]}
 
 {paths}

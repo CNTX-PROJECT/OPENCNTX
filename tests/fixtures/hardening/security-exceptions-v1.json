@@ -3,6 +3,26 @@
   "format_version": 1,
   "exceptions": [
     {
+      "path": "src/opencntx/installation.py",
+      "codes": ["S603"],
+      "reason": "The owner explicitly selects the target Python interpreter; only fixed isolated health probes run with no shell and disposable project state."
+    },
+    {
+      "path": "src/opencntx/install_manager.py",
+      "codes": ["S310", "S603"],
+      "reason": "The manager accepts downloads only from approved GitHub HTTPS hosts and invokes package managers through closed argument vectors without a shell."
+    },
+    {
+      "path": "tools/legacy_compatibility.py",
+      "codes": ["S603"],
+      "reason": "The discovered Git executable runs fixed read-only identity and cleanliness checks against an explicitly selected historical checkout."
+    },
+    {
+      "path": "tools/managed_install_acceptance.py",
+      "codes": ["S603"],
+      "reason": "The acceptance harness invokes only an explicitly selected local Python interpreter and package installer with fixed repository-owned arguments."
+    },
+    {
       "path": "src/opencntx/adaptive_storage.py",
       "codes": ["S608"],
       "reason": "The only dynamic SQL fragment is a counted sequence of literal question-mark placeholders; every record value remains separately parameterized."

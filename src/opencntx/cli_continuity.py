@@ -35,7 +35,7 @@ from .continuity import (
 from .continuity_sync import apply_sync, build_sync_preview, configure_sync, sync_status
 from .goal_binding import BoundGoal
 from .governance import assess_profile
-from .host_protocol import claim_host, host_status, resume_host
+from .host_protocol import claim_host, host_status, park_host_input, resume_host, return_host_input
 from .legacy_recovery import stage_legacy_recovery
 from .recovery import record_failed_attempt, recovery_decision, recovery_report
 
@@ -184,6 +184,27 @@ def _register_sync_host_commands(
     host_resume_parser.add_argument("--host", required=True, help="portable uppercase host ID")
     host_resume_parser.add_argument("--claim-digest", required=True)
     _root_argument(host_resume_parser)
+    host_park_parser = host_commands.add_parser(
+        "park", help="persist one classified nested input with an exact return anchor"
+    )
+    host_park_parser.add_argument("--host", required=True)
+    host_park_parser.add_argument("--claim-digest", required=True)
+    host_park_parser.add_argument("--input-id", required=True)
+    host_park_parser.add_argument(
+        "--classification",
+        required=True,
+        choices=("FEEDBACK", "CORRECTION", "EXTENSION", "SIDE_TOPIC", "REPLACEMENT"),
+    )
+    host_park_parser.add_argument("--step", required=True)
+    host_park_parser.add_argument("--open-outcome", action="append", default=[])
+    _root_argument(host_park_parser)
+    host_return_parser = host_commands.add_parser(
+        "return", help="acknowledge the newest nested input and resume its verified anchor"
+    )
+    host_return_parser.add_argument("--host", required=True)
+    host_return_parser.add_argument("--input-id", required=True)
+    host_return_parser.add_argument("--input-digest", required=True)
+    _root_argument(host_return_parser)
 
 
 def _register_governance_commands(
@@ -390,6 +411,29 @@ def _dispatch_host(args: argparse.Namespace) -> int:
         return 0
     if command == "resume":
         _print(resume_host(root, args.host, args.claim_digest))
+        return 0
+    if command == "park":
+        _print(
+            park_host_input(
+                root,
+                args.host,
+                args.claim_digest,
+                input_id=args.input_id,
+                classification=args.classification,
+                step_id=args.step,
+                open_outcome_ids=args.open_outcome,
+            )
+        )
+        return 0
+    if command == "return":
+        _print(
+            return_host_input(
+                root,
+                args.host,
+                input_id=args.input_id,
+                input_digest=args.input_digest,
+            )
+        )
         return 0
     return 2
 

@@ -2,11 +2,18 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
+## Installation management
+
+`opencntx-install status` inventories an existing package owner without
+writing. The independent entry point also provides `install`, `update`,
+`resume`, and `repair`; candidate and rollback hashes are mandatory for an
+existing installation. Follow the exact checksum and recovery walkthrough in
+[Install and update OPENCNTX 1.7.6](install-and-update.md).
+
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
 
-This navigation table documents 74 public CLI paths: five orientation and
-version routes plus all 69 executable routes from the real parser. It does not invent options or grant
+This navigation table documents 77 public CLI paths from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -83,10 +90,12 @@ required arguments and repeatable options.
 | 69 | `opencntx flow host status` | deliver exactly one current assignment without writes |
 | 70 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
 | 71 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
-| 72 | `opencntx layout audit` | report deterministic order findings without changing paths |
-| 73 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
-| 74 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
-| 75 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
+| 72 | `opencntx flow host park` | persist a classified nested input and exact return anchor |
+| 73 | `opencntx flow host return` | acknowledge the newest input and resume its verified step |
+| 74 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 75 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 76 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
+| 77 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
 
 ## Roadmap flow
 

@@ -51,8 +51,8 @@ class StartHereQualityTests(unittest.TestCase):
 class LanguageQualityTests(unittest.TestCase):
     def test_current_source_has_only_intentional_unicode(self) -> None:
         result = language_gate.check_language()
-        self.assertEqual(11, result["literal_count"])
-        self.assertEqual(12, result["character_count"])
+        self.assertEqual(14, result["literal_count"])
+        self.assertEqual(15, result["character_count"])
         self.assertEqual(["legacy_i18n", "unicode_symbol"], result["purposes"])
         self.assertEqual([], result["violations"])
 
@@ -78,10 +78,10 @@ class LanguageQualityTests(unittest.TestCase):
 class SchemaPurposeTests(unittest.TestCase):
     def test_every_r17_schema_has_one_unique_declared_need(self) -> None:
         result = schema_purpose_gate.check_schema_purposes()
-        self.assertEqual(85, result["schema_count"])
+        self.assertEqual(89, result["schema_count"])
         self.assertEqual(73, result["baseline_count"])
-        self.assertEqual(12, result["new_schema_count"])
-        self.assertEqual(12, result["unique_purposes"])
+        self.assertEqual(16, result["new_schema_count"])
+        self.assertEqual(16, result["unique_purposes"])
         self.assertEqual([], result["undeclared_new"])
 
     def test_an_undeclared_schema_fails_closed(self) -> None:

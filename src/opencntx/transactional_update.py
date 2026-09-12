@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -50,13 +51,14 @@ def _tree_digest(root: Path) -> str:
         if stat.S_ISDIR(mode):
             records.append({"path": relative, "type": "directory"})
         elif stat.S_ISREG(mode):
-            content = path.read_bytes()
+            with path.open("rb") as stream:
+                file_digest = hashlib.file_digest(stream, "sha256").hexdigest()
             records.append(
                 {
                     "path": relative,
                     "type": "file",
-                    "bytes": len(content),
-                    "sha256": _digest(content),
+                    "bytes": path.stat().st_size,
+                    "sha256": file_digest,
                 }
             )
         else:
@@ -651,6 +653,7 @@ def apply_update_plan(
     *,
     approval: str,
     fault_hook: Callable[[str], None] | None = None,
+    runtime_check: Callable[[Mapping[str, object], str], None] | None = None,
 ) -> dict[str, Any]:
     """Lock declared project writers as well as the existing update transaction."""
     selected = _validate_plan(plan)
@@ -677,7 +680,9 @@ def apply_update_plan(
                 stack.enter_context(_writer_lock(lock))
             if _project_checks(root, requests, selected["to_version"], locks_owned=True) != checks:
                 raise _fail("update_project_drift", "Project changed before writer lock.")
-        return _apply_update_plan_locked(selected, approval=approval, fault_hook=fault_hook)
+        return _apply_update_plan_locked(
+            selected, approval=approval, fault_hook=fault_hook, runtime_check=runtime_check
+        )
 
 
 @contextmanager
@@ -775,6 +780,7 @@ def _apply_update_plan_locked(
     *,
     approval: str,
     fault_hook: Callable[[str], None] | None = None,
+    runtime_check: Callable[[Mapping[str, object], str], None] | None = None,
 ) -> dict[str, Any]:
     """Apply one exact approved plan with verified backup, rollback, and replay."""
     selected = _validate_plan(plan)
@@ -811,6 +817,8 @@ def _apply_update_plan_locked(
                 for item in selected["components"]
             ):
                 raise _fail("update_postflight_failed", "Completed update active state drifted.")
+            if runtime_check is not None:
+                runtime_check(selected, "ACTIVE")
             return receipt
         journal_path = state_root / "journal.json"
         retired_root = state_root / "retired" / str(selected["plan_id"])
@@ -832,6 +840,11 @@ def _apply_update_plan_locked(
                 "update_disk_space_insufficient", "Current free space is below the plan bound."
             )
         backup = Path(str(selected["backup_path"]))
+        if runtime_check is not None:
+            # Run before creating backups or changing active components. The
+            # callback is supplied by the calling application, never loaded
+            # from plan JSON or treated as an external authorization grant.
+            runtime_check(selected, "CANDIDATE")
         try:
             for item in selected["components"]:
                 name = item["name"]
@@ -862,6 +875,10 @@ def _apply_update_plan_locked(
                     raise _fail(
                         "update_postflight_failed", "Active target digest differs after cutover."
                     )
+            if runtime_check is not None:
+                # Keep the original generation available until real startup
+                # succeeds. Failure enters the same tested rollback path.
+                runtime_check(selected, "ACTIVE")
             _preserve_directory(staging_root, state_root)
             _preserve_directory(retired_root, state_root)
             receipt = {
