@@ -37,6 +37,9 @@ verification. There is no published PyPI/TestPyPI package.
 - Candidate scope: [engine and visual release plan](release-1.7.5.md).
 - Publication, tag and release-assets are intentionally still a separate step.
 
+Remaining work outside this bounded candidate stays on the [roadmap page](roadmap.md)
+and is never implied by a version number.
+
 The release scope distinguishes implemented behavior from deferred extensions;
 a roadmap checkbox is never a substitute for release evidence.
 
