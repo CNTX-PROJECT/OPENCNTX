@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
@@ -50,13 +51,14 @@ def _tree_digest(root: Path) -> str:
         if stat.S_ISDIR(mode):
             records.append({"path": relative, "type": "directory"})
         elif stat.S_ISREG(mode):
-            content = path.read_bytes()
+            with path.open("rb") as stream:
+                file_digest = hashlib.file_digest(stream, "sha256").hexdigest()
             records.append(
                 {
                     "path": relative,
                     "type": "file",
-                    "bytes": len(content),
-                    "sha256": _digest(content),
+                    "bytes": path.stat().st_size,
+                    "sha256": file_digest,
                 }
             )
         else:

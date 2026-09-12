@@ -10,7 +10,7 @@ _RELATIONS = frozenset({"INFORMATION", "RELATED", "EXTENSION", "DISTINCT_OUTCOME
 _SIZES = frozenset({"SHORT", "MEDIUM", "LARGE", "MEGA"})
 _CONTEXT_ROLES = frozenset({"CURRENT_STEP", "RETURN_ANCHOR", "DECISION", "SUPPORTING"})
 _ROLE_PRIORITY = {"CURRENT_STEP": 0, "RETURN_ANCHOR": 1, "DECISION": 2, "SUPPORTING": 3}
-_REQUIRED_ROLES = frozenset({"CURRENT_STEP", "RETURN_ANCHOR"})
+_REQUIRED_ROLES = frozenset({"CURRENT_STEP", "RETURN_ANCHOR", "DECISION"})
 
 
 def _identifier(value: str | None, name: str, *, required: bool = False) -> str | None:
@@ -88,17 +88,33 @@ def route_project_task(
             ],
         }[facts.size_class],
     }
-    if not facts.project_known:
+    if facts.relation == "INFORMATION":
+        base.update(recipe_id="builtin.information-v1", method_steps=["scope", "read", "answer"])
+    if not facts.project_known and facts.relation == "INFORMATION":
         return base | {"action": "ANSWER_ONLY", "recipe_id": None, "method_steps": []}
+    if not facts.project_known:
+        return base | {"action": "BOOTSTRAP_PROJECT", "roadmap_required": True}
     if master is None:
         raise ValueError("a known project requires its master roadmap")
     if facts.relation == "SIDE_TOPIC":
+        _identifier(current_step, "current step", required=True)
+        base["return_to_roadmap_id"] = current_child or master
         return base | {"action": "PARK_AND_RETURN", "target_roadmap_id": current_child or master}
     if facts.relation == "DISTINCT_OUTCOME" and facts.size_class in {"LARGE", "MEGA"}:
         return base | {
             "action": "CREATE_CHILD_ROADMAP",
             "parent_roadmap_id": master,
-            "child_ordinal": len(children) + 1,
+            "child_ordinal": max(
+                [len(children)]
+                + [
+                    int(item.rsplit("-", 1)[-1])
+                    for item in children
+                    if item is not None
+                    and item.rsplit("-", 1)[-1].isascii()
+                    and item.rsplit("-", 1)[-1].isdigit()
+                ]
+            )
+            + 1,
         }
     if facts.size_class == "SHORT":
         return base | {"action": "ATTACH_STEP", "target_roadmap_id": current_child or master}
@@ -163,7 +179,7 @@ def plan_context_load(
         required = source.role in _REQUIRED_ROLES
         if required:
             required_ids.append(source.source_id)
-        reference_available = available is None or source.source_id in available
+        reference_available = available is not None and source.source_id in available
         if unchanged and not required and reference_available:
             reference.append(source.source_id)
             referenced_bytes += source.byte_count
@@ -229,6 +245,9 @@ def decide_execution(facts: ExecutionFacts) -> dict[str, Any]:
             raise ValueError(f"{name} must be boolean")
     roadmap = _identifier(facts.return_to_roadmap_id, "return roadmap")
     step = _identifier(facts.return_to_step_id, "return step")
+    if facts.feedback_only:
+        _identifier(roadmap, "return roadmap", required=True)
+        _identifier(step, "return step", required=True)
     decision = "CONTINUE"
     technical_mutation_allowed = False
     reason = "OPEN_SAFE_WORK"

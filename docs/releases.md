@@ -50,6 +50,11 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
+Local candidate: v1.7.6. Implementation is in progress against the
+[1.7.6 delivery roadmap](roadmap-1.7.6.md). It is not yet a released software
+package; v1.7.5 remains the available download. Candidate checks do not mark
+unfinished update, cleanup, host-integration or installation milestones complete.
+
 | Item | Current boundary |
 |---|---|
 | Python | 3.11, 3.12, 3.13 and 3.14 |

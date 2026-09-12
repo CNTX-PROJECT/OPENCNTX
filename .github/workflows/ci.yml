@@ -14,6 +14,56 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  legacy:
+    name: Legacy ${{ matrix.legacy.name }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        legacy:
+          - name: 1.5.0
+            commit: a670af45676ec977103e8d1c575d0998f5683785
+          - name: 1.6.0
+            commit: 78ad80017c35cf430d67537486cd254449a44c6d
+          - name: 1.6.1
+            commit: db6ee76ae247ebe90c56e7593bdefd7797804f41
+          - name: 1.6.2-candidate
+            commit: 01c34fc5aab556a2e5e0447af2a83bbb46f48ef1
+          - name: 1.6.3
+            commit: 20731daca41216d341240092321146aa0c58f1f0
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUTF8: "1"
+      PYTHONPATH: src
+      LEGACY_COMMIT: ${{ matrix.legacy.commit }}
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Require historical writer tests without skips
+        shell: python {0}
+        run: |
+          import os
+          import pathlib
+          import subprocess
+          import sys
+
+          source = pathlib.Path(os.environ["RUNNER_TEMP"]) / "legacy-source"
+          commit = os.environ["LEGACY_COMMIT"]
+          subprocess.run(["git", "worktree", "add", "--detach", str(source), commit], check=True)
+          subprocess.run([
+              sys.executable, "tools/legacy_compatibility.py",
+              "--source", str(source), "--expected-commit", commit,
+          ], check=True)
+
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}

@@ -14,7 +14,7 @@ pack, inspect and verify. Workspace and continuity are optional.
 |---|---|
 | Installation, a first package, updates or removal | [Get started](start-here.md) |
 | A short explanation of the product | [How it works](how-it-works.md) |
-| The latest development plan | [Roadmap](roadmap.md) — 1.7.5; [complete historical plan](roadmap-plan.md) |
+| The latest development plan | [1.7.6 implementation roadmap](roadmap-1.7.6.md); [Roadmap](roadmap.md); [complete historical plan](roadmap-plan.md) |
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 

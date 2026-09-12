@@ -2,6 +2,23 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.6 - Unreleased implementation candidate
+
+- Preserve owner decisions in bounded context plans and require explicit
+  availability before referring to unchanged supporting context.
+- Reject incomplete side-topic return anchors, prevent gapped child identifiers
+  from reusing a reserved ordinal, and distinguish information and bootstrap recipes.
+- Add standalone installation identity and runtime health probes covering actual
+  import, version, help, checkpoint creation and fresh-process continuation.
+- Stream component and legacy-recovery hashes instead of reading entire files.
+- Require immutable historical writer regressions in Windows and Ubuntu CI,
+  including the pre-1.6 writer protocol; mandatory cases cannot silently skip.
+
+The [full 1.7.6 roadmap](docs/roadmap-1.7.6.md) remains in progress. These
+initial changes do not yet implement the complete managed installer, bounded
+update cleanup, host integration, or the full installation acceptance matrix.
+No v1.7.6 software release is claimed by this candidate entry.
+
 ## 1.7.5 - 2026-09-12
 
 Released engine and visual roadmaps. This release adds

@@ -26,6 +26,7 @@ unrelated behavior untouched.
 
 ```powershell
 $env:PYTHONDONTWRITEBYTECODE="1"
+$env:PYTHONPATH="src"
 python -W error::ResourceWarning -m unittest discover -s tests
 python -m pip install --disable-pip-version-check -r requirements-quality.txt
 python -m coverage run --branch --source=opencntx -m unittest discover -s tests

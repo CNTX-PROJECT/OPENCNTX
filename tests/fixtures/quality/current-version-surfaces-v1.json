@@ -67,7 +67,8 @@
         "local release helper emits exactly four v{version} files",
         "--expected-version {version}"
       ],
-      "purpose": "Current release artifact contract"
+      "purpose": "Published release artifact contract",
+      "version_source": "published"
     }
   ]
 }
