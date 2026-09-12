@@ -16,7 +16,15 @@ from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 
-from .continuity import _digest, _fail, _value_digest, _writer_lock, execution_state_capsule
+from .continuity import (
+    ContinuityError,
+    _digest,
+    _fail,
+    _value_digest,
+    _writer_lock,
+    execution_state_capsule,
+)
+from .continuity_version import FORMAT, _retained_legacy_bytes
 
 LOCK_PATHS = (
     "CONTROL/continuity.lock",
@@ -73,13 +81,20 @@ def stage_legacy_recovery(
             "legacy_recovery_path_invalid", "Use a new destination outside the source project."
         )
     roadmap_path = source / ".opencntx/continuity/roadmaps/roadmap.json"
-    if (
-        json.loads(roadmap_path.read_text(encoding="utf-8")).get("format")
-        == "opencntx-goal-storage-envelope"
-    ):
+    roadmap_value = json.loads(roadmap_path.read_text(encoding="utf-8"))
+    try:
+        legacy_roadmap_bytes = _retained_legacy_bytes(roadmap_value)
+    except ContinuityError as exc:
+        if roadmap_value.get("format") == FORMAT:
+            raise _fail(
+                "legacy_recovery_snapshot_required",
+                "Newer storage has no valid retained pre-upgrade snapshot; the original is unchanged.",
+            ) from exc
+        raise
+    if roadmap_value.get("format") == FORMAT and legacy_roadmap_bytes is None:
         raise _fail(
             "legacy_recovery_snapshot_required",
-            "Newer storage requires its retained pre-upgrade snapshot; the original is unchanged.",
+            "Newer storage has no valid retained pre-upgrade snapshot; the original is unchanged.",
         )
     # Validate the complete tree before acquiring any lock or creating staging.
     _project_digest(source)
@@ -92,7 +107,9 @@ def stage_legacy_recovery(
             )
     with ExitStack() as stack:
         for lock in sorted(locks):
-            stack.enter_context(_writer_lock(lock, reject_local_overlap=True))
+            stack.enter_context(
+                _writer_lock(lock, reject_local_overlap=True, preserve_marker=True)
+            )
         # Missing lock paths cannot be created as a side effect of this copy.
         # An absent operation lock is acceptable only for a quiesced initial store;
         # callers must first create a current-version checkpoint instead.
@@ -117,6 +134,13 @@ def stage_legacy_recovery(
         shutil.copytree(source, copy, ignore=ignore)
         if _project_digest(source) != before or _project_digest(copy) != before:
             raise _fail("legacy_recovery_drift", f"Project changed; staging retained at {staging}.")
+        if legacy_roadmap_bytes is not None:
+            # The retained bytes are the only deliberate difference in a copy
+            # prepared for an older reader; all event and evidence bytes remain
+            # bound to the same validated roadmap state.
+            (copy / ".opencntx/continuity/roadmaps/roadmap.json").write_bytes(
+                legacy_roadmap_bytes
+            )
         removed = [lock.relative_to(source).as_posix() for lock in locks]
         if execution_state_capsule(copy)["state_digest"] != expected_state_digest:
             raise _fail(
@@ -134,6 +158,7 @@ def stage_legacy_recovery(
             "source_unchanged": _project_digest(source) == before,
             "staged_project": str(target / "project"),
             "removed_copy_markers": removed,
+            "legacy_roadmap_restored": legacy_roadmap_bytes is not None,
             "state_digest": expected_state_digest,
             "runtime_switched": False,
         }

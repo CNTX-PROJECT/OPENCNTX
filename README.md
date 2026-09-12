@@ -4,7 +4,7 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **v1.7.4 Stable release**
+Local first · Any model · Your files, your decisions · **v1.7.5 Stable release**
 
 [Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 
@@ -70,7 +70,7 @@ A new chat resumes saved work; it does not by itself require another roadmap. Yo
 With Python 3.11–3.14, Git and pipx available:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.4"
+pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.5"
 opencntx --version
 ```
 

@@ -68,7 +68,7 @@ required arguments and repeatable options.
 | 54 | `opencntx flow health` | verify local roadmap, state, detail and history |
 | 55 | `opencntx flow capabilities` | discover local storage and Git capabilities read-only |
 | 56 | `opencntx flow inspect` | use the file, Git, Markdown or JSON adapter read-only |
-| 57 | `opencntx flow legacy-stage` | development candidate: prepare an isolated recovery copy; no runtime switch |
+| 57 | `opencntx flow legacy-stage` | prepare an isolated v1-compatible recovery copy; no runtime switch |
 | 58 | `opencntx flow profile` | choose the smallest safe governance profile from fixed facts |
 | 59 | `opencntx flow recovery` | record or inspect the fixed four-stage recovery sequence |
 | 60 | `opencntx flow combo` | maintain or query the bounded derived Combo Roadmap |

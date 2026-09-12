@@ -70,7 +70,7 @@ class PublicRoadmapTests(unittest.TestCase):
         overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
         releases = (ROOT / "docs/releases.md").read_text(encoding="utf-8")
         self.assertIn("published_baseline: 1.7.3", plan)
-        self.assertIn("Package version: `1.7.5`", releases)
+        self.assertIn("Published software — v1.7.5 Stable", releases)
         self.assertIn("release scope", releases)
         self.assertIn("remaining work", releases.lower())
         self.assertIn("twelve failed tasks out of one hundred", overview)

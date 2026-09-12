@@ -8,16 +8,18 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 5 · v1.7.4 Stable project-routing release published · remaining work tracked.**
+**Revision 6 · v1.7.5 Stable engine and visual release published · remaining work tracked.**
 
 **[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.7.4 ships project-aware task routing, explicit child-roadmap creation,
-return anchors, continuation decisions, and bounded changed-context loading as
-documented in its [release scope](release-1.7.4.md). The complete historical
-plan retains unfinished work; publication status is based on the GitHub Release.
+Version 1.7.5 ships the engine and visual roadmaps: deterministic task-size
+recipes, safe-action gating, durable rollback resumption, legacy-safe staging,
+and the responsive English knowledge-and-roadmap guide. It retains the 1.7.4
+project-aware routing documented in its [release scope](release-1.7.5.md). The
+complete historical plan retains unfinished work; publication status is based
+on the GitHub Release.
 
-## What 1.7.4 improves
+## What 1.7.5 improves
 
 | Priority | Intended result |
 |---|---|
@@ -27,6 +29,8 @@ plan retains unfinished work; publication status is based on the GitHub Release.
 | Return after interruption | Retain the exact roadmap and step anchor |
 | Compact resumption | Load anchors and changed sources; reference unchanged bytes by digest |
 | Measured economy | Report naive and loaded bytes without making universal token claims |
+| Legacy recovery | Restore a validated retained v1 snapshot in an isolated copy without resetting Codex |
+| Clearer orientation | Explain local storage, optional private GitHub backup, notes and roadmaps visually |
 
 These claims apply only to the tested native routes in the release scope. Host
 policies, legitimate safety boundaries, missing access and explicit user stops
@@ -63,7 +67,7 @@ than adding global policy layers.
 
 | Record | Where to read it |
 |---|---|
-| Current 1.7.4 release scope | [Project routing release](release-1.7.4.md) |
+| Current 1.7.5 release scope | [Engine and visual release](release-1.7.5.md) |
 | 1.7.3 plan, revision 4 | [Complete historical roadmap](roadmap-plan.md) |
 | Previous 1.7.2 plan, revision 3 | [Fixed historical English snapshot](https://github.com/CNTX-PROJECT/OPENCNTX/blob/f6edbbf6d9d81310c37a55036f7d9794e38e109b/docs/roadmap-plan.md) |
 | Shipped software and known limitations | [Releases](releases.md) |

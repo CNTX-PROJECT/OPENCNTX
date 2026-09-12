@@ -6,38 +6,34 @@ Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
 
-## Published software — v1.7.4 Stable
+## Published software — v1.7.5 Stable
 
-[Download v1.7.4](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.4) ·
-[Release scope and limitations](release-1.7.4.md) ·
+[Download v1.7.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.5) ·
+[Release scope and limitations](release-1.7.5.md) ·
 [Installation and removal](start-here.md)
 
-Version 1.7.4 adds deterministic project-aware routing: small related work is
-attached as a step, related large work extends the current child roadmap, and a
-distinct large outcome creates a new child roadmap under one master. Exact
-return anchors survive side topics and rollover. A byte-budgeted context plan
-references unchanged sources by digest, and safe authorized work continues
-until evidence is complete or an explicit stop condition is reached.
+Version 1.7.5 adds deterministic task-size recipes, availability-aware context
+planning, explicit safe-action gating, durable rollback resumption and an
+isolated legacy recovery route. It also publishes the responsive visual guide
+for local knowledge, optional private GitHub backup, readable notes and
+small-to-mega roadmaps. The project-aware routing from 1.7.4 remains included.
+
+The former 1.6.x downgrade/reset path is repaired. A valid retained v1 snapshot
+inside a v2 goal-storage envelope is restored only in a new staged copy; the
+source remains unchanged. The actual 1.6.0, 1.6.1, 1.6.2 and 1.6.3 writers
+passed the staged-copy checkpoint matrix.
 
 The published distribution contains exactly:
 
-- `opencntx-1.7.4-py3-none-any.whl`
-- `opencntx-1.7.4.tar.gz`
+- `opencntx-1.7.5-py3-none-any.whl`
+- `opencntx-1.7.5.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
 Read [Release artifacts](release-artifacts.md) for build records, checksums and
 verification. There is no published PyPI/TestPyPI package.
 
-## Local v1.7.5 release candidate
-
-- Local candidate: v1.7.5.
-- Source candidate: `v1.7.5`.
-- Package version: `1.7.5`.
-- Candidate scope: [engine and visual release plan](release-1.7.5.md).
-- Publication, tag and release-assets are intentionally still a separate step.
-
-Remaining work outside this bounded candidate stays on the [roadmap page](roadmap.md)
+Remaining work outside this bounded release stays on the [roadmap page](roadmap.md)
 and is never implied by a version number.
 
 The release scope distinguishes implemented behavior from deferred extensions;
@@ -71,7 +67,7 @@ real-host cost claim.
 
 - [Changelog](../CHANGELOG.md) — dated release history and unreleased documentation changes.
 - [1.7.0 scope](release-1.7.0.md) — earlier runtime and publication limitations.
-- [1.7.3 scope](release-1.7.3.md) — reliability work retained by 1.7.4.
+- [1.7.3 scope](release-1.7.3.md) — reliability work retained by 1.7.4 and 1.7.5.
 - [Product roadmap](roadmap.md) — latest plan and earlier English plan snapshot.
 
 The following diagram records historical foundation milestones.

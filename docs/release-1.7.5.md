@@ -1,15 +1,15 @@
-# OPENCNTX 1.7.5 — engine and visual release candidate
+# OPENCNTX 1.7.5 — engine and visual release
 
 [Overview](../README.md) · [Get started](start-here.md) · [Releases](releases.md) · [Roadmap](roadmap.md)
 
-This page is the bounded release scope for the local `1.7.5` candidate. The
-candidate keeps the public 1.7.4 release untouched until the exact commit,
-artifacts, CI result, tag and GitHub Release have all been verified.
+This page records the bounded scope of the published `1.7.5` release. The
+immutable tag, exact source tree, CI result and four GitHub Release assets are
+the publication evidence.
 
 ## Engine roadmap outcome
 
 The [engine roadmap, issue #225](https://github.com/CNTX-PROJECT/OPENCNTX/issues/225)
-is implemented in the candidate through these additive contracts:
+is implemented through these additive contracts:
 
 - deterministic `SHORT`, `MEDIUM`, `LARGE` and `MEGA` task recipes with stable
   method steps;
@@ -24,10 +24,10 @@ is implemented in the candidate through these additive contracts:
   the active runtime.
 
 The isolated writer matrix exercised the actual 1.6.0, 1.6.1, 1.6.2 and 1.6.3
-source trees. Each wrote a checkpoint on its staged copy. This is a qualified
-compatibility route, not an in-place downgrade and not permission to disable
-security controls. Newer storage envelopes require their retained compatible
-snapshot.
+source trees. Each wrote a checkpoint on its staged copy, including a copy
+prepared from the v2 envelope with its retained v1 roadmap restored. This is a
+qualified compatibility route, not an in-place downgrade and not permission to
+disable security controls. The source store remains unchanged.
 
 ## Visual roadmap outcome
 
@@ -55,14 +55,19 @@ projects, bypass OS permissions, unlock a live writer, run an AI, or promise a
 universal host integration. Optional GitHub and notes-app integrations remain
 explicit owner-controlled steps.
 
-## Candidate verification
+The former 1.6.x downgrade/reset failure is fixed: `flow legacy-stage` now
+recognizes a valid retained v1 snapshot inside a v2 storage envelope and
+restores it only in the new staged destination. Missing, changed or invalid
+snapshots still stop without mutating the source.
+
+## Verification
 
 The release gate binds package version, current-version surfaces, exact source
 tree and four assets. CI covers Windows and Ubuntu on Python 3.11–3.14. The
-release is not considered published until the immutable `v1.7.5` tag and its
-wheel, sdist, `SHA256SUMS` and `BUILD-RECORD.json` are readable from GitHub.
+immutable `v1.7.5` tag and its wheel, sdist, `SHA256SUMS` and
+`BUILD-RECORD.json` are readable from GitHub.
 
-## After publication
+## Installation
 
 Install the exact tag with:
 
@@ -71,7 +76,6 @@ pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.5"
 opencntx --version
 ```
 
-The command must print `opencntx 1.7.5`. A source branch, local candidate or
-green CI run alone is not a published release.
+The command must print `opencntx 1.7.5`.
 
 [Release artifacts](release-artifacts.md) · [Legacy recovery guide](legacy-recovery.md) · [Visual tour](visual-tour.md)

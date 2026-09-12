@@ -60,8 +60,9 @@ checklist; it does not need a second project master.
 ## What is available now?
 
 The released tools create and verify context packages, structure optional
-workspaces and preserve bounded continuity state. Version 1.7.4 also provides
-project-routing and context-load planning APIs. Your host remains responsible
+workspaces and preserve bounded continuity state. Version 1.7.5 also provides
+legacy-safe recovery while retaining project-routing and context-load planning
+APIs. Your host remains responsible
 for executing work, classifying requests and updating external applications.
 
-[Start with one local package](start-here.md) · [Release scope](release-1.7.4.md)
+[Start with one local package](start-here.md) · [Release scope](release-1.7.5.md)

@@ -4,12 +4,13 @@ All notable OPENCNTX changes are recorded here.
 
 ## 1.7.5 - 2026-09-12
 
-Release candidate for the engine and visual roadmaps. The candidate adds
+Released engine and visual roadmaps. This release adds
 deterministic task-size recipes, availability-aware context planning, explicit
 safe-action gating, durable rollback resumption, isolated legacy recovery for
-portable v1 stores, and the responsive English visual guide. Publication is
-pending the exact clean commit, CI matrix, immutable tag and verified GitHub
-Release assets.
+portable v1 stores, and the responsive English visual guide. It also fixes the
+1.6.x downgrade/reset path: a valid retained v1 snapshot in a v2 envelope is
+restored only in an isolated copy, leaving the source unchanged. The actual
+1.6.0 through 1.6.3 writer matrix passed on the staged route.
 
 ## 1.7.4 - 2026-09-11
 

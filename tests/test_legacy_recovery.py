@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -89,10 +90,30 @@ class LegacyRecoveryTests(unittest.TestCase):
         self.assertFalse(self.target.exists())
         self.assertEqual(bytes_map(self.root), self.before)
 
-    def test_newer_format_requires_retained_snapshot(self):
+    def test_newer_format_restores_retained_snapshot_for_legacy_writer(self):
         self.fixture.upgrade()
         before = bytes_map(self.fixture.staged)
-        with self.assertRaisesRegex(ContinuityError, "retained pre-upgrade snapshot"):
+        result = stage_legacy_recovery(
+            self.fixture.staged,
+            destination=self.target,
+            expected_state_digest=self.fixture.state["state_digest"],
+        )
+        self.assertTrue(result["legacy_roadmap_restored"])
+        self.assertEqual(bytes_map(self.fixture.staged), before)
+        staged_roadmap = Path(result["staged_project"]) / ".opencntx/continuity/roadmaps/roadmap.json"
+        self.assertEqual(
+            json.loads(staged_roadmap.read_text(encoding="utf-8"))["format"],
+            "opencntx-continuity-roadmap",
+        )
+
+    def test_newer_format_without_valid_snapshot_remains_blocked_without_mutation(self):
+        self.fixture.upgrade()
+        roadmap_path = self.fixture.staged / ".opencntx/continuity/roadmaps/roadmap.json"
+        value = json.loads(roadmap_path.read_text(encoding="utf-8"))
+        value["legacy_sha256"] = "f" * 64
+        roadmap_path.write_text(json.dumps(value), encoding="utf-8")
+        before = bytes_map(self.fixture.staged)
+        with self.assertRaisesRegex(ContinuityError, "valid retained pre-upgrade snapshot"):
             stage_legacy_recovery(
                 self.fixture.staged,
                 destination=self.target,
@@ -125,6 +146,42 @@ class LegacyRecoveryTests(unittest.TestCase):
             self.state["checkpoint_number"] + 1,
         )
         self.assertEqual(bytes_map(self.root), self.before)
+
+    @unittest.skipUnless(os.environ.get("R15_LEGACY_SOURCE"), "Actual legacy source required")
+    def test_actual_legacy_writer_can_continue_after_v2_upgrade(self):
+        self.fixture.upgrade()
+        result = stage_legacy_recovery(
+            self.fixture.staged,
+            destination=self.target,
+            expected_state_digest=self.fixture.state["state_digest"],
+        )
+        source = Path(os.environ["R15_LEGACY_SOURCE"]).resolve(strict=True)
+        code = (
+            "from pathlib import Path; import sys; import opencntx.continuity as c; "
+            "root=Path(sys.argv[1]); s=c.execution_state_capsule(root); "
+            "c.record_execution_checkpoint(root,checkpoint_id='OLD-V2-RESUMED',current_internal_task='VERIFY',"
+            "next_internal_action='Continue without reset',evidence_paths=['input.txt'],expected_state_digest=s['state_digest'])"
+        )
+        child = subprocess.run(
+            [sys.executable, "-B", "-c", code, result["staged_project"]],
+            env=dict(os.environ, PYTHONPATH=str(source)),
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        self.assertEqual(child.returncode, 0, child.stderr)
+        self.assertEqual(
+            execution_state_capsule(Path(result["staged_project"]))["checkpoint_number"],
+            self.fixture.state["checkpoint_number"] + 1,
+        )
+        self.assertEqual(
+            json.loads(
+                (Path(result["staged_project"])
+                 / ".opencntx/continuity/roadmaps/roadmap.json").read_text(encoding="utf-8")
+            )["format"],
+            "opencntx-continuity-roadmap",
+        )
 
     def test_cli_stages_copy_without_switching_runtime(self):
         import contextlib
