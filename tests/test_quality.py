@@ -234,8 +234,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(70, len(executable_paths))
-        self.assertEqual(75, len(documented_paths))
+        self.assertEqual(72, len(executable_paths))
+        self.assertEqual(77, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
@@ -604,7 +604,7 @@ class PublicQualityTests(unittest.TestCase):
             },
         )
         self.assertNotIn("Operating System :: OS Independent", project["classifiers"])
-        self.assertEqual(1, text.count("${{ matrix.os }} / Python ${{ matrix.python-version }}"))
+        self.assertEqual(2, text.count("${{ matrix.os }} / Python ${{ matrix.python-version }}"))
 
     def test_public_ci_status_is_active_and_unambiguous(self) -> None:
         status_documents = (DOCS / "releases.md", CHANGELOG, DOCS / "platforms.md")

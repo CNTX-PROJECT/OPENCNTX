@@ -6,6 +6,8 @@ Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
 
+Release verification is live in the public workflow (`CI_ACTIVE`).
+
 ## Published software — v1.7.6 Stable
 
 [Download v1.7.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.6) ·
