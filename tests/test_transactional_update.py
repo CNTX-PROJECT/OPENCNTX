@@ -82,6 +82,51 @@ class TransactionalUpdateTests(unittest.TestCase):
             risks=["Cutover interruption"],
         )
 
+    def test_completed_update_can_rollback_and_reapply_repeatedly(self) -> None:
+        root, components = self.update_fixture()
+        plan = self.plan(root, components)
+        approval = f"APPLY UPDATE {plan['plan_digest']}"
+        for _ in range(3):
+            receipt = apply_update_plan(plan, approval=approval)
+            self.assertEqual(receipt["status"], "COMPLETED")
+            self.assertEqual(apply_update_plan(plan, approval=approval), receipt)
+            self.assertEqual(recover_interrupted_update(plan)["status"], "ROLLED_BACK")
+            self.assertEqual(recover_interrupted_update(plan)["status"], "ROLLED_BACK")
+        self.assertEqual(apply_update_plan(plan, approval=approval)["status"], "COMPLETED")
+        self.assertEqual(update_postflight(plan)["status"], "GREEN")
+
+    def test_rollback_archives_completed_receipt_instead_of_erasing_history(self) -> None:
+        root, components = self.update_fixture()
+        plan = self.plan(root, components)
+        receipt = apply_update_plan(plan, approval=f"APPLY UPDATE {plan['plan_digest']}")
+        recover_interrupted_update(plan)
+        active_receipt = root / ".opencntx-update/receipts" / f"{plan['plan_id']}.json"
+        self.assertFalse(active_receipt.exists())
+        archived = list((root / ".opencntx-update/receipts/rolled-back").glob("*.json"))
+        self.assertEqual(len(archived), 1)
+        self.assertEqual(json.loads(archived[0].read_text(encoding="utf-8")), receipt)
+
+    def test_apply_resumes_interrupted_completed_rollback(self) -> None:
+        from opencntx import transactional_update as updater
+
+        root, components = self.update_fixture()
+        plan = self.plan(root, components)
+        approval = f"APPLY UPDATE {plan['plan_digest']}"
+        apply_update_plan(plan, approval=approval)
+        original = updater._write_journal
+
+        def interrupt(state_root, selected, phase):
+            if phase == "ROLLED_BACK":
+                raise RuntimeError("rollback interrupted before receipt retirement")
+            return original(state_root, selected, phase)
+
+        with (
+            mock.patch.object(updater, "_write_journal", side_effect=interrupt),
+            self.assertRaisesRegex(RuntimeError, "rollback interrupted"),
+        ):
+            recover_interrupted_update(plan)
+        self.assertEqual(apply_update_plan(plan, approval=approval)["status"], "COMPLETED")
+
     def test_writer_without_digest_publishes_contract_valid_string(self) -> None:
         workspace = self.root / "workspace"
         init_workspace(workspace)

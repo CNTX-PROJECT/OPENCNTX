@@ -36,6 +36,7 @@ from .continuity_sync import apply_sync, build_sync_preview, configure_sync, syn
 from .goal_binding import BoundGoal
 from .governance import assess_profile
 from .host_protocol import claim_host, host_status, resume_host
+from .legacy_recovery import stage_legacy_recovery
 from .recovery import record_failed_attempt, recovery_decision, recovery_report
 
 
@@ -117,6 +118,13 @@ def register_continuity_commands(
     inspect.add_argument("target", nargs="?", default=".")
     _root_argument(inspect)
     inspect.add_argument("--json", action="store_true", help="print machine-readable JSON")
+
+    legacy = commands.add_parser(
+        "legacy-stage", help="prepare a separate legacy recovery copy; never switch the runtime"
+    )
+    _root_argument(legacy)
+    legacy.add_argument("--destination", required=True, help="new directory outside the project")
+    legacy.add_argument("--expected-state", required=True, help="current checkpoint state digest")
 
     _register_governance_commands(commands)
     connected = commands.add_parser("current", help="inspect or rebuild connected current views")
@@ -392,6 +400,11 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
         return None
     command = args.flow_command
     root = Path(getattr(args, "root", "."))
+    if command == "legacy-stage":
+        _print(stage_legacy_recovery(
+            root, destination=Path(args.destination), expected_state_digest=args.expected_state
+        ))
+        return 0
     if command == "preview":
         _print(preview_roadmap(root, Path(args.roadmap)))
         return 0

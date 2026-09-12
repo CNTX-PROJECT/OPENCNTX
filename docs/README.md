@@ -74,6 +74,9 @@ imply that every host has connected that API to its own chat interface.
 
 ## Product boundary
 
+Development candidate: [Legacy recovery without a Codex reset](legacy-recovery.md)
+describes the new staging command, not an already published 1.7.4 capability.
+
 OPENCNTX creates local, explicit, verifiable files. It does not call an AI,
 choose a provider, upload context or execute supplied content. Reviewed output
 can be used with tools that accept text or files.

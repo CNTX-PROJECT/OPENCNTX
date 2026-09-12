@@ -1,6 +1,6 @@
 # A visual tour of your project
 
-[Overview](../README.md) · [Get started](start-here.md) · [All guides](README.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 OPENCNTX keeps project context in files you can inspect. Start with a small
 package; add structured knowledge and task continuity when your work needs it.

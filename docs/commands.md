@@ -68,24 +68,25 @@ required arguments and repeatable options.
 | 54 | `opencntx flow health` | verify local roadmap, state, detail and history |
 | 55 | `opencntx flow capabilities` | discover local storage and Git capabilities read-only |
 | 56 | `opencntx flow inspect` | use the file, Git, Markdown or JSON adapter read-only |
-| 57 | `opencntx flow profile` | choose the smallest safe governance profile from fixed facts |
-| 58 | `opencntx flow recovery` | record or inspect the fixed four-stage recovery sequence |
-| 59 | `opencntx flow combo` | maintain or query the bounded derived Combo Roadmap |
-| 60 | `opencntx flow current` | inspect revision-bound current views or explicitly publish them |
-| 61 | `opencntx flow capsule export` | export a deterministic portable context capsule |
-| 62 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
-| 63 | `opencntx flow capsule import` | restore a capsule only into a new local store |
-| 64 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
-| 65 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
-| 66 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
-| 67 | `opencntx flow sync status` | report optional sync configuration and receipt |
-| 68 | `opencntx flow host status` | deliver exactly one current assignment without writes |
-| 69 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
-| 70 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
-| 71 | `opencntx layout audit` | report deterministic order findings without changing paths |
-| 72 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
-| 73 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
-| 74 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
+| 57 | `opencntx flow legacy-stage` | development candidate: prepare an isolated recovery copy; no runtime switch |
+| 58 | `opencntx flow profile` | choose the smallest safe governance profile from fixed facts |
+| 59 | `opencntx flow recovery` | record or inspect the fixed four-stage recovery sequence |
+| 60 | `opencntx flow combo` | maintain or query the bounded derived Combo Roadmap |
+| 61 | `opencntx flow current` | inspect revision-bound current views or explicitly publish them |
+| 62 | `opencntx flow capsule export` | export a deterministic portable context capsule |
+| 63 | `opencntx flow capsule verify` | independently verify capsule paths and bytes |
+| 64 | `opencntx flow capsule import` | restore a capsule only into a new local store |
+| 65 | `opencntx flow sync preview` | preview a filtered private Git replica without writes |
+| 66 | `opencntx flow sync configure` | enable optional EVERY_CHECKPOINT sync for PASS, FAIL, and BLOCKED |
+| 67 | `opencntx flow sync apply` | non-force push one exact preview and read it back |
+| 68 | `opencntx flow sync status` | report optional sync configuration and receipt |
+| 69 | `opencntx flow host status` | deliver exactly one current assignment without writes |
+| 70 | `opencntx flow host claim` | claim one exact delivery with idempotent retry behavior |
+| 71 | `opencntx flow host resume` | resume execution or route a completed claim to the next status |
+| 72 | `opencntx layout audit` | report deterministic order findings without changing paths |
+| 73 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
+| 74 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
+| 75 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
 
 ## Roadmap flow
 

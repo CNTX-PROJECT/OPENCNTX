@@ -56,6 +56,8 @@ GUIDES = {
     "glossary.md",
     "how-it-works.md",
     "media.md",
+    "legacy-recovery.md",
+    "visual-tour.md",
     "owner-flow.md",
     "playbooks-and-roles.md",
     "privacy-storage-lifecycle.md",
@@ -80,7 +82,9 @@ LIGHT_DIAGRAMS = {
     "workspace-map.svg",
 }
 DARK_DIAGRAMS = {name.replace(".svg", "-dark.svg") for name in LIGHT_DIAGRAMS}
-DIAGRAMS = LIGHT_DIAGRAMS | DARK_DIAGRAMS
+DIAGRAMS = LIGHT_DIAGRAMS | DARK_DIAGRAMS | {
+    "knowledge-ecosystem.svg", "task-journey.svg", "owner-knowledge.svg",
+}
 
 PRIMARY_NAVIGATION = (
     "[Overview](../README.md) · [Get started](start-here.md) · "
@@ -230,8 +234,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(69, len(executable_paths))
-        self.assertEqual(74, len(documented_paths))
+        self.assertEqual(70, len(executable_paths))
+        self.assertEqual(75, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()

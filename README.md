@@ -1,101 +1,69 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/opencntx-wordmark-dark.svg">
-  <img src="assets/brand/opencntx-wordmark-light.svg" width="640" alt="OPENCNTX">
-</picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/brand/opencntx-wordmark-dark.svg"><img src="assets/brand/opencntx-wordmark-light.svg" width="640" alt="OPENCNTX"></picture>
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions
+Local first · Any model · Your files, your decisions · **v1.7.4 Stable**
 
-[Start here](docs/start-here.md) · [Visual tour](docs/visual-tour.md) · [Project roadmaps](docs/project-roadmaps.md) · [All guides](docs/README.md)
+[Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 
 </div>
 
-You should not have to explain your project from scratch every time you open a
-new AI conversation. OPENCNTX helps you keep useful knowledge in local files,
-select a small context package for the next task, and preserve progress outside
-the chat.
+You should not have to explain your project from scratch in every new AI conversation. Keep useful knowledge locally, select the context for one task, and retain a clear place to resume.
 
-**Available now:** [v1.7.4 Stable release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.4).
-[What is included](docs/release-1.7.4.md) · [What comes next](docs/roadmap.md)
+## Three places, three clear jobs
 
-## Your project, in three places
+![Your local workspace holds project knowledge; GitHub is an optional remote copy; a notes app is a readable view.](assets/docs/knowledge-ecosystem.svg)
 
-![Local files are the source of truth; a reviewed GitHub copy provides remote history; a notes app provides a readable progress view.](assets/docs/knowledge-ecosystem.svg)
-
-| Place | What it contains | Why it helps |
+| Place | What belongs there? | Why it helps |
 |---|---|---|
-| **Your computer — the original** | Context, source files, technical knowledge, decisions, reusable instructions, task evidence and roadmaps. | Knowledge survives a closed chat. You control the files. |
-| **GitHub — a recommended remote copy** | Selected project files and their version history, usually in a private repository. | Recover a reviewed version or continue on another computer. Set up Git and synchronization separately. |
-| **A notes app — your readable view** | Short explanations, linked knowledge, completed work, open questions and roadmaps. | See where the project stands without reading technical logs. Obsidian or another Markdown-friendly app can serve this role. |
+| **Local workspace — the original** | Context, sources, decisions, skills and agent instructions, technical knowledge, evidence and roadmaps. | Knowledge survives a closed chat; you control the files. |
+| **GitHub — a recommended remote copy** | Selected files and version history, usually in a private repository. | Recover a reviewed version or continue elsewhere. Configure Git and synchronization separately. |
+| **A notes app — your readable view** | Simple explanations, linked knowledge, progress and roadmaps. | Understand the project without reading technical logs. Use Obsidian or another Markdown-friendly app. |
 
-Think of GitHub as a versioned off-machine copy: only committed and pushed files
-are there. It complements a separate backup for untracked files and large or
-sensitive data. Keep private project knowledge out of public repositories.
-
-The local workspace is canonical. The notes app is an optional presentation
-layer; it does not need another OPENCNTX store. Skills and agent instructions
-can be stored as documents; your AI host decides how to use or run them.
-GitHub sync and notes-app updates are integrations you configure, not services
-enabled automatically by installing OPENCNTX.
+GitHub holds only committed and pushed files; keep separate backups for untracked, large or sensitive data. Never put private knowledge in a public repository. The notes app is a presentation layer, not a second OPENCNTX store. Your AI host decides how to use stored skills and instructions; installing OPENCNTX does not automatically enable GitHub or notes-app synchronization.
 
 ## From a question to a finished step
 
-![Choose a task, select relevant context, work and check the result, save the outcome, then continue from the next step.](assets/docs/task-journey.svg)
+![Choose a task, load relevant context, work and verify, save evidence, then continue.](assets/docs/task-journey.svg)
 
-1. **Choose the next task.** Start with the goal, current step and relevant decisions.
-2. **Give AI the useful context.** Preview selected files and build a small, readable package.
-3. **Work and check.** Your AI tool or you carry out the task and test the result.
-4. **Save and continue.** Record the outcome and evidence, update the roadmap, and preserve where to resume.
+1. **Choose the next task:** goal, current step and relevant decisions.
+2. **Give AI useful context:** preview selected files and build a small package.
+3. **Work and check:** you or your AI tool perform the task and verify the result.
+4. **Save and continue:** record evidence and preserve the next step.
 
-OPENCNTX packages and verifies files. Its optional workspace and continuity
-tools help organize durable task state. Your AI tool performs the work; the
-installed package does not run an AI or automatically understand chat intent.
+OPENCNTX packages and verifies files. Optional workspace and continuity tools organize durable task state; the installed package does not run an AI or automatically interpret chat intent.
 
-## Small fix or mega project? Keep one clear direction.
+## Small fix or mega project?
 
-The structure grows with the work. Size helps plan the detail; **the relationship
-to the existing goal decides whether a new child roadmap is needed**.
+Task size sets the level of detail. **Its relationship to the existing goal determines whether a new child roadmap is needed.**
 
-| Work size | Example | Roadmap and follow-up |
+| Work size | Example | Follow-up |
 |---|---|---|
-| **Small** | Correct a setting or improve one paragraph. | Add one check to the relevant existing roadmap. Verify and close it. |
-| **Medium** | Add a feature with a few connected steps. | Keep a short checklist in the active roadmap: prepare, implement, check, finish. |
-| **Large** | Deliver an independent new feature or migration. | Create a child roadmap under the project master for a distinct outcome; extend the current child when it is related work. |
-| **Mega** | Build a product with several independent deliverables. | Use one master with child roadmaps per outcome, explicit dependencies and checkpoints. Each child identifies its current step and evidence. |
+| **Small** | A setting or paragraph. | One check in the relevant existing roadmap; verify and close. |
+| **Medium** | A few connected changes. | A short prepare → implement → check checklist in the active roadmap. |
+| **Large** | An independent feature or migration. | A child roadmap for a distinct outcome; extend the current child for related work. |
+| **Mega** | Several independent deliverables. | One master, child roadmaps, dependencies and evidenced checkpoints. |
 
 ```mermaid
 flowchart TD
-    M["One project master roadmap"] --> A["Child A · Current outcome"]
-    M --> B["Child B · Next independent outcome"]
-    M --> C["Child C · Another deliverable"]
-    A --> D["Current step + relevant context"]
-    D --> E["Work → check → save evidence"]
-    E --> F["Next ready step or completed outcome"]
-    D -. "Side question" .-> P["Park it + remember the return step"]
-    P -. "Resume" .-> D
+    M["Project master"] --> A["Child A: current outcome"]
+    M --> B["Child B: independent outcome"]
+    A --> C["Current step + relevant context"]
+    C --> D["Work → verify → save evidence"]
+    D --> E["Next step or completed outcome"]
+    C -. "Side question" .-> P["Remember return step"]
+    P -. "Resume" .-> C
 ```
 
-A new chat resumes the saved current step. A side question retains a return
-anchor. Related work stays together; a new conversation alone does not create
-a new roadmap. Completion is recorded with evidence, and blockers remain visible.
-
-[See the roadmap rules](docs/project-roadmaps.md) ·
-[Follow a complete continuity example](docs/continuity.md)
+A new chat resumes saved work; it does not by itself require another roadmap. Your host must connect its work to the saved state. [Roadmap rules](docs/project-roadmaps.md) · [Continuity example](docs/continuity.md)
 
 ## A knowledge base you can actually read
 
-![Illustrative notes-app layout with project navigation, a clear current step, linked knowledge, and a short roadmap. This is an example presentation, not a built-in OPENCNTX dashboard.](assets/docs/owner-knowledge.svg)
+![Illustrative notes-app layout with project navigation, current work, linked knowledge and a roadmap; not a built-in dashboard.](assets/docs/owner-knowledge.svg)
 
-A useful overview answers four questions: **What are we doing? What is done?
-What happens next? Where is the explanation?** Keep readable summaries and
-linked notes in the foreground, with technical records available when needed.
-
-The illustration is a suggested layout for your own notes app, not a bundled
-dashboard or an automatic Obsidian integration.
-[Explore the visual tour](docs/visual-tour.md) · [Organize a workspace](docs/workspace.md)
+**What are we doing? What is done? What happens next? Where is the explanation?** Keep those answers in the foreground and technical evidence one link away. This is a suggested notes-app layout, not a bundled dashboard or automatic Obsidian integration. [Explore the visual tour](docs/visual-tour.md).
 
 ## Start in minutes
 
@@ -115,24 +83,17 @@ opencntx pack
 opencntx verify
 ```
 
-Choose files in `opencntx.toml`, preview the selection, and inspect
-`.opencntx/latest/CONTEXT.md` before sharing it.
-The [getting-started guide](docs/start-here.md) covers installation,
-configuration, updates and removal. No account, API key or built-in model is required.
+Choose files in `opencntx.toml` and inspect `.opencntx/latest/CONTEXT.md` before sharing. [Get started](docs/start-here.md) covers installation, configuration and removal. No account, API key or built-in model is required.
 
 ## Go deeper when you need to
 
-| Your next question | Guide |
+| Question | Guide |
 |---|---|
-| What exactly is a context package? | [How it works](docs/how-it-works.md) |
+| How does a context package work? | [How it works](docs/how-it-works.md) |
 | Where do knowledge, instructions and tasks live? | [Workspace](docs/workspace.md) |
-| How do I resume work across conversations? | [Continuity](docs/continuity.md) |
-| What command do I use? | [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
-| What is delivered, and what is still planned? | [Releases](docs/releases.md) · [Product roadmap](docs/roadmap.md) |
+| Which command or recovery route do I need? | [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
+| What is delivered versus planned? | [Releases](docs/releases.md) · [Roadmap](docs/roadmap.md) |
 
-Verification proves matching bytes, not the truth of a document or the success
-of a task. You decide what leaves your computer.
-[Security in plain language](docs/security.md) · [Private vulnerability reporting](SECURITY.md)
+Verification proves matching bytes, not truth or task success. You decide what leaves your computer. [Security](docs/security.md) · [Private vulnerability reporting](SECURITY.md)
 
-[Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) ·
-[Visual system](docs/visual-system.md) · [Changelog](CHANGELOG.md) · [Apache-2.0](LICENSE)
+[Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) · [Visual system](docs/visual-system.md) · [Changelog](CHANGELOG.md) · [Apache-2.0](LICENSE)
