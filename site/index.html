@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="OPENCNTX creates small, explicit, verifiable context packages for AI-assisted work.">
+    <meta name="description" content="Keep project knowledge in local files, give AI the context it needs, and follow work from a small task to a multi-roadmap project.">
     <title>OPENCNTX · The right context, nothing more</title>
     <link rel="stylesheet" href="assets/opencntx.css">
   </head>
@@ -21,6 +21,7 @@
         <nav aria-label="Primary navigation">
           <ul class="nav-list">
             <li><a href="#how">How it works</a></li>
+            <li><a href="#roadmaps">Roadmaps</a></li>
             <li><a href="#start">Get started</a></li>
             <li><a href="#safety">Safety</a></li>
             <li><a href="#guides">Documentation</a></li>
@@ -35,26 +36,25 @@
         <div class="shell">
           <div class="hero__layout">
             <div>
-              <p class="eyebrow">OPENCNTX v1.7.4 · Local-first context control</p>
+              <p class="eyebrow">Your knowledge. Your next step.</p>
               <p><a href="../docs/releases.md">Available software: v1.7.4</a>
                 · <a href="../docs/roadmap.md">Roadmap and next work</a>.
                 Project-aware roadmap routing is now available.</p>
               <h1>The right context. Nothing more.</h1>
-              <p class="lede">Give an AI the files it needs for one task—small, reviewable, and backed by exact byte evidence.</p>
+              <p class="lede">Keep what your project has learned. Give AI a focused brief. Pick up the next step without explaining everything again.</p>
               <div class="actions">
                 <a class="button button--primary" href="#start">Get started safely</a>
                 <a class="button button--secondary" href="#how">See how it works</a>
               </div>
             </div>
             <picture class="hero__visual">
-              <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
-              <img src="../assets/docs/opencntx-overview.svg" alt="Select local files, review a small context package, verify exact bytes, and then decide whether to share" width="1200" height="675">
+              <img src="../assets/docs/task-journey.svg" alt="Choose a task, prepare context, work and check, save the outcome, then continue with the next ready step" width="1200" height="640">
             </picture>
           </div>
           <div class="proof-strip" aria-label="Product properties">
-            <div class="proof-strip__item"><strong>Local first</strong><span>No account or upload</span></div>
-            <div class="proof-strip__item"><strong>Exact evidence</strong><span>Paths, sizes, and SHA-256</span></div>
-            <div class="proof-strip__item"><strong>Your decision</strong><span>OPENCNTX never grants approval</span></div>
+            <div class="proof-strip__item"><strong>Keep the knowledge</strong><span>Local files survive a closed chat</span></div>
+            <div class="proof-strip__item"><strong>Focus the context</strong><span>Relevant files for one next step</span></div>
+            <div class="proof-strip__item"><strong>See the progress</strong><span>Roadmaps, results and a place to resume</span></div>
           </div>
         </div>
       </section>
@@ -62,12 +62,56 @@
       <section class="section section--soft" id="how">
         <div class="shell">
           <p class="eyebrow">How it works</p>
-          <h2>Three calm checkpoints</h2>
+          <h2>A home for the work. A view for you.</h2>
+          <p class="lede">Start with your local project. Add a reviewed remote copy and a readable knowledge view when you need them.</p>
+          <figure class="explainer">
+            <img src="../assets/docs/knowledge-ecosystem.svg" width="1200" height="680" alt="The local workspace is canonical; GitHub is a recommended remote copy; a notes app is an optional human view">
+            <figcaption>One technical source of truth, with optional connections you configure.</figcaption>
+          </figure>
           <div class="grid grid--three">
-            <article class="panel"><span class="panel__number" aria-hidden="true">1</span><h3>Select</h3><p>Choose one goal and only the local text files needed for it.</p></article>
-            <article class="panel"><span class="panel__number" aria-hidden="true">2</span><h3>Review</h3><p>Preview the selection and inspect the readable context before sharing anything.</p></article>
-            <article class="panel"><span class="panel__number" aria-hidden="true">3</span><h3>Verify</h3><p>Prove the package and recorded source bytes still match exactly.</p></article>
+            <article class="panel"><span class="panel__number" aria-hidden="true">1</span><h3>Your computer</h3><p>The original context, sources, technical knowledge, decisions, skills, agent-role instructions, roadmaps and evidence. Your AI host uses the instructions.</p></article>
+            <article class="panel"><span class="panel__number" aria-hidden="true">2</span><h3>Your GitHub copy</h3><p>A recommended private repository for reviewed files and version history. Only committed and pushed files are copied. Configure sync and back up other data separately.</p></article>
+            <article class="panel"><span class="panel__number" aria-hidden="true">3</span><h3>Your notes app</h3><p>A simple view of the knowledge and progress. Use Obsidian or another Markdown-friendly app. Link clear summaries to the original technical records.</p></article>
           </div>
+          <p class="section-note">GitHub synchronization and notes-app updates are optional integrations. Installing OPENCNTX does not activate them.</p>
+        </div>
+      </section>
+
+      <section class="section" id="roadmaps">
+        <div class="shell">
+          <p class="eyebrow">Small → medium → large → mega</p>
+          <h2>Let the plan grow with the work.</h2>
+          <p class="lede">Keep one master roadmap for the project. Add detail where it helps, and separate independent outcomes into child roadmaps.</p>
+          <div class="size-grid">
+            <article class="panel"><span class="size-mark">S</span><h3>One useful fix</h3><p>A setting or paragraph. Add one check to the relevant existing roadmap, verify it and close it.</p><p class="status">Small · one check</p></article>
+            <article class="panel"><span class="size-mark">M</span><h3>A connected checklist</h3><p>A feature with a few steps. Prepare, implement and check within the active roadmap.</p><p class="status">Medium · several steps</p></article>
+            <article class="panel"><span class="size-mark">L</span><h3>A focused outcome</h3><p>An independent migration or feature gets a child roadmap. Related extensions stay with the existing child.</p><p class="status">Large · one outcome</p></article>
+            <article class="panel"><span class="size-mark">XL</span><h3>Coordinated outcomes</h3><p>Several major deliverables share one master. Each child records dependencies, checkpoints and its next step.</p><p class="status">Mega · several outcomes</p></article>
+          </div>
+          <div class="roadmap-tree" aria-label="One master roadmap connects three child outcomes, each with steps and evidence">
+            <div class="roadmap-master">One project master roadmap</div>
+            <div class="roadmap-branches">
+              <div><strong>Outcome A</strong><span>Current step → checked result</span></div>
+              <div><strong>Outcome B</strong><span>Dependencies → next ready step</span></div>
+              <div><strong>Outcome C</strong><span>Milestones → evidence</span></div>
+            </div>
+          </div>
+          <p class="section-note">Size guides the detail; the relationship to the current goal decides the route. Your host supplies these facts. A side question keeps a return anchor; a new chat resumes saved state.</p>
+          <a class="button button--secondary" href="../docs/project-roadmaps.md">Explore the roadmap rules</a>
+        </div>
+      </section>
+
+      <section class="section section--soft" id="knowledge">
+        <div class="shell">
+          <p class="eyebrow">Made for the person following along</p>
+          <h2>A knowledge base you can actually read.</h2>
+          <p class="lede">What are we doing? What is done? What happens next? Where is the explanation? Your overview should answer these at a glance.</p>
+          <figure class="explainer">
+            <img src="../assets/docs/owner-knowledge.svg" width="1200" height="680" loading="lazy" alt="Illustrative notes-app overview with knowledge links, the current task and a readable roadmap; not a built-in OPENCNTX dashboard">
+            <figcaption>A suggested layout for your own notes app. This dashboard is illustrative, not included software.</figcaption>
+          </figure>
+          <p>Keep short summaries, decisions and linked roadmaps in your notes app. Keep raw logs and detailed evidence in the technical workspace. A new conversation can return to the current task and the knowledge it needs.</p>
+          <a class="button button--secondary" href="../docs/visual-tour.md">Take the visual tour</a>
         </div>
       </section>
 
@@ -75,7 +119,7 @@
         <div class="shell split">
           <div>
             <p class="eyebrow">Get started</p>
-            <h2>One explicit local flow</h2>
+            <h2>Try one small project first.</h2>
             <p>Install an immutable release, enter a small project, and keep the complete flow visible.</p>
             <p><a href="../docs/start-here.md">Read the complete installation and rollback guide</a></p>
           </div>
@@ -93,7 +137,8 @@ opencntx verify</code></pre>
           <div>
             <p class="eyebrow">Safety boundary</p>
             <h2>Evidence is not permission</h2>
-            <p class="lede">A green verification proves byte identity. It does not prove truth, completeness, safety, or OWNER acceptance.</p>
+            <p class="lede">You choose what to share. Verification checks that file bytes match the recorded evidence; you still check whether the work is right.</p>
+            <p>OPENCNTX does not run an AI. Your AI tool or you perform the task; optional continuity tools record progress and the next step.</p>
           </div>
           <ul class="plain-list">
             <li><strong>Local by default</strong>No model, cloud service, database, or upload is required.</li>
