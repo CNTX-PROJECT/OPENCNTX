@@ -6,17 +6,16 @@ Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
 
-## Published software — v1.7.5 Stable
+## Published software — v1.7.6 Stable
 
-[Download v1.7.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.5) ·
-[Release scope and limitations](release-1.7.5.md) ·
-[Installation and removal](start-here.md)
+[Download v1.7.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.6) ·
+[Release scope and limitations](release-1.7.6.md) ·
+[Installation and managed update](install-and-update.md)
 
-Version 1.7.5 adds deterministic task-size recipes, availability-aware context
-planning, explicit safe-action gating, durable rollback resumption and an
-isolated legacy recovery route. It also publishes the responsive visual guide
-for local knowledge, optional private GitHub backup, readable notes and
-small-to-mega roadmaps. The project-aware routing from 1.7.4 remains included.
+Version 1.7.6 adds an independent managed installer, semantic runtime health,
+offline rollback, bounded owned cleanup, durable nested host return anchors and
+measured context planning. The task recipes, responsive visual guide and
+project-aware routing from 1.7.5 remain included.
 
 The former 1.6.x downgrade/reset path is repaired. A valid retained v1 snapshot
 inside a v2 goal-storage envelope is restored only in a new staged copy; the
@@ -25,8 +24,8 @@ passed the staged-copy checkpoint matrix.
 
 The published distribution contains exactly:
 
-- `opencntx-1.7.5-py3-none-any.whl`
-- `opencntx-1.7.5.tar.gz`
+- `opencntx-1.7.6-py3-none-any.whl`
+- `opencntx-1.7.6.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
@@ -50,16 +49,15 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
-Local candidate: v1.7.6. Implementation is in progress against the
-[1.7.6 delivery roadmap](roadmap-1.7.6.md). It is not yet a released software
-package; v1.7.5 remains the available download. Candidate checks do not mark
-unfinished update, cleanup, host-integration or installation milestones complete.
+The exact v1.7.6 source, four release assets and managed installation route are
+published together. The [delivery roadmap](roadmap-1.7.6.md) records the
+accepted release evidence and explicit diagnosis-only boundaries.
 
 | Item | Current boundary |
 |---|---|
 | Python | 3.11, 3.12, 3.13 and 3.14 |
 | Tested systems | Windows and Ubuntu |
-| CI | `CI_ACTIVE`; eight live Windows/Ubuntu and Python jobs |
+| CI | Windows and Ubuntu; Python 3.11–3.14 plus immutable historical writers |
 | Runtime dependencies | None |
 | Distribution | Exact Git tag plus four verified GitHub Release assets |
 | License | [Apache-2.0](../LICENSE) |

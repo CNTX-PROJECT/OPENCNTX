@@ -176,13 +176,26 @@ def normalize_session_metrics(metrics: Mapping[str, object]) -> dict[str, Any]:
     return result | {"metrics_digest": _value_digest(result)}
 
 
-def assess_session_rollover(metrics: Mapping[str, object]) -> dict[str, Any]:
+def assess_session_rollover(
+    metrics: Mapping[str, object],
+    *,
+    handoff_bytes: int = 35_000_000,
+    prepare_bytes: int = 30_000_000,
+) -> dict[str, Any]:
     """Return an advisory rollover signal from whatever metrics are available."""
+    for field, value in (("handoff_bytes", handoff_bytes), ("prepare_bytes", prepare_bytes)):
+        if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 10 * 1024 * MIB:
+            raise _fail("continuity_session_metrics_invalid", f"{field} is outside its bound.")
+    if prepare_bytes >= handoff_bytes:
+        raise _fail(
+            "continuity_session_metrics_invalid",
+            "prepare_bytes must be smaller than handoff_bytes.",
+        )
     normalized = normalize_session_metrics(metrics)
     values = normalized["metrics"]
     reasons: list[str] = []
     hard = (
-        (values["chat_bytes"] is not None and values["chat_bytes"] >= 35 * MIB)
+        (values["chat_bytes"] is not None and values["chat_bytes"] >= handoff_bytes)
         or (values["context_percent"] is not None and values["context_percent"] >= 90)
         or (
             values["tool_output_bytes"] is not None
@@ -190,7 +203,7 @@ def assess_session_rollover(metrics: Mapping[str, object]) -> dict[str, Any]:
         )
     )
     soft = (
-        (values["chat_bytes"] is not None and values["chat_bytes"] >= 30 * MIB)
+        (values["chat_bytes"] is not None and values["chat_bytes"] >= prepare_bytes)
         or (values["context_percent"] is not None and values["context_percent"] >= 75)
         or (
             values["tool_output_bytes"] is not None
@@ -200,7 +213,7 @@ def assess_session_rollover(metrics: Mapping[str, object]) -> dict[str, Any]:
         or (values["compaction_count"] is not None and values["compaction_count"] >= 2)
         or (values["failure_density"] is not None and values["failure_density"] >= 0.35)
     )
-    if values["chat_bytes"] is not None and values["chat_bytes"] >= 30 * MIB:
+    if values["chat_bytes"] is not None and values["chat_bytes"] >= prepare_bytes:
         reasons.append("CHAT_SIZE")
     if values["context_percent"] is not None and values["context_percent"] >= 75:
         reasons.append("CONTEXT_PRESSURE")
@@ -226,6 +239,8 @@ def assess_session_rollover(metrics: Mapping[str, object]) -> dict[str, Any]:
         "signal": signal,
         "reasons": sorted(reasons),
         "metrics_digest": normalized["metrics_digest"],
+        "handoff_bytes": handoff_bytes,
+        "prepare_bytes": prepare_bytes,
         "state_changed": False,
     }
     return result | {"assessment_digest": _value_digest(result)}

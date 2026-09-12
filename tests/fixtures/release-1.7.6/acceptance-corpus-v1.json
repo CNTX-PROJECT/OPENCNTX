@@ -1,0 +1,45 @@
+{
+  "format": "opencntx-1.7.6-acceptance-corpus",
+  "format_version": 1,
+  "baseline": {
+    "commit": "685d3738782c1e0ef2ebc7398d1f76593fae54b8",
+    "tag": "v1.7.5",
+    "tag_object": "7f74b19175d98741e4c533d9b051123ab692d0e5",
+    "assets": {
+      "BUILD-RECORD.json": "c370219079d43105c7e9b2aa33a54af815db087ebc310dcdea4fcf3ee3d6e2d4",
+      "opencntx-1.7.5-py3-none-any.whl": "8494439d1b3422d8a3afcb0fb385f1e499253d4932232338fada8fd04713fca0",
+      "opencntx-1.7.5.tar.gz": "213378bafa50c73ec62175cc1ec269f9e6a886012f51b61d7e7751cddc140b05",
+      "SHA256SUMS": "ed10ce1350b30743ec0e7565f8e92e7e1b1234798e898bac547f6327bd5d0f09"
+    },
+    "carried_open_acceptance": [
+      "managed-existing-installation-update",
+      "semantic-post-activation-health",
+      "offline-independent-rollback",
+      "bounded-provenance-cleanup",
+      "connected-nested-return",
+      "measured-context-reduction"
+    ]
+  },
+  "failure_cases": [
+    {"id": "R176-F01", "name": "historical-lock-conflict", "expected": "detect the writer conflict without deleting the retained marker"},
+    {"id": "R176-F02", "name": "byte-only-postflight", "expected": "reject a hash-correct runtime that cannot import, answer help, checkpoint, and resume"},
+    {"id": "R176-F03", "name": "recovery-growth-2-6-10", "expected": "retain one usable rollback generation and at most ten terminal cycle journals"},
+    {"id": "R176-F04", "name": "required-decision-over-budget", "expected": "fail explicitly instead of dropping a required owner decision"},
+    {"id": "R176-F05", "name": "unverified-cached-reference", "expected": "load when current-session availability is not proven"},
+    {"id": "R176-F06", "name": "absent-return-anchor", "expected": "refuse resumability until task, step, revision, outcomes, and authority are bound"},
+    {"id": "R176-F07", "name": "reserved-identifier-gap", "expected": "allocate above the highest reserved identifier without reuse"},
+    {"id": "R176-F08", "name": "authority-route-ambiguity", "expected": "separate readiness, bounded authority, material choice, recovery, and completion"},
+    {"id": "R176-F09", "name": "candidate-startup-failure", "expected": "restore the cached prior artifact from an independent process"},
+    {"id": "R176-F10", "name": "cleanup-interruption", "expected": "resume idempotently and never remove paths without the product ownership marker"}
+  ],
+  "golden_tasks": [
+    {"id": "R176-G01", "name": "empty-project-start"},
+    {"id": "R176-G02", "name": "adopted-existing-project"},
+    {"id": "R176-G03", "name": "three-nested-side-inputs"},
+    {"id": "R176-G04", "name": "fresh-and-compacted-session"},
+    {"id": "R176-G05", "name": "failed-update"},
+    {"id": "R176-G06", "name": "interrupted-cleanup"},
+    {"id": "R176-G07", "name": "full-release-build"},
+    {"id": "R176-G08", "name": "public-download-install-and-upgrade"}
+  ]
+}

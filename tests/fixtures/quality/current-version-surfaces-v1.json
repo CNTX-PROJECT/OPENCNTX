@@ -21,7 +21,7 @@
       "path": "site/index.html",
       "patterns": [
         "releases/tag/v{version}",
-        "@v{version}"
+        "opencntx-{version}-py3-none-any.whl"
       ],
       "purpose": "Published site release link and install command",
       "version_source": "published"

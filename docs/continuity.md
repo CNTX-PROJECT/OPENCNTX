@@ -14,7 +14,7 @@ privacy, integrity, and evidence checks.
 
 ## Fast route
 
-The commands in this guide remain Stable in the current v1.7.5 release. The
+The commands in this guide remain Stable in the current v1.7.6 release. The
 [adaptive AI workflow](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice
 without changing authority. It does not add a released CLI command.

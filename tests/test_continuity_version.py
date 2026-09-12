@@ -26,6 +26,23 @@ def bytes_map(root: Path) -> dict[str, bytes]:
     return {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob("*") if p.is_file()}
 
 
+def legacy_writer_code(checkpoint_id: str) -> str:
+    """Use the actual writer API available in the immutable historical source."""
+    return (
+        "from pathlib import Path; import json,sys; import opencntx.continuity as c; "
+        "assert Path(c.__file__).resolve().is_relative_to(Path(sys.argv[2])); "
+        "root=Path(sys.argv[1]); "
+        "has_checkpoint=hasattr(c,'execution_state_capsule') and "
+        "hasattr(c,'record_execution_checkpoint'); "
+        "s=c.execution_state_capsule(root) if has_checkpoint else None; "
+        f"r=c.record_execution_checkpoint(root,checkpoint_id='{checkpoint_id}',"
+        "current_internal_task='VERIFY',next_internal_action='Verify legacy',"
+        "evidence_paths=['input.txt'],expected_state_digest=s['state_digest']) "
+        "if has_checkpoint else c.advance_flow(root,outcome='PASS',evidence_paths=['input.txt']); "
+        "print(json.dumps({'api':'checkpoint' if has_checkpoint else 'advance_flow'}))"
+    )
+
+
 class ContinuityVersionTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
@@ -126,13 +143,7 @@ class ContinuityVersionTests(unittest.TestCase):
         source = Path(os.environ["R15_LEGACY_SOURCE"]).resolve(strict=True)
         env = os.environ.copy()
         env["PYTHONPATH"] = str(source)
-        code = (
-            "from pathlib import Path; import sys; import opencntx.continuity as c; "
-            "assert Path(c.__file__).resolve().is_relative_to(Path(sys.argv[2])); "
-            "root=Path(sys.argv[1]); state=c.execution_state_capsule(root); "
-            "c.record_execution_checkpoint(root,checkpoint_id='OLD-WRITER',current_internal_task='VERIFY',"
-            "next_internal_action='Verify legacy',evidence_paths=['input.txt'],expected_state_digest=state['state_digest'])"
-        )
+        code = legacy_writer_code("OLD-WRITER")
         legacy_clone = self.directory / "v1-positive-control"
         shutil.copytree(self.root, legacy_clone)
         positive = subprocess.run(

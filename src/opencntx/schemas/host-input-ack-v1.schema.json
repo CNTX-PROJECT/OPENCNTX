@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/host-input-ack-v1.schema.json",
+  "title": "OPENCNTX host input acknowledgement v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "format_version", "input_id", "input_digest", "host_id", "resumed_task_id", "resumed_step_id", "route", "next_action", "execution", "ack_digest"],
+  "properties": {
+    "format": {"const": "opencntx-host-input-ack"}, "format_version": {"const": 1},
+    "input_id": {"type": "string"}, "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "host_id": {"type": "string"}, "resumed_task_id": {"type": ["string", "null"]},
+    "resumed_step_id": {"type": ["string", "null"]},
+    "route": {"enum": ["SAME_STEP", "REVISED_NEXT_STEP"]}, "next_action": {"type": "string"},
+    "execution": {"const": "ACKNOWLEDGED"}, "ack_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

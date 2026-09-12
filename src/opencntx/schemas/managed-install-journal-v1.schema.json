@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/managed-install-journal-v1.schema.json",
+  "title": "OPENCNTX managed installation journal v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "plan_id", "created_ns", "owner", "python", "executable", "from_version", "to_version", "candidate_artifact", "candidate_sha256", "rollback_artifact", "rollback_sha256", "plan_digest", "phase", "result"],
+  "properties": {
+    "format": {"const": "opencntx-managed-install-v1"}, "plan_id": {"type": "string"},
+    "created_ns": {"type": "integer", "minimum": 1}, "owner": {"enum": ["PIPX", "PIP_VENV", "ABSENT"]},
+    "python": {"type": "string"}, "executable": {"type": ["string", "null"]},
+    "from_version": {"type": ["string", "null"]}, "to_version": {"type": "string"},
+    "candidate_artifact": {"type": "string"}, "candidate_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "rollback_artifact": {"type": ["string", "null"]}, "rollback_sha256": {"type": ["string", "null"]},
+    "plan_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "phase": {"enum": ["STAGED", "ACTIVATING", "VERIFYING", "NEW_HEALTHY", "OLD_RESTORED", "RECOVERY_REQUIRED"]},
+    "result": {"type": ["object", "null"]}
+  }
+}

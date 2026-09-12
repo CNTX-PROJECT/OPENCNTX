@@ -1,7 +1,7 @@
 {
   "format": "opencntx-continuity-contract",
   "format_version": 1,
-  "release": "1.2.0",
+  "release": "1.7.6",
   "stable_baseline": "1.0.0",
   "compatibility": "ADDITIVE",
   "commands": [
@@ -21,7 +21,14 @@
     "opencntx flow sync status",
     "opencntx flow host status",
     "opencntx flow host claim",
-    "opencntx flow host resume"
+    "opencntx flow host resume",
+    "opencntx flow host park",
+    "opencntx flow host return",
+    "opencntx-install status",
+    "opencntx-install install",
+    "opencntx-install update",
+    "opencntx-install resume",
+    "opencntx-install repair"
   ],
   "schemas": [
     "continuity-roadmap-v1.schema.json",
@@ -65,7 +72,11 @@
     "host-claim-v1.schema.json",
     "sync-receipt-v1.schema.json",
     "runtime-maturity-v1.json",
-    "transactional-update-plan-v2.schema.json"
+    "transactional-update-plan-v2.schema.json",
+    "host-input-anchor-v1.schema.json",
+    "host-input-ack-v1.schema.json",
+    "installation-inventory-v1.schema.json",
+    "managed-install-journal-v1.schema.json"
   ],
   "conflict_classes": [
     "NO_CONFLICT",
@@ -85,6 +96,12 @@
     "continuity_checkpoint_conflict",
     "continuity_dependency_blocked",
     "continuity_evidence_missing",
+    "continuity_host_input_conflict",
+    "continuity_host_input_drift",
+    "continuity_host_input_invalid",
+    "continuity_host_input_order",
+    "continuity_host_input_unavailable",
+    "continuity_host_input_unbound",
     "continuity_not_active",
     "continuity_outcome_invalid",
     "continuity_path_unsafe",

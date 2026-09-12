@@ -2,7 +2,7 @@
 
 All notable OPENCNTX changes are recorded here.
 
-## 1.7.6 - Unreleased implementation candidate
+## 1.7.6 - 2026-09-12
 
 - Preserve owner decisions in bounded context plans and require explicit
   availability before referring to unchanged supporting context.
@@ -14,10 +14,15 @@ All notable OPENCNTX changes are recorded here.
 - Require immutable historical writer regressions in Windows and Ubuntu CI,
   including the pre-1.6 writer protocol; mandatory cases cannot silently skip.
 
-The [full 1.7.6 roadmap](docs/roadmap-1.7.6.md) remains in progress. These
-initial changes do not yet implement the complete managed installer, bounded
-update cleanup, host integration, or the full installation acceptance matrix.
-No v1.7.6 software release is claimed by this candidate entry.
+- Add the independent `opencntx-install` status/install/update/resume/repair
+  entry point with semantic health, offline rollback and owned cleanup.
+- Preserve exact task and step return anchors through three or more nested host
+  inputs with idempotent acknowledgements.
+- Test the exact 35,000,000-byte rollover policy and measure bounded context
+  planning at 0, 100, 1,000 and 10,000 checkpoints.
+
+See the [1.7.6 release scope](docs/release-1.7.6.md) and the
+[installation and update guide](docs/install-and-update.md).
 
 ## 1.7.5 - 2026-09-12
 

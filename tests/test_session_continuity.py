@@ -110,6 +110,19 @@ class SessionContinuityTests(unittest.TestCase):
         with self.assertRaisesRegex(ContinuityError, "unknown fields"):
             normalize_session_metrics({"provider_magic": 1})
 
+    def test_decimal_rollover_threshold_is_exact_and_configurable(self) -> None:
+        below = assess_session_rollover({"chat_bytes": 34_999_999})
+        exact = assess_session_rollover({"chat_bytes": 35_000_000})
+        custom = assess_session_rollover(
+            {"chat_bytes": 999}, handoff_bytes=1_000, prepare_bytes=800
+        )
+        self.assertEqual("PREPARE_HANDOFF", below["signal"])
+        self.assertEqual("HANDOFF_NOW", exact["signal"])
+        self.assertEqual(35_000_000, exact["handoff_bytes"])
+        self.assertEqual("PREPARE_HANDOFF", custom["signal"])
+        with self.assertRaisesRegex(ContinuityError, "smaller"):
+            assess_session_rollover({}, handoff_bytes=1_000, prepare_bytes=1_000)
+
     def test_heartbeat_is_compact_and_does_not_write_state(self) -> None:
         project = self.project()
         before = execution_state_capsule(project)

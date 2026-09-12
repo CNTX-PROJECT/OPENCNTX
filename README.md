@@ -4,7 +4,7 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **v1.7.5 Stable release**
+Local first · Any model · Your files, your decisions · **v1.7.6 Stable release**
 
 [Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 
@@ -70,7 +70,7 @@ A new chat resumes saved work; it does not by itself require another roadmap. Yo
 With Python 3.11–3.14, Git and pipx available:
 
 ```powershell
-pipx install "git+https://github.com/CNTX-PROJECT/OPENCNTX.git@v1.7.5"
+pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.6/opencntx-1.7.6-py3-none-any.whl"
 opencntx --version
 ```
 
@@ -91,7 +91,7 @@ Choose files in `opencntx.toml` and inspect `.opencntx/latest/CONTEXT.md` before
 |---|---|
 | How does a context package work? | [How it works](docs/how-it-works.md) |
 | Where do knowledge, instructions and tasks live? | [Workspace](docs/workspace.md) |
-| Which command or recovery route do I need? | [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
+| Which command or recovery route do I need? | [Install or update](docs/install-and-update.md) · [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
 | What is delivered versus planned? | [Releases](docs/releases.md) · [Roadmap](docs/roadmap.md) |
 
 Verification proves matching bytes, not truth or task success. You decide what leaves your computer. [Security](docs/security.md) · [Private vulnerability reporting](SECURITY.md)

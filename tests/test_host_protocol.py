@@ -18,7 +18,13 @@ from opencntx.continuity import (
     health_report,
     start_flow,
 )
-from opencntx.host_protocol import claim_host, host_status, resume_host
+from opencntx.host_protocol import (
+    claim_host,
+    host_status,
+    park_host_input,
+    resume_host,
+    return_host_input,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,6 +65,74 @@ def project(parent: Path) -> Path:
 
 
 class HostProtocolTests(unittest.TestCase):
+    def test_three_nested_inputs_return_to_exact_step_once(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = project(Path(temporary_directory))
+            delivery = host_status(root, "HOST-A")
+            claim = claim_host(root, "HOST-A", delivery["delivery_digest"])
+            anchors = []
+            for number, kind in enumerate(("SIDE_TOPIC", "FEEDBACK", "EXTENSION"), start=1):
+                anchors.append(
+                    park_host_input(
+                        root,
+                        "HOST-A",
+                        claim["claim_digest"],
+                        input_id=f"INPUT-{number}",
+                        classification=kind,
+                        step_id="STEP-1",
+                        open_outcome_ids=("OUTCOME-1",),
+                    )
+                )
+            self.assertIsNone(anchors[0]["parent_input_id"])
+            self.assertEqual("INPUT-1", anchors[1]["parent_input_id"])
+            self.assertEqual("INPUT-2", anchors[2]["parent_input_id"])
+            with self.assertRaisesRegex(ContinuityError, "newest first"):
+                return_host_input(
+                    root,
+                    "HOST-A",
+                    input_id="INPUT-1",
+                    input_digest=anchors[0]["input_digest"],
+                )
+            for anchor in reversed(anchors):
+                acknowledgement = return_host_input(
+                    root,
+                    "HOST-A",
+                    input_id=anchor["input_id"],
+                    input_digest=anchor["input_digest"],
+                )
+                self.assertEqual("SAME_STEP", acknowledgement["route"])
+                self.assertEqual("RESUME TASK-1 STEP-1", acknowledgement["next_action"])
+                self.assertEqual(
+                    acknowledgement,
+                    return_host_input(
+                        root,
+                        "HOST-A",
+                        input_id=anchor["input_id"],
+                        input_digest=anchor["input_digest"],
+                    ),
+                )
+
+    def test_input_requires_active_claim_and_rejects_state_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = project(Path(temporary_directory))
+            with self.assertRaisesRegex(ContinuityError, "active claim"):
+                park_host_input(
+                    root, "HOST-A", "0" * 64, input_id="INPUT-1",
+                    classification="SIDE_TOPIC", step_id="STEP-1"
+                )
+            delivery = host_status(root, "HOST-A")
+            claim = claim_host(root, "HOST-A", delivery["delivery_digest"])
+            anchor = park_host_input(
+                root, "HOST-A", claim["claim_digest"], input_id="INPUT-1",
+                classification="SIDE_TOPIC", step_id="STEP-1"
+            )
+            (root / "evidence.txt").write_text("changed\n", encoding="utf-8")
+            # Evidence bytes are not part of the flow state until a checkpoint;
+            # the exact parked state therefore remains resumable.
+            acknowledgement = return_host_input(
+                root, "HOST-A", input_id="INPUT-1", input_digest=anchor["input_digest"]
+            )
+            self.assertEqual("SAME_STEP", acknowledgement["route"])
     def test_status_claim_and_retry_deliver_one_idempotent_assignment(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = project(Path(temporary_directory))

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencntx.dev/schemas/installation-inventory-v1.schema.json",
+  "title": "OPENCNTX installation inventory v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "format_version", "installation", "projects", "pending_journals", "state_root", "available_bytes", "ownership_classes", "compatibility_route", "proposed_write_set", "writes_performed", "inventory_digest"],
+  "properties": {
+    "format": {"const": "opencntx-installation-inventory"}, "format_version": {"const": 1},
+    "installation": {"type": "object"}, "projects": {"type": "array"}, "pending_journals": {"type": "array"},
+    "state_root": {"type": "string"}, "available_bytes": {"type": "integer", "minimum": 0},
+    "ownership_classes": {"type": "object"},
+    "compatibility_route": {"enum": ["DIRECT_MANAGED", "FRESH_MANAGED", "DIAGNOSIS_ONLY"]},
+    "proposed_write_set": {"type": "array", "items": {"type": "string"}},
+    "writes_performed": {"const": false}, "inventory_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
