@@ -2,6 +2,15 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.7.5 - 2026-09-12
+
+Release candidate for the engine and visual roadmaps. The candidate adds
+deterministic task-size recipes, availability-aware context planning, explicit
+safe-action gating, durable rollback resumption, isolated legacy recovery for
+portable v1 stores, and the responsive English visual guide. Publication is
+pending the exact clean commit, CI matrix, immutable tag and verified GitHub
+Release assets.
+
 ## 1.7.4 - 2026-09-11
 
 - Add deterministic project-aware task routing: short related work becomes a

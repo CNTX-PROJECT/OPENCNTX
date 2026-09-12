@@ -29,12 +29,13 @@ The published distribution contains exactly:
 Read [Release artifacts](release-artifacts.md) for build records, checksums and
 verification. There is no published PyPI/TestPyPI package.
 
-## Development source and next plan
+## Local v1.7.5 release candidate
 
-- Local candidate: v1.7.4.
-- Source candidate: `v1.7.4`.
-- Package version: `1.7.4`.
-- Remaining work is tracked on the [roadmap page](roadmap.md).
+- Local candidate: v1.7.5.
+- Source candidate: `v1.7.5`.
+- Package version: `1.7.5`.
+- Candidate scope: [engine and visual release plan](release-1.7.5.md).
+- Publication, tag and release-assets are intentionally still a separate step.
 
 The release scope distinguishes implemented behavior from deferred extensions;
 a roadmap checkbox is never a substitute for release evidence.

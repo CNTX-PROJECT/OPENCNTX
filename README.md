@@ -4,7 +4,7 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **v1.7.4 Stable**
+Local first · Any model · Your files, your decisions · **v1.7.4 Stable release**
 
 [Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 

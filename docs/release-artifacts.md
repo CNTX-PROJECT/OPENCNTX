@@ -25,12 +25,12 @@ Its published artifacts are `opencntx-1.7.4-py3-none-any.whl`,
 Any file built locally is an unpublished candidate unless it is one of the
 four exact assets attached to the immutable GitHub Release.
 
-## Reproducible local output
+## Reproducible local v1.7.5 candidate output
 
-The local release helper emits exactly four v1.7.4 candidate files:
+The local release helper emits exactly four v1.7.5 candidate files:
 
-1. `opencntx-1.7.4-py3-none-any.whl`;
-2. `opencntx-1.7.4.tar.gz`;
+1. `opencntx-1.7.5-py3-none-any.whl`;
+2. `opencntx-1.7.5.tar.gz`;
 3. `SHA256SUMS` for those two artifacts;
 4. `BUILD-RECORD.json`.
 
@@ -51,7 +51,7 @@ python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.7.4 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.7.5 --expected-commit $commit --expected-tree $tree
 ```
 
 Ubuntu:
@@ -61,7 +61,7 @@ python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0
 commit=$(git rev-parse HEAD)
 tree=$(git rev-parse 'HEAD^{tree}')
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.7.4 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.7.5 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
 The helper exports the exact Git tree to two independent temporary source
@@ -99,8 +99,8 @@ must support:
 Run the same bounded smoke for both local candidates:
 
 ```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.7.4-py3-none-any.whl --expected-version 1.7.4
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.7.4.tar.gz --expected-version 1.7.4
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.7.5-py3-none-any.whl --expected-version 1.7.5
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.7.5.tar.gz --expected-version 1.7.5
 ```
 
 This tests a local candidate. It is not proof that an external package-index

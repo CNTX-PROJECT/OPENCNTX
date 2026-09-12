@@ -401,9 +401,11 @@ def dispatch_continuity(args: argparse.Namespace) -> int | None:
     command = args.flow_command
     root = Path(getattr(args, "root", "."))
     if command == "legacy-stage":
-        _print(stage_legacy_recovery(
-            root, destination=Path(args.destination), expected_state_digest=args.expected_state
-        ))
+        _print(
+            stage_legacy_recovery(
+                root, destination=Path(args.destination), expected_state_digest=args.expected_state
+            )
+        )
         return 0
     if command == "preview":
         _print(preview_roadmap(root, Path(args.roadmap)))

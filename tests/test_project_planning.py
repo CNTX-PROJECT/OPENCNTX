@@ -49,6 +49,16 @@ class ProjectRoadmapRoutingTests(unittest.TestCase):
         self.assertEqual("EXTEND_CHILD_ROADMAP", result["action"])
         self.assertEqual("CHILD-1", result["target_roadmap_id"])
 
+    def test_medium_work_gets_a_built_in_recipe_without_new_master(self) -> None:
+        result = route_project_task(
+            ProjectTaskFacts(project_known=True, relation="RELATED", size_class="MEDIUM"),
+            master_roadmap_id="MASTER",
+            current_child_roadmap_id="CHILD-1",
+        )
+        self.assertEqual("EXTEND_CHILD_ROADMAP", result["action"])
+        self.assertEqual("builtin.medium-v1", result["recipe_id"])
+        self.assertEqual(["scope", "plan", "change", "verify", "record"], result["method_steps"])
+
     def test_side_topic_is_parked_with_exact_return_anchor(self) -> None:
         result = route_project_task(
             ProjectTaskFacts(project_known=True, relation="SIDE_TOPIC", size_class="SHORT"),
@@ -82,6 +92,10 @@ class ContextEconomyTests(unittest.TestCase):
             ["current-step", "return-anchor", "changed-decision"], result["load_source_ids"]
         )
         self.assertEqual(["old-analysis"], result["reference_source_ids"])
+        self.assertEqual(["current-step", "return-anchor"], result["required_source_ids"])
+        self.assertEqual(0, result["omitted_bytes"])
+        self.assertEqual(6000, result["referenced_bytes"])
+        self.assertEqual(0.0, result["omission_percent"])
         self.assertGreaterEqual(result["reduction_percent"], 30)
         self.assertLessEqual(result["loaded_bytes"], 4000)
 
@@ -102,11 +116,33 @@ class ContextEconomyTests(unittest.TestCase):
                 max_bytes=1000,
             )
 
+    def test_new_session_does_not_count_unavailable_digest_as_loaded_context(self) -> None:
+        sources = (
+            ContextSource("current", 1, "a" * 64, 1000, "CURRENT_STEP"),
+            ContextSource("supporting", 1, "b" * 64, 9000, "SUPPORTING"),
+        )
+        result = plan_context_load(
+            sources,
+            previous_digests={"supporting": "b" * 64},
+            available_source_ids=(),
+            max_bytes=3000,
+        )
+        self.assertEqual(["current"], result["load_source_ids"])
+        self.assertEqual(["supporting"], result["skipped_source_ids"])
+        self.assertEqual(0, result["referenced_bytes"])
+        self.assertTrue(result["availability_checked"])
+
 
 class ExecutionDecisionTests(unittest.TestCase):
     def test_safe_open_work_continues_without_premature_stop(self) -> None:
         result = decide_execution(ExecutionFacts(authority_granted=True, safe_action_ready=True))
         self.assertEqual("CONTINUE", result["decision"])
+
+    def test_not_ready_does_not_authorize_a_mutation_or_claim_safe_work(self) -> None:
+        result = decide_execution(ExecutionFacts(authority_granted=True, safe_action_ready=False))
+        self.assertEqual("WAIT_FOR_SAFE_ACTION", result["decision"])
+        self.assertEqual("NO_SAFE_ACTION_READY", result["reason"])
+        self.assertFalse(result["technical_mutation_allowed"])
 
     def test_only_material_choice_requests_owner(self) -> None:
         result = decide_execution(
@@ -145,7 +181,7 @@ class ExecutionDecisionTests(unittest.TestCase):
             )["decision"],
         )
         self.assertEqual(
-            "CONTINUE",
+            "WAIT_FOR_SAFE_ACTION",
             decide_execution(
                 ExecutionFacts(
                     authority_granted=True,
