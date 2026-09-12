@@ -99,7 +99,7 @@ Every row starts NOT_TESTED_FOR_1.7.6. Prior 1.7.5 evidence is a baseline, never
 | 1.1.0, 1.1.1, 1.2.0, 1.2.1, 1.3.0 | Exact continuity-format inventory and migration proof for any advertised supported route. |
 | 0.3.0 | Existing data-preserving upgrade proof repeated against target artifacts. |
 | 1.0.0, other 0.x, unknown/custom | Inventory and preservation first; implement a named migration for support. Diagnostic-only means not installation-qualified and must be visible before mutation. |
-| pip/venv, shared runtimes, OneDrive/network/junction paths | Qualify separately from pipx/local filesystem. Never extrapolate Windows/pipx evidence. |
+| pip/venv, shared runtimes, cloud-synchronized/network/junction paths | Qualify separately from pipx/local filesystem. Never extrapolate Windows/pipx evidence. |
 
 Do not silently shrink mandatory scope to make a failing release green. Any substantive scope change is recorded explicitly rather than silently declaring the row unsupported.
 
