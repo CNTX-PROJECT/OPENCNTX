@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import tempfile
 import unittest
 import zipfile
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -241,6 +243,87 @@ class InstallManagerTests(unittest.TestCase):
             selected,
             manager._verification_python({"owner": "PIP_VENV", "python": str(selected)}),
         )
+
+    def test_cli_dispatches_status_update_and_resume_results(self) -> None:
+        output = io.StringIO()
+        with (
+            mock.patch.object(
+                manager, "installation_inventory", return_value={"status": "INVENTORIED"}
+            ) as inventory,
+            redirect_stdout(output),
+        ):
+            code = manager.main(["--state-root", str(self.root / "state"), "status"])
+        self.assertEqual(0, code)
+        inventory.assert_called_once()
+        self.assertEqual("INVENTORIED", json.loads(output.getvalue())["status"])
+
+        output = io.StringIO()
+        with (
+            mock.patch.object(manager, "managed_update", return_value={"status": "NEW_HEALTHY"})
+            as update,
+            redirect_stdout(output),
+        ):
+            code = manager.main(
+                [
+                    "--state-root",
+                    str(self.root / "state"),
+                    "update",
+                    "--artifact",
+                    "candidate.whl",
+                    "--sha256",
+                    "a" * 64,
+                    "--version",
+                    "1.7.6",
+                ]
+            )
+        self.assertEqual(0, code)
+        update.assert_called_once()
+
+        output = io.StringIO()
+        with (
+            mock.patch.object(
+                manager, "resume_update", return_value={"status": "RECOVERY_REQUIRED"}
+            ) as resume,
+            redirect_stdout(output),
+        ):
+            code = manager.main(
+                ["--state-root", str(self.root / "state"), "repair", "--plan-id", "plan"]
+            )
+        self.assertEqual(3, code)
+        resume.assert_called_once_with(state_root=self.root / "state", plan_id="plan")
+
+    def test_cli_reports_managed_failure_without_traceback(self) -> None:
+        error = io.StringIO()
+        with (
+            mock.patch.object(
+                manager,
+                "installation_inventory",
+                side_effect=manager.InstallManagerError("closed failure"),
+            ),
+            redirect_stderr(error),
+        ):
+            code = manager.main(["--state-root", str(self.root / "state"), "status"])
+        self.assertEqual(2, code)
+        self.assertEqual("Managed installation failed: closed failure\n", error.getvalue())
+
+    def test_manager_commands_cover_supported_and_diagnosis_only_owners(self) -> None:
+        wheel = self.root / "candidate.whl"
+        python = self.root / "venv/python"
+        with mock.patch.object(manager.shutil, "which", return_value="pipx"):
+            self.assertEqual(
+                ["pipx", "install", "--force", str(wheel)],
+                manager._manager_command("PIPX", python, wheel),
+            )
+            self.assertEqual(
+                ["pipx", "install", str(wheel)],
+                manager._manager_command("ABSENT", python, wheel),
+            )
+        self.assertEqual(
+            [str(python), "-I", "-B", "-m", "pip", "install", "--upgrade", str(wheel)],
+            manager._manager_command("PIP_VENV", python, wheel),
+        )
+        with self.assertRaisesRegex(manager.InstallManagerError, "diagnosis-only"):
+            manager._manager_command("UNKNOWN", python, wheel)
 
 
 if __name__ == "__main__":
