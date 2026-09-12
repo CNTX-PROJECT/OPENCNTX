@@ -30,9 +30,9 @@ FORMAT = "opencntx-goal-storage-envelope"
 FIELDS = {"format", "format_version", "legacy_roadmap_base64", "legacy_sha256", "envelope_digest"}
 
 
-def unwrap_goal_storage(value: Mapping[str, Any]) -> dict[str, Any]:
+def _retained_legacy_bytes(value: Mapping[str, Any]) -> bytes | None:
     if value.get("format") != FORMAT:
-        return dict(value)
+        return None
     if (
         set(value) != FIELDS
         or type(value.get("format_version")) is not int
@@ -49,6 +49,15 @@ def unwrap_goal_storage(value: Mapping[str, Any]) -> dict[str, Any]:
         raise _fail("goal_storage_invalid", "Invalid retained v1 roadmap bytes.") from exc
     if _digest(content) != value["legacy_sha256"] or not isinstance(legacy, dict):
         raise _fail("goal_storage_invalid", "Retained v1 roadmap digest differs.")
+    validate_roadmap(legacy)
+    return content
+
+
+def unwrap_goal_storage(value: Mapping[str, Any]) -> dict[str, Any]:
+    content = _retained_legacy_bytes(value)
+    if content is None:
+        return dict(value)
+    legacy = json.loads(content)
     return validate_roadmap(legacy)
 
 

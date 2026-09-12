@@ -54,19 +54,20 @@
     {
       "path": "docs/releases.md",
       "patterns": [
-        "Local candidate: v{version}",
-        "Source candidate: `v{version}`",
-        "Package version: `{version}`"
+        "Published software — v{version} Stable",
+        "Download v{version}",
+        "opencntx-{version}-py3-none-any.whl"
       ],
-      "purpose": "Dedicated release page current source candidate contract"
+      "purpose": "Dedicated release page current published software contract",
+      "version_source": "published"
     },
     {
       "path": "docs/release-artifacts.md",
       "patterns": [
-        "local release helper emits exactly four v{version} candidate files",
+        "local release helper emits exactly four v{version} files",
         "--expected-version {version}"
       ],
-      "purpose": "Current candidate artifact contract"
+      "purpose": "Current release artifact contract"
     }
   ]
 }

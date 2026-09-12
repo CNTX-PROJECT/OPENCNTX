@@ -1048,7 +1048,7 @@ def _load_store(
 
 
 @contextmanager
-def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
+def _writer_lock(path: Path, *, reject_local_overlap: bool = False, preserve_marker: bool = False):
     """Hold an operating-system lock whose ownership ends with the process.
 
     The file is a stable coordination object, not evidence that a writer is
@@ -1080,7 +1080,7 @@ def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
                 import importlib
 
                 msvcrt = importlib.import_module("msvcrt")
-                if not legacy:
+                if not legacy and not preserve_marker:
                     os.write(descriptor, b"OPENCNTX_OS_LOCK_V2\n")
                     os.fsync(descriptor)
                 os.lseek(descriptor, 0, os.SEEK_SET)
@@ -1090,7 +1090,7 @@ def _writer_lock(path: Path, *, reject_local_overlap: bool = False):
 
                 fcntl = importlib.import_module("fcntl")
                 fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                if not legacy:
+                if not legacy and not preserve_marker:
                     os.write(descriptor, b"OPENCNTX_OS_LOCK_V2\n")
                     os.fsync(descriptor)
         except ContinuityError:

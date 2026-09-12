@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<title id="title">An overview made for people</title><desc id="desc">Illustrative notes-app layout, not an included dashboard. A sidebar links knowledge and roadmaps; the main area shows status, next step and explanations.</desc>
+<rect width="1200" height="680" rx="24" fill="#111827"/>
+<style>text{font-family:Segoe UI,Arial,sans-serif;fill:#F8FAFC}.small{font-size:19px;fill:#CBD5E1}.label{font-size:17px;letter-spacing:2px;fill:#DDA0DD;font-weight:700}.heading{font-size:29px;font-weight:700}.body{font-size:22px}.line{fill:none;stroke:#DDA0DD;stroke-width:2}</style>
+
+<text x="54" y="61" class="label">03 / YOUR HUMAN VIEW</text>
+<text x="54" y="111" font-size="40" font-weight="700">Less searching. More understanding.</text>
+<rect x="54" y="150" width="1092" height="446" rx="18" fill="#F8FAFC"/>
+<path d="M72 150H324V596H72Q54 596 54 578V168Q54 150 72 150" fill="#EDE5F0"/>
+<text x="80" y="198" style="fill:#30343B;font-size:17px;letter-spacing:2px;font-weight:700">MY PROJECT</text>
+<rect x="70" y="224" width="238" height="46" rx="9" fill="#DDA0DD"/>
+<text x="87" y="255" style="fill:#0B1020;font-size:21px;font-weight:700">Overview</text>
+<text x="87" y="311" style="fill:#475569;font-size:21px">Knowledge</text>
+<text x="87" y="360" style="fill:#475569;font-size:21px">Master roadmap</text>
+<text x="87" y="409" style="fill:#475569;font-size:21px">Current outcome</text>
+<text x="87" y="458" style="fill:#475569;font-size:21px">Decisions</text>
+<text x="87" y="554" style="fill:#30343B;font-size:18px">Linked, readable notes</text>
+<text x="360" y="201" style="fill:#475569;font-size:17px;letter-spacing:2px">WEBSITE PROJECT / ILLUSTRATIVE EXAMPLE</text>
+<text x="360" y="249" style="fill:#0F172A;font-size:32px;font-weight:700">Make the next step obvious.</text>
+<rect x="360" y="277" width="744" height="83" rx="12" fill="#EDE5F0"/>
+<text x="381" y="311" style="fill:#30343B;font-size:18px;font-weight:700">NOW · CONTENT ROADMAP</text>
+<text x="381" y="341" style="fill:#0F172A;font-size:21px">Review the first draft of the welcome page.</text>
+<text x="360" y="407" style="fill:#0F172A;font-size:23px;font-weight:700">Progress</text>
+<text x="755" y="407" style="fill:#0F172A;font-size:23px;font-weight:700">Useful knowledge</text>
+<text x="360" y="447" style="fill:#047857;font-size:20px">✓ Audience and goal agreed</text>
+<text x="360" y="484" style="fill:#0F172A;font-size:20px">→ Review welcome-page draft</text>
+<text x="360" y="521" style="fill:#475569;font-size:20px">○ Check mobile layout</text>
+<text x="755" y="447" style="fill:#475569;font-size:20px">Writing guide</text>
+<text x="755" y="484" style="fill:#475569;font-size:20px">Design decisions</text>
+<text x="755" y="521" style="fill:#475569;font-size:20px">Evidence and open questions</text>
+<text x="54" y="638" class="small">Suggested layout for your notes app. OPENCNTX does not include this dashboard.</text></svg>

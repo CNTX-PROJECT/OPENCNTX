@@ -14,14 +14,18 @@ pack, inspect and verify. Workspace and continuity are optional.
 |---|---|
 | Installation, a first package, updates or removal | [Get started](start-here.md) |
 | A short explanation of the product | [How it works](how-it-works.md) |
-| The latest development plan | [Roadmap](roadmap.md) — 1.7.4; [complete historical plan](roadmap-plan.md) |
+| The latest development plan | [Roadmap](roadmap.md) — 1.7.5; [complete historical plan](roadmap-plan.md) |
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 
-Current software: **v1.7.4**. See the [1.7.4 release scope](release-1.7.4.md)
-for project-aware routing, context economy, and explicit host boundaries.
+Current software: **v1.7.5**. See the [1.7.5 release scope](release-1.7.5.md)
+for legacy-safe recovery, project-aware routing, context economy, and explicit
+host boundaries.
 
 ## Core package guides
+
+New to the workflow? Start with the [visual tour](visual-tour.md) for local
+knowledge, an optional GitHub copy, readable notes and small-to-mega task planning.
 
 For selecting local files and preparing reviewable context.
 
@@ -70,6 +74,9 @@ imply that every host has connected that API to its own chat interface.
 - [Contributing](../CONTRIBUTING.md) · [Changelog](../CHANGELOG.md) — development and history.
 
 ## Product boundary
+
+[Legacy recovery without a Codex reset](legacy-recovery.md) describes the
+published v1.7.5 staging route and its deliberate safety boundaries.
 
 OPENCNTX creates local, explicit, verifiable files. It does not call an AI,
 choose a provider, upload context or execute supplied content. Reviewed output

@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [Continuity](continuity.md) · [Commands](commands.md) · [Releases](releases.md) · [All guides](README.md)
 
-OPENCNTX 1.7.4 provides deterministic building blocks for hosts that organize
+OPENCNTX 1.7.5 provides deterministic building blocks for hosts that organize
 work under one project roadmap. The host supplies explicit facts; OPENCNTX does
 not infer intent from natural language or start an AI.
 
@@ -74,4 +74,4 @@ These APIs do not alter the existing durable formats, CLI routes, or authority
 model. A connected host may use the returned decisions to update its existing
 roadmap store. Installation alone does not activate that host integration.
 
-[Release scope](release-1.7.4.md) · [Roadmap continuity](continuity.md) · [Documentation home](README.md)
+[Release scope](release-1.7.5.md) · [Roadmap continuity](continuity.md) · [Documentation home](README.md)

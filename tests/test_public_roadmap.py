@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -20,12 +21,15 @@ PUBLIC_PAGES = (
 class PublicRoadmapTests(unittest.TestCase):
     def test_primary_routes_point_to_the_roadmap_home(self) -> None:
         self.assertFalse((ROOT / "docs/roadmap-plan.nl.md").exists())
+        with (ROOT / "pyproject.toml").open("rb") as project_file:
+            metadata = tomllib.load(project_file)
+        published = metadata["tool"]["opencntx"]["release"]["published_version"]
         for name in ("README.md", "docs/README.md", "site/index.html"):
             text = (ROOT / name).read_text(encoding="utf-8")
             with self.subTest(page=name):
                 self.assertIn("roadmap.md", text)
                 self.assertIn("releases.md", text)
-                self.assertIn("1.7.4", text)
+                self.assertIn(str(published), text)
         overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
         self.assertIn("roadmap-plan.md", overview)
         self.assertIn("Fixed historical English snapshot", overview)
@@ -66,7 +70,7 @@ class PublicRoadmapTests(unittest.TestCase):
         overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
         releases = (ROOT / "docs/releases.md").read_text(encoding="utf-8")
         self.assertIn("published_baseline: 1.7.3", plan)
-        self.assertIn("Package version: `1.7.4`", releases)
+        self.assertIn("Published software — v1.7.5 Stable", releases)
         self.assertIn("release scope", releases)
         self.assertIn("remaining work", releases.lower())
         self.assertIn("twelve failed tasks out of one hundred", overview)

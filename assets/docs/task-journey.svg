@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+<title id="title">One step at a time, without losing the goal</title><desc id="desc">Choose a task, select context, work and check, save the outcome and resume the next step. Side questions retain a return anchor.</desc>
+<rect width="1200" height="640" rx="24" fill="#111827"/>
+<style>text{font-family:Segoe UI,Arial,sans-serif;fill:#F8FAFC}.small{font-size:19px;fill:#CBD5E1}.label{font-size:17px;letter-spacing:2px;fill:#DDA0DD;font-weight:700}.heading{font-size:29px;font-weight:700}.body{font-size:22px}.line{fill:none;stroke:#DDA0DD;stroke-width:2}</style>
+
+<text x="54" y="65" class="label">02 / FROM REQUEST TO RESULT</text>
+<text x="54" y="118" font-size="42" font-weight="700">One step forward. A clear way back.</text>
+<text x="54" y="155" class="body">The roadmap holds the direction. Each step leaves a useful record.</text>
+<rect x="54" y="211" width="256" height="224" rx="18" fill="#172033" stroke="#475569"/><text x="78" y="254" class="label">01</text><text x="78" y="300" class="heading">Choose</text><text x="78" y="347" class="small">Goal + current step</text><text x="78" y="391" class="small">What matters now?</text><path d="M312 322h17 M323 317L329 322L323 327" class="line"/><rect x="332" y="211" width="256" height="224" rx="18" fill="#172033" stroke="#475569"/><text x="356" y="254" class="label">02</text><text x="356" y="300" class="heading">Prepare</text><text x="356" y="347" class="small">Relevant context</text><text x="356" y="391" class="small">Preview before sharing.</text><path d="M590 322h17 M601 317L607 322L601 327" class="line"/><rect x="610" y="211" width="256" height="224" rx="18" fill="#172033" stroke="#475569"/><text x="634" y="254" class="label">03</text><text x="634" y="300" class="heading">Work + check</text><text x="634" y="347" class="small">Your AI tool or you</text><text x="634" y="391" class="small">Verify the result.</text><path d="M868 322h17 M879 317L885 322L879 327" class="line"/><rect x="888" y="211" width="256" height="224" rx="18" fill="#172033" stroke="#475569"/><text x="912" y="254" class="label">04</text><text x="912" y="300" class="heading">Save</text><text x="912" y="347" class="small">Outcome + evidence</text><text x="912" y="391" class="small">Keep the next step.</text>
+<path d="M1016 445V486H182V447 M176 455L182 447L188 455" class="line"/>
+<rect x="418" y="462" width="364" height="45" rx="22" fill="#DDA0DD"/>
+<text x="600" y="492" text-anchor="middle" font-size="20" style="fill:#0B1020;font-weight:700">Continue with the next ready step</text>
+<text x="54" y="569" class="small">A side question? Park it and keep the return step.</text>
+<text x="54" y="603" class="small">A new chat? Resume from the saved state. A completed goal? Keep the evidence.</text>
+</svg>

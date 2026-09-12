@@ -122,7 +122,7 @@ class ContinuityVersionTests(unittest.TestCase):
         self.assertEqual(execution_state_capsule(self.staged)["checkpoint_number"], 1)
 
     @unittest.skipUnless(os.environ.get("R15_LEGACY_SOURCE"), "Actual v1 source path must be supplied")
-    def test_actual_v1_reader_and_writer_fail_closed_on_new_store(self) -> None:
+    def test_actual_legacy_writer_preserves_original_new_store(self) -> None:
         source = Path(os.environ["R15_LEGACY_SOURCE"]).resolve(strict=True)
         env = os.environ.copy()
         env["PYTHONPATH"] = str(source)
@@ -147,7 +147,15 @@ class ContinuityVersionTests(unittest.TestCase):
             env=env, capture_output=True, text=True, timeout=30, check=False,
         )
         self.assertNotEqual(rejected.returncode, 0)
-        self.assertIn("Roadmap fields are incomplete or unknown", rejected.stderr)
+        # 1.6.3 already reads the envelope, but cannot acquire a persistent V2
+        # marker. Earlier readers may reject the format itself. This test proves
+        # non-mutation only; test_legacy_recovery separately requires successful
+        # actual legacy writes on the deliberately prepared recovery copy.
+        self.assertTrue(
+            "Roadmap fields are incomplete or unknown" in rejected.stderr
+            or "Another continuity writer is active" in rejected.stderr,
+            rejected.stderr,
+        )
         self.assertEqual(bytes_map(self.staged), before)
         self.assertEqual(bytes_map(self.root), self.original)
 

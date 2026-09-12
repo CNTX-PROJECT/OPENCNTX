@@ -131,6 +131,11 @@ pre {
   gap: var(--oc-space-4);
 }
 
+.topbar nav, .split > *, .hero__layout > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .brand-link {
   display: inline-flex;
   align-items: center;
@@ -197,6 +202,97 @@ pre {
 .hero__visual img {
   width: 100%;
   height: auto;
+}
+
+.brand-link img {
+  height: auto;
+}
+
+.explainer {
+  margin: var(--oc-space-6) 0;
+}
+
+.explainer img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--oc-radius-panel);
+}
+
+figcaption, .section-note {
+  margin-block: var(--oc-space-4);
+  color: var(--oc-text-muted);
+  font-size: var(--oc-type-small);
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--oc-space-4);
+  margin-block: var(--oc-space-6);
+}
+
+.size-mark {
+  display: block;
+  color: var(--oc-text);
+  font-size: var(--oc-type-h2);
+  font-weight: 800;
+  margin-block-end: var(--oc-space-4);
+  border-bottom: var(--oc-space-1) solid var(--oc-brand);
+  width: fit-content;
+}
+
+.roadmap-tree {
+  margin-block: var(--oc-space-7);
+  text-align: center;
+}
+
+.roadmap-master {
+  width: fit-content;
+  margin-inline: auto;
+  padding: var(--oc-space-4) var(--oc-space-5);
+  border-radius: var(--oc-radius-control);
+  background: var(--oc-brand);
+  color: var(--oc-brand-ink);
+  font-weight: 800;
+}
+
+.roadmap-branches {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--oc-space-4);
+  padding-block-start: var(--oc-space-6);
+}
+
+.roadmap-branches > div {
+  position: relative;
+  padding: var(--oc-space-4);
+  border: 1px solid var(--oc-border);
+  border-radius: var(--oc-radius-control);
+  background: var(--oc-surface);
+}
+
+.roadmap-branches > div::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  height: var(--oc-space-6);
+  border-left: 1px solid var(--oc-border);
+}
+
+.roadmap-branches strong, .roadmap-branches span {
+  display: block;
+}
+
+.roadmap-branches span {
+  color: var(--oc-text-muted);
+  font-size: var(--oc-type-small);
+}
+
+@media (max-width: 44rem) {
+  .size-grid, .roadmap-branches {
+    grid-template-columns: 1fr;
+  }
 }
 
 .proof-strip {
@@ -480,6 +576,7 @@ pre {
     width: 100%;
     padding: 0 0 var(--oc-space-3);
     overflow-x: auto;
+    flex-wrap: wrap;
   }
 
   .section {

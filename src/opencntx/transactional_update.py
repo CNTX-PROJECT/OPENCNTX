@@ -586,6 +586,10 @@ def _recover_unlocked(plan: Mapping[str, object], state_root: Path) -> dict[str,
     staging_root = state_root / "staging" / str(plan["plan_id"])
     restored: list[str] = []
     components = _recovery_preflight(plan, state_root)
+    # Persist intent before restoring any component. A later apply must finish
+    # this recovery before considering the old success receipt for replay.
+    recovery_path = state_root / "recovering" / f"{plan['plan_id']}.json"
+    _write_atomic(recovery_path, _pretty({"plan_digest": plan["plan_digest"]}))
     for item in reversed(components):
         name = item["name"]
         active = Path(item["active_path"])
@@ -612,6 +616,15 @@ def _recover_unlocked(plan: Mapping[str, object], state_root: Path) -> dict[str,
     _preserve_directory(staging_root, state_root)
     _preserve_directory(retired_root, state_root)
     _write_journal(state_root, plan, "ROLLED_BACK")
+    receipt_path = state_root / "receipts" / f"{plan['plan_id']}.json"
+    if receipt_path.exists():
+        content = receipt_path.read_bytes()
+        archive = state_root / "receipts" / "rolled-back" / f"{_digest(content)}.json"
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        if archive.exists() and archive.read_bytes() != content:
+            raise _fail("update_recovery_required", "Receipt archive differs; history retained.")
+        os.replace(receipt_path, archive)
+    recovery_path.unlink()
     result = {
         "format": "opencntx-update-recovery",
         "format_version": 1,
@@ -773,6 +786,15 @@ def _apply_update_plan_locked(
     state_root.mkdir(exist_ok=True)
     receipt_path = state_root / "receipts" / f"{selected['plan_id']}.json"
     with _writer_lock(state_root / "writer.lock"):
+        recovery_path = state_root / "recovering" / f"{selected['plan_id']}.json"
+        if recovery_path.exists():
+            try:
+                intent = json.loads(recovery_path.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise _fail("update_recovery_required", "Cannot read pending recovery intent.") from exc
+            if intent != {"plan_digest": selected["plan_digest"]}:
+                raise _fail("update_recovery_required", "Pending recovery belongs to another plan.")
+            _recover_unlocked(selected, state_root)
         if receipt_path.exists():
             receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
             receipt_basis = {
