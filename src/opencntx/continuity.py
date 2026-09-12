@@ -1048,9 +1048,7 @@ def _load_store(
 
 
 @contextmanager
-def _writer_lock(
-    path: Path, *, reject_local_overlap: bool = False, preserve_marker: bool = False
-):
+def _writer_lock(path: Path, *, reject_local_overlap: bool = False, preserve_marker: bool = False):
     """Hold an operating-system lock whose ownership ends with the process.
 
     The file is a stable coordination object, not evidence that a writer is
