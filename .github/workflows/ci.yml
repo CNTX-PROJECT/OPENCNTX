@@ -137,6 +137,9 @@ jobs:
           python tools/managed_install_acceptance.py
           --candidate dist/opencntx-1.8.0-py3-none-any.whl
           --baseline dist/opencntx-1.7.6-py3-none-any.whl
+          --expected-candidate 1.8.0
+          --expected-baseline 1.7.6
+          --expected-baseline-sha256 b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f
 
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
