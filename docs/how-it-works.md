@@ -59,6 +59,24 @@ record to the exact executor package, context manifest, allowed action, and
 copied result evidence. Fixed task-wide limits stop repeated or alternating
 failure loops; OPENCNTX never executes or retries the command itself.
 
+### 1.8.0 knowledge layer
+
+For projects that outgrow one file, `knowledge index build` adds a derived
+local layer. It discovers an explicit root, assigns stable node IDs to
+Markdown/JSON and other UTF-8 text files, connects parent/child paths and
+records typed links. `knowledge index search` ranks exact paths, titles and
+headings before short previews and reports the reason for every result.
+
+The index is disposable metadata: source files remain authoritative and an
+index can be rebuilt from them. Hard file, depth and byte budgets prevent an
+unbounded scan. `knowledge adopt` inventories existing roadmaps, tasks,
+techniques and project records without claiming ownership. `knowledge footer`
+renders a complete provider-neutral footer with explicit fallbacks, including
+an exact JSON profile for machine-readable output.
+
+The knowledge layer is intentionally not a model. It uses no embeddings,
+vector store, OpenSpec runtime, network service or hidden ranking provider.
+
 ## Three kinds of evidence
 
 - **Bytes:** the exact stored or selected content.

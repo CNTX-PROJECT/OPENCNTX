@@ -19,6 +19,7 @@
     "recovery-handoff-v1.schema.json": "Restart handoff binding recovery state, evidence, rollback, and open outcomes.",
     "recovery-report-v2.schema.json": "Compact terminal or continuing report across all classified recovery attempts.",
     "verification-lease-v1.schema.json": "Exact input and guard fingerprints that prevent unsafe lightweight reuse.",
-    "transactional-update-plan-v2.schema.json": "Bind transactional update plans to exact project states and managed candidate profile readbacks."
+    "transactional-update-plan-v2.schema.json": "Bind transactional update plans to exact project states and managed candidate profile readbacks.",
+    "knowledge-contracts-v1.schema.json": "Closed local metadata envelopes for hierarchical sources, typed links, search, techniques, adoption and footers."
   }
 }

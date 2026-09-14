@@ -2,6 +2,25 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.8.0 - 2026-09-14
+
+- Add a local hierarchical source index for Markdown, JSON, TOML, YAML and
+  UTF-8 text, with stable IDs, parent/child depth, privacy, freshness and
+  SHA-256 digests.
+- Add typed link manifests and deterministic exact-first search with explicit
+  score components, reason codes, byte budgets and loaded/referenced/skipped
+  states.
+- Add digest-bound technique cards, preview-first existing-project adoption
+  manifests and a provider-neutral footer contract with exact JSON output.
+- Keep the 1.7.6 core, workspace, continuity, layout and installer routes
+  compatible; no external index, embedding, OpenSpec or Zvec runtime is added.
+- Refresh public README, website, command reference, release scope, roadmap,
+  installation and safety documentation to distinguish delivered behavior from
+  future host integrations.
+
+See the [1.8.0 release scope](docs/release-1.8.0.md) and the
+[knowledge layer guide](docs/knowledge-layer.md).
+
 ## 1.7.6 - 2026-09-12
 
 - Preserve owner decisions in bounded context plans and require explicit

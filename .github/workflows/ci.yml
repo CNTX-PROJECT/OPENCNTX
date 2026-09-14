@@ -126,17 +126,17 @@ jobs:
               "--repository", ".", "--output", "dist",
               "--expected-commit", commit, "--expected-tree", tree,
           ], check=True)
-          baseline = pathlib.Path("dist/opencntx-1.7.5-py3-none-any.whl")
+          baseline = pathlib.Path("dist/opencntx-1.7.6-py3-none-any.whl")
           urllib.request.urlretrieve(
-              "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.5/"
-              "opencntx-1.7.5-py3-none-any.whl",
+              "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.6/"
+              "opencntx-1.7.6-py3-none-any.whl",
               baseline,
           )
       - name: Require update, rollback, reapply, resume, and cleanup
         run: >-
           python tools/managed_install_acceptance.py
-          --candidate dist/opencntx-1.7.6-py3-none-any.whl
-          --baseline dist/opencntx-1.7.5-py3-none-any.whl
+          --candidate dist/opencntx-1.8.0-py3-none-any.whl
+          --baseline dist/opencntx-1.7.6-py3-none-any.whl
 
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}

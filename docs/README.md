@@ -12,13 +12,13 @@ pack, inspect and verify. Workspace and continuity are optional.
 
 | You need… | Read |
 |---|---|
-| Installation, a first package, updates or removal | [Install and update 1.7.6](install-and-update.md) · [Get started](start-here.md) |
-| A short explanation of the product | [How it works](how-it-works.md) |
-| The latest development plan | [1.7.6 implementation roadmap](roadmap-1.7.6.md); [Roadmap](roadmap.md); [complete historical plan](roadmap-plan.md) |
+| Installation, a first package, updates or removal | [Install and update 1.8.0](install-and-update.md) · [Get started](start-here.md) |
+| A short explanation of the product | [How it works](how-it-works.md) · [Knowledge layer](knowledge-layer.md) |
+| The latest development plan | [1.8.0 release roadmap](roadmap-1.8.0.md); [Roadmap](roadmap.md); [complete historical plan](roadmap-plan.md) |
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 
-Current software: **v1.7.6**. See the [1.7.6 release scope](release-1.7.6.md)
+Current software: **v1.8.0**. See the [1.8.0 release scope](release-1.8.0.md)
 for managed updates, rollback, connected return anchors, context economy and
 the exact qualified boundaries.
 
@@ -32,6 +32,7 @@ For selecting local files and preparing reviewable context.
 - [Core commands](core.md) — initialize, preview, pack and verify.
 - [Context packages](context-packets.md) — files, budgets, hashes and source drift.
 - [Security in plain language](security.md) — privacy, exclusions and limitations.
+- [Knowledge layer](knowledge-layer.md) — hierarchy, typed links, exact-first search, technique memory and safe adoption.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/opencntx-overview-dark.svg">
@@ -48,6 +49,7 @@ For longer projects that need more structure than one context package.
 - [Media and derived text](media.md) — register externally produced text.
 - [Privacy, storage and lifecycle](privacy-storage-lifecycle.md) — compatibility, cleanup and restore.
 - [Bounded workspace order](layout.md) — read-only root, ownership and duplicate audits.
+- [Knowledge layer](knowledge-layer.md) — hierarchy, typed links, exact-first search, technique memory and safe adoption.
 
 ## Workflow and resumption
 
@@ -71,6 +73,7 @@ imply that every host has connected that API to its own chat interface.
 - [Platforms and CI](platforms.md) — supported environments and evidence limits.
 - [Release artifacts](release-artifacts.md) — builds, checksums and provenance.
 - [Visual system](visual-system.md) · [Brand guide](brand.md) — accessible presentation and assets.
+- [1.8.0 release scope](release-1.8.0.md) · [1.8.0 roadmap](roadmap-1.8.0.md) — delivered behavior and release gates.
 - [Contributing](../CONTRIBUTING.md) · [Changelog](../CHANGELOG.md) — development and history.
 
 ## Product boundary

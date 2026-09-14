@@ -8,12 +8,12 @@
 writing. The independent entry point also provides `install`, `update`,
 `resume`, and `repair`; candidate and rollback hashes are mandatory for an
 existing installation. Follow the exact checksum and recovery walkthrough in
-[Install and update OPENCNTX 1.7.6](install-and-update.md).
+[Install and update OPENCNTX 1.8.0](install-and-update.md).
 
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
 
-This navigation table documents 77 public CLI paths from the real parser. It does not invent options or grant
+This navigation table documents the public CLI paths from the real parser. It does not invent options or grant
 permission to run a workflow step. Use the exact nested `--help` output for
 required arguments and repeatable options.
 
@@ -96,6 +96,12 @@ required arguments and repeatable options.
 | 75 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
 | 76 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
 | 77 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
+| 78 | `opencntx knowledge index build` | build a deterministic hierarchical source index |
+| 79 | `opencntx knowledge index search` | exact-first search with explainable scores and byte states |
+| 80 | `opencntx knowledge technique add` | validate and store one evidence-bound technique card |
+| 81 | `opencntx knowledge technique list` | list locally stored technique cards |
+| 82 | `opencntx knowledge adopt` | preview or write an existing-project adoption manifest |
+| 83 | `opencntx knowledge footer` | render a complete provider-neutral footer contract |
 
 ## Roadmap flow
 

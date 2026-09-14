@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/CNTX-PROJECT/OPENCNTX/schema/knowledge-contracts-v1",
+  "title": "OPENCNTX 1.8.0 knowledge contracts",
+  "description": "Closed local metadata envelopes for source nodes, typed links, search results, technique memory, adoption and provider-neutral footers.",
+  "oneOf": [
+    { "$ref": "#/$defs/sourceNode" },
+    { "$ref": "#/$defs/linkManifest" },
+    { "$ref": "#/$defs/searchResult" },
+    { "$ref": "#/$defs/techniqueCard" },
+    { "$ref": "#/$defs/adoptionManifest" },
+    { "$ref": "#/$defs/footerContract" }
+  ],
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "base": {
+      "type": "object",
+      "required": ["format", "format_version"],
+      "properties": { "format": { "type": "string" }, "format_version": { "const": 1 } },
+      "additionalProperties": true
+    },
+    "sourceNode": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-source-node-v1" },
+        "ocx_id": { "type": "string" },
+        "root_id": { "type": "string" },
+        "parent_id": { "type": ["string", "null"] },
+        "path": { "type": "string", "pattern": "^(?!/)(?!.*\\\\)" },
+        "depth": { "type": "integer", "minimum": 1 },
+        "digest": { "$ref": "#/$defs/digest" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "privacy": { "enum": ["PUBLIC", "PRIVATE", "RESTRICTED", "QUARANTINED"] },
+        "freshness": { "type": "string" }
+      },
+      "required": ["ocx_id", "root_id", "parent_id", "path", "depth", "digest", "bytes", "privacy", "freshness"]
+    },
+    "linkManifest": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-link-manifest-v1" },
+        "source_id": { "type": "string" },
+        "target_id": { "type": ["string", "null"] },
+        "target_path": { "type": "string" },
+        "relation": { "enum": ["contains", "requires", "supports", "history_of", "supersedes", "verify_live", "references"] },
+        "load_mode": { "enum": ["required", "on_demand"] },
+        "source_digest": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["source_id", "target_id", "target_path", "relation", "load_mode", "source_digest"]
+    },
+    "searchResult": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-search-result-v1" },
+        "index_digest": { "$ref": "#/$defs/digest" },
+        "query": { "type": "string" },
+        "results": { "type": "array" },
+        "loaded_bytes": { "type": "integer", "minimum": 0 },
+        "referenced_bytes": { "type": "integer", "minimum": 0 },
+        "skipped_bytes": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["index_digest", "query", "results", "loaded_bytes", "referenced_bytes", "skipped_bytes"]
+    },
+    "techniqueCard": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-technique-card-v1" },
+        "technique_id": { "type": "string" },
+        "name": { "type": "string" },
+        "trigger": { "type": "string" },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "source_digests": { "type": "array", "items": { "$ref": "#/$defs/digest" } },
+        "verification_state": { "enum": ["PROVEN", "STALE", "PROPOSED"] },
+        "card_digest": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["technique_id", "name", "trigger", "steps", "source_digests", "verification_state", "card_digest"]
+    },
+    "adoptionManifest": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-project-adoption-v1" },
+        "project_id": { "type": "string" },
+        "ownership": { "const": "EXISTING_LOCAL" },
+        "state": { "const": "DISCOVERED" },
+        "proposed_action": { "const": "BIND_READ_ONLY" },
+        "records": { "type": "array" },
+        "manifest_digest": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["project_id", "ownership", "state", "proposed_action", "records", "manifest_digest"]
+    },
+    "footerContract": {
+      "$ref": "#/$defs/base",
+      "properties": {
+        "format": { "const": "ocx-footer-contract-v1" },
+        "task_note": { "type": "string" },
+        "status": { "type": "string" },
+        "now": { "type": "string" },
+        "thereafter": { "type": "string" },
+        "chat": { "type": "string" },
+        "tokens": { "type": "string" },
+        "model": { "type": "string" },
+        "proposal": { "type": "string" },
+        "profile": { "enum": ["commonmark", "portable", "plain", "exact"] },
+        "contract_digest": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["task_note", "status", "now", "thereafter", "chat", "tokens", "model", "proposal", "profile", "contract_digest"]
+    }
+  }
+}
