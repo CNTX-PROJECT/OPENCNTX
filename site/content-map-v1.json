@@ -3,7 +3,7 @@
   "format_version": 1,
   "audiences": ["NEW_USER", "RETURNING_USER", "CONTRIBUTOR", "SECURITY_REPORTER"],
   "primary_task": "UNDERSTAND_AND_START_SAFELY",
-  "primary_message": "Keep project knowledge, focus the AI context, and follow the next step.",
+  "primary_message": "Keep project knowledge, map its hierarchy, focus the AI context, and follow the next step.",
   "navigation": [
     {"id": "how", "label": "How it works", "priority": 1},
     {"id": "start", "label": "Get started", "priority": 2},

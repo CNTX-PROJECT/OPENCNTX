@@ -8,16 +8,17 @@ is authoritative for available downloads.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
-## Published software — v1.7.6 Stable
+## Published software — v1.8.0 Stable
 
-[Download v1.7.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.6) ·
-[Release scope and limitations](release-1.7.6.md) ·
+[Download v1.8.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.0) ·
+[Release scope and limitations](release-1.8.0.md) ·
 [Installation and managed update](install-and-update.md)
 
-Version 1.7.6 adds an independent managed installer, semantic runtime health,
-offline rollback, bounded owned cleanup, durable nested host return anchors and
-measured context planning. The task recipes, responsive visual guide and
-project-aware routing from 1.7.5 remain included.
+Version 1.8.0 adds the local knowledge layer: hierarchical source nodes,
+typed links, exact-first search with byte budgets, evidence-bound technique
+cards, read-only project adoption and a provider-neutral footer. The managed
+installer, semantic runtime health, offline rollback, continuity, task recipes,
+visual guide and project-aware routing from 1.7.6 remain included.
 
 The former 1.6.x downgrade/reset path is repaired. A valid retained v1 snapshot
 inside a v2 goal-storage envelope is restored only in a new staged copy; the
@@ -26,8 +27,8 @@ passed the staged-copy checkpoint matrix.
 
 The published distribution contains exactly:
 
-- `opencntx-1.7.6-py3-none-any.whl`
-- `opencntx-1.7.6.tar.gz`
+- `opencntx-1.8.0-py3-none-any.whl`
+- `opencntx-1.8.0.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
@@ -51,9 +52,10 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
-The exact v1.7.6 source, four release assets and managed installation route are
-published together. The [delivery roadmap](roadmap-1.7.6.md) records the
-accepted release evidence and explicit diagnosis-only boundaries.
+The exact v1.8.0 source, four release assets and managed installation route are
+published together. The [1.8.0 roadmap](roadmap-1.8.0.md) records the accepted
+release evidence and explicit diagnosis-only boundaries; the [1.7.6 scope](release-1.7.6.md)
+remains the rollback reference.
 
 | Item | Current boundary |
 |---|---|
@@ -71,6 +73,7 @@ real-host cost claim.
 ## History
 
 - [Changelog](../CHANGELOG.md) — dated release history and unreleased documentation changes.
+- [1.7.6 scope](release-1.7.6.md) — managed delivery and recovery baseline retained by 1.8.0.
 - [1.7.0 scope](release-1.7.0.md) — earlier runtime and publication limitations.
 - [1.7.3 scope](release-1.7.3.md) — reliability work retained by 1.7.4 and 1.7.5.
 - [Product roadmap](roadmap.md) — latest plan and earlier English plan snapshot.

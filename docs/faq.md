@@ -71,9 +71,23 @@ or transcription.
 
 ## Does it automatically find the best context?
 
-No. Core selection uses your patterns. Workspace navigation follows explicit
-approved relationships. There are no embeddings, ranking model, or vector
-search.
+Core selection still uses your patterns. The optional 1.8.0 knowledge layer
+adds deterministic exact-first search over an explicit local index; it reports
+why each result matched and whether it was loaded, referenced or skipped.
+There are no embeddings, ranking model or vector database, and a search result
+never grants authority.
+
+## Can one project have nested Markdown files?
+
+Yes. `opencntx knowledge index build` records a main file, child files and
+sub-child files as one digest-bound hierarchy. It does not silently move or
+rename those files. See the [knowledge layer guide](knowledge-layer.md).
+
+## Does OPENCNTX remember a technique I already proved?
+
+Yes, when you store an evidence-bound technique card. It records the trigger,
+preconditions, steps, tools, risks, outputs and source digests. `PROVEN` means
+the procedure has evidence; it never means that OPENCNTX will execute it.
 
 ## Can it run an agent or executor?
 
@@ -92,7 +106,7 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.7.6` Production/Stable release is installed from its
+No. The immutable `v1.8.0` Production/Stable release is installed from its
 verified GitHub Release wheel. See [Install and update](install-and-update.md)
 for checksum verification and existing-installation detection.
 A current 404 response from a package index is not proof that a name is owned
@@ -100,9 +114,9 @@ or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.7.6` Release has
-exactly `opencntx-1.7.6-py3-none-any.whl`,
-`opencntx-1.7.6.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The historical `v0.2.0` Release has none. The immutable `v1.8.0` Release has
+exactly `opencntx-1.8.0-py3-none-any.whl`,
+`opencntx-1.8.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain verification builds unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for
@@ -112,7 +126,7 @@ gate.
 ## Where should I start?
 
 For completed and planned work, read the [roadmap overview](roadmap.md),
-[full English plan](roadmap-plan.md), and [1.7.6 release scope](release-1.7.6.md).
+[1.8.0 release roadmap](roadmap-1.8.0.md), and [1.8.0 release scope](release-1.8.0.md).
 
 Use [Start here](start-here.md) for installation and your first package.
 

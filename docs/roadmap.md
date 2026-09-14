@@ -8,18 +8,18 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 7 · v1.7.6 Stable managed delivery release published · remaining work tracked.**
+**Revision 8 · v1.8.0 Stable knowledge-layer release published · remaining work tracked.**
 
 **[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.7.6 adds an independent managed installer, semantic runtime health,
-offline rollback, bounded owned cleanup, durable nested return anchors and
-measured context planning. It retains the 1.7.5 engine and visual release and
-the 1.7.4 project-aware routing. Read its [release scope](release-1.7.6.md) and
-[delivery roadmap](roadmap-1.7.6.md). The complete historical plan retains
-unfinished work; publication status is based on the GitHub Release.
+Version 1.8.0 adds the local knowledge layer described in the [release scope](release-1.8.0.md):
+hierarchical source nodes, typed links, exact-first search, evidence-bound
+technique cards, read-only adoption and a universal footer. It retains the
+1.7.6 installer, continuity, workspace, layout, visual and project-routing
+foundations. The complete historical plan retains unfinished work; publication
+status is based on the GitHub Release.
 
-## What 1.7.6 improves
+## What 1.8.0 improves
 
 | Priority | Intended result |
 |---|---|
@@ -31,6 +31,9 @@ unfinished work; publication status is based on the GitHub Release.
 | Measured economy | Report naive and loaded bytes without making universal token claims |
 | Legacy recovery | Restore a validated retained v1 snapshot in an isolated copy without resetting Codex |
 | Clearer orientation | Explain local storage, optional private GitHub backup, notes and roadmaps visually |
+| Faster source recall | Search a bounded hierarchy with exact paths, titles, headings and reason codes |
+| Safer project growth | Inventory existing roadmaps, tasks, techniques and agents before adoption |
+| Consistent chat output | Render every footer field or an explicit fallback, independent of the model |
 
 These claims apply only to the tested native routes in the release scope. Host
 policies, legitimate safety boundaries, missing access and explicit user stops
@@ -68,6 +71,7 @@ than adding global policy layers.
 | Record | Where to read it |
 |---|---|
 | Current 1.7.6 release scope | [Managed delivery release](release-1.7.6.md) |
+| Current 1.8.0 release scope | [Knowledge-layer release](release-1.8.0.md) |
 | 1.7.5 release scope | [Engine and visual release](release-1.7.5.md) |
 | 1.7.3 plan, revision 4 | [Complete historical roadmap](roadmap-plan.md) |
 | Previous 1.7.2 plan, revision 3 | [Fixed historical English snapshot](https://github.com/CNTX-PROJECT/OPENCNTX/blob/f6edbbf6d9d81310c37a55036f7d9794e38e109b/docs/roadmap-plan.md) |

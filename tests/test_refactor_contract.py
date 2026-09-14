@@ -64,6 +64,7 @@ class RefactorContractTests(unittest.TestCase):
                 "cli_definitions.py",
                 "cli_lifecycle.py",
                 "cli_layout.py",
+                "cli_knowledge.py",
                 "cli_tasks.py",
                 "cli_workspace.py",
             },
