@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import tempfile
 import unittest
@@ -12,14 +13,37 @@ from opencntx.knowledge import (
     build_adoption_manifest,
     build_index,
     list_techniques,
+    load_footer_envelope,
     load_index,
     make_footer_contract,
+    make_footer_contract_from_host_envelope,
     make_technique_card,
     render_footer,
     save_technique,
     search_index,
     write_adoption_manifest,
 )
+
+
+def host_footer_envelope(**overrides: object) -> dict[str, object]:
+    basis: dict[str, object] = {
+        "format": "ocx-footer-host-envelope-v1",
+        "format_version": 1,
+        "adapter": "test-adapter",
+        "session_id": "SESSION-1",
+        "source_session_id": "SESSION-1",
+        "status": "OK",
+        "chat_megabytes": 12.34,
+        "total_tokens": 2_012_345,
+        "model": "Luna/Max",
+        "proposal": "Luna/Max",
+        "source_digest": "a" * 64,
+    }
+    basis.update(overrides)
+    canonical = (
+        json.dumps(basis, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
+    return basis | {"envelope_digest": hashlib.sha256(canonical).hexdigest()}
 
 
 def run_knowledge_cli(arguments: list[str], *, cwd: Path) -> tuple[int, str, str]:
@@ -104,6 +128,7 @@ class KnowledgeIndexTests(unittest.TestCase):
             self.assertEqual(list_techniques(root)[0]["verification_state"], "PROVEN")
             preview = build_adoption_manifest(root)
             self.assertEqual(preview["proposed_action"], "BIND_READ_ONLY")
+            self.assertEqual(preview["audit"]["status"], "READY")
             written = write_adoption_manifest(root)
             self.assertEqual(
                 written, json.loads((root / ".opencntx" / "adoption-v1.json").read_text())
@@ -114,13 +139,79 @@ class KnowledgeIndexTests(unittest.TestCase):
 
             shutil.rmtree(root)
 
+    def test_adoption_audit_is_digest_bound_and_blocks_ambiguous_layouts(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="opencntx-adoption-audit-") as temporary_directory:
+            root = Path(temporary_directory)
+            control = root / "CONTROL"
+            control.mkdir()
+            (control / "10 - First.md").write_text(
+                "# First\n\n[Missing](missing.md)\n", encoding="utf-8"
+            )
+            (control / "10 - Second.md").write_text("# Second\n", encoding="utf-8")
+            preview = build_adoption_manifest(root)
+            self.assertEqual("BLOCKED", preview["audit"]["status"])
+            codes = {item["code"] for item in preview["audit"]["findings"]}
+            self.assertIn("DUPLICATE_ORDINAL", codes)
+            self.assertIn("UNRESOLVED_LINK", codes)
+            with self.assertRaisesRegex(KnowledgeError, "source changed"):
+                write_adoption_manifest(root, expected_manifest_digest="0" * 64)
+            with self.assertRaisesRegex(KnowledgeError, "inside .opencntx"):
+                write_adoption_manifest(root, output=root / "outside.json")
+
     def test_footer_always_has_fallbacks_and_exact_profile(self) -> None:
-        contract = make_footer_contract(profile="exact")
+        contract = make_footer_contract()
         rendered = render_footer(contract)
         self.assertIn("geen opdrachtnotitie", rendered)
         self.assertIn("niet gemeten", rendered)
-        self.assertIn("contract_digest", rendered)
+        self.assertIn(" · **Tokens:** ", rendered)
         self.assertTrue(contract["contract_digest"])
+
+        exact = make_footer_contract(profile="exact")
+        exact_rendered = render_footer(exact)
+        self.assertIn("contract_digest", exact_rendered)
+        self.assertTrue(exact["contract_digest"])
+
+    def test_host_footer_envelope_is_session_bound_and_formats_exact_values(self) -> None:
+        envelope = host_footer_envelope()
+        contract = make_footer_contract_from_host_envelope(
+            envelope,
+            task_note="Task note",
+            status="Ready",
+            now="Current",
+            thereafter="Next",
+        )
+        rendered = render_footer(contract)
+        self.assertIn("**Chat:** 12,3 MB", rendered)
+        self.assertIn("**Tokens:** ≈2,0M", rendered)
+        self.assertIn("**Model:** Luna/Max", rendered)
+        with tempfile.TemporaryDirectory(prefix="opencntx-footer-") as temporary_directory:
+            path = Path(temporary_directory) / "envelope.json"
+            path.write_text(json.dumps(envelope), encoding="utf-8")
+            self.assertEqual(load_footer_envelope(path), envelope)
+
+    def test_host_footer_envelope_rejects_stale_or_partial_evidence(self) -> None:
+        with self.assertRaises(KnowledgeError):
+            make_footer_contract_from_host_envelope(
+                host_footer_envelope(session_id="SESSION-2")
+            )
+        with self.assertRaises(KnowledgeError):
+            make_footer_contract_from_host_envelope(
+                host_footer_envelope(envelope_digest="b" * 64)
+            )
+        with self.assertRaises(KnowledgeError):
+            make_footer_contract_from_host_envelope(
+                host_footer_envelope(format_version=True)
+            )
+        with self.assertRaises(KnowledgeError):
+            make_footer_contract_from_host_envelope(host_footer_envelope(status=[]))
+        unavailable = host_footer_envelope(
+            status="UNAVAILABLE",
+            chat_megabytes=None,
+            total_tokens=None,
+            model=None,
+        )
+        contract = make_footer_contract_from_host_envelope(unavailable)
+        self.assertIn("niet gemeten", render_footer(contract))
 
     def test_cli_knowledge_routes_cover_build_search_technique_adoption_and_footer(self) -> None:
         root = self._project()
@@ -184,6 +275,24 @@ class KnowledgeIndexTests(unittest.TestCase):
             exact = run_knowledge_cli(["knowledge", "footer", "--profile", "exact"], cwd=root)
             self.assertEqual(exact[0], 0, exact[2])
             self.assertIn("rendered_digest", json.loads(exact[1]))
+
+            envelope_path = root / "footer-envelope.json"
+            envelope_path.write_text(
+                json.dumps(host_footer_envelope()), encoding="utf-8"
+            )
+            from_host = run_knowledge_cli(
+                [
+                    "knowledge",
+                    "footer",
+                    "--from-host-envelope",
+                    str(envelope_path),
+                    "--status",
+                    "Ready",
+                ],
+                cwd=root,
+            )
+            self.assertEqual(from_host[0], 0, from_host[2])
+            self.assertIn("**Tokens:** ≈2,0M", from_host[1])
 
             bad_input = root / "bad.json"
             bad_input.write_text("{", encoding="utf-8")

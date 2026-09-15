@@ -73,6 +73,7 @@ GUIDES = {
     "knowledge-layer.md",
     "release-1.8.0.md",
     "roadmap-1.8.0.md",
+    "roadmap-1.8.1.md",
 }
 
 LIGHT_DIAGRAMS = {

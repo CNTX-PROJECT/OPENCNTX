@@ -2,14 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/CNTX-PROJECT/OPENCNTX/schema/knowledge-contracts-v1",
   "title": "OPENCNTX 1.8.0 knowledge contracts",
-  "description": "Closed local metadata envelopes for source nodes, typed links, search results, technique memory, adoption and provider-neutral footers.",
+  "description": "Closed local metadata envelopes for source nodes, typed links, search results, technique memory, adoption, provider-neutral footers and session-bound host footer telemetry.",
   "oneOf": [
     { "$ref": "#/$defs/sourceNode" },
     { "$ref": "#/$defs/linkManifest" },
     { "$ref": "#/$defs/searchResult" },
     { "$ref": "#/$defs/techniqueCard" },
     { "$ref": "#/$defs/adoptionManifest" },
-    { "$ref": "#/$defs/footerContract" }
+    { "$ref": "#/$defs/footerContract" },
+    { "$ref": "#/$defs/hostFooterEnvelope" }
   ],
   "$defs": {
     "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
@@ -84,9 +85,33 @@
         "state": { "const": "DISCOVERED" },
         "proposed_action": { "const": "BIND_READ_ONLY" },
         "records": { "type": "array" },
+        "audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "enum": ["READY", "BLOCKED"] },
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "code": { "type": "string", "minLength": 1 },
+                  "path": { "type": "string" },
+                  "detail": { "type": "string", "minLength": 1 }
+                },
+                "required": ["code", "path", "detail"]
+              }
+            },
+            "records": { "type": "integer", "minimum": 0 },
+            "links": { "type": "integer", "minimum": 0 }
+          },
+          "required": ["status", "findings", "records", "links"]
+        },
+        "source_tree_digest": { "$ref": "#/$defs/digest" },
         "manifest_digest": { "$ref": "#/$defs/digest" }
       },
-      "required": ["project_id", "ownership", "state", "proposed_action", "records", "manifest_digest"]
+      "required": ["project_id", "ownership", "state", "proposed_action", "records", "audit", "source_tree_digest", "manifest_digest"]
     },
     "footerContract": {
       "$ref": "#/$defs/base",
@@ -104,6 +129,38 @@
         "contract_digest": { "$ref": "#/$defs/digest" }
       },
       "required": ["task_note", "status", "now", "thereafter", "chat", "tokens", "model", "proposal", "profile", "contract_digest"]
+    },
+    "hostFooterEnvelope": {
+      "type": "object",
+      "properties": {
+        "format": { "const": "ocx-footer-host-envelope-v1" },
+        "format_version": { "const": 1 },
+        "adapter": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "session_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "source_session_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "status": { "enum": ["OK", "UNAVAILABLE"] },
+        "chat_megabytes": { "type": ["number", "null"], "minimum": 0 },
+        "total_tokens": { "type": ["integer", "null"], "minimum": 0 },
+        "model": { "type": ["string", "null"], "maxLength": 200 },
+        "proposal": { "type": ["string", "null"], "maxLength": 200 },
+        "source_digest": { "$ref": "#/$defs/digest" },
+        "envelope_digest": { "$ref": "#/$defs/digest" }
+      },
+      "required": [
+        "format",
+        "format_version",
+        "adapter",
+        "session_id",
+        "source_session_id",
+        "status",
+        "chat_megabytes",
+        "total_tokens",
+        "model",
+        "proposal",
+        "source_digest",
+        "envelope_digest"
+      ],
+      "additionalProperties": false
     }
   }
 }

@@ -232,7 +232,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
         self.assertIn("**Daarna:** Controleer het volgende bewijs.", rendered)
         self.assertIn("**Volgende opdracht:** TASK-2 — CONTINUE_AUTOMATICALLY", rendered)
         self.assertIn("**Chat:** 16,80 MB", rendered)
-        self.assertIn("**Tokens:** 16.624.059", rendered)
+        self.assertIn(" · **Tokens:** 16.624.059", rendered)
         self.assertNotIn("```text", rendered)
 
     def changed_capsule(self, project: Path, **changes: object) -> dict[str, object]:

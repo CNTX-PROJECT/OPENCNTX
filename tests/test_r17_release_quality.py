@@ -51,8 +51,8 @@ class StartHereQualityTests(unittest.TestCase):
 class LanguageQualityTests(unittest.TestCase):
     def test_current_source_has_only_intentional_unicode(self) -> None:
         result = language_gate.check_language()
-        self.assertEqual(14, result["literal_count"])
-        self.assertEqual(15, result["character_count"])
+        self.assertEqual(24, result["literal_count"])
+        self.assertEqual(25, result["character_count"])
         self.assertEqual(["legacy_i18n", "unicode_symbol"], result["purposes"])
         self.assertEqual([], result["violations"])
 

@@ -8,6 +8,9 @@ older installation even when that installation cannot import.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
+import csv
 import hashlib
 import json
 import os
@@ -19,7 +22,8 @@ import urllib.parse
 import urllib.request
 import zipfile
 from collections.abc import Sequence
-from pathlib import Path
+from contextlib import contextmanager
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from .installation import InstallationError, file_sha256, inspect_runtime, verify_runtime
@@ -157,11 +161,14 @@ def installation_status(*, python: Path | None = None) -> dict[str, Any]:
             runtime = inspect_runtime(selected)
         except InstallationError as exc:
             runtime = {"python": str(selected), "owner": "UNREADABLE", "error": str(exc)}
+    package = (runtime.get("packages") or [{}])[0]
     owner = pipx or {
         "owner": runtime.get("owner", "ABSENT"),
-        "version": (runtime.get("packages") or [{}])[0].get("version"),
+        "version": package.get("version"),
         "python": runtime.get("python") or str(selected or sys.executable),
         "executable": None,
+        "package_or_url": package.get("source_path"),
+        "package_sha256": package.get("source_sha256"),
     }
     return {
         "format": _FORMAT,
@@ -171,6 +178,38 @@ def installation_status(*, python: Path | None = None) -> dict[str, Any]:
         "supported_route": owner["owner"] in {"PIPX", "PIP_VENV", "ABSENT"},
         "writes_performed": False,
     }
+
+
+def _project_manifest_state(
+    store: Path,
+) -> tuple[str, int | None, Path | None, str | None]:
+    """Read the current project projection without confusing it with the store root.
+
+    Core packing publishes the active manifest below ``.opencntx/latest``.
+    Older inventory code inspected only ``.opencntx/manifest.json`` and could
+    therefore report a healthy packed project as ``ABSENT``. The newest
+    published projection is authoritative when it exists; an invalid current
+    projection is reported as unreadable instead of silently falling back to a
+    potentially stale root file.
+    """
+    candidates = (
+        (store / "latest" / "manifest.json", "LATEST_PACKAGE"),
+        (store / "manifest.json", "ROOT_STORE"),
+    )
+    for manifest, projection in candidates:
+        if not manifest.is_file():
+            continue
+        try:
+            value = json.loads(manifest.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, ValueError):
+            return "UNREADABLE", None, manifest, projection
+        if not isinstance(value, dict):
+            return "UNREADABLE", None, manifest, projection
+        format_name = str(value.get("format", "UNKNOWN"))
+        raw_version = value.get("format_version")
+        format_version = raw_version if isinstance(raw_version, int) else None
+        return format_name, format_version, manifest, projection
+    return "ABSENT", None, None, None
 
 
 def installation_inventory(
@@ -190,17 +229,7 @@ def installation_inventory(
         if not root.is_dir() or root.is_symlink():
             raise InstallManagerError(f"Project root is not a safe local directory: {raw_root}")
         store = root / ".opencntx"
-        format_name = "ABSENT"
-        format_version: int | None = None
-        manifest = store / "manifest.json"
-        if manifest.is_file():
-            try:
-                value = json.loads(manifest.read_text(encoding="utf-8"))
-                format_name = str(value.get("format", "UNKNOWN"))
-                raw_version = value.get("format_version")
-                format_version = raw_version if isinstance(raw_version, int) else None
-            except (OSError, UnicodeError, ValueError):
-                format_name = "UNREADABLE"
+        format_name, format_version, manifest, projection = _project_manifest_state(store)
         locks = []
         if store.is_dir():
             locks = [
@@ -214,6 +243,8 @@ def installation_inventory(
                 "state_path": str(store),
                 "state_format": format_name,
                 "state_format_version": format_version,
+                "state_manifest_path": str(manifest) if manifest is not None else None,
+                "state_manifest_projection": projection,
                 "writer_markers": locks,
                 "writer_activity": "UNKNOWN" if locks else "NONE_OBSERVED",
                 "rules_and_hooks": "USER_OWNED_UNLESS_PROVEN_GENERATED",
@@ -273,22 +304,78 @@ def installation_inventory(
     return result | {"inventory_digest": _digest(result)}
 
 
-def _wheel_version(path: Path) -> str:
+def _safe_wheel_name(name: str) -> str:
+    if not name or "\x00" in name or "\\" in name:
+        raise InstallManagerError("The wheel contains an unsafe archive path.")
+    path = PurePosixPath(name)
+    if path.is_absolute() or "." in path.parts or ".." in path.parts:
+        raise InstallManagerError("The wheel contains an unsafe archive path.")
+    return path.as_posix()
+
+
+def _record_digest(value: str) -> bytes:
+    if not value.startswith("sha256="):
+        raise InstallManagerError("The wheel RECORD contains an unsupported hash.")
+    encoded = value[7:]
+    if not encoded:
+        raise InstallManagerError("The wheel RECORD contains an empty file hash.")
+    try:
+        return base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4))
+    except (ValueError, binascii.Error) as exc:
+        raise InstallManagerError("The wheel RECORD contains an invalid hash.") from exc
+
+
+def _validate_wheel(path: Path, expected_version: str) -> str:
+    """Validate one wheel's identity and every hash/size entry before activation."""
     try:
         with zipfile.ZipFile(path) as archive:
-            names = [name for name in archive.namelist() if name.endswith(".dist-info/METADATA")]
-            if len(names) != 1:
+            raw_names = archive.namelist()
+            names = [_safe_wheel_name(name) for name in raw_names]
+            if len(names) != len(set(names)):
+                raise InstallManagerError("The wheel contains duplicate archive paths.")
+            metadata_names = [name for name in names if name.endswith(".dist-info/METADATA")]
+            wheel_names = [name for name in names if name.endswith(".dist-info/WHEEL")]
+            record_names = [name for name in names if name.endswith(".dist-info/RECORD")]
+            if len(metadata_names) != 1 or len(wheel_names) != 1 or len(record_names) != 1:
                 raise InstallManagerError("The wheel has no unique primary metadata record.")
-            metadata = archive.read(names[0]).decode("utf-8", errors="strict")
-    except (OSError, UnicodeError, zipfile.BadZipFile) as exc:
+            metadata = archive.read(metadata_names[0]).decode("utf-8", errors="strict")
+            archive.read(wheel_names[0]).decode("utf-8", errors="strict")
+            records = list(
+                csv.reader(
+                    archive.read(record_names[0]).decode("utf-8", errors="strict").splitlines()
+                )
+            )
+            if len(records) != len(names) or len({row[0] for row in records if row}) != len(records):
+                raise InstallManagerError("The wheel RECORD does not cover each archive path exactly once.")
+            by_record: dict[str, list[str]] = {}
+            for row in records:
+                if len(row) != 3:
+                    raise InstallManagerError("The wheel RECORD contains an invalid row.")
+                record_name = _safe_wheel_name(row[0])
+                by_record[record_name] = row
+            if set(by_record) != set(names):
+                raise InstallManagerError("The wheel RECORD paths differ from the archive.")
+            for name in names:
+                row = by_record[name]
+                data = archive.read(name)
+                if name == record_names[0]:
+                    if row[1] or row[2]:
+                        raise InstallManagerError("The wheel RECORD self-entry must be empty.")
+                    continue
+                if (
+                    _record_digest(row[1]) != hashlib.sha256(data).digest()
+                    or row[2] != str(len(data))
+                ):
+                    raise InstallManagerError(f"The wheel RECORD does not match {name}.")
+    except (OSError, UnicodeError, csv.Error, zipfile.BadZipFile) as exc:
         raise InstallManagerError("The candidate is not a readable wheel.") from exc
     versions = [line[9:].strip() for line in metadata.splitlines() if line.startswith("Version: ")]
     names = [
         line[6:].strip().lower() for line in metadata.splitlines() if line.startswith("Name: ")
     ]
-    if names != ["opencntx"] or len(versions) != 1:
+    if names != ["opencntx"] or versions != [expected_version]:
         raise InstallManagerError("The wheel metadata does not identify one OPENCNTX version.")
-    return versions[0]
+    return expected_version
 
 
 def _copy_artifact(source: str, destination: Path) -> None:
@@ -344,7 +431,7 @@ def _stage_artifact(source: str, destination: Path, expected_sha256: str, versio
     if actual != expected_sha256:
         destination.unlink(missing_ok=True)
         raise InstallManagerError("The candidate artifact SHA-256 does not match.")
-    if _wheel_version(destination) != version:
+    if _validate_wheel(destination, version) != version:
         destination.unlink(missing_ok=True)
         raise InstallManagerError(
             "The candidate wheel version does not match the requested version."
@@ -517,7 +604,68 @@ def _cleanup_owned(
     return {"removed_owned_paths": removed, "retained_terminal_journals": min(len(terminal), 9) + 1}
 
 
-def managed_update(
+@contextmanager
+def _operation_lock(state_root: Path, *, allow_legacy_journal: bool = False):
+    """Serialize one managed transition and release it automatically after a crash."""
+    state_root = state_root.expanduser().absolute()
+    marker = state_root / _OWNER_MARKER
+    if allow_legacy_journal and state_root.exists() and not marker.is_file():
+        if not state_root.is_dir() or state_root.is_symlink():
+            raise InstallManagerError("The installation state root is not a safe directory.")
+        _write_atomic(marker, b"opencntx-install-manager-v1\n")
+    else:
+        _ensure_state_root(state_root)
+    lock_path = state_root / "operation.lock"
+    try:
+        handle = lock_path.open("a+b")
+    except OSError as exc:
+        raise InstallManagerError("The managed operation lock cannot be opened.") from exc
+    acquired = False
+    try:
+        handle.seek(0, os.SEEK_END)
+        if handle.tell() == 0:
+            handle.write(b"0")
+            handle.flush()
+            os.fsync(handle.fileno())
+        handle.seek(0)
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                vars(msvcrt)["locking"](
+                    handle.fileno(), vars(msvcrt)["LK_NBLCK"], 1
+                )
+            else:
+                import fcntl
+
+                vars(fcntl)["flock"](
+                    handle.fileno(), vars(fcntl)["LOCK_EX"] | vars(fcntl)["LOCK_NB"]
+                )
+            acquired = True
+        except (OSError, ImportError) as exc:
+            raise InstallManagerError("Another managed installation operation is active.") from exc
+        yield
+    finally:
+        if acquired:
+            try:
+                handle.seek(0)
+                if os.name == "nt":
+                    import msvcrt
+
+                    vars(msvcrt)["locking"](
+                        handle.fileno(), vars(msvcrt)["LK_UNLCK"], 1
+                    )
+                else:
+                    import fcntl
+
+                    vars(fcntl)["flock"](handle.fileno(), vars(fcntl)["LOCK_UN"])
+            finally:
+                handle.close()
+        else:
+            handle.close()
+
+
+def _managed_update(
     *,
     artifact: str,
     sha256: str,
@@ -536,8 +684,24 @@ def managed_update(
     selected_python = Path(str(status["owner"]["python"]))
     from_version = status["owner"].get("version")
     if from_version == version:
-        health = verify_runtime(selected_python, expected_version=version)
-        return {"status": "NEW_HEALTHY", "reused": True, "health": health}
+        current_artifact = status["owner"].get("package_or_url")
+        current_hash: str | None = None
+        if isinstance(current_artifact, str):
+            candidate_path = Path(current_artifact).expanduser()
+            if candidate_path.is_file():
+                current_hash = file_sha256(candidate_path)
+        if current_hash == sha256 or status["owner"].get("package_sha256") == sha256:
+            health = verify_runtime(selected_python, expected_version=version)
+            return {"status": "NEW_HEALTHY", "reused": True, "health": health}
+        if current_hash is None or not isinstance(current_artifact, str):
+            raise InstallManagerError(
+                "A same-version replacement requires the exact current wheel as rollback."
+            )
+        # A local candidate can be rebuilt without changing its semantic version.
+        # Treat a changed wheel digest as a real managed transition and retain the
+        # exact active wheel for rollback instead of incorrectly declaring a no-op.
+        rollback_artifact = current_artifact
+        rollback_sha256 = current_hash
     if from_version and (not rollback_artifact or not rollback_sha256):
         raise InstallManagerError(
             "An existing installation requires an offline rollback wheel and SHA-256."
@@ -628,7 +792,30 @@ def managed_update(
     return result
 
 
-def resume_update(*, state_root: Path, plan_id: str | None = None) -> dict[str, Any]:
+def managed_update(
+    *,
+    artifact: str,
+    sha256: str,
+    version: str,
+    rollback_artifact: str | None,
+    rollback_sha256: str | None,
+    state_root: Path,
+    python: Path | None = None,
+) -> dict[str, Any]:
+    state_root = state_root.expanduser().absolute()
+    with _operation_lock(state_root):
+        return _managed_update(
+            artifact=artifact,
+            sha256=sha256,
+            version=version,
+            rollback_artifact=rollback_artifact,
+            rollback_sha256=rollback_sha256,
+            state_root=state_root,
+            python=python,
+        )
+
+
+def _resume_update(*, state_root: Path, plan_id: str | None = None) -> dict[str, Any]:
     """Resolve an interrupted update from a fresh process using its durable journal."""
     state_root = state_root.expanduser().absolute()
     path, journal = _latest_journal(state_root, plan_id)
@@ -650,6 +837,14 @@ def resume_update(*, state_root: Path, plan_id: str | None = None) -> dict[str, 
     result = {"status": "NEW_HEALTHY", "reused": True, "health": health, "cleanup": cleanup}
     _save_journal(path, journal, phase="NEW_HEALTHY", result=result)
     return result
+
+
+def resume_update(*, state_root: Path, plan_id: str | None = None) -> dict[str, Any]:
+    state_root = state_root.expanduser().absolute()
+    if state_root.exists() and not (state_root / _OWNER_MARKER).is_file():
+        _latest_journal(state_root, plan_id)
+    with _operation_lock(state_root, allow_legacy_journal=True):
+        return _resume_update(state_root=state_root, plan_id=plan_id)
 
 
 def _parser() -> argparse.ArgumentParser:

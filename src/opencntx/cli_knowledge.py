@@ -12,8 +12,10 @@ from .knowledge import (
     build_index,
     footer_output,
     list_techniques,
+    load_footer_envelope,
     load_index,
     make_footer_contract,
+    make_footer_contract_from_host_envelope,
     render_footer,
     save_technique,
     search_index,
@@ -59,6 +61,10 @@ def register_knowledge_commands(
     adopt.add_argument("--root", default=".")
     adopt.add_argument("--output")
     adopt.add_argument(
+        "--expected-manifest-digest",
+        help="require the source tree to match a previously reviewed preview digest",
+    )
+    adopt.add_argument(
         "--write", action="store_true", help="write the exact manifest after inspection"
     )
 
@@ -70,7 +76,12 @@ def register_knowledge_commands(
     footer.add_argument("--chat")
     footer.add_argument("--tokens")
     footer.add_argument("--model")
-    footer.add_argument("--proposal", default="Luna/Max")
+    footer.add_argument("--proposal")
+    footer.add_argument(
+        "--from-host-envelope",
+        type=Path,
+        help="compile host-bound telemetry from one validated JSON envelope",
+    )
     footer.add_argument(
         "--profile", choices=("commonmark", "portable", "plain", "exact"), default="commonmark"
     )
@@ -130,9 +141,13 @@ def _dispatch_technique(args: argparse.Namespace) -> int:
 
 
 def _dispatch_adopt(args: argparse.Namespace) -> int:
+    if args.expected_manifest_digest and not args.write:
+        raise KnowledgeError("--expected-manifest-digest requires --write.")
     if args.write:
         manifest = write_adoption_manifest(
-            Path(args.root), Path(args.output) if args.output else None
+            Path(args.root),
+            Path(args.output) if args.output else None,
+            expected_manifest_digest=args.expected_manifest_digest,
         )
         status = "ADOPTION_MANIFEST_WRITTEN"
     else:
@@ -143,17 +158,34 @@ def _dispatch_adopt(args: argparse.Namespace) -> int:
 
 
 def _dispatch_footer(args: argparse.Namespace) -> int:
-    contract = make_footer_contract(
-        task_note=args.task_note,
-        status=args.status,
-        now=args.now,
-        thereafter=args.thereafter,
-        chat=args.chat,
-        tokens=args.tokens,
-        model=args.model,
-        proposal=args.proposal,
-        profile=args.profile,
-    )
+    if args.from_host_envelope is not None:
+        if any(
+            value is not None
+            for value in (args.chat, args.tokens, args.model, args.proposal)
+        ):
+            raise KnowledgeError(
+                "Host envelope telemetry cannot be combined with explicit metric arguments."
+            )
+        contract = make_footer_contract_from_host_envelope(
+            load_footer_envelope(args.from_host_envelope),
+            task_note=args.task_note,
+            status=args.status,
+            now=args.now,
+            thereafter=args.thereafter,
+            profile=args.profile,
+        )
+    else:
+        contract = make_footer_contract(
+            task_note=args.task_note,
+            status=args.status,
+            now=args.now,
+            thereafter=args.thereafter,
+            chat=args.chat,
+            tokens=args.tokens,
+            model=args.model,
+            proposal=args.proposal,
+            profile=args.profile,
+        )
     if args.profile == "exact":
         _json(footer_output(contract))
     else:

@@ -6,6 +6,7 @@ import json
 import tempfile
 import unittest
 import zipfile
+from base64 import urlsafe_b64encode
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
@@ -19,13 +20,30 @@ class InstallManagerTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
 
-    def wheel(self, version: str, name: str | None = None) -> tuple[Path, str]:
+    def wheel(
+        self, version: str, name: str | None = None, marker: str | None = None
+    ) -> tuple[Path, str]:
         path = self.root / (name or f"opencntx-{version}-py3-none-any.whl")
+        files = {
+            f"opencntx-{version}.dist-info/METADATA": (
+                f"Metadata-Version: 2.1\nName: opencntx\nVersion: {version}\n"
+            ).encode(),
+            f"opencntx-{version}.dist-info/WHEEL": (
+                b"Wheel-Version: 1.0\nGenerator: opencntx-test\n"
+                b"Root-Is-Purelib: true\nTag: py3-none-any\n"
+            ),
+        }
+        if marker is not None:
+            files[marker] = b"candidate\n"
+        rows = []
+        for archive_name, content in files.items():
+            digest = urlsafe_b64encode(hashlib.sha256(content).digest()).decode().rstrip("=")
+            rows.append(f"{archive_name},sha256={digest},{len(content)}")
+        record_name = f"opencntx-{version}.dist-info/RECORD"
+        files[record_name] = ("\n".join(rows) + f"\n{record_name},,\n").encode()
         with zipfile.ZipFile(path, "w") as archive:
-            archive.writestr(
-                f"opencntx-{version}.dist-info/METADATA",
-                f"Metadata-Version: 2.1\nName: opencntx\nVersion: {version}\n",
-            )
+            for archive_name, content in files.items():
+                archive.writestr(archive_name, content)
         return path, hashlib.sha256(path.read_bytes()).hexdigest()
 
     def pipx(self, version: str = "1.7.5") -> dict[str, object]:
@@ -84,6 +102,23 @@ class InstallManagerTests(unittest.TestCase):
             },
         )
 
+    def test_inventory_detects_the_active_latest_package_manifest(self) -> None:
+        project = self.root / "packed-project"
+        manifest = project / ".opencntx" / "latest" / "manifest.json"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(
+            '{"format":"opencntx-manifest","format_version":1}', encoding="utf-8"
+        )
+        with mock.patch.object(manager, "_pipx_inventory", return_value={"venvs": {}}):
+            inventory = manager.installation_inventory(
+                project_roots=(project,), state_root=self.root / "state"
+            )
+        record = inventory["projects"][0]
+        self.assertEqual("opencntx-manifest", record["state_format"])
+        self.assertEqual("LATEST_PACKAGE", record["state_manifest_projection"])
+        self.assertEqual(str(manifest), record["state_manifest_path"])
+        self.assertFalse(inventory["writes_performed"])
+
     def test_explicit_python_cannot_be_replaced_by_unrelated_pipx(self) -> None:
         selected = self.root / "target/Scripts/python.exe"
         runtime = {
@@ -128,6 +163,69 @@ class InstallManagerTests(unittest.TestCase):
         self.assertEqual(candidate_hash, journal["candidate_sha256"])
         self.assertEqual(rollback_hash, journal["rollback_sha256"])
         self.assertTrue(Path(journal["candidate_artifact"]).is_file())
+
+    def test_same_version_changed_wheel_is_reinstalled_with_exact_previous_rollback(self) -> None:
+        current, current_hash = self.wheel("1.8.1", "current.whl")
+        candidate, candidate_hash = self.wheel(
+            "1.8.1", "candidate.whl", marker="candidate-marker.txt"
+        )
+        status = {
+            "owner": {
+                "owner": "PIPX",
+                "version": "1.8.1",
+                "python": str(self.root / "venv/Scripts/python.exe"),
+                "package_or_url": str(current),
+            },
+            "supported_route": True,
+        }
+        health = {"status": "RUNTIME_HEALTHY", "version": "1.8.1"}
+        with (
+            mock.patch.object(manager, "installation_status", return_value=status),
+            mock.patch.object(manager, "_manager_command", return_value=["manager"]),
+            mock.patch.object(manager, "_execute") as execute,
+            mock.patch.object(manager, "_verification_python", return_value=Path("python")),
+            mock.patch.object(manager, "verify_runtime", return_value=health),
+        ):
+            result = manager.managed_update(
+                artifact=str(candidate),
+                sha256=candidate_hash,
+                version="1.8.1",
+                rollback_artifact=None,
+                rollback_sha256=None,
+                state_root=self.root / "state",
+            )
+        self.assertEqual("NEW_HEALTHY", result["status"])
+        self.assertFalse(result["reused"])
+        execute.assert_called_once()
+        journal = json.loads(next((self.root / "state/journals").iterdir()).read_text())
+        self.assertEqual(current_hash, journal["rollback_sha256"])
+        self.assertEqual(candidate_hash, journal["candidate_sha256"])
+
+    def test_wheel_record_mismatch_stops_before_activation(self) -> None:
+        candidate, candidate_hash = self.wheel("1.8.1")
+        with zipfile.ZipFile(candidate, "a") as archive:
+            archive.writestr("unrecorded.txt", "unexpected\n")
+        candidate_hash = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        with (
+            mock.patch.object(manager, "_pipx_inventory", return_value={"venvs": {}}),
+            self.assertRaisesRegex(manager.InstallManagerError, "RECORD"),
+        ):
+            manager.managed_update(
+                artifact=str(candidate),
+                sha256=candidate_hash,
+                version="1.8.1",
+                rollback_artifact=None,
+                rollback_sha256=None,
+                state_root=self.root / "state",
+            )
+        self.assertFalse((self.root / "state/journals").exists())
+
+    def test_operation_lock_is_product_owned_and_released(self) -> None:
+        state = self.root / "state"
+        with manager._operation_lock(state):
+            self.assertTrue((state / "operation.lock").is_file())
+        with manager._operation_lock(state):
+            self.assertTrue((state / "operation.lock").is_file())
 
     def test_failed_candidate_uses_cached_offline_rollback(self) -> None:
         candidate, candidate_hash = self.wheel("1.7.6")
