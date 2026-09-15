@@ -38,11 +38,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate", type=Path, required=True)
     parser.add_argument("--baseline", type=Path, required=True)
-    parser.add_argument("--expected-candidate", default="1.7.6")
-    parser.add_argument("--expected-baseline", default="1.7.5")
+    parser.add_argument("--expected-candidate", default="1.8.1")
+    parser.add_argument("--expected-baseline", default="1.7.6")
     parser.add_argument(
         "--expected-baseline-sha256",
-        default="8494439d1b3422d8a3afcb0fb385f1e499253d4932232338fada8fd04713fca0",
+        default="b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f",
     )
     parser.add_argument("--transitions", type=int, default=10)
     args = parser.parse_args()

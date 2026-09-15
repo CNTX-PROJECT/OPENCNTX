@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 import tempfile
@@ -23,6 +24,24 @@ SEARCH_RESULT_FORMAT = "ocx-search-result-v1"
 TECHNIQUE_FORMAT = "ocx-technique-card-v1"
 ADOPTION_FORMAT = "ocx-project-adoption-v1"
 FOOTER_FORMAT = "ocx-footer-contract-v1"
+HOST_FOOTER_FORMAT = "ocx-footer-host-envelope-v1"
+HOST_FOOTER_FIELDS = frozenset(
+    {
+        "format",
+        "format_version",
+        "adapter",
+        "session_id",
+        "source_session_id",
+        "status",
+        "chat_megabytes",
+        "total_tokens",
+        "model",
+        "proposal",
+        "source_digest",
+        "envelope_digest",
+    }
+)
+SHA256_PATTERN = re.compile(r"[0-9a-f]{64}\Z")
 
 TEXT_SUFFIXES = frozenset({".md", ".markdown", ".json", ".toml", ".yaml", ".yml", ".txt"})
 SKIP_DIRECTORIES = frozenset({".git", ".opencntx", ".venv", "venv", "__pycache__", "node_modules"})
@@ -48,6 +67,15 @@ def _canonical_json(value: Mapping[str, Any]) -> bytes:
 
 def _digest(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def _strict_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise KnowledgeError(f"JSON contains a duplicate field: {key}.")
+        value[key] = item
+    return value
 
 
 def _text(value: object, field: str, maximum: int = 1_000) -> str:
@@ -584,19 +612,52 @@ def _adoption_kind(relative: str) -> str:
     return "source"
 
 
+def _adoption_scope(relative: str) -> str:
+    """Classify archive boundaries without treating them as active project content."""
+    for part in PurePosixPath(relative).parts:
+        upper = part.upper()
+        if upper == "BACKUP":
+            return "BACKUP"
+        if upper in {"ARCHIVE", "ARCHIEF"}:
+            return "ARCHIVE"
+        if upper == "HISTORICAL":
+            return "HISTORICAL"
+    return "ACTIVE"
+
+
+def _adoption_finding(code: str, path: str, detail: str) -> dict[str, str]:
+    return {"code": code, "path": path, "detail": detail}
+
+
 def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, Any]:
     selected_root = _root(root)
     records: list[dict[str, Any]] = []
+    texts: dict[str, str] = {}
+    findings: list[dict[str, str]] = []
     allowed_roots = ("CONTROL", "TASKS", "PLAYBOOKS", "ROLES", "CHAPTERS", "INBOX", ".opencntx")
     candidates: list[Path] = []
     for name in allowed_roots:
         base = selected_root / name
         if base.is_dir():
-            candidates.extend(
-                path for path in base.rglob("*") if path.is_file() and not path.is_symlink()
-            )
+            for path in base.rglob("*"):
+                if path.is_symlink():
+                    findings.append(
+                        _adoption_finding(
+                            "LINK_PRESENT",
+                            _relative(selected_root, path),
+                            "A symlink or junction needs explicit owner review.",
+                        )
+                    )
+                elif path.is_file():
+                    candidates.append(path)
     config = selected_root / "opencntx.toml"
-    if config.is_file():
+    if config.is_symlink():
+        findings.append(
+            _adoption_finding(
+                "LINK_PRESENT", "opencntx.toml", "The project configuration is a link."
+            )
+        )
+    elif config.is_file():
         candidates.append(config)
     for path in sorted(set(candidates), key=lambda item: _relative(selected_root, item)):
         relative = _relative(selected_root, path)
@@ -607,10 +668,20 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
         if path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         data = path.read_bytes()
+        try:
+            texts[relative] = data.decode("utf-8")
+        except UnicodeDecodeError:
+            findings.append(
+                _adoption_finding(
+                    "INVALID_UTF8", relative, "The source is not valid UTF-8 text."
+                )
+            )
+            texts[relative] = ""
         records.append(
             {
                 "path": relative,
                 "kind": _adoption_kind(relative),
+                "scope": _adoption_scope(relative),
                 "bytes": len(data),
                 "digest": _digest(data),
                 "ownership": "EXISTING_LOCAL",
@@ -620,6 +691,73 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
         )
         if len(records) > max_files:
             raise KnowledgeError(f"Adoption inventory exceeds max_files={max_files}.")
+    by_casefold: dict[str, list[str]] = {}
+    by_ordinal: dict[tuple[str, str], list[str]] = {}
+    ordinal_pattern = re.compile(r"^(\d+(?:\.\d+)*)(?:\s*[-_.]\s*|\s+)")
+    for record in records:
+        relative = str(record["path"])
+        by_casefold.setdefault(relative.casefold(), []).append(relative)
+        pure = PurePosixPath(relative)
+        match = ordinal_pattern.match(pure.name)
+        if match:
+            key = (pure.parent.as_posix().casefold(), match.group(1))
+            by_ordinal.setdefault(key, []).append(relative)
+    for paths in by_casefold.values():
+        if len(paths) > 1:
+            for conflict_path in sorted(paths):
+                findings.append(
+                    _adoption_finding(
+                        "CASE_COLLISION",
+                        conflict_path,
+                        "Another discovered path differs only by case.",
+                    )
+                )
+    for paths in by_ordinal.values():
+        if len(paths) > 1:
+            for ordinal_path in sorted(paths):
+                findings.append(
+                    _adoption_finding(
+                        "DUPLICATE_ORDINAL",
+                        ordinal_path,
+                        "Sibling items share one numeric ordinal.",
+                    )
+                )
+    root_id = _root_id(selected_root)
+    nodes = [
+        {
+            "format": SOURCE_NODE_FORMAT,
+            "format_version": 1,
+            "ocx_id": _node_id(root_id, str(record["path"])),
+            "path": record["path"],
+            "digest": record["digest"],
+        }
+        for record in records
+    ]
+    links = _links(nodes, texts)
+    for link in links:
+        if link["target_id"] is None:
+            findings.append(
+                _adoption_finding(
+                    "UNRESOLVED_LINK",
+                    str(link["source_id"]),
+                    f"Target is not present: {link['target_path']}",
+                )
+            )
+    try:
+        _cycle_check(nodes, links)
+    except KnowledgeError:
+        findings.append(
+            _adoption_finding(
+                "CONTAINS_CYCLE", "", "The discovered contains graph contains a cycle."
+            )
+        )
+    findings.sort(key=lambda item: (item["code"], item["path"], item["detail"]))
+    audit = {
+        "status": "READY" if not findings else "BLOCKED",
+        "findings": findings,
+        "records": len(records),
+        "links": len(links),
+    }
     basis = {
         "format": ADOPTION_FORMAT,
         "format_version": 1,
@@ -629,14 +767,32 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
         "state": "DISCOVERED",
         "proposed_action": "BIND_READ_ONLY",
         "records": records,
+        "audit": audit,
+        "source_tree_digest": _digest(_canonical_json({"records": records, "audit": audit})),
     }
     return basis | {"manifest_digest": _digest(_canonical_json(basis))}
 
 
-def write_adoption_manifest(root: Path, output: Path | None = None) -> dict[str, Any]:
+def write_adoption_manifest(
+    root: Path,
+    output: Path | None = None,
+    *,
+    expected_manifest_digest: str | None = None,
+) -> dict[str, Any]:
     selected_root = _root(root)
     manifest = build_adoption_manifest(selected_root)
-    destination = output or selected_root / ".opencntx" / "adoption-v1.json"
+    if expected_manifest_digest is not None and manifest["manifest_digest"] != expected_manifest_digest:
+        raise KnowledgeError("The adoption source changed after its preview digest was approved.")
+    store = selected_root / ".opencntx"
+    if store.is_symlink() or (store.exists() and not store.is_dir()):
+        raise KnowledgeError("The project metadata store is not a safe product-owned directory.")
+    destination = (output or store / "adoption-v1.json").expanduser().absolute()
+    try:
+        destination.relative_to(store.absolute())
+    except ValueError as exc:
+        raise KnowledgeError("The adoption manifest must remain inside .opencntx.") from exc
+    if destination.is_symlink() or destination.parent.is_symlink():
+        raise KnowledgeError("The adoption manifest path must not follow a symlink.")
     _atomic_json(destination, manifest)
     return manifest
 
@@ -675,6 +831,151 @@ def make_footer_contract(
         "profile": profile,
     }
     return basis | {"contract_digest": _digest(_canonical_json(basis))}
+
+
+def _host_digest(value: object, field: str) -> str:
+    if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
+        raise KnowledgeError(f"{field} must be a lowercase SHA-256 digest.")
+    return value
+
+
+def _optional_host_metric(value: object, field: str) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise KnowledgeError(f"{field} must be a non-negative finite number or null.")
+    if not math.isfinite(float(value)) or value < 0:
+        raise KnowledgeError(f"{field} must be a non-negative finite number or null.")
+    return float(value)
+
+
+def _optional_host_tokens(value: object) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise KnowledgeError("total_tokens must be a non-negative integer or null.")
+    return value
+
+
+def validate_footer_host_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate one session-bound, digest-protected host footer envelope."""
+    if not isinstance(envelope, Mapping) or set(envelope) != HOST_FOOTER_FIELDS:
+        raise KnowledgeError("Footer host envelope fields differ from its closed v1 contract.")
+    value = dict(envelope)
+    if (
+        value["format"] != HOST_FOOTER_FORMAT
+        or isinstance(value["format_version"], bool)
+        or value["format_version"] != 1
+    ):
+        raise KnowledgeError("Footer host envelope format is unsupported.")
+    adapter = _text(value["adapter"], "adapter", 200)
+    session_id = _text(value["session_id"], "session_id", 256)
+    source_session_id = _text(value["source_session_id"], "source_session_id", 256)
+    if session_id != source_session_id:
+        raise KnowledgeError("Footer host envelope session identities differ.")
+    if not isinstance(value["status"], str) or value["status"] not in {
+        "OK",
+        "UNAVAILABLE",
+    }:
+        raise KnowledgeError("Footer host envelope status is unsupported.")
+    chat_megabytes = _optional_host_metric(value["chat_megabytes"], "chat_megabytes")
+    total_tokens = _optional_host_tokens(value["total_tokens"])
+    model = None if value["model"] is None else _text(value["model"], "model", 200)
+    proposal = (
+        None if value["proposal"] is None else _text(value["proposal"], "proposal", 200)
+    )
+    source_digest = _host_digest(value["source_digest"], "source_digest")
+    envelope_digest = _host_digest(value["envelope_digest"], "envelope_digest")
+    if value["status"] == "OK" and (
+        chat_megabytes is None or total_tokens is None or model is None
+    ):
+        raise KnowledgeError("An OK footer host envelope must contain complete telemetry.")
+    if value["status"] == "UNAVAILABLE" and (
+        chat_megabytes is not None or total_tokens is not None or model is not None
+    ):
+        raise KnowledgeError("An unavailable footer host envelope cannot contain partial telemetry.")
+    basis = {key: item for key, item in value.items() if key != "envelope_digest"}
+    if envelope_digest != _digest(_canonical_json(basis)):
+        raise KnowledgeError("Footer host envelope digest does not match its content.")
+    return {
+        "format": HOST_FOOTER_FORMAT,
+        "format_version": 1,
+        "adapter": adapter,
+        "session_id": session_id,
+        "source_session_id": source_session_id,
+        "status": value["status"],
+        "chat_megabytes": chat_megabytes,
+        "total_tokens": total_tokens,
+        "model": model,
+        "proposal": proposal,
+        "source_digest": source_digest,
+        "envelope_digest": envelope_digest,
+    }
+
+
+def load_footer_envelope(path: Path, *, max_bytes: int = 65_536) -> dict[str, Any]:
+    """Load one bounded UTF-8 host envelope without following a symlink."""
+    selected = path.expanduser().resolve()
+    if path.is_symlink() or not selected.is_file():
+        raise KnowledgeError(f"Footer host envelope is not a regular file: {path}")
+    try:
+        if selected.stat().st_size > max_bytes:
+            raise KnowledgeError("Footer host envelope exceeds its bounded size.")
+        value = json.loads(
+            selected.read_text(encoding="utf-8"), object_pairs_hook=_strict_object
+        )
+    except KnowledgeError:
+        raise
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise KnowledgeError(f"Footer host envelope cannot be read: {path}") from exc
+    if not isinstance(value, dict):
+        raise KnowledgeError("Footer host envelope must contain one JSON object.")
+    return validate_footer_host_envelope(value)
+
+
+def _format_host_chat(value: float) -> str:
+    return f"{value:.1f}".replace(".", ",") + " MB"
+
+
+def _format_host_tokens(value: int) -> str:
+    if value >= 1_000_000:
+        return f"≈{value / 1_000_000:.1f}".replace(".", ",") + "M"
+    if value >= 1_000:
+        return f"≈{value / 1_000:.1f}".replace(".", ",") + "k"
+    return str(value)
+
+
+def make_footer_contract_from_host_envelope(
+    envelope: Mapping[str, Any],
+    *,
+    task_note: str | None = None,
+    status: str | None = None,
+    now: str | None = None,
+    thereafter: str | None = None,
+    profile: str = "commonmark",
+) -> dict[str, Any]:
+    """Compile a footer from exact host telemetry or explicit unavailable fallbacks."""
+    value = validate_footer_host_envelope(envelope)
+    chat: str | None
+    tokens: str | None
+    model: str | None
+    if value["status"] == "OK":
+        chat = _format_host_chat(value["chat_megabytes"])
+        tokens = _format_host_tokens(value["total_tokens"])
+        model = value["model"]
+    else:
+        chat = tokens = model = None
+    return make_footer_contract(
+        task_note=task_note,
+        status=status,
+        now=now,
+        thereafter=thereafter,
+        chat=chat,
+        tokens=tokens,
+        model=model,
+        proposal=value["proposal"],
+        profile=profile,
+    )
 
 
 def render_footer(contract: Mapping[str, Any]) -> str:

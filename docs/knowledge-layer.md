@@ -1,8 +1,8 @@
-# The OPENCNTX 1.8.0 knowledge layer
+# The OPENCNTX 1.8.1 knowledge layer
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-OPENCNTX 1.8.0 adds a first-party, local index for projects that have one main
+OPENCNTX 1.8.1 adds a first-party, local index for projects that have one main
 Markdown file with child files, nested child files, JSON records, roadmaps and
 technical notes. It keeps the original files authoritative and creates only
 digest-bound metadata under `.opencntx/`.
@@ -26,9 +26,11 @@ digest-bound metadata under `.opencntx/`.
 5. **Remembers proven techniques.** A technique card records its trigger,
    preconditions, steps, tools, risks, outputs, source digests and verification
    state. A card is recallable; OPENCNTX never executes its steps automatically.
-6. **Adopts existing work safely.** An adoption manifest inventories existing
-   controls, roadmaps, tasks, playbooks, roles, chapters and technique cards.
-   The proposed action is `BIND_READ_ONLY`; ownership is never inferred as
+6. **Audits existing work safely.** An adoption manifest inventories existing
+   controls, roadmaps, tasks, playbooks, roles, chapters and technique cards,
+   classifies active versus archive boundaries, and reports case collisions,
+   duplicate ordinals, unresolved links, cycles and links/junctions. The
+   proposed action is `BIND_READ_ONLY`; ownership is never inferred as
    permission to rewrite.
 7. **Renders a universal footer.** The provider-neutral footer contract always
    emits a value or an explicit fallback (`geen opdrachtnotitie`, `onbekend`,
@@ -68,11 +70,16 @@ Preview first. The default command is read-only:
 
 ```powershell
 opencntx knowledge adopt --root .
-opencntx knowledge adopt --root . --write
+opencntx knowledge adopt --root . --write \
+  --expected-manifest-digest REVIEWED_PREVIEW_DIGEST
 ```
 
-The second command writes one digest-bound `.opencntx/adoption-v1.json`
-manifest. It does not move, rename, delete or rewrite project files.
+The preview returns `audit.status` and a deterministic `manifest_digest`. The
+write command should receive that reviewed digest; it refuses source drift and
+writes only the digest-bound `.opencntx/adoption-v1.json` manifest. It does not
+move, rename, delete or rewrite project files. A `BLOCKED` audit remains an
+explicit review outcome and cannot be mistaken for a successful visual
+takeover.
 
 ## Footer profiles
 
@@ -85,6 +92,19 @@ opencntx knowledge footer --profile exact
 only preserve plain text; `plain` removes Markdown emphasis; `exact` returns
 the closed JSON contract and its digest. Missing telemetry is explicit and
 never blocks the result.
+
+A host that has exact, current telemetry may pass a session-bound
+`ocx-footer-host-envelope-v1` JSON object:
+
+```powershell
+opencntx knowledge footer --from-host-envelope .\footer-envelope.json
+```
+
+The package verifies the closed fields, matching session identities, source
+digest and envelope digest before rendering. Complete `OK` telemetry is
+formatted for the Dutch owner footer; `UNAVAILABLE` produces explicit
+fallbacks. It never accepts partial metrics and never reads raw host or
+transcript content.
 
 ## Boundaries
 

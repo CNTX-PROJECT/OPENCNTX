@@ -8,7 +8,7 @@
 writing. The independent entry point also provides `install`, `update`,
 `resume`, and `repair`; candidate and rollback hashes are mandatory for an
 existing installation. Follow the exact checksum and recovery walkthrough in
-[Install and update OPENCNTX 1.8.0](install-and-update.md).
+[Install and update OPENCNTX 1.8.1](install-and-update.md).
 
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
@@ -100,8 +100,8 @@ required arguments and repeatable options.
 | 79 | `opencntx knowledge index search` | exact-first search with explainable scores and byte states |
 | 80 | `opencntx knowledge technique add` | validate and store one evidence-bound technique card |
 | 81 | `opencntx knowledge technique list` | list locally stored technique cards |
-| 82 | `opencntx knowledge adopt` | preview or write an existing-project adoption manifest |
-| 83 | `opencntx knowledge footer` | render a complete provider-neutral footer contract |
+| 82 | `opencntx knowledge adopt` | audit, preview or write a digest-bound existing-project adoption manifest |
+| 83 | `opencntx knowledge footer` | render a complete provider-neutral footer contract or a validated host envelope |
 
 ## Roadmap flow
 

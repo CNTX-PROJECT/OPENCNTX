@@ -24,20 +24,20 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
-The instructions below target v1.8.0. Check the matching
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.0)
+The instructions below target v1.8.1. Check the matching
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.1)
 for published availability; a source checkout or PR is not a release.
 
 ## 2. Install the Stable release
 
-Install immutable `v1.8.0` only after its exact Git tag and matching
+Install immutable `v1.8.1` only after its exact Git tag and matching
 GitHub Release are published. OPENCNTX is not published on PyPI or
 TestPyPI.
 
 With `pipx` available, install the verified release wheel:
 
 ```powershell
-pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.0/opencntx-1.8.0-py3-none-any.whl"
+pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.1/opencntx-1.8.1-py3-none-any.whl"
 opencntx --version
 opencntx --help
 ```
@@ -50,7 +50,7 @@ available when `pipx` is not the intended environment.
 Open PowerShell:
 
 ```powershell
-git clone --branch v1.8.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.8.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -65,7 +65,7 @@ launcher is available in PowerShell. Do not use unofficial installers.
 Open a terminal:
 
 ```bash
-git clone --branch v1.8.0 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.8.1 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python3 -m pip install .
 opencntx --help
@@ -86,7 +86,7 @@ opencntx --help
 opencntx --version
 ```
 
-The Stable release prints exactly `opencntx 1.8.0`.
+The Stable release prints exactly `opencntx 1.8.1`.
 
 ## 4. Open a small project
 
@@ -185,7 +185,7 @@ with [Workspace](workspace.md). Those concepts are optional
 and are not prerequisites for a first package.
 
 For the provider-neutral host, AUTO PILOT behavior, visual presentation and
-the 1.8.0 knowledge layer, read the
+the 1.8.1 knowledge layer, read the
 [Adaptive AI workflow](adaptive-ai-workflow.md).
 
 ## Build a local knowledge index
@@ -205,7 +205,7 @@ adoption, technique cards and footer profiles.
 ## Upgrade or remove OPENCNTX
 
 Use the independent read-only inventory before an upgrade. The
-[1.8.0 installation guide](install-and-update.md) gives the exact managed
+[1.8.1 installation guide](install-and-update.md) gives the exact managed
 update, offline rollback, fresh-shell resume and targeted repair commands.
 
 To remove the package from the active Python environment:
@@ -223,8 +223,8 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The immutable `v1.8.0` GitHub Release contains exactly
-`opencntx-1.8.0-py3-none-any.whl`, `opencntx-1.8.0.tar.gz`, `SHA256SUMS`,
+The immutable `v1.8.1` GitHub Release contains exactly
+`opencntx-1.8.1-py3-none-any.whl`, `opencntx-1.8.1.tar.gz`, `SHA256SUMS`,
 and `BUILD-RECORD.json`. OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local verification builds,
 checksums, reproducibility limits, and the separate publication gate.

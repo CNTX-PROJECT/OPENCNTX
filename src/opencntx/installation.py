@@ -28,6 +28,8 @@ import json
 import pathlib
 import sys
 import sysconfig
+import urllib.parse
+import urllib.request
 
 prefix = pathlib.Path(sys.prefix)
 distributions = list(metadata.distributions(name="opencntx"))
@@ -35,6 +37,24 @@ packages = []
 for dist in distributions:
     files = dist.files or []
     direct = json.loads(dist.read_text("direct_url.json") or "{}")
+    source_url = direct.get("url")
+    source_path = None
+    if isinstance(source_url, str) and source_url.startswith("file://"):
+        parsed = urllib.parse.urlparse(source_url)
+        if parsed.netloc in {"", "localhost"}:
+            source_path = urllib.request.url2pathname(urllib.parse.unquote(parsed.path))
+    archive_info = direct.get("archive_info", {})
+    source_hashes = archive_info.get("hashes", {}) if isinstance(archive_info, dict) else {}
+    source_sha256 = source_hashes.get("sha256")
+    if not isinstance(source_sha256, str) and isinstance(archive_info, dict):
+        archive_hash = archive_info.get("hash")
+        source_sha256 = (
+            archive_hash[7:]
+            if isinstance(archive_hash, str) and archive_hash.startswith("sha256=")
+            else None
+        )
+    if not isinstance(source_sha256, str):
+        source_sha256 = None
     packages.append({
         "version": dist.version,
         "location": str(pathlib.Path(dist.locate_file("")).absolute()),
@@ -43,6 +63,8 @@ for dist in distributions:
         "record_available": dist.read_text("RECORD") is not None,
         "record_entries": len(files),
         "source_commit": direct.get("vcs_info", {}).get("commit_id"),
+        "source_path": source_path,
+        "source_sha256": source_sha256,
     })
 pipx_metadata = prefix / "pipx_metadata.json"
 result = {

@@ -4,11 +4,23 @@ All notable OPENCNTX changes are recorded here.
 
 ## 1.8.1 - 2026-09-15
 
-Local candidate; not a published GitHub release. The candidate aligns the
+Published GitHub release. This release aligns the
 rendered footer telemetry separators with the owner-facing contract and
 revalidates the managed installation/update route against the v1.7.6 offline
 rollback artifact. Host-supplied telemetry remains explicit: missing values
-must render as `niet gemeten` or `onbekend` instead of being invented.
+must render as `niet gemeten` or `onbekend` instead of being invented. The
+read-only installation inventory now recognizes the active
+`.opencntx/latest/manifest.json` projection instead of reporting a packed
+project as absent. The release also adds a closed, session-bound
+`ocx-footer-host-envelope-v1` input route for complete host telemetry, rejects
+partial or stale evidence, and handles a changed same-version wheel as a real
+managed transition with exact rollback retention.
+The release now serializes managed transitions with an OS-level operation lock,
+validates wheel `METADATA`, `WHEEL` and `RECORD` contents before activation, and
+adds a fail-closed adoption audit for case collisions, duplicate ordinals,
+unresolved links, cycles and links/junctions. Adoption writes can be bound to a
+reviewed preview digest and remain confined to the product-owned `.opencntx`
+store.
 
 ## 1.8.0 - 2026-09-14
 

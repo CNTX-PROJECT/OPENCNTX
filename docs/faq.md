@@ -71,7 +71,7 @@ or transcription.
 
 ## Does it automatically find the best context?
 
-Core selection still uses your patterns. The optional 1.8.0 knowledge layer
+Core selection still uses your patterns. The optional 1.8.1 knowledge layer
 adds deterministic exact-first search over an explicit local index; it reports
 why each result matched and whether it was loaded, referenced or skipped.
 There are no embeddings, ranking model or vector database, and a search result
@@ -106,7 +106,7 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.8.0` Production/Stable release is installed from its
+No. The immutable `v1.8.1` Production/Stable release is installed from its
 verified GitHub Release wheel. See [Install and update](install-and-update.md)
 for checksum verification and existing-installation detection.
 A current 404 response from a package index is not proof that a name is owned
@@ -114,9 +114,9 @@ or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The historical `v0.2.0` Release has none. The immutable `v1.8.0` Release has
-exactly `opencntx-1.8.0-py3-none-any.whl`,
-`opencntx-1.8.0.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The historical `v0.2.0` Release has none. The immutable `v1.8.1` Release has
+exactly `opencntx-1.8.1-py3-none-any.whl`,
+`opencntx-1.8.1.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain verification builds unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for
@@ -126,7 +126,7 @@ gate.
 ## Where should I start?
 
 For completed and planned work, read the [roadmap overview](roadmap.md),
-[1.8.0 release roadmap](roadmap-1.8.0.md), and [1.8.0 release scope](release-1.8.0.md).
+[1.8.1 release roadmap](roadmap-1.8.1.md), and [1.8.1 release scope](release-1.8.1.md).
 
 Use [Start here](start-here.md) for installation and your first package.
 

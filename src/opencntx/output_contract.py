@@ -350,7 +350,7 @@ def render_output(value: Mapping[str, object]) -> str:
     chat_text = unavailable if chat is None else f"{_number(chat, language)} MB"
     token_text = unavailable if tokens is None else _number(tokens, language)
     metric_line = (
-        f"**{labels['chat']}:** {chat_text}  |  **{labels['tokens']}:** {token_text}  |  "
+        f"**{labels['chat']}:** {chat_text} · **{labels['tokens']}:** {token_text} · "
         f"**{labels['required_model']}:** {value['required_capability']} - {value['reasoning_level']}"
     )
     return "\n".join([*body, "", "", "---", "", *roadmap, "", "---", "", metric_line, ""])
