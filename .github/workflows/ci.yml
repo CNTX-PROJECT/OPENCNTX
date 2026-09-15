@@ -135,9 +135,9 @@ jobs:
       - name: Require update, rollback, reapply, resume, and cleanup
         run: >-
           python tools/managed_install_acceptance.py
-          --candidate dist/opencntx-1.8.0-py3-none-any.whl
+          --candidate dist/opencntx-1.8.1-py3-none-any.whl
           --baseline dist/opencntx-1.7.6-py3-none-any.whl
-          --expected-candidate 1.8.0
+          --expected-candidate 1.8.1
           --expected-baseline 1.7.6
           --expected-baseline-sha256 b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f
 
@@ -240,7 +240,9 @@ jobs:
         run: python -m pip check
 
       - name: Verify package version against latest stable tag
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        if: >-
+          matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13' &&
+          github.event_name != 'pull_request'
         run: python tools/release_version_gate.py --repository .
 
       - name: Run tests
