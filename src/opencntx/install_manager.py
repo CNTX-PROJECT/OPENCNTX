@@ -24,7 +24,7 @@ import zipfile
 from collections.abc import Sequence
 from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
-from typing import Any, cast
+from typing import Any
 
 from .installation import InstallationError, file_sha256, inspect_runtime, verify_runtime
 
@@ -632,13 +632,14 @@ def _operation_lock(state_root: Path, *, allow_legacy_journal: bool = False):
             if os.name == "nt":
                 import msvcrt
 
-                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+                vars(msvcrt)["locking"](
+                    handle.fileno(), vars(msvcrt)["LK_NBLCK"], 1
+                )
             else:
                 import fcntl
 
-                fcntl_module = cast(Any, fcntl)
-                fcntl_module.flock(
-                    handle.fileno(), fcntl_module.LOCK_EX | fcntl_module.LOCK_NB
+                vars(fcntl)["flock"](
+                    handle.fileno(), vars(fcntl)["LOCK_EX"] | vars(fcntl)["LOCK_NB"]
                 )
             acquired = True
         except (OSError, ImportError) as exc:
@@ -651,12 +652,13 @@ def _operation_lock(state_root: Path, *, allow_legacy_journal: bool = False):
                 if os.name == "nt":
                     import msvcrt
 
-                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+                    vars(msvcrt)["locking"](
+                        handle.fileno(), vars(msvcrt)["LK_UNLCK"], 1
+                    )
                 else:
                     import fcntl
 
-                    fcntl_module = cast(Any, fcntl)
-                    fcntl_module.flock(handle.fileno(), fcntl_module.LOCK_UN)
+                    vars(fcntl)["flock"](handle.fileno(), vars(fcntl)["LOCK_UN"])
             finally:
                 handle.close()
         else:
