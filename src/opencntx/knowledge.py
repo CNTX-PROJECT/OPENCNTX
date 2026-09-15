@@ -697,8 +697,8 @@ def render_footer(contract: Mapping[str, Any]) -> str:
         "---",
         "",
         (
-            f"**Chat:** {contract['chat']} | **Tokens:** {contract['tokens']} | "
-            f"**Model:** {contract['model']} | **Voorstel:** {contract['proposal']}"
+            f"**Chat:** {contract['chat']} · **Tokens:** {contract['tokens']} · "
+            f"**Model:** {contract['model']} · **Voorstel:** {contract['proposal']}"
         ),
         "",
     ]
@@ -710,7 +710,7 @@ def render_footer(contract: Mapping[str, Any]) -> str:
             f"Nu: {contract['now']}",
             f"Daarna: {contract['thereafter']}",
             "---",
-            f"Chat: {contract['chat']} | Tokens: {contract['tokens']} | Model: {contract['model']} | Voorstel: {contract['proposal']}",
+            f"Chat: {contract['chat']} · Tokens: {contract['tokens']} · Model: {contract['model']} · Voorstel: {contract['proposal']}",
             "",
         ]
     return "\n".join(lines)

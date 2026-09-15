@@ -2,6 +2,14 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.8.1 - 2026-09-15
+
+Local candidate; not a published GitHub release. The candidate aligns the
+rendered footer telemetry separators with the owner-facing contract and
+revalidates the managed installation/update route against the v1.7.6 offline
+rollback artifact. Host-supplied telemetry remains explicit: missing values
+must render as `niet gemeten` or `onbekend` instead of being invented.
+
 ## 1.8.0 - 2026-09-14
 
 - Add a local hierarchical source index for Markdown, JSON, TOML, YAML and

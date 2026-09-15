@@ -115,12 +115,17 @@ class KnowledgeIndexTests(unittest.TestCase):
             shutil.rmtree(root)
 
     def test_footer_always_has_fallbacks_and_exact_profile(self) -> None:
-        contract = make_footer_contract(profile="exact")
+        contract = make_footer_contract()
         rendered = render_footer(contract)
         self.assertIn("geen opdrachtnotitie", rendered)
         self.assertIn("niet gemeten", rendered)
-        self.assertIn("contract_digest", rendered)
+        self.assertIn(" · **Tokens:** ", rendered)
         self.assertTrue(contract["contract_digest"])
+
+        exact = make_footer_contract(profile="exact")
+        exact_rendered = render_footer(exact)
+        self.assertIn("contract_digest", exact_rendered)
+        self.assertTrue(exact["contract_digest"])
 
     def test_cli_knowledge_routes_cover_build_search_technique_adoption_and_footer(self) -> None:
         root = self._project()

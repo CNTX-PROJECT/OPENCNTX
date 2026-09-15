@@ -41,6 +41,16 @@ and is never implied by a version number.
 The release scope distinguishes implemented behavior from deferred extensions;
 a roadmap checkbox is never a substitute for release evidence.
 
+## Local candidate — v1.8.1
+
+Local candidate: v1.8.1
+
+This candidate is intentionally ahead of the latest published release and is
+used for local managed-installation validation. It is not a GitHub Release,
+Git tag or PyPI package until an upstream publication exists. The candidate
+aligns the rendered footer telemetry separators with the owner-facing contract
+and keeps host telemetry explicit when the provider does not supply values.
+
 Contributors who deliberately need current, unreleased source can use:
 
 ```powershell
