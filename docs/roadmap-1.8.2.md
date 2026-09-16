@@ -23,7 +23,7 @@ search.
 | E03 | Preserve machine contracts during translation | AST identifiers, format IDs, paths, error codes and compatibility inputs remain intentional | Complete |
 | E04 | Normalize retained R9 fixture prose and rebind frozen digests | Corpus runners pass with stable IDs, expected outcomes and verified current hashes | Complete |
 | E05 | Enforce the public-language gate locally and in CI | `quality_gate.py language` fails closed on a blocked term and passes the tracked tree | Complete |
-| E06 | Prove release and update behavior | Clean install, 1.8.0 update, rollback, reapply, build, smoke and GitHub read-back are green | In progress |
+| E06 | Prove release and update behavior | Clean install, 1.8.0 update, rollback, reapply, build, smoke and GitHub read-back are green | Complete |
 
 ## Explicit non-goals
 
