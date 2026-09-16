@@ -52,7 +52,7 @@ def write_config(
     content = "\n".join(
         [
             "[task]",
-            'goal = "Test één concrete taak"',
+            'goal = "Test one concrete task"',
             "",
             "[context]",
             f"include = {toml_array(include)}",
@@ -105,7 +105,7 @@ class MvpTests(unittest.TestCase):
     def test_02_repeated_pack_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "a.txt").write_text("dezelfde bytes\n", encoding="utf-8")
+            (root / "a.txt").write_text("same bytes\n", encoding="utf-8")
             write_config(root, include=["**/*"], required=["a.txt"])
 
             first = run_cli("pack", cwd=root)
@@ -127,7 +127,7 @@ class MvpTests(unittest.TestCase):
     def test_03_budget_overflow_leaves_no_partial_package(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "large.txt").write_text("te groot", encoding="utf-8")
+            (root / "large.txt").write_text("to groot", encoding="utf-8")
             write_config(root, include=["large.txt"], max_bytes=3)
 
             result = run_cli("pack", cwd=root)
@@ -160,8 +160,8 @@ class MvpTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "one.txt").write_text("een", encoding="utf-8")
-            (root / "two.txt").write_text("twee", encoding="utf-8")
+            (root / "one.txt").write_text("a", encoding="utf-8")
+            (root / "two.txt").write_text("two", encoding="utf-8")
             write_config(root, include=["*.txt"], max_files=1)
 
             result = run_cli("pack", cwd=root)
@@ -223,7 +223,7 @@ class MvpTests(unittest.TestCase):
     def test_04_missing_required_file_is_clear_error(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "optional.txt").write_text("optioneel", encoding="utf-8")
+            (root / "optional.txt").write_text("optional", encoding="utf-8")
             write_config(
                 root,
                 include=["*.txt"],
@@ -239,7 +239,7 @@ class MvpTests(unittest.TestCase):
     def test_05_exclusions_and_sensitive_defaults_apply_before_reading(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "notes.txt").write_text("publiek", encoding="utf-8")
+            (root / "notes.txt").write_text("public", encoding="utf-8")
             (root / ".env").write_text("DEMO_SECRET=not-real", encoding="utf-8")
             (root / "secret.pem").write_bytes(b"\x00binary-secret")
             (root / "private.key").write_bytes(b"\x00binary-key")
@@ -279,10 +279,10 @@ class MvpTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "blocked.txt").write_text("tekst", encoding="utf-8")
+            (root / "blocked.txt").write_text("text", encoding="utf-8")
             write_config(root, include=["blocked.txt"])
             with (
-                patch.object(Path, "read_bytes", side_effect=PermissionError("geen toegang")),
+                patch.object(Path, "read_bytes", side_effect=PermissionError("no access")),
                 self.assertRaisesRegex(OpenCntxError, "cannot be read"),
             ):
                 pack_project(root)
@@ -293,7 +293,7 @@ class MvpTests(unittest.TestCase):
             root = parent / "project"
             root.mkdir()
             outside = parent / "outside.txt"
-            outside.write_text("buiten", encoding="utf-8")
+            outside.write_text("outside", encoding="utf-8")
             write_config(root, include=["../outside.txt"])
 
             traversal_result = run_cli("pack", cwd=root)
@@ -315,14 +315,14 @@ class MvpTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             for name in ("a.txt", "b.txt", "stable.txt"):
-                (root / name).write_text(f"origineel {name}\n", encoding="utf-8")
+                (root / name).write_text(f"original {name}\n", encoding="utf-8")
             write_config(root, include=["*.txt"], required=["a.txt"])
             pack_result = run_cli("pack", cwd=root)
             self.assertEqual(pack_result.returncode, 0, pack_result.stderr)
 
-            (root / "a.txt").write_text("gewijzigd\n", encoding="utf-8")
+            (root / "a.txt").write_text("changed\n", encoding="utf-8")
             (root / "b.txt").unlink()
-            (root / "new.txt").write_text("nieuw\n", encoding="utf-8")
+            (root / "new.txt").write_text("new\n", encoding="utf-8")
             verify_result = run_cli("verify", ".opencntx/latest", cwd=root)
 
             self.assertEqual(verify_result.returncode, 1)
@@ -337,7 +337,7 @@ class MvpTests(unittest.TestCase):
             root = Path(temporary_directory)
             folder = root / "folder"
             folder.mkdir()
-            (folder / "note.txt").write_text("Windows-pad", encoding="utf-8")
+            (folder / "note.txt").write_text("Windows-path", encoding="utf-8")
             write_config(
                 root,
                 include=[r"folder\*.txt"],
@@ -355,7 +355,7 @@ class MvpTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             source_path = root / "source.txt"
-            source_path.write_bytes(b"ongewijzigde bron\n")
+            source_path.write_bytes(b"unchanged source\n")
             write_config(root, include=["source.txt"], required=["source.txt"])
             before_bytes = source_path.read_bytes()
             before_mtime = source_path.stat().st_mtime_ns
@@ -381,11 +381,11 @@ class MvpTests(unittest.TestCase):
     def test_tampered_context_makes_verify_nonzero_without_rewriting_it(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            (root / "source.txt").write_text("bron", encoding="utf-8")
+            (root / "source.txt").write_text("source", encoding="utf-8")
             write_config(root, include=["source.txt"])
             self.assertEqual(run_cli("pack", cwd=root).returncode, 0)
             context_path = root / ".opencntx/latest/CONTEXT.md"
-            context_path.write_text("gemanipuleerd", encoding="utf-8")
+            context_path.write_text("tampered", encoding="utf-8")
             before = context_path.read_bytes()
 
             result = run_cli("verify", ".opencntx/latest", cwd=root)

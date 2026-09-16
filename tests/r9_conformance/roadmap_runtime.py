@@ -19,7 +19,7 @@ from .project_runtime import (
 from .runtime_contracts import AVAILABILITY, ROLES, canonical_digest
 
 SCENARIO_COUNT = 84
-SCENARIO_TABLE_SHA256 = "b3e1fcc6d075ed3542e3cdd5f82872df58280bfbc87c81a70a051fa21bc0b4be"
+SCENARIO_TABLE_SHA256 = "043542a4532293f36a4f77fbeae47ae93eae9f538c2b1f8766909fc4bdbca2fd"
 SCENARIO_ID_PATTERN = re.compile(r"S32-(\d{3})")
 
 CASE_RESULT_CODES = {
@@ -28,7 +28,7 @@ CASE_RESULT_CODES = {
     "missing-parent-roadmap": "BLOCKED_NO_VALID_ROADMAP_STACK",
     "unknown-parent-roadmap": "BLOCKED_NO_VALID_ROADMAP_STACK",
     "unknown-parent-node": "BLOCKED_NO_VALID_ROADMAP_STACK",
-    "unknown-return-node": "BLOCKED_INVALID_RETURN_TO_PARENT",
+    "unknown-return node": "BLOCKED_INVALID_RETURN_TO_PARENT",
     "graph-cycle": "BLOCKED_NO_VALID_ROADMAP_STACK",
     "orphan-relation": "BLOCKED_NO_VALID_ROADMAP_STACK",
     "multiple-parents": "BLOCKED_NO_VALID_ROADMAP_STACK",
@@ -69,7 +69,7 @@ CASE_RESULT_CODES = {
     "valid-child-close": "RETURN_TO_PARENT_READY",
     "wrong-return-mode": "BLOCKED_INVALID_RETURN_TO_PARENT",
     "wrong-closed-roadmap": "BLOCKED_INVALID_RETURN_TO_PARENT",
-    "wrong-return-node": "BLOCKED_INVALID_RETURN_TO_PARENT",
+    "wrong-return node": "BLOCKED_INVALID_RETURN_TO_PARENT",
     "stale-parent-revision": "BLOCKED_INVALID_RETURN_TO_PARENT",
     "missing-parent-frame": "BLOCKED_INVALID_RETURN_TO_PARENT",
     "invalid-event-chain": "BLOCKED_INVALID_RETURN_TO_PARENT",

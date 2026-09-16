@@ -1,4 +1,4 @@
-"""Long 1.8.1 clean-install and 1.8.0-to-1.8.1 transition simulation.
+"""Long 1.8.2 clean-install and 1.8.0-to-1.8.2 transition simulation.
 
 This is an opt-in integration simulator. It creates disposable virtual
 environments and disposable projects only; it never touches a registered
@@ -162,7 +162,7 @@ def _exercise_project(python: Path, project: Path, *, expected_version: str) -> 
         ],
         cwd=project,
     )
-    if not footer.endswith("\n") or "**Daarna:** STOP" not in footer:
+    if not footer.endswith("\n") or "**Then:** STOP" not in footer:
         raise RuntimeError("Footer contract did not render its final field")
     return {
         "adoption_audit": manifest["audit"]["status"],
@@ -193,13 +193,13 @@ def _make_broken_candidate(candidate: Path, destination: Path) -> Path:
 
 def _rollback_probe(parent: Path, baseline: Path, candidate: Path) -> dict[str, Any]:
     python = _create_venv(parent, "rollback-venv", baseline)
-    broken = _make_broken_candidate(candidate, parent / "broken-1.8.1.whl")
+    broken = _make_broken_candidate(candidate, parent / "broken-1.8.2.whl")
     broken_hash = _sha256(broken)
     baseline_hash = _sha256(baseline)
     result = managed_update(
         artifact=str(broken),
         sha256=broken_hash,
-        version="1.8.1",
+        version="1.8.2",
         rollback_artifact=str(baseline),
         rollback_sha256=baseline_hash,
         state_root=parent / "rollback-state",
@@ -236,7 +236,7 @@ def _clean_install(parent: Path, candidate: Path) -> dict[str, Any]:
     project = _prepare_project(parent, "clean-project")
     _init_and_seed(python, project)
     before = _snapshot_sources(project)
-    exercised = _exercise_project(python, project, expected_version="1.8.1")
+    exercised = _exercise_project(python, project, expected_version="1.8.2")
     after = _snapshot_sources(project)
     if before != after:
         raise RuntimeError("Clean installation changed human-owned project files")
@@ -259,27 +259,27 @@ def _upgrade_from_180(
     first = managed_update(
         artifact=str(candidate),
         sha256=candidate_hash,
-        version="1.8.1",
+        version="1.8.2",
         rollback_artifact=str(baseline),
         rollback_sha256=baseline_hash,
         state_root=parent / "managed-state",
         python=python,
     )
     if first["status"] != "NEW_HEALTHY":
-        raise RuntimeError(f"1.8.0-to-1.8.1 update failed: {first}")
+        raise RuntimeError(f"1.8.0-to-1.8.2 update failed: {first}")
     reapply_statuses = []
     for _ in range(cycles):
         result = managed_update(
             artifact=str(candidate),
             sha256=candidate_hash,
-            version="1.8.1",
+            version="1.8.2",
             rollback_artifact=str(baseline),
             rollback_sha256=baseline_hash,
             state_root=parent / "managed-state",
             python=python,
         )
         reapply_statuses.append((result["status"], bool(result.get("reused"))))
-    exercised = _exercise_project(python, project, expected_version="1.8.1")
+    exercised = _exercise_project(python, project, expected_version="1.8.2")
     blocked = _blocked_adoption_probe(python, parent)
     after = _snapshot_sources(project)
     if before != after:
@@ -349,7 +349,7 @@ def run(candidate: Path, baseline: Path, *, cycles: int) -> dict[str, Any]:
             "lock_probe": _lock_probe(parent),
             "status": "PASS",
             "rollback_probe": _rollback_probe(parent, baseline, candidate),
-            "upgrade_1_8_0_to_1_8_1": _upgrade_from_180(parent, baseline, candidate, cycles),
+            "upgrade_1_8_0_to_1_8_2": _upgrade_from_180(parent, baseline, candidate, cycles),
         }
     return result
 

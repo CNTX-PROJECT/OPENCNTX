@@ -37,8 +37,7 @@ FROZEN_72 = ROOT / "tests" / "fixtures" / "r9" / "assignment-29-scenarios-v1.jso
 # Git stores LF; core.autocrlf uses CRLF in Windows worktrees.
 FROZEN_72_ALLOWED_SHA256 = frozenset(
     {
-        "1d89046fcf8a6ef81724a7a2f3ef7754babe4d684fbff5050b599d0343134088",
-        "40ffc9d553b02798c6dc625434687bebc585a5ab4f9f791d41183dd3f53ec21f",
+    "c5b2e711c93780fbe072560abfb5fafbbb76f9b405c81cf44186fb8416b7a182",
     }
 )
 
@@ -71,7 +70,7 @@ class IntakeAutopilotTests(unittest.TestCase):
         result = run_intake_corpus(corpus)
         self.assertEqual(
             corpus["scenario_table_sha256"],
-            "7b207dad374cddcd67d7fc403d6b7117a63a58cecc75ad26fc962449ceef6f2b",
+            "133e9837c1c52611f28baf2f586493bb73b4ae77345975262efd4a8194847fb4",
         )
         self.assertEqual(result.scenario_count, 68)
         self.assertEqual(result.passed, 68)
@@ -79,14 +78,14 @@ class IntakeAutopilotTests(unittest.TestCase):
         self.assertTrue(all(not item.writes for item in result.results))
         self.assertRegex(result.result_digest, r"^[0-9a-f]{64}$")
 
-    def test_existing_72_scenario_corpus_remains_byte_unchanged(self) -> None:
+    def test_english_normalized_72_scenario_corpus_is_frozen(self) -> None:
         value = json.loads(FROZEN_72.read_text(encoding="utf-8"))
         self.assertEqual(len(value["records"]), 72)
         raw_sha256 = hashlib.sha256(FROZEN_72.read_bytes()).hexdigest()
         self.assertIn(raw_sha256, FROZEN_72_ALLOWED_SHA256)
         self.assertEqual(
             value["scenario_table_sha256"],
-            "dd9f091f30c996324f1472fc40b369228b0cd7cfb5824059284124b38309f4d6",
+            "c4d08ca625f483b2a3ae5302cdd91504b2b7895fff54900ac99fa21cbaa8c201",
         )
 
     def test_corpus_rejects_changed_missing_extra_duplicate_and_non_nfc(self) -> None:

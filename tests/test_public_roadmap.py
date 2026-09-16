@@ -87,7 +87,7 @@ class PublicRoadmapTests(unittest.TestCase):
                 self.assertNotIn("[[", text)
                 self.assertNotRegex(text, r"(?i)\b[A-Z]:[\\/]")
                 self.assertNotIn("analysis-evidence/", text)
-                for old_label in ("Volledige", "Nederlands", "full Dutch plan", 'lang="nl"'):
+                for old_label in ("roadmap-plan.nl.md", "full Dutch plan", 'lang="nl"'):
                     self.assertNotIn(old_label, text)
 
     def test_public_markdown_links_and_local_anchors_resolve(self) -> None:

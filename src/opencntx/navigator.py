@@ -121,8 +121,7 @@ CATALOG_SELECT_QUERIES = {
     ),
 }
 CURRENT_TASK_PATTERN = re.compile(
-    r"^- (?:Active task|Actieve taak): (TASK-\d{8}-\d{4}) "
-    r"(?:revision|revisie) ([1-9]\d*)$",
+    r"^- Active task: (TASK-\d{8}-\d{4}) revision ([1-9]\d*)$",
     re.MULTILINE,
 )
 
@@ -200,21 +199,21 @@ def _json_bytes(value: object) -> bytes:
 def _validate_task_id(value: object) -> str:
     if not isinstance(value, str) or TASK_ID_PATTERN.fullmatch(value) is None:
         raise NavigatorError(
-            "Taak-ID moet TASK-YYYYMMDD-NNNN gebruiken.", code="context_task_id_invalid"
+            "Task ID must use TASK-YYYYMMDD-NNNN.", code="context_task_id_invalid"
         )
     return value
 
 
 def _validate_digest(value: object, *, label: str) -> str:
     if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
-        raise NavigatorError(f"{label} is geen geldige SHA-256.", code="context_digest_invalid")
+        raise NavigatorError(f"{label} is not a valid SHA-256.", code="context_digest_invalid")
     return value
 
 
 def _positive_budget(value: object, *, label: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise NavigatorError(
-            f"{label} moet een positief geheel getal zijn.",
+            f"{label} must be a positive integer.",
             code="context_budget_invalid",
         )
     return value
@@ -224,7 +223,7 @@ def _path_parts(relative_text: str) -> tuple[str, ...]:
     pure = PurePosixPath(relative_text)
     if pure.is_absolute() or not pure.parts or ".." in pure.parts or "\\" in relative_text:
         raise NavigatorError(
-            "Contextpad moet draagbaar binnen de werkruimte blijven.",
+            "Context path must remain portable within the workspace.",
             code="context_path_invalid",
         )
     return pure.parts
@@ -235,7 +234,7 @@ def _safe_file(root: Path, relative_text: str) -> Path:
     path = _assert_no_symlink(root, relative, code="context_path_unsafe")
     if not path.is_file():
         raise NavigatorError(
-            f"Contextbestand ontbreekt of is geen regulier bestand: {relative_text}.",
+            f"Context file is missing or is not a regular file: {relative_text}.",
             code="context_path_invalid",
         )
     return path
@@ -245,12 +244,12 @@ def _proposal_inputs(chain: TaskChain) -> tuple[str, ...]:
     payload = chain.events[0].payload
     values = payload.get("inputs")
     if not isinstance(values, list):
-        raise NavigatorError("Taakvoorstel mist geldige inputs.", code="context_task_invalid")
+        raise NavigatorError("Task proposal lacks valid inputs.", code="context_task_invalid")
     paths: list[str] = []
     for item in values:
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
             raise NavigatorError(
-                "Taakvoorstel bevat een ongeldig inputrecord.",
+                "Task proposal contains an invalid input record.",
                 code="context_task_invalid",
             )
         paths.append(item["path"])
@@ -263,7 +262,7 @@ def _current_task(root: Path) -> tuple[str, int]:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         raise NavigatorError(
-            "CONTROL/CURRENT.md is niet als UTF-8 leesbaar.",
+            "CONTROL/CURRENT.md is not readable as UTF-8.",
             code="context_current_invalid",
         ) from exc
     matches = CURRENT_TASK_PATTERN.findall(text)
@@ -350,14 +349,14 @@ def _read_catalog(
         index_path = _safe_file(root, "CHAPTERS/INDEX.md")
     except WorkspaceError as exc:
         raise NavigatorError(
-            "Catalogus of hoofdstukindex ontbreekt of is onveilig; rebuild vereist.",
+            "Catalog or chapter index is missing or unsafe; rebuild is required.",
             code="catalog_rebuild_required",
         ) from exc
     try:
         index_bytes = index_path.read_bytes()
     except OSError as exc:
         raise NavigatorError(
-            "CHAPTERS/INDEX.md kan niet worden gecontroleerd.",
+            "CHAPTERS/INDEX.md cannot be checked.",
             code="catalog_rebuild_required",
         ) from exc
 
@@ -375,7 +374,7 @@ def _read_catalog(
         integrity = connection.execute("PRAGMA integrity_check").fetchone()
         if integrity != ("ok",):
             raise NavigatorError(
-                "SQLite-catalogus faalt de integriteitscontrole.",
+            "SQLite catalog fails the integrity check.",
                 code="catalog_rebuild_required",
             )
         tables = {
@@ -386,7 +385,7 @@ def _read_catalog(
         }
         if tables != set(CATALOG_TABLE_COLUMNS):
             raise NavigatorError(
-                "SQLite-catalogus gebruikt een onbekend schema.",
+                "SQLite catalog uses an unknown schema.",
                 code="catalog_rebuild_required",
             )
         forbidden_objects = connection.execute(
@@ -395,7 +394,7 @@ def _read_catalog(
         ).fetchall()
         if forbidden_objects:
             raise NavigatorError(
-                "SQLite-catalogus bevat onbekende views of triggers.",
+                "SQLite catalog contains unknown views or triggers.",
                 code="catalog_rebuild_required",
             )
         for table, expected_columns in CATALOG_TABLE_COLUMNS.items():
@@ -404,7 +403,7 @@ def _read_catalog(
             )
             if column_names != expected_columns:
                 raise NavigatorError(
-                    "SQLite-catalogus gebruikt een onbekend schema.",
+                    "SQLite catalog uses an unknown schema.",
                     code="catalog_rebuild_required",
                 )
         metadata = dict(connection.execute("SELECT key, value FROM catalog_meta"))
@@ -419,7 +418,7 @@ def _read_catalog(
         }
         if set(metadata) != expected_meta_keys:
             raise NavigatorError(
-                "SQLite-catalogus mist bekende metadata.",
+            "SQLite catalog lacks expected metadata.",
                 code="catalog_rebuild_required",
             )
         if (
@@ -446,7 +445,7 @@ def _read_catalog(
         raise
     except (OSError, sqlite3.Error) as exc:
         raise NavigatorError(
-            "Catalogus is ontbrekend, onleesbaar of verouderd; rebuild vereist.",
+            "Catalog is missing, unreadable or stale; rebuild is required.",
             code="catalog_rebuild_required",
         ) from exc
     finally:
@@ -473,7 +472,7 @@ def _dependency_closure(
         chapter = chapters.get(chapter_id)
         if chapter is None:
             raise NavigatorError(
-                f"Taak verwijst naar onbekend hoofdstuk: {chapter_id}.",
+                f"Task points to an unknown chapter: {chapter_id}.",
                 code="context_chapter_invalid",
             )
         selected.add(chapter_id)
@@ -494,18 +493,18 @@ def _prepare_route(
 ) -> NavigationRoute:
     root = validate_workspace(root_path)
     task_id = _validate_task_id(task_id)
-    proposal_digest = _validate_digest(proposal_digest, label="Voorsteldigest")
+    proposal_digest = _validate_digest(proposal_digest, label="Proposal digest")
     chain = _load_chain(root, task_id)
     _ensure_managed_view(chain)
     _verify_inputs(root, chain)
     if chain.proposal_digest != proposal_digest:
         raise NavigatorError(
-            "Voorsteldigest komt niet overeen met de actieve taak.",
+            "Proposal digest does not match the active task.",
             code="context_proposal_mismatch",
         )
     if chain.status != "IN_EXECUTION":
         raise NavigatorError(
-            "Contextbouw vereist een exact goedgekeurde taak in IN_EXECUTION.",
+            "Context build requires an exact approved task in IN_EXECUTION.",
             code="context_task_not_executing",
         )
     approval = next((event for event in chain.events if event.event_type == "owner-approval"), None)
@@ -514,7 +513,7 @@ def _prepare_route(
     )
     if approval is None or execution is None:
         raise NavigatorError(
-            "Taak mist geldige approval- of executionrecords.",
+            "Task lacks valid approval or execution records.",
             code="context_task_invalid",
         )
 
@@ -522,7 +521,7 @@ def _prepare_route(
     control_inputs = {path for path in input_paths if path.startswith("CONTROL/")}
     if control_inputs != set(HOT_PATHS):
         raise NavigatorError(
-            "Taakinputs moeten exact OWNER.md, ROADMAP.md en CURRENT.md als CONTROL-inputs pinnen.",
+            "Task inputs must pin exactly OWNER.md, ROADMAP.md and CURRENT.md as CONTROL inputs.",
             code="context_control_inputs_invalid",
         )
     content_inputs = tuple(path for path in input_paths if not path.startswith("CONTROL/"))
@@ -534,7 +533,7 @@ def _prepare_route(
     current_task_id, current_revision = _current_task(root)
     if current_task_id != chain.task_id or current_revision != chain.revision:
         raise NavigatorError(
-            "CONTROL/CURRENT.md noemt niet exact dezelfde taak en revisie.",
+            "CONTROL/CURRENT.md does not name the exact same task and revision.",
             code="context_current_mismatch",
         )
 
@@ -553,7 +552,7 @@ def _prepare_route(
             chapter_id = _chapter_id_from_path(path)
             if path != "CHAPTERS/INDEX.md" and chapter_id is None:
                 raise NavigatorError(
-                    f"Onbekende hoofdstukinput: {path}.",
+                    f"Unknown chapter input: {path}.",
                     code="context_input_invalid",
                 )
             warm_inputs.add(path)
@@ -565,13 +564,13 @@ def _prepare_route(
             source_id = source_by_path.get(path)
             if source_id is None:
                 raise NavigatorError(
-                    f"Taakinput is geen bekend bronrecord of origineel: {path}.",
+                    f"Task input is not a known source record or original: {path}.",
                     code="context_input_invalid",
                 )
             direct_source_ids.add(source_id)
         else:
             raise NavigatorError(
-                f"Inhoudelijke taakinput heeft geen ondersteunde route: {path}.",
+                f"Content task input has no supported route: {path}.",
                 code="context_input_invalid",
             )
 
@@ -581,7 +580,7 @@ def _prepare_route(
         chapter = chapters[chapter_id]
         if chapter.knowledge_status != "OWNER_ACCEPTED" or freshness[chapter_id] != "CURRENT":
             raise NavigatorError(
-                f"Hoofdstuk {chapter_id} is niet OWNER_ACCEPTED en CURRENT.",
+                f"Chapter {chapter_id} is not OWNER_ACCEPTED and CURRENT.",
                 code="context_chapter_not_current",
             )
         warm_inputs.add(chapter.relative_path)
@@ -592,12 +591,12 @@ def _prepare_route(
         selected_source = sources.get(source_id)
         if selected_source is None or selected_source.integrity != "EXACT":
             raise NavigatorError(
-                f"Bron {source_id} is ontbrekend of niet exact.",
+                f"Source {source_id} is missing or not exact.",
                 code="context_source_stale",
             )
         if selected_source.privacy == "QUARANTINED":
             raise NavigatorError(
-                f"Bron {source_id} is QUARANTINED en wordt niet geladen.",
+                f"Source {source_id} is QUARANTINED and will not be loaded.",
                 code="context_source_quarantined",
             )
         if selected_source.privacy == "RESTRICTED" and not (
@@ -605,7 +604,7 @@ def _prepare_route(
             or selected_source.original_path in explicit_inputs
         ):
             raise NavigatorError(
-                f"RESTRICTED bron {source_id} vereist een expliciete taakinput.",
+                f"RESTRICTED source {source_id} requires an explicit task input.",
                 code="context_source_restricted",
             )
 
@@ -637,7 +636,7 @@ def _prepare_route(
 
     goal = chain.events[0].payload.get("goal")
     if not isinstance(goal, str) or not goal:
-        raise NavigatorError("Taakdoel is ongeldig.", code="context_task_invalid")
+        raise NavigatorError("Task goal is invalid.", code="context_task_invalid")
     return NavigationRoute(
         root=root,
         chain=chain,
@@ -668,7 +667,7 @@ def _read_route(
             sizes.append((item.path, path.stat().st_size))
         except OSError as exc:
             raise NavigatorError(
-                f"Contextbestand kan niet worden gemeten: {item.path}.",
+                f"Context file cannot be measured: {item.path}.",
                 code="context_source_unavailable",
             ) from exc
     required_bytes = sum(size for _, size in sizes)
@@ -677,9 +676,9 @@ def _read_route(
             path for path, _ in sorted(sizes, key=lambda item: (-item[1], item[0]))[:5]
         )
         raise NavigatorError(
-            "Contextbudget onvoldoende: "
-            f"vereist {required_count} bestanden en {required_bytes} bytes; "
-            f"grootste kandidaten: {largest}.",
+            "Context budget is insufficient: "
+            f"requires {required_count} files and {required_bytes} bytes; "
+            f"largest candidates: {largest}.",
             code="context_budget_exceeded",
         )
     paths = tuple(item.path for item in route.files)
@@ -705,7 +704,7 @@ def _read_route(
         context_sources = read_sources(route.root, selection, config)
     except OpenCntxError as exc:
         raise NavigatorError(
-            f"Contextbron kan niet veilig worden geladen: {exc}",
+            f"Context source cannot be loaded safely: {exc}",
             code="context_source_invalid",
         ) from exc
     return context_sources, config, selection
@@ -782,8 +781,8 @@ def _navigation(
         "warnings": [],
         "scope_statement": (
             (
-                "Alleen de genoemde goedgekeurde taakscope is onderzocht; "
-                "dit is geen claim over het volledige project."
+                "Only the stated approved task scope was examined; "
+                "this is not a claim about the full project."
             )
             if legacy
             else (
@@ -852,7 +851,7 @@ def _write_receipt(root: Path, value: dict[str, Any]) -> Path:
             os.fsync(output.fileno())
     except OSError as exc:
         raise NavigatorError(
-            "Contextreceipt kon niet worden geschreven.",
+            "Context receipt could not be written.",
             code="context_receipt_write_failed",
         ) from exc
     return receipt_path
@@ -921,7 +920,7 @@ def _build_context_package_unlocked(
         confirmed = _prepare_route(root, task_id, proposal_digest)
         if confirmed.fingerprint != route.fingerprint:
             raise NavigatorError(
-                "Taak- of catalogusstaat veranderde tijdens contextbouw.",
+            "Task or catalog state changed during context build.",
                 code="context_state_changed",
             )
         package_path = _atomic_package_write(
@@ -1013,7 +1012,7 @@ def _load_package_manifest(root: Path) -> tuple[Path, dict[str, Any], bytes, byt
     package_path = root / ".opencntx" / "latest"
     if package_path.is_symlink() or not package_path.is_dir():
         raise NavigatorError(
-            "Contextpakket .opencntx/latest ontbreekt of is onveilig.",
+            "Context package .opencntx/latest is missing or unsafe.",
             code="context_package_invalid",
         )
     manifest_path = _safe_file(root, ".opencntx/latest/manifest.json")
@@ -1024,7 +1023,7 @@ def _load_package_manifest(root: Path) -> tuple[Path, dict[str, Any], bytes, byt
         manifest = json.loads(manifest_bytes.decode("utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise NavigatorError(
-            "Contextpakket bevat een ongeldig manifest.",
+            "Context package contains an invalid manifest.",
             code="context_package_invalid",
         ) from exc
     if not isinstance(manifest, dict) or set(manifest) != {
@@ -1039,7 +1038,7 @@ def _load_package_manifest(root: Path) -> tuple[Path, dict[str, Any], bytes, byt
         "navigation",
     }:
         raise NavigatorError(
-            "Contextmanifest heeft onbekende of ontbrekende velden.",
+            "Context manifest has unknown or missing fields.",
             code="context_package_invalid",
         )
     return package_path, manifest, context_bytes, manifest_bytes
@@ -1057,7 +1056,7 @@ def verify_context_package(
     selection = manifest.get("selection")
     if not isinstance(navigation, dict) or not isinstance(selection, dict):
         raise NavigatorError(
-            "Contextmanifest mist geldige navigatie of selectie.",
+            "Context manifest lacks valid navigation or selection.",
             code="context_package_invalid",
         )
     task_value = navigation.get("task")
@@ -1069,7 +1068,7 @@ def verify_context_package(
         or task_value.get("proposal_digest") != proposal_digest
     ):
         raise NavigatorError(
-            "Contextmanifest hoort niet bij de opgegeven taak en voorstel-digest.",
+            "Context manifest does not belong to the supplied task and proposal digest.",
             code="context_package_mismatch",
         )
     max_files = _positive_budget(selection.get("max_files"), label="manifest max-files")

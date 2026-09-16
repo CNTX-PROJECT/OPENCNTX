@@ -3,79 +3,837 @@
   "format": "opencntx-r9-scenario-corpus",
   "format_version": 1,
   "records": [
-    {"expected": "`INTAKE_PLANNING`, `UNRESOLVED`, nul write", "expected_result_code": "INTAKE_PLANNING", "expected_writes": [], "input": {"owner_bound": false}, "operation": "intake", "scenario": "nieuw leeg project", "scenario_id": "S29-001"},
-    {"expected": "read-only facts, voorstel mogelijk", "expected_result_code": "EXISTING_HEALTHY_PROPOSAL", "expected_writes": [], "input": {"owner_bound": true, "result": "EXISTING_HEALTHY_PROPOSAL"}, "operation": "intake", "scenario": "bestaand gezond project met roadmap", "scenario_id": "S29-002"},
-    {"expected": "`EXISTING_ASSIST`, roadmapvoorstel, geen binding", "expected_result_code": "EXISTING_ASSIST", "expected_writes": [], "input": {"owner_bound": true, "result": "EXISTING_ASSIST"}, "operation": "intake", "scenario": "bestaand legacyproject zonder roadmap", "scenario_id": "S29-003"},
-    {"expected": "`MIGRATION`, preview-only", "expected_result_code": "MIGRATION_PREVIEW_ONLY", "expected_writes": [], "input": {"owner_bound": true, "result": "MIGRATION_PREVIEW_ONLY"}, "operation": "intake", "scenario": "migratieverzoek", "scenario_id": "S29-004"},
-    {"expected": "`READ_ONLY_RESEARCH` / `READ_ONLY_SLICE`", "expected_result_code": "READ_ONLY_RESEARCH", "expected_writes": [], "input": {"owner_bound": true, "result": "READ_ONLY_RESEARCH"}, "operation": "intake", "scenario": "read-only onderzoek", "scenario_id": "S29-005"},
-    {"expected": "`CONFLICTING`, niet genoeg informatie", "expected_result_code": "CONFLICTING", "expected_writes": [], "input": {"conflicting": true}, "operation": "intake", "scenario": "conflicterende historische en actuele status", "scenario_id": "S29-006"},
-    {"expected": "alleen na expliciete OWNER-scopebinding", "expected_result_code": "FULL_PROJECT", "expected_writes": [], "input": {"owner_bound": true, "result": "FULL_PROJECT"}, "operation": "intake", "scenario": "full-projectscope", "scenario_id": "S29-007"},
-    {"expected": "beperkte childbinding", "expected_result_code": "SUBPROJECT", "expected_writes": [], "input": {"owner_bound": true, "result": "SUBPROJECT"}, "operation": "intake", "scenario": "subproject met geldige parent", "scenario_id": "S29-008"},
-    {"expected": "geen stille parentuitbreiding", "expected_result_code": "COMPONENT", "expected_writes": [], "input": {"owner_bound": true, "result": "COMPONENT"}, "operation": "intake", "scenario": "component met geldige parent", "scenario_id": "S29-009"},
-    {"expected": "`ONE_ASSIGNMENT`, geen projectverbreding", "expected_result_code": "ONE_ASSIGNMENT", "expected_writes": [], "input": {"owner_bound": true, "result": "ONE_ASSIGNMENT"}, "operation": "intake", "scenario": "one-assignmentvraag", "scenario_id": "S29-010"},
-    {"expected": "nul muterende acties", "expected_result_code": "READ_ONLY_SLICE", "expected_writes": [], "input": {"owner_bound": true, "result": "READ_ONLY_SLICE"}, "operation": "intake", "scenario": "read-only slice", "scenario_id": "S29-011"},
-    {"expected": "`BLOCKED_NO_PROJECT_BINDING`", "expected_result_code": "BLOCKED_NO_PROJECT_BINDING", "expected_writes": [], "input": {"missing_parent": true}, "operation": "intake", "scenario": "subproject zonder parentverklaring", "scenario_id": "S29-012"},
-    {"expected": "`TINY_TASK`, geen roadmaphiërarchie", "expected_result_code": "TINY_TASK", "expected_writes": [], "input": {"assignment_count": 1, "dependency_depth": 0, "source_count": 5, "system_count": 1}, "operation": "scale", "scenario": "exact tiny", "scenario_id": "S29-013"},
-    {"expected": "`SMALL_PROJECT`", "expected_result_code": "SMALL_PROJECT", "expected_writes": [], "input": {"assignment_count": 2, "dependency_depth": 1, "source_count": 6, "system_count": 1}, "operation": "scale", "scenario": "hoogste as maakt small", "scenario_id": "S29-014"},
-    {"expected": "`MEDIUM_PROJECT`", "expected_result_code": "MEDIUM_PROJECT", "expected_writes": [], "input": {"assignment_count": 9, "dependency_depth": 3, "source_count": 26, "system_count": 3}, "operation": "scale", "scenario": "hoogste as maakt medium", "scenario_id": "S29-015"},
-    {"expected": "verplichte subroadmaps", "expected_result_code": "LARGE_PROJECT", "expected_writes": [], "input": {"assignment_count": 31, "dependency_depth": 5, "source_count": 101, "system_count": 5}, "operation": "scale", "scenario": "hoogste as maakt large", "scenario_id": "S29-016"},
-    {"expected": "lazy graph en extra stress vereist", "expected_result_code": "MEGA_PROJECT", "expected_writes": [], "input": {"assignment_count": 121, "dependency_depth": 9, "source_count": 501, "system_count": 9}, "operation": "scale", "scenario": "hoogste as maakt mega", "scenario_id": "S29-017"},
-    {"expected": "`UNRESOLVED`, nooit tiny gokken", "expected_result_code": "UNRESOLVED", "expected_writes": [], "input": {"counts_known": false}, "operation": "intake", "scenario": "onbekende telling", "scenario_id": "S29-018"},
-    {"expected": "één muterende leaf maximaal", "expected_result_code": "SOLO", "expected_writes": [], "input": {"humans": 1}, "operation": "team", "scenario": "solo één mens", "scenario_id": "S29-019"},
-    {"expected": "exact `TEAM 2 personen`", "expected_result_code": "TEAM_2", "expected_writes": [], "input": {"humans": 2}, "operation": "team", "scenario": "team twee personen", "scenario_id": "S29-020"},
-    {"expected": "begrensde paralleliteit toegestaan na OWNER-binding", "expected_result_code": "PARALLEL_BOUNDED", "expected_writes": [], "input": {"humans": 8, "result": "PARALLEL_BOUNDED"}, "operation": "team", "scenario": "team 8 met disjuncte resources", "scenario_id": "S29-021"},
-    {"expected": "maximaal ondersteund", "expected_result_code": "TEAM_64", "expected_writes": [], "input": {"humans": 64}, "operation": "team", "scenario": "team 64 grens", "scenario_id": "S29-022"},
-    {"expected": "schemablokkade", "expected_result_code": "SCHEMA_BLOCKED", "expected_writes": [], "input": {"humans": 65}, "operation": "team", "scenario": "team 65", "scenario_id": "S29-023"},
-    {"expected": "`BLOCKED_TEAM_OR_RESOURCE_CONFLICT`", "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT", "expected_writes": [], "input": {"actor_missing": true, "humans": 2}, "operation": "team", "scenario": "ontbrekende actor of verzonnen rol", "scenario_id": "S29-024"},
-    {"expected": "leaf gepauzeerd", "expected_result_code": "PAUSED", "expected_writes": [], "input": {"humans": 2, "unavailable": true}, "operation": "team", "scenario": "actor unavailable zonder overdracht", "scenario_id": "S29-025"},
-    {"expected": "nieuwe binding met oude historie intact", "expected_result_code": "REASSIGNED", "expected_writes": [], "input": {"humans": 2, "reassigned": true, "unavailable": true}, "operation": "team", "scenario": "geldige reassignment", "scenario_id": "S29-026"},
-    {"expected": "paralleliteit geblokkeerd", "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT", "expected_writes": [], "input": {"humans": 2, "resource_conflict": true}, "operation": "team", "scenario": "dependency-ready, resourceconflict", "scenario_id": "S29-027"},
-    {"expected": "geserialiseerd", "expected_result_code": "SERIALIZED_SHARED_INTEGRATION", "expected_writes": [], "input": {"humans": 2, "result": "SERIALIZED_SHARED_INTEGRATION"}, "operation": "team", "scenario": "gedeeld integratiepunt", "scenario_id": "S29-028"},
-    {"expected": "stackdigest reproduceerbaar", "expected_result_code": "STACK_DIGEST_REPRODUCIBLE", "expected_writes": [], "input": {"depth": 1, "result": "STACK_DIGEST_REPRODUCIBLE"}, "operation": "stack", "scenario": "geldige main/sub/leafstack", "scenario_id": "S29-029"},
-    {"expected": "juiste returnlinks", "expected_result_code": "VALID_RETURN_LINKS", "expected_writes": [], "input": {"depth": 3, "result": "VALID_RETURN_LINKS"}, "operation": "stack", "scenario": "twee niveaus geneste subroadmap", "scenario_id": "S29-030"},
-    {"expected": "geldig op grens", "expected_result_code": "STACK_VALID", "expected_writes": [], "input": {"depth": 8}, "operation": "stack", "scenario": "stackdiepte 8", "scenario_id": "S29-031"},
-    {"expected": "`BLOCKED_NO_VALID_ROADMAP_STACK`", "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK", "expected_writes": [], "input": {"depth": 9}, "operation": "stack", "scenario": "stackdiepte 9", "scenario_id": "S29-032"},
-    {"expected": "fail-closed", "expected_result_code": "BLOCKED_GRAPH_CYCLE", "expected_writes": [], "input": {"cycle": true}, "operation": "stack", "scenario": "graphcycle", "scenario_id": "S29-033"},
-    {"expected": "fail-closed", "expected_result_code": "BLOCKED_GRAPH_ORPHAN", "expected_writes": [], "input": {"orphan": true}, "operation": "stack", "scenario": "orphannode", "scenario_id": "S29-034"},
-    {"expected": "projectie faalt zichtbaar", "expected_result_code": "BLOCKED_UNKNOWN_RELATION", "expected_writes": [], "input": {"unknown_relation": true}, "operation": "stack", "scenario": "onbekend relatietype", "scenario_id": "S29-035"},
-    {"expected": "`BLOCKED_UNVERIFIED_AI_CLAIM`", "expected_result_code": "BLOCKED_UNVERIFIED_AI_CLAIM", "expected_writes": [], "input": {"invented": true}, "operation": "stack", "scenario": "verzonnen node/return-node", "scenario_id": "S29-036"},
-    {"expected": "geen return", "expected_result_code": "NO_RETURN", "expected_writes": [], "input": {"accepted": false, "closed": true}, "operation": "return", "scenario": "child done maar niet OWNER-accepted", "scenario_id": "S29-037"},
-    {"expected": "exact één frame pop", "expected_result_code": "RETURNED_ONE_FRAME_NO_START", "expected_writes": [], "input": {"accepted": true, "closed": true}, "operation": "return", "scenario": "geaccepteerde en gesloten child", "scenario_id": "S29-038"},
-    {"expected": "`BLOCKED_INVALID_RETURN_TO_PARENT`", "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT", "expected_writes": [], "input": {"accepted": true, "closed": true, "stale": true}, "operation": "return", "scenario": "stale parentrevisie tijdens return", "scenario_id": "S29-039"},
-    {"expected": "navigatie, geen automatische start", "expected_result_code": "RETURNED_ONE_FRAME_NO_START", "expected_writes": [], "input": {"accepted": true, "closed": true}, "operation": "return", "scenario": "geldige return naar parent", "scenario_id": "S29-040"},
-    {"expected": "sticky current leaf", "expected_result_code": "STICKY_CURRENT_LEAF", "expected_writes": [], "input": {"current_leaf": true}, "operation": "continuity", "scenario": "sessieherstart", "scenario_id": "S29-041"},
-    {"expected": "sticky current leaf", "expected_result_code": "STICKY_CURRENT_LEAF", "expected_writes": [], "input": {"current_leaf": true}, "operation": "continuity", "scenario": "modelwissel", "scenario_id": "S29-042"},
-    {"expected": "sticky current leaf", "expected_result_code": "STICKY_CURRENT_LEAF", "expected_writes": [], "input": {"current_leaf": true}, "operation": "continuity", "scenario": "contextcompaction", "scenario_id": "S29-043"},
-    {"expected": "guard block", "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT", "expected_writes": [], "input": {"team_conflict": true}, "operation": "guard", "scenario": "verkeerde actorstack", "scenario_id": "S29-044"},
-    {"expected": "`BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT`", "expected_result_code": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT", "expected_writes": [], "input": {"action_allowed": false}, "operation": "guard", "scenario": "actie buiten current leaf", "scenario_id": "S29-045"},
-    {"expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`", "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH", "expected_writes": [], "input": {"detail_matches": false}, "operation": "guard", "scenario": "siblingdetail in context", "scenario_id": "S29-046"},
-    {"expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`", "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH", "expected_writes": [], "input": {"detail_matches": false}, "operation": "guard", "scenario": "toekomstdetail in context", "scenario_id": "S29-047"},
-    {"expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`", "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH", "expected_writes": [], "input": {"detail_matches": false}, "operation": "guard", "scenario": "ander teamleafdetail", "scenario_id": "S29-048"},
-    {"expected": "tijdelijk binnen 32.768 bytes", "expected_result_code": "ALLOW_EXACT_ACTION", "expected_writes": [], "input": {}, "operation": "guard", "scenario": "geldig justified parent fragment", "scenario_id": "S29-049"},
-    {"expected": "`BLOCKED_CONTEXT_BUDGET`", "expected_result_code": "BLOCKED_CONTEXT_BUDGET", "expected_writes": [], "input": {"context_budget": false}, "operation": "guard", "scenario": "te brede context of stille truncatie", "scenario_id": "S29-050"},
-    {"expected": "volledig leesbaar/schrijfbaar", "expected_result_code": "LOCAL_OFFLINE_CONTINUITY", "expected_writes": [], "input": {"result": "LOCAL_OFFLINE_CONTINUITY"}, "operation": "storage", "scenario": "lokale store offline zonder netwerk", "scenario_id": "S29-051"},
-    {"expected": "oude pointer geldig, staging herstelbaar", "expected_result_code": "STAGING_RECOVERABLE", "expected_writes": [], "input": {"result": "STAGING_RECOVERABLE"}, "operation": "storage", "scenario": "crash vóór pointerwissel", "scenario_id": "S29-052"},
-    {"expected": "recovery bepaalt eenduidige toestand", "expected_result_code": "RECOVERY_DETERMINISTIC", "expected_writes": [], "input": {"result": "RECOVERY_DETERMINISTIC"}, "operation": "storage", "scenario": "crash na datawrite vóór receipt", "scenario_id": "S29-053"},
-    {"expected": "één winnaar, één conflict", "expected_result_code": "CAS_ONE_WINNER_ONE_CONFLICT", "expected_writes": [], "input": {"result": "CAS_ONE_WINNER_ONE_CONFLICT"}, "operation": "storage", "scenario": "dubbele schrijver/CAS-conflict", "scenario_id": "S29-054"},
-    {"expected": "sync geblokkeerd", "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT", "expected_writes": [], "input": {"private_confirmed": false}, "operation": "storage", "scenario": "private repo niet bevestigd", "scenario_id": "S29-055"},
-    {"expected": "sync geblokkeerd", "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT", "expected_writes": [], "input": {"repository_public": true}, "operation": "storage", "scenario": "repository aantoonbaar public", "scenario_id": "S29-056"},
-    {"expected": "sync geblokkeerd", "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT", "expected_writes": [], "input": {"drift": true}, "operation": "storage", "scenario": "syncpreview/apply-drift", "scenario_id": "S29-057"},
-    {"expected": "sync geblokkeerd, local blijft bruikbaar", "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT", "expected_writes": [], "input": {"conflict": true}, "operation": "storage", "scenario": "remote drift/conflict", "scenario_id": "S29-058"},
-    {"expected": "`EXCLUDED_SECRET`, waarde niet gelogd", "expected_result_code": "EXCLUDED_SECRET", "expected_writes": [], "input": {"secret": true}, "operation": "storage", "scenario": "secret of credential", "scenario_id": "S29-059"},
-    {"expected": "local-only of excluded", "expected_result_code": "LOCAL_ONLY_MEDIA", "expected_writes": [], "input": {"binary": true}, "operation": "storage", "scenario": "niet-toegestaan type", "scenario_id": "S29-060"},
-    {"expected": "alleen met groen beleid syncbaar", "expected_result_code": "SYNC_POLICY_GREEN", "expected_writes": [], "input": {"file_bytes": 10485760}, "operation": "storage", "scenario": "tekstbestand exact 10 MiB", "scenario_id": "S29-061"},
-    {"expected": "`LOCAL_ONLY_MEDIA`", "expected_result_code": "LOCAL_ONLY_MEDIA", "expected_writes": [], "input": {"file_bytes": 10485761}, "operation": "storage", "scenario": "bestand groter dan 10 MiB", "scenario_id": "S29-062"},
-    {"expected": "alleen met alle filters groen", "expected_result_code": "SYNC_POLICY_GREEN", "expected_writes": [], "input": {"batch_bytes": 52428800, "batch_files": 100}, "operation": "storage", "scenario": "batch exact 100 bestanden/50 MiB", "scenario_id": "S29-063"},
-    {"expected": "nieuw OWNER-besluit vereist", "expected_result_code": "OWNER_DECISION_REQUIRED", "expected_writes": [], "input": {"repository_bytes": 1073741825}, "operation": "storage", "scenario": "mirrorbudget boven 1 GiB", "scenario_id": "S29-064"},
-    {"expected": "local-only pointer met veilige metadata", "expected_result_code": "LOCAL_ONLY_MEDIA", "expected_writes": [], "input": {"binary": true, "file_bytes": 20971520}, "operation": "storage", "scenario": "grote afbeelding", "scenario_id": "S29-065"},
-    {"expected": "buiten scope en ongemuteerd", "expected_result_code": "HARD_EXCLUDED_UNCHANGED", "expected_writes": [], "input": {"project": "SKYRIM"}, "operation": "storage", "scenario": "Skyrim saves/moddownloads/diagnostiek", "scenario_id": "S29-066"},
-    {"expected": "hard uitgesloten en ongemuteerd", "expected_result_code": "HARD_EXCLUDED_UNCHANGED", "expected_writes": [], "input": {"project": "HOME_ASSISTANT"}, "operation": "storage", "scenario": "Home Assistant secrets/database/backups", "scenario_id": "S29-067"},
-    {"expected": "lokale continuïteit, geen dataverlies", "expected_result_code": "LOCAL_CONTINUITY", "expected_writes": [], "input": {"central_unavailable": true}, "operation": "storage", "scenario": "toekomstige centrale backend unavailable", "scenario_id": "S29-068"},
-    {"expected": "alle oude contracten regressiegroen", "expected_result_code": "V1_COMPATIBLE", "expected_writes": [], "input": {"major": 1}, "operation": "compatibility", "scenario": "volledige v1.0.0-compatibiliteitsset", "scenario_id": "S29-069"},
-    {"expected": "reject vóór write", "expected_result_code": "REJECT_BEFORE_WRITE", "expected_writes": [], "input": {"major": 99}, "operation": "compatibility", "scenario": "unknown future major", "scenario_id": "S29-070"},
-    {"expected": "niet geladen en byte-ongewijzigd", "expected_result_code": "OPENSPEC_EXCLUDED", "expected_writes": [], "input": {"present": true}, "operation": "openspec", "scenario": "OpenSpec-store aanwezig", "scenario_id": "S29-071"},
-    {"expected": "schema/guard reject, nul placeholder", "expected_result_code": "OPENSPEC_EXCLUDED", "expected_writes": [], "input": {"adapter": true}, "operation": "openspec", "scenario": "OpenSpec als voorgestelde adapter/input", "scenario_id": "S29-072"}
+    {
+      "expected": "`INTAKE_PLANNING`, `UNRESOLVED`, zero writes",
+      "expected_result_code": "INTAKE_PLANNING",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": false
+      },
+      "operation": "intake",
+      "scenario": "new empty project",
+      "scenario_id": "S29-001"
+    },
+    {
+      "expected": "read-only facts, proposal possible",
+      "expected_result_code": "EXISTING_HEALTHY_PROPOSAL",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "EXISTING_HEALTHY_PROPOSAL"
+      },
+      "operation": "intake",
+      "scenario": "existing healthy project with roadmap",
+      "scenario_id": "S29-002"
+    },
+    {
+      "expected": "`EXISTING_ASSIST`, roadmap proposal, no binding",
+      "expected_result_code": "EXISTING_ASSIST",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "EXISTING_ASSIST"
+      },
+      "operation": "intake",
+      "scenario": "existing legacy project without roadmap",
+      "scenario_id": "S29-003"
+    },
+    {
+      "expected": "`MIGRATION`, preview-only",
+      "expected_result_code": "MIGRATION_PREVIEW_ONLY",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "MIGRATION_PREVIEW_ONLY"
+      },
+      "operation": "intake",
+      "scenario": "migration request",
+      "scenario_id": "S29-004"
+    },
+    {
+      "expected": "`READ_ONLY_RESEARCH` / `READ_ONLY_SLICE`",
+      "expected_result_code": "READ_ONLY_RESEARCH",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "READ_ONLY_RESEARCH"
+      },
+      "operation": "intake",
+      "scenario": "read-only research",
+      "scenario_id": "S29-005"
+    },
+    {
+      "expected": "`CONFLICTING`, not enough information",
+      "expected_result_code": "CONFLICTING",
+      "expected_writes": [],
+      "input": {
+        "conflicting": true
+      },
+      "operation": "intake",
+      "scenario": "conflicting historical and current status",
+      "scenario_id": "S29-006"
+    },
+    {
+      "expected": "only after explicit OWNER-scope binding",
+      "expected_result_code": "FULL_PROJECT",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "FULL_PROJECT"
+      },
+      "operation": "intake",
+      "scenario": "full project scope",
+      "scenario_id": "S29-007"
+    },
+    {
+      "expected": "limited child binding",
+      "expected_result_code": "SUBPROJECT",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "SUBPROJECT"
+      },
+      "operation": "intake",
+      "scenario": "subproject with valid parent",
+      "scenario_id": "S29-008"
+    },
+    {
+      "expected": "no silent parent expansion",
+      "expected_result_code": "COMPONENT",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "COMPONENT"
+      },
+      "operation": "intake",
+      "scenario": "component with valid parent",
+      "scenario_id": "S29-009"
+    },
+    {
+      "expected": "`ONE_ASSIGNMENT`, no project expansion",
+      "expected_result_code": "ONE_ASSIGNMENT",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "ONE_ASSIGNMENT"
+      },
+      "operation": "intake",
+      "scenario": "one-assignment question",
+      "scenario_id": "S29-010"
+    },
+    {
+      "expected": "zero mutating actions",
+      "expected_result_code": "READ_ONLY_SLICE",
+      "expected_writes": [],
+      "input": {
+        "owner_bound": true,
+        "result": "READ_ONLY_SLICE"
+      },
+      "operation": "intake",
+      "scenario": "read-only slice",
+      "scenario_id": "S29-011"
+    },
+    {
+      "expected": "`BLOCKED_NO_PROJECT_BINDING`",
+      "expected_result_code": "BLOCKED_NO_PROJECT_BINDING",
+      "expected_writes": [],
+      "input": {
+        "missing_parent": true
+      },
+      "operation": "intake",
+      "scenario": "subproject without parent declaration",
+      "scenario_id": "S29-012"
+    },
+    {
+      "expected": "`TINY_TASK`, no roadmap hierarchy",
+      "expected_result_code": "TINY_TASK",
+      "expected_writes": [],
+      "input": {
+        "assignment_count": 1,
+        "dependency_depth": 0,
+        "source_count": 5,
+        "system_count": 1
+      },
+      "operation": "scale",
+      "scenario": "exact tiny",
+      "scenario_id": "S29-013"
+    },
+    {
+      "expected": "`SMALL_PROJECT`",
+      "expected_result_code": "SMALL_PROJECT",
+      "expected_writes": [],
+      "input": {
+        "assignment_count": 2,
+        "dependency_depth": 1,
+        "source_count": 6,
+        "system_count": 1
+      },
+      "operation": "scale",
+      "scenario": "highest axis makes small",
+      "scenario_id": "S29-014"
+    },
+    {
+      "expected": "`MEDIUM_PROJECT`",
+      "expected_result_code": "MEDIUM_PROJECT",
+      "expected_writes": [],
+      "input": {
+        "assignment_count": 9,
+        "dependency_depth": 3,
+        "source_count": 26,
+        "system_count": 3
+      },
+      "operation": "scale",
+      "scenario": "highest axis makes medium",
+      "scenario_id": "S29-015"
+    },
+    {
+      "expected": "required subroadmaps",
+      "expected_result_code": "LARGE_PROJECT",
+      "expected_writes": [],
+      "input": {
+        "assignment_count": 31,
+        "dependency_depth": 5,
+        "source_count": 101,
+        "system_count": 5
+      },
+      "operation": "scale",
+      "scenario": "highest axis makes large",
+      "scenario_id": "S29-016"
+    },
+    {
+      "expected": "lazy graph and extra stress required",
+      "expected_result_code": "MEGA_PROJECT",
+      "expected_writes": [],
+      "input": {
+        "assignment_count": 121,
+        "dependency_depth": 9,
+        "source_count": 501,
+        "system_count": 9
+      },
+      "operation": "scale",
+      "scenario": "highest axis makes mega",
+      "scenario_id": "S29-017"
+    },
+    {
+      "expected": "`UNRESOLVED`, never make tiny guesses",
+      "expected_result_code": "UNRESOLVED",
+      "expected_writes": [],
+      "input": {
+        "counts_known": false
+      },
+      "operation": "intake",
+      "scenario": "unknown count",
+      "scenario_id": "S29-018"
+    },
+    {
+      "expected": "one mutating leaf maximum",
+      "expected_result_code": "SOLO",
+      "expected_writes": [],
+      "input": {
+        "humans": 1
+      },
+      "operation": "team",
+      "scenario": "solo one person",
+      "scenario_id": "S29-019"
+    },
+    {
+      "expected": "exact `TEAM 2 people`",
+      "expected_result_code": "TEAM_2",
+      "expected_writes": [],
+      "input": {
+        "humans": 2
+      },
+      "operation": "team",
+      "scenario": "team two people",
+      "scenario_id": "S29-020"
+    },
+    {
+      "expected": "bounded parallelism allowed after OWNER binding",
+      "expected_result_code": "PARALLEL_BOUNDED",
+      "expected_writes": [],
+      "input": {
+        "humans": 8,
+        "result": "PARALLEL_BOUNDED"
+      },
+      "operation": "team",
+      "scenario": "team 8 with disjoint resources",
+      "scenario_id": "S29-021"
+    },
+    {
+      "expected": "maximum supported",
+      "expected_result_code": "TEAM_64",
+      "expected_writes": [],
+      "input": {
+        "humans": 64
+      },
+      "operation": "team",
+      "scenario": "team 64 boundary",
+      "scenario_id": "S29-022"
+    },
+    {
+      "expected": "schema block",
+      "expected_result_code": "SCHEMA_BLOCKED",
+      "expected_writes": [],
+      "input": {
+        "humans": 65
+      },
+      "operation": "team",
+      "scenario": "team 65",
+      "scenario_id": "S29-023"
+    },
+    {
+      "expected": "`BLOCKED_TEAM_OR_RESOURCE_CONFLICT`",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "actor_missing": true,
+        "humans": 2
+      },
+      "operation": "team",
+      "scenario": "missing actor of invented role",
+      "scenario_id": "S29-024"
+    },
+    {
+      "expected": "leaf paused",
+      "expected_result_code": "PAUSED",
+      "expected_writes": [],
+      "input": {
+        "humans": 2,
+        "unavailable": true
+      },
+      "operation": "team",
+      "scenario": "actor unavailable without handoff",
+      "scenario_id": "S29-025"
+    },
+    {
+      "expected": "new binding with old history intact",
+      "expected_result_code": "REASSIGNED",
+      "expected_writes": [],
+      "input": {
+        "humans": 2,
+        "reassigned": true,
+        "unavailable": true
+      },
+      "operation": "team",
+      "scenario": "valid reassignment",
+      "scenario_id": "S29-026"
+    },
+    {
+      "expected": "parallelism blocked",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "humans": 2,
+        "resource_conflict": true
+      },
+      "operation": "team",
+      "scenario": "dependency-ready, resource conflict",
+      "scenario_id": "S29-027"
+    },
+    {
+      "expected": "serialized",
+      "expected_result_code": "SERIALIZED_SHARED_INTEGRATION",
+      "expected_writes": [],
+      "input": {
+        "humans": 2,
+        "result": "SERIALIZED_SHARED_INTEGRATION"
+      },
+      "operation": "team",
+      "scenario": "shared integration point",
+      "scenario_id": "S29-028"
+    },
+    {
+      "expected": "stack digest reproducible",
+      "expected_result_code": "STACK_DIGEST_REPRODUCIBLE",
+      "expected_writes": [],
+      "input": {
+        "depth": 1,
+        "result": "STACK_DIGEST_REPRODUCIBLE"
+      },
+      "operation": "stack",
+      "scenario": "valid main/sub/leaf stack",
+      "scenario_id": "S29-029"
+    },
+    {
+      "expected": "correct return links",
+      "expected_result_code": "VALID_RETURN_LINKS",
+      "expected_writes": [],
+      "input": {
+        "depth": 3,
+        "result": "VALID_RETURN_LINKS"
+      },
+      "operation": "stack",
+      "scenario": "two levels nested subroadmap",
+      "scenario_id": "S29-030"
+    },
+    {
+      "expected": "valid at boundary",
+      "expected_result_code": "STACK_VALID",
+      "expected_writes": [],
+      "input": {
+        "depth": 8
+      },
+      "operation": "stack",
+      "scenario": "stack depth 8",
+      "scenario_id": "S29-031"
+    },
+    {
+      "expected": "`BLOCKED_NO_VALID_ROADMAP_STACK`",
+      "expected_result_code": "BLOCKED_NO_VALID_ROADMAP_STACK",
+      "expected_writes": [],
+      "input": {
+        "depth": 9
+      },
+      "operation": "stack",
+      "scenario": "stack depth 9",
+      "scenario_id": "S29-032"
+    },
+    {
+      "expected": "fail-closed",
+      "expected_result_code": "BLOCKED_GRAPH_CYCLE",
+      "expected_writes": [],
+      "input": {
+        "cycle": true
+      },
+      "operation": "stack",
+      "scenario": "graph cycle",
+      "scenario_id": "S29-033"
+    },
+    {
+      "expected": "fail-closed",
+      "expected_result_code": "BLOCKED_GRAPH_ORPHAN",
+      "expected_writes": [],
+      "input": {
+        "orphan": true
+      },
+      "operation": "stack",
+      "scenario": "orphan node",
+      "scenario_id": "S29-034"
+    },
+    {
+      "expected": "projection fails visibly",
+      "expected_result_code": "BLOCKED_UNKNOWN_RELATION",
+      "expected_writes": [],
+      "input": {
+        "unknown_relation": true
+      },
+      "operation": "stack",
+      "scenario": "unknown relation type",
+      "scenario_id": "S29-035"
+    },
+    {
+      "expected": "`BLOCKED_UNVERIFIED_AI_CLAIM`",
+      "expected_result_code": "BLOCKED_UNVERIFIED_AI_CLAIM",
+      "expected_writes": [],
+      "input": {
+        "invented": true
+      },
+      "operation": "stack",
+      "scenario": "invented node/return node",
+      "scenario_id": "S29-036"
+    },
+    {
+      "expected": "no return",
+      "expected_result_code": "NO_RETURN",
+      "expected_writes": [],
+      "input": {
+        "accepted": false,
+        "closed": true
+      },
+      "operation": "return",
+      "scenario": "child done but not OWNER-accepted",
+      "scenario_id": "S29-037"
+    },
+    {
+      "expected": "exact one frame pop",
+      "expected_result_code": "RETURNED_ONE_FRAME_NO_START",
+      "expected_writes": [],
+      "input": {
+        "accepted": true,
+        "closed": true
+      },
+      "operation": "return",
+      "scenario": "accepted and closed child",
+      "scenario_id": "S29-038"
+    },
+    {
+      "expected": "`BLOCKED_INVALID_RETURN_TO_PARENT`",
+      "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
+      "expected_writes": [],
+      "input": {
+        "accepted": true,
+        "closed": true,
+        "stale": true
+      },
+      "operation": "return",
+      "scenario": "stale parent revision during return",
+      "scenario_id": "S29-039"
+    },
+    {
+      "expected": "navigation, no automatic start",
+      "expected_result_code": "RETURNED_ONE_FRAME_NO_START",
+      "expected_writes": [],
+      "input": {
+        "accepted": true,
+        "closed": true
+      },
+      "operation": "return",
+      "scenario": "valid return to parent",
+      "scenario_id": "S29-040"
+    },
+    {
+      "expected": "sticky current leaf",
+      "expected_result_code": "STICKY_CURRENT_LEAF",
+      "expected_writes": [],
+      "input": {
+        "current_leaf": true
+      },
+      "operation": "continuity",
+      "scenario": "session restart",
+      "scenario_id": "S29-041"
+    },
+    {
+      "expected": "sticky current leaf",
+      "expected_result_code": "STICKY_CURRENT_LEAF",
+      "expected_writes": [],
+      "input": {
+        "current_leaf": true
+      },
+      "operation": "continuity",
+      "scenario": "model switch",
+      "scenario_id": "S29-042"
+    },
+    {
+      "expected": "sticky current leaf",
+      "expected_result_code": "STICKY_CURRENT_LEAF",
+      "expected_writes": [],
+      "input": {
+        "current_leaf": true
+      },
+      "operation": "continuity",
+      "scenario": "context compaction",
+      "scenario_id": "S29-043"
+    },
+    {
+      "expected": "guard block",
+      "expected_result_code": "BLOCKED_TEAM_OR_RESOURCE_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "team_conflict": true
+      },
+      "operation": "guard",
+      "scenario": "wrong actor stack",
+      "scenario_id": "S29-044"
+    },
+    {
+      "expected": "`BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT`",
+      "expected_result_code": "BLOCKED_ACTION_OUTSIDE_CURRENT_ASSIGNMENT",
+      "expected_writes": [],
+      "input": {
+        "action_allowed": false
+      },
+      "operation": "guard",
+      "scenario": "action outside current leaf",
+      "scenario_id": "S29-045"
+    },
+    {
+      "expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_writes": [],
+      "input": {
+        "detail_matches": false
+      },
+      "operation": "guard",
+      "scenario": "sibling detail in context",
+      "scenario_id": "S29-046"
+    },
+    {
+      "expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_writes": [],
+      "input": {
+        "detail_matches": false
+      },
+      "operation": "guard",
+      "scenario": "future detail in context",
+      "scenario_id": "S29-047"
+    },
+    {
+      "expected": "`BLOCKED_ASSIGNMENT_DETAIL_MISMATCH`",
+      "expected_result_code": "BLOCKED_ASSIGNMENT_DETAIL_MISMATCH",
+      "expected_writes": [],
+      "input": {
+        "detail_matches": false
+      },
+      "operation": "guard",
+      "scenario": "other team leaf detail",
+      "scenario_id": "S29-048"
+    },
+    {
+      "expected": "temporary within 32.768 bytes",
+      "expected_result_code": "ALLOW_EXACT_ACTION",
+      "expected_writes": [],
+      "input": {},
+      "operation": "guard",
+      "scenario": "valid justified parent fragment",
+      "scenario_id": "S29-049"
+    },
+    {
+      "expected": "`BLOCKED_CONTEXT_BUDGET`",
+      "expected_result_code": "BLOCKED_CONTEXT_BUDGET",
+      "expected_writes": [],
+      "input": {
+        "context_budget": false
+      },
+      "operation": "guard",
+      "scenario": "too-broad context or silent truncation",
+      "scenario_id": "S29-050"
+    },
+    {
+      "expected": "complete readable/writable",
+      "expected_result_code": "LOCAL_OFFLINE_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "result": "LOCAL_OFFLINE_CONTINUITY"
+      },
+      "operation": "storage",
+      "scenario": "local store offline without network",
+      "scenario_id": "S29-051"
+    },
+    {
+      "expected": "old pointer valid, staging recoverable",
+      "expected_result_code": "STAGING_RECOVERABLE",
+      "expected_writes": [],
+      "input": {
+        "result": "STAGING_RECOVERABLE"
+      },
+      "operation": "storage",
+      "scenario": "crash before pointer switch",
+      "scenario_id": "S29-052"
+    },
+    {
+      "expected": "recovery determines unambiguous state",
+      "expected_result_code": "RECOVERY_DETERMINISTIC",
+      "expected_writes": [],
+      "input": {
+        "result": "RECOVERY_DETERMINISTIC"
+      },
+      "operation": "storage",
+      "scenario": "crash after data write before receipt",
+      "scenario_id": "S29-053"
+    },
+    {
+      "expected": "one winner, one conflict",
+      "expected_result_code": "CAS_ONE_WINNER_ONE_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "result": "CAS_ONE_WINNER_ONE_CONFLICT"
+      },
+      "operation": "storage",
+      "scenario": "duplicate writer/CAS conflict",
+      "scenario_id": "S29-054"
+    },
+    {
+      "expected": "sync blocked",
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "private_confirmed": false
+      },
+      "operation": "storage",
+      "scenario": "private repo not confirmed",
+      "scenario_id": "S29-055"
+    },
+    {
+      "expected": "sync blocked",
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "repository_public": true
+      },
+      "operation": "storage",
+      "scenario": "repository demonstrably public",
+      "scenario_id": "S29-056"
+    },
+    {
+      "expected": "sync blocked",
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "drift": true
+      },
+      "operation": "storage",
+      "scenario": "sync preview/apply-drift",
+      "scenario_id": "S29-057"
+    },
+    {
+      "expected": "sync blocked, local remains usable",
+      "expected_result_code": "BLOCKED_STORAGE_OR_SYNC_CONFLICT",
+      "expected_writes": [],
+      "input": {
+        "conflict": true
+      },
+      "operation": "storage",
+      "scenario": "remote drift/conflict",
+      "scenario_id": "S29-058"
+    },
+    {
+      "expected": "`EXCLUDED_SECRET`, value not logged",
+      "expected_result_code": "EXCLUDED_SECRET",
+      "expected_writes": [],
+      "input": {
+        "secret": true
+      },
+      "operation": "storage",
+      "scenario": "secret of credential",
+      "scenario_id": "S29-059"
+    },
+    {
+      "expected": "local-only or excluded",
+      "expected_result_code": "LOCAL_ONLY_MEDIA",
+      "expected_writes": [],
+      "input": {
+        "binary": true
+      },
+      "operation": "storage",
+      "scenario": "not-allowed type",
+      "scenario_id": "S29-060"
+    },
+    {
+      "expected": "only with green policy syncable",
+      "expected_result_code": "SYNC_POLICY_GREEN",
+      "expected_writes": [],
+      "input": {
+        "file_bytes": 10485760
+      },
+      "operation": "storage",
+      "scenario": "text file exact 10 MiB",
+      "scenario_id": "S29-061"
+    },
+    {
+      "expected": "`LOCAL_ONLY_MEDIA`",
+      "expected_result_code": "LOCAL_ONLY_MEDIA",
+      "expected_writes": [],
+      "input": {
+        "file_bytes": 10485761
+      },
+      "operation": "storage",
+      "scenario": "file larger than 10 MiB",
+      "scenario_id": "S29-062"
+    },
+    {
+      "expected": "only with all filters green",
+      "expected_result_code": "SYNC_POLICY_GREEN",
+      "expected_writes": [],
+      "input": {
+        "batch_bytes": 52428800,
+        "batch_files": 100
+      },
+      "operation": "storage",
+      "scenario": "batch exact 100 files/50 MiB",
+      "scenario_id": "S29-063"
+    },
+    {
+      "expected": "new OWNER decision required",
+      "expected_result_code": "OWNER_DECISION_REQUIRED",
+      "expected_writes": [],
+      "input": {
+        "repository_bytes": 1073741825
+      },
+      "operation": "storage",
+      "scenario": "mirror budget above 1 GiB",
+      "scenario_id": "S29-064"
+    },
+    {
+      "expected": "local-only pointer with safe metadata",
+      "expected_result_code": "LOCAL_ONLY_MEDIA",
+      "expected_writes": [],
+      "input": {
+        "binary": true,
+        "file_bytes": 20971520
+      },
+      "operation": "storage",
+      "scenario": "large image",
+      "scenario_id": "S29-065"
+    },
+    {
+      "expected": "outside scope and unmutated",
+      "expected_result_code": "HARD_EXCLUDED_UNCHANGED",
+      "expected_writes": [],
+      "input": {
+        "project": "SKYRIM"
+      },
+      "operation": "storage",
+      "scenario": "Skyrim saves/mod downloads/diagnostics",
+      "scenario_id": "S29-066"
+    },
+    {
+      "expected": "hard excluded and unmutated",
+      "expected_result_code": "HARD_EXCLUDED_UNCHANGED",
+      "expected_writes": [],
+      "input": {
+        "project": "HOME_ASSISTANT"
+      },
+      "operation": "storage",
+      "scenario": "Home Assistant secrets/database/backups",
+      "scenario_id": "S29-067"
+    },
+    {
+      "expected": "local continuity, no data loss",
+      "expected_result_code": "LOCAL_CONTINUITY",
+      "expected_writes": [],
+      "input": {
+        "central_unavailable": true
+      },
+      "operation": "storage",
+      "scenario": "future central backend unavailable",
+      "scenario_id": "S29-068"
+    },
+    {
+      "expected": "all old contracts regression green",
+      "expected_result_code": "V1_COMPATIBLE",
+      "expected_writes": [],
+      "input": {
+        "major": 1
+      },
+      "operation": "compatibility",
+      "scenario": "complete v1.0.0 compatibility set",
+      "scenario_id": "S29-069"
+    },
+    {
+      "expected": "reject before write",
+      "expected_result_code": "REJECT_BEFORE_WRITE",
+      "expected_writes": [],
+      "input": {
+        "major": 99
+      },
+      "operation": "compatibility",
+      "scenario": "unknown future major",
+      "scenario_id": "S29-070"
+    },
+    {
+      "expected": "not loaded and byte-unchanged",
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_writes": [],
+      "input": {
+        "present": true
+      },
+      "operation": "openspec",
+      "scenario": "OpenSpec-store present",
+      "scenario_id": "S29-071"
+    },
+    {
+      "expected": "schema/guard reject, zero placeholder",
+      "expected_result_code": "OPENSPEC_EXCLUDED",
+      "expected_writes": [],
+      "input": {
+        "adapter": true
+      },
+      "operation": "openspec",
+      "scenario": "OpenSpec if proposed adapter/input",
+      "scenario_id": "S29-072"
+    }
   ],
   "scenario_count": 72,
-  "scenario_table_sha256": "dd9f091f30c996324f1472fc40b369228b0cd7cfb5824059284124b38309f4d6"
+  "scenario_table_sha256": "c4d08ca625f483b2a3ae5302cdd91504b2b7895fff54900ac99fa21cbaa8c201"
 }

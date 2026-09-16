@@ -54,15 +54,15 @@ def propose(workspace: Path, task_id: str = TASK_ID):
     return propose_task(
         workspace,
         task_id,
-        title="Controleer het plan",
-        goal="Controleer één begrensd plan.",
-        definition_of_done="Resultaat en bewijs zijn ingeleverd.",
-        executor_role="ROLE-CONTROLEUR",
+        title="Inspect the plan",
+        goal="Inspect one bounded plan.",
+        definition_of_done="Result and evidence are submitted.",
+        executor_role="ROLE-CONTROLLER",
         input_paths=["CONTROL/ROADMAP.md"],
-        allowed_actions=["Lees uitsluitend de gepinde input"],
-        forbidden_actions=["Geen externe verzending"],
-        expected_output="Eén lokaal resultaatbestand",
-        acceptance_criteria=["Iedere claim verwijst naar bewijs"],
+        allowed_actions=["Read only the pinned input"],
+        forbidden_actions=["No external transmission"],
+        expected_output="One local resultaatbestand",
+        acceptance_criteria=["Every claim refers to evidence"],
         architect="ARCHITECT",
     )
 
@@ -128,16 +128,16 @@ def submit(workspace: Path, outside: Path):
     proposed, _ = begin(workspace)
     result_file = outside / "result.md"
     evidence_file = outside / "evidence.txt"
-    result_file.write_text("begrensd resultaat", encoding="utf-8")
-    evidence_file.write_text("controlebewijs", encoding="utf-8")
+    result_file.write_text("bounded result", encoding="utf-8")
+    evidence_file.write_text("control evidence", encoding="utf-8")
     result = submit_result(
         workspace,
         TASK_ID,
         result_path=result_file,
         evidence_paths=[evidence_file],
-        limitations=["Alleen het gepinde plan is gelezen"],
-        open_questions=["Geen"],
-        executor="UITVOERDER-1",
+        limitations=["Only the pinned plan is read"],
+        open_questions=["No"],
+        executor="EXECUTOR-1",
     )
     return proposed, result
 
@@ -173,7 +173,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual([path.name for path in events], ["0001-proposal.json"])
             task_text = result.task_path.read_text(encoding="utf-8")
             self.assertIn("Generated task card", task_text)
-            self.assertIn("Geen externe verzending", task_text)
+            self.assertIn("No external transmission", task_text)
             self.assertIn(result.object_digest, task_text)
             self.assertEqual((workspace / "CONTROL" / "ROADMAP.md").read_bytes(), roadmap_before)
             self.assertIsNotNone(result.receipt_path)
@@ -217,7 +217,7 @@ class WorkflowTests(unittest.TestCase):
                 TASK_ID,
                 result_digest=result.object_digest,
                 outcome="PASS",
-                findings=["Resultaat en bewijs zijn exact gekoppeld"],
+                findings=["Result en evidence are exact bound"],
                 architect="ARCHITECT",
             )
             acceptance = accept_result(
@@ -235,7 +235,7 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(closed.task_status, "CLOSED")
             self.assertEqual(task_status(workspace, TASK_ID).task_status, "CLOSED")
             task_view = closed.task_path.read_text(encoding="utf-8")
-            self.assertIn("Alleen het gepinde plan is gelezen", task_view)
+            self.assertIn("Only the pinned plan is read", task_view)
             self.assertIn("Open questions", task_view)
             event_names = [
                 path.name for path in sorted((workspace / "TASKS" / TASK_ID / "events").iterdir())
@@ -272,7 +272,7 @@ class WorkflowTests(unittest.TestCase):
                 owner="OWNER",
             )
             (workspace / "CONTROL" / "ROADMAP.md").write_text(
-                "gewijzigde roadmap\n", encoding="utf-8"
+                "changed roadmap\n", encoding="utf-8"
             )
 
             with self.assertRaises(WorkflowError) as context:
@@ -288,7 +288,7 @@ class WorkflowTests(unittest.TestCase):
             propose(workspace)
             event_path = workspace / "TASKS" / TASK_ID / "events" / "0001-proposal.json"
             value = json.loads(event_path.read_text(encoding="utf-8"))
-            value["payload"]["goal"] = "verborgen wijziging"
+            value["payload"]["goal"] = "hidden change"
             event_path.write_text(json.dumps(value), encoding="utf-8")
 
             with self.assertRaises(WorkflowError) as context:
@@ -296,8 +296,8 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(context.exception.code, "task_object_digest_mismatch")
 
             event_path.unlink()
-            (workspace / "TASKS" / TASK_ID / "onbekend.txt").write_text(
-                "onbekend", encoding="utf-8"
+            (workspace / "TASKS" / TASK_ID / "unknown.txt").write_text(
+                "unknown", encoding="utf-8"
             )
             with self.assertRaises(WorkflowError) as layout_context:
                 task_status(workspace, TASK_ID)
@@ -309,7 +309,7 @@ class WorkflowTests(unittest.TestCase):
             init_workspace(workspace)
             proposed = propose(workspace)
             task_view = workspace / "TASKS" / TASK_ID / "TASK.md"
-            task_view.write_text("handmatige waarheid\n", encoding="utf-8")
+            task_view.write_text("manual truth\n", encoding="utf-8")
 
             with self.assertRaises(WorkflowError) as context:
                 approve_task(
@@ -328,7 +328,7 @@ class WorkflowTests(unittest.TestCase):
             init_workspace(workspace)
             _, result = submit(workspace, outside)
             copied = workspace / "TASKS" / TASK_ID / "artifacts" / "result-r0001.bin"
-            self.assertEqual(copied.read_bytes(), b"begrensd resultaat")
+            self.assertEqual(copied.read_bytes(), b"bounded result")
             copied.write_bytes(b"drift")
 
             with self.assertRaises(WorkflowError) as context:
@@ -337,7 +337,7 @@ class WorkflowTests(unittest.TestCase):
                     TASK_ID,
                     result_digest=result.object_digest,
                     outcome="PASS",
-                    findings=["controle"],
+                    findings=["review"],
                     architect="ARCHITECT",
                 )
             self.assertEqual(context.exception.code, "task_artifact_stale")
@@ -374,7 +374,7 @@ class WorkflowTests(unittest.TestCase):
                 TASK_ID,
                 result_digest=result.object_digest,
                 outcome="RETURN",
-                findings=["Bewijs ontbreekt"],
+                findings=["Evidence missing"],
                 architect="ARCHITECT",
             )
             self.assertEqual(returned.task_status, "RETURNED")
@@ -400,25 +400,25 @@ class WorkflowTests(unittest.TestCase):
                 workspace,
                 TASK_ID,
                 error_code="input_error",
-                error_signature="zelfde-fout",
-                new_basis="controle A",
-                executor="UITVOERDER",
+                error_signature="same-error",
+                new_basis="review A",
+                executor="EXECUTOR",
             )
             second = record_attempt(
                 workspace,
                 TASK_ID,
                 error_code="input_error",
-                error_signature="zelfde-fout",
-                new_basis="controle B",
-                executor="UITVOERDER",
+                error_signature="same-error",
+                new_basis="review B",
+                executor="EXECUTOR",
             )
             third = record_attempt(
                 workspace,
                 TASK_ID,
                 error_code="input_error",
-                error_signature="zelfde-fout",
-                new_basis="controle C",
-                executor="UITVOERDER",
+                error_signature="same-error",
+                new_basis="review C",
+                executor="EXECUTOR",
             )
 
             self.assertEqual(first.task_status, "IN_EXECUTION")
@@ -433,9 +433,9 @@ class WorkflowTests(unittest.TestCase):
                     workspace,
                     TASK_ID,
                     error_code="input_error",
-                    error_signature="zelfde-fout",
-                    new_basis="controle D",
-                    executor="UITVOERDER",
+                    error_signature="same-error",
+                    new_basis="review D",
+                    executor="EXECUTOR",
                 )
 
     def test_equal_failure_signature_requires_a_changed_basis(self) -> None:
@@ -447,9 +447,9 @@ class WorkflowTests(unittest.TestCase):
                 workspace,
                 TASK_ID,
                 error_code="input_error",
-                error_signature="zelfde-fout",
-                new_basis="zelfde aanpak",
-                executor="UITVOERDER",
+                error_signature="same-error",
+                new_basis="same approach",
+                executor="EXECUTOR",
             )
 
             with self.assertRaises(WorkflowError) as context:
@@ -457,9 +457,9 @@ class WorkflowTests(unittest.TestCase):
                     workspace,
                     TASK_ID,
                     error_code="input_error",
-                    error_signature="zelfde-fout",
-                    new_basis="zelfde aanpak",
-                    executor="UITVOERDER",
+                    error_signature="same-error",
+                    new_basis="same approach",
+                    executor="EXECUTOR",
                 )
             self.assertEqual(context.exception.code, "task_attempt_unchanged")
 
@@ -473,16 +473,16 @@ class WorkflowTests(unittest.TestCase):
                     workspace,
                     TASK_ID,
                     error_code="input_error",
-                    error_signature="zelfde-fout",
-                    new_basis=f"gewijzigde aanpak {number}",
-                    executor="UITVOERDER",
+                    error_signature="same-error",
+                    new_basis=f"changed approach {number}",
+                    executor="EXECUTOR",
                 )
             self.assertEqual(blocked.task_status, "BLOCKED")
 
             cancelled = cancel_task(
                 workspace,
                 TASK_ID,
-                reason="OWNER beëindigt de geblokkeerde taak",
+                reason="OWNER ends the blocked task",
                 owner="OWNER",
             )
             self.assertEqual(cancelled.task_status, "CANCELLED")
@@ -499,14 +499,14 @@ class WorkflowTests(unittest.TestCase):
                 workspace,
                 TASK_ID,
                 title="<script>alert(1)</script> `code`",
-                goal="Veilig weergeven",
-                definition_of_done="Geen actieve HTML",
-                executor_role="ROLE-CONTROLEUR",
+                goal="Display safely",
+                definition_of_done="No active HTML",
+                executor_role="ROLE-CONTROLLER",
                 input_paths=["CONTROL/ROADMAP.md"],
-                allowed_actions=["Lees <alleen> lokaal"],
-                forbidden_actions=["Geen `uitvoering`"],
-                expected_output="Tekst",
-                acceptance_criteria=["Veilig"],
+                allowed_actions=["Read <only> local"],
+                forbidden_actions=["No `execution`"],
+                expected_output="Text",
+                acceptance_criteria=["Safe"],
                 architect="ARCHITECT",
             )
             view = result.task_path.read_text(encoding="utf-8")
@@ -523,7 +523,7 @@ class WorkflowTests(unittest.TestCase):
                 propose(workspace, "TASK-20260816-0002")
             self.assertEqual(context.exception.code, "task_active_exists")
 
-            cancelled = cancel_task(workspace, TASK_ID, reason="OWNER stopt de taak", owner="OWNER")
+            cancelled = cancel_task(workspace, TASK_ID, reason="OWNER stops the task", owner="OWNER")
             self.assertEqual(cancelled.task_status, "CANCELLED")
             next_task = propose(workspace, "TASK-20260816-0002")
             self.assertEqual(next_task.task_status, "AWAITING_OWNER_APPROVAL")
@@ -537,7 +537,7 @@ class WorkflowTests(unittest.TestCase):
                 workspace,
                 TASK_ID,
                 replacement_task_id="TASK-20260816-0002",
-                reason="Nieuw voorstel vereist",
+                reason="New proposal required",
                 owner="OWNER",
             )
             self.assertEqual(result.task_status, "SUPERSEDED")
@@ -555,15 +555,15 @@ class WorkflowTests(unittest.TestCase):
                 propose_task(
                     workspace,
                     TASK_ID,
-                    title="Fout",
-                    goal="Fout",
-                    definition_of_done="Fout",
-                    executor_role="ROL",
+                    title="Error",
+                    goal="Error",
+                    definition_of_done="Error",
+                    executor_role="Role",
                     input_paths=["../secret.txt"],
-                    allowed_actions=["lezen"],
-                    forbidden_actions=["delen"],
-                    expected_output="resultaat",
-                    acceptance_criteria=["bewijs"],
+                    allowed_actions=["reading"],
+                    forbidden_actions=["sharing"],
+                    expected_output="result",
+                    acceptance_criteria=["evidence"],
                     architect="ARCHITECT",
                 )
             self.assertEqual(parent_context.exception.code, "task_input_path_invalid")
@@ -573,20 +573,20 @@ class WorkflowTests(unittest.TestCase):
             try:
                 link.symlink_to(target)
             except OSError:
-                self.skipTest("Symlinks zijn niet beschikbaar in deze testomgeving")
+                self.skipTest("Symlinks are not available in this test environment")
             with self.assertRaises(WorkflowError) as link_context:
                 propose_task(
                     workspace,
                     TASK_ID,
-                    title="Fout",
-                    goal="Fout",
-                    definition_of_done="Fout",
-                    executor_role="ROL",
+                    title="Error",
+                    goal="Error",
+                    definition_of_done="Error",
+                    executor_role="Role",
                     input_paths=["CONTROL/LINK.md"],
-                    allowed_actions=["lezen"],
-                    forbidden_actions=["delen"],
-                    expected_output="resultaat",
-                    acceptance_criteria=["bewijs"],
+                    allowed_actions=["reading"],
+                    forbidden_actions=["sharing"],
+                    expected_output="result",
+                    acceptance_criteria=["evidence"],
                     architect="ARCHITECT",
                 )
             self.assertEqual(link_context.exception.code, "task_input_unsafe")
@@ -601,23 +601,23 @@ class WorkflowTests(unittest.TestCase):
                 "propose",
                 TASK_ID,
                 "--title",
-                "CLI-taak",
+                "CLI-task",
                 "--goal",
-                "CLI controleren",
+                "CLI verify",
                 "--done",
-                "CLI-resultaat",
+                "CLI-result",
                 "--executor-role",
                 "ROLE-CLI",
                 "--input",
                 "CONTROL/ROADMAP.md",
                 "--allow",
-                "lokaal lezen",
+                "local reading",
                 "--forbid",
-                "extern delen",
+                "share externally",
                 "--expected-output",
-                "lokaal bestand",
+                "local file",
                 "--acceptance",
-                "digest klopt",
+                "digest matches",
                 "--architect",
                 "ARCHITECT",
                 "--root",
@@ -661,23 +661,23 @@ class WorkflowTests(unittest.TestCase):
                 "propose",
                 TASK_ID,
                 "--title",
-                "Volledige CLI-taak",
+                "Complete CLI-task",
                 "--goal",
-                "Controleer de CLI-flow",
+                "Inspect the CLI-flow",
                 "--done",
-                "Taak is exact gesloten",
+                "Task is exact closed",
                 "--executor-role",
                 "ROLE-CLI",
                 "--input",
                 "CONTROL/ROADMAP.md",
                 "--allow",
-                "lokaal lezen",
+                "local reading",
                 "--forbid",
-                "geen externe actie",
+                "no external action",
                 "--expected-output",
-                "één resultaat",
+                "one result",
                 "--acceptance",
-                "digests zijn gelijk",
+                "digests are equal",
                 "--architect",
                 "ARCHITECT",
                 "--root",
@@ -713,8 +713,8 @@ class WorkflowTests(unittest.TestCase):
             )
             result_file = outside / "cli-result.txt"
             evidence_file = outside / "cli-evidence.txt"
-            result_file.write_text("resultaat", encoding="utf-8")
-            evidence_file.write_text("bewijs", encoding="utf-8")
+            result_file.write_text("result", encoding="utf-8")
+            evidence_file.write_text("evidence", encoding="utf-8")
             submitted = run_cli(
                 "workspace",
                 "task",
@@ -725,11 +725,11 @@ class WorkflowTests(unittest.TestCase):
                 "--evidence",
                 str(evidence_file),
                 "--limitation",
-                "begrensde test",
+                "bounded test",
                 "--open-question",
-                "geen",
+                "no",
                 "--executor",
-                "UITVOERDER",
+                "EXECUTOR",
                 "--root",
                 str(workspace),
                 cwd=REPOSITORY_ROOT,
@@ -745,7 +745,7 @@ class WorkflowTests(unittest.TestCase):
                 "--outcome",
                 "PASS",
                 "--finding",
-                "resultaat en bewijs zijn gekoppeld",
+                "result en evidence are bound",
                 "--architect",
                 "ARCHITECT",
                 "--root",

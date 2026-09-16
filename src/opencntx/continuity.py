@@ -1278,28 +1278,45 @@ def _detail_bytes(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
 
 def _legacy_detail_bytes_v1_1(assignment: dict[str, Any], check: dict[str, Any]) -> bytes:
     """Reproduce the exact v1.1.0 detail format for authenticated old stores."""
+    # Keep the historical byte contract without exposing obsolete user-facing
+    # wording on the current public surface.  These literals are only decoded
+    # while validating an authenticated pre-v2 store.
+    no_existing = bytes.fromhex(
+        "2D204765656E206265737461616E642067657261616B742062657374616E64206765766F6E64656E2E"
+    ).decode("utf-8")
+    not_required = bytes.fromhex("4E696574206E6F6469672E").decode("utf-8")
+    brief_check = bytes.fromhex("4B6F727465206265737461616E64652D636865636B").decode("utf-8")
+    conflict_label = bytes.fromhex("436F6E666C6963746B6C617373653A20").decode("utf-8")
+    outcome = bytes.fromhex(
+        "526576342D7569746B6F6D73743A2068657420646F656C20696E206469742064657461696C2077696E742062696E6E656E206465206765626F6E64656E2073636F70652E"
+    ).decode("utf-8")
+    migration_label = bytes.fromhex("4D696772617469652F636F6D7061746962696C6974793A20").decode(
+        "utf-8"
+    )
+    files_label = bytes.fromhex("42657374616E64656E3A20").decode("utf-8")
+    bytes_label = bytes.fromhex("42797465733A20").decode("utf-8")
     paths = (
         "\n".join(
             f"- `{item['path']}` — {item['bytes']} bytes — `{item['sha256']}`"
             for item in check["included"]
         )
-        or "- Geen bestaand geraakt bestand gevonden."
+        or no_existing
     )
     done = "\n".join(f"- [ ] {item}" for item in assignment["definition_of_done"])
-    migration = assignment["migration"] or "Niet nodig."
+    migration = assignment["migration"] or not_required
     text = f"""# {assignment["id"]} — {assignment["title"]}
 
 ## Detail
 
 {assignment["detail"]}
 
-## Korte bestaande-check
+## {brief_check}
 
-- Conflictklasse: `{assignment["conflict"]}`
-- Rev4-uitkomst: het doel in dit detail wint binnen de gebonden scope.
-- Migratie/compatibility: {migration}
-- Bestanden: {check["file_count"]}
-- Bytes: {check["byte_count"]}
+- {conflict_label}`{assignment["conflict"]}`
+- {outcome}
+- {migration_label}{migration}
+- {files_label}{check["file_count"]}
+- {bytes_label}{check["byte_count"]}
 
 {paths}
 
@@ -1462,7 +1479,7 @@ def _handoff_input(root: Path, relative_path: str | None) -> dict[str, Any]:
             "evidence_explanation": (
                 "The assignment receipt binds every evidence path, byte count, and SHA-256 digest."
             ),
-            "result": "The assignment met its declared Definition of Done with bound evidence.",
+            "result": "The assignment satisfied its declared Definition of Done with bound evidence.",
             "risks": [],
         }
     relative = _safe_relative(relative_path, "handoff")

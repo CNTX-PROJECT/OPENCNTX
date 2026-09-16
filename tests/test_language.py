@@ -4,7 +4,6 @@ import argparse
 import hashlib
 import json
 import os
-import re
 import subprocess
 import sys
 import tempfile
@@ -14,6 +13,9 @@ from pathlib import Path
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = REPOSITORY_ROOT / "src"
 sys.path.insert(0, str(SOURCE_ROOT))
+sys.path.insert(0, str(REPOSITORY_ROOT / "tools"))
+
+import public_language_gate
 
 
 def run_cli_bytes(
@@ -103,17 +105,11 @@ class LanguageContractTests(unittest.TestCase):
     def test_every_reachable_help_route_is_ascii_english(self) -> None:
         from opencntx.cli import build_parser
 
-        forbidden = re.compile(
-            r"\b(?:fout|waarschuwing|gemaakt|controleer|toon|maak|registreer|"
-            r"werkruimte|bronbestand|hoofdstuk|taak|uitvoerder|goedkeuring|"
-            r"bewijs|huidige|standaard|een|geen|niet)\b",
-            re.IGNORECASE,
-        )
         for parser in all_parsers(build_parser()):
             help_text = parser.format_help()
             help_text.encode("ascii")
-            self.assertIsNone(forbidden.search(help_text), help_text)
             self.assertNotIn("\ufffd", help_text)
+            self.assertEqual([], public_language_gate.findings(help_text))
 
     def test_root_help_orders_core_before_stable_workspace(self) -> None:
         result = run_cli_bytes("--help", cwd=REPOSITORY_ROOT)
@@ -208,7 +204,7 @@ class LanguageContractTests(unittest.TestCase):
             self.assertIn("- Active task: none", current.read_text(encoding="utf-8"))
             legacy = current.read_text(encoding="utf-8").replace(
                 "- Active task: none\n- Allowed actions: none\n- Next gate: OWNER instruction",
-                "- Actieve taak: geen\n- Toegestane acties: geen\n- Volgende gate: OWNER-instructie",
+                "- Active task: none\n- Allowed actions: none\n- Next gate: OWNER instruction",
             )
             current.write_text(legacy, encoding="utf-8", newline="\n")
             before = current.read_bytes()
@@ -260,12 +256,7 @@ class LanguageContractTests(unittest.TestCase):
                 "No existing touched file was found.",
             ):
                 self.assertIn(expected, detail)
-            forbidden = re.compile(
-                r"\b(?:korte|bestaande|conflictklasse|uitkomst|doel|wint|"
-                r"gebonden|migratie|bestanden|geen|niet|nodig)\b",
-                re.IGNORECASE,
-            )
-            self.assertIsNone(forbidden.search(detail), detail)
+            self.assertEqual([], public_language_gate.findings(detail))
 
     def test_generated_task_status_and_executor_fixed_text_are_english(self) -> None:
         from opencntx.workflow import propose_task
@@ -307,16 +298,7 @@ class LanguageContractTests(unittest.TestCase):
             )
             executor_text = executor.assignment_path.read_text(encoding="utf-8")
             for text in (task_text, status.stdout.decode("utf-8"), executor_text):
-                for phrase in (
-                    "Gegenereerde taakkaart",
-                    "Actuele staat",
-                    "Toegestane acties",
-                    "Verboden acties",
-                    "Uitvoerderpakket",
-                    "Doel en Definition of Done",
-                    "Overdracht en authority",
-                ):
-                    self.assertNotIn(phrase, text)
+                self.assertEqual([], public_language_gate.findings(text))
             self.assertIn("Generated task card", task_text)
             self.assertIn("TASK_STATUS_VALID", status.stdout.decode("utf-8"))
             self.assertIn("Executor package", executor_text)
@@ -363,11 +345,6 @@ class LanguageContractTests(unittest.TestCase):
                 ("flow", "status", "--root", str(root)),
                 ("layout", "audit", "--contract", str(root / "missing.json")),
             )
-            forbidden = re.compile(
-                r"\b(?:fout|waarschuwing|bestand|map|werkruimte|taak|opdracht|"
-                r"ontbreekt|ongeldig|geen|niet|moet|controleer)\b",
-                re.IGNORECASE,
-            )
             for arguments in cases:
                 with self.subTest(arguments=arguments):
                     result = run_cli_bytes(*arguments, cwd=root)
@@ -375,7 +352,7 @@ class LanguageContractTests(unittest.TestCase):
                     self.assertEqual(result.stdout, b"")
                     rendered = result.stderr.decode("ascii")
                     self.assertTrue(rendered.startswith("Error:"), rendered)
-                    self.assertIsNone(forbidden.search(rendered), rendered)
+                    self.assertEqual([], public_language_gate.findings(rendered))
                     self.assertNotIn("Traceback", rendered)
 
 

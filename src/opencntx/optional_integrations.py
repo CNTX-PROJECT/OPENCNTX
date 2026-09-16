@@ -18,11 +18,11 @@ CONFLICT_POLICIES = frozenset({"FAIL_CLOSED", "CREATE_CONFLICT_COPY"})
 
 _START_LABELS = {
     "nl": {
-        "question": "Wil je alleen de huidige opdracht starten, of de volledige roadmap?",
-        "question_remaining": "Wil je alleen de huidige opdracht starten, of de resterende roadmap?",
-        "current": "Enkel huidige opdracht",
-        "roadmap": "Volledige roadmap",
-        "remaining": "Resterende roadmap",
+        "question": "Start only the current assignment, or the complete roadmap?",
+        "question_remaining": "Start only the current assignment, or the remaining roadmap?",
+        "current": "Current assignment only",
+        "roadmap": "Complete roadmap",
+        "remaining": "Remaining roadmap",
     },
     "en": {
         "question": "Start only the current assignment, or the complete roadmap?",

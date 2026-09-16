@@ -397,8 +397,8 @@ class RoadmapRuntimeTests(unittest.TestCase):
         self.assertEqual(snapshot["file_count"], 197)
         self.assertEqual(snapshot["total_blob_bytes"], 3_858_552)
         expected = {
-            ASSIGNMENT_29: "1d89046fcf8a6ef81724a7a2f3ef7754babe4d684fbff5050b599d0343134088",
-            ASSIGNMENT_31: "24d8ef89418a093882af7ff42dee00315d21ee90613ce87a76c5d924ab62e5a4",
+            ASSIGNMENT_29: "c5b2e711c93780fbe072560abfb5fafbbb76f9b405c81cf44186fb8416b7a182",
+            ASSIGNMENT_31: "38bedf14f46bf6212caddeb14853661ad333166301ad891fc7e31932afce7588",
             ASSIGNMENT_31_SNAPSHOT: (
                 "62ce3ca3d16fe4e5999624fbd405693ce8e7fa38cee0c12c461c1d935901e117"
             ),

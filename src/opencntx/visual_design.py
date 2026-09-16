@@ -8,7 +8,7 @@ from typing import Any
 from .continuity import _fail, _one_line, _value_digest
 
 ROLE_ID = "VISUAL_ARTIST"
-ROLE_LABELS = {"en": "Visual Artist", "nl": "VISUEEL ARTIST"}
+ROLE_LABELS = {"en": "Visual Artist", "nl": "VISUAL ARTIST"}
 VISUAL_INTENT_FORMAT = "opencntx-visual-intent"
 VISUAL_REVIEW_FORMAT = "opencntx-visual-review"
 MAX_REFINEMENT_ROUNDS = 3

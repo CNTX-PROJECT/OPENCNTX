@@ -161,14 +161,14 @@ def _resolve_root(project_root: Path, *, create: bool) -> tuple[Path, bool]:
     requested = project_root.absolute()
     if requested.is_symlink():
         raise WorkspaceError(
-            "De projectwerkruimte mag geen symlink zijn.",
+            "The project workspace must not be a symlink.",
             code="workspace_root_symlink",
         )
     created = False
     if not requested.exists():
         if not create:
             raise WorkspaceError(
-                "De projectwerkruimte bestaat niet; voer eerst 'opencntx workspace init' uit.",
+                "The project workspace does not exist; run 'opencntx workspace init' first.",
                 code="workspace_missing",
             )
         try:
@@ -176,19 +176,19 @@ def _resolve_root(project_root: Path, *, create: bool) -> tuple[Path, bool]:
             created = True
         except OSError as exc:
             raise WorkspaceError(
-                f"De projectwerkruimte kon niet worden gemaakt: {exc}",
+                f"The project workspace could not be created: {exc}",
                 code="workspace_create_failed",
             ) from exc
     if not requested.is_dir():
         raise WorkspaceError(
-            "De projectwerkruimte is geen map.",
+            "The project workspace is not a directory.",
             code="workspace_not_directory",
         )
     try:
         return requested.resolve(strict=True), created
     except OSError as exc:
         raise WorkspaceError(
-            f"De projectwerkruimte is niet toegankelijk: {exc}",
+            f"The project workspace is inaccessible: {exc}",
             code="workspace_unavailable",
         ) from exc
 
@@ -203,29 +203,29 @@ def _validate_managed_path(root: Path, relative: Path, *, directory: bool) -> Pa
     path = root / relative
     if path.is_symlink():
         raise WorkspaceError(
-            f"Beheerd werkruimtepad mag geen symlink zijn: {relative.as_posix()}",
+            f"Managed workspace path must not be a symlink: {relative.as_posix()}",
             code="managed_path_symlink",
         )
     if directory and not path.is_dir():
         raise WorkspaceError(
-            f"Vereiste werkruimtemap ontbreekt: {relative.as_posix()}",
+            f"Required workspace directory is missing: {relative.as_posix()}",
             code="workspace_incomplete",
         )
     if not directory and not path.is_file():
         raise WorkspaceError(
-            f"Vereist werkruimtebestand ontbreekt: {relative.as_posix()}",
+            f"Required workspace file is missing: {relative.as_posix()}",
             code="workspace_incomplete",
         )
     try:
         resolved = path.resolve(strict=True)
     except OSError as exc:
         raise WorkspaceError(
-            f"Beheerd werkruimtepad is niet toegankelijk: {relative.as_posix()}: {exc}",
+            f"Managed workspace path is inaccessible: {relative.as_posix()}: {exc}",
             code="managed_path_unavailable",
         ) from exc
     if not resolved.is_relative_to(root):
         raise WorkspaceError(
-            f"Beheerd werkruimtepad verlaat de projectroot: {relative.as_posix()}",
+            f"Managed workspace path escapes the project root: {relative.as_posix()}",
             code="managed_path_escape",
         )
     return resolved
@@ -241,7 +241,7 @@ def validate_workspace(project_root: Path) -> Path:
     opencntx = root / ".opencntx"
     if opencntx.is_symlink() or not opencntx.is_dir():
         raise WorkspaceError(
-            ".opencntx moet een gewone map binnen de projectwerkruimte zijn.",
+            ".opencntx must be a regular directory inside the project workspace.",
             code="managed_path_invalid",
         )
     return root
@@ -281,14 +281,14 @@ def init_workspace(project_root: Path) -> WorkspaceInitResult:
         return WorkspaceInitResult(root=root, created=False)
     if partly_present:
         raise WorkspaceError(
-            "De werkruimte bevat al een deel van de beheerde structuur; er is niets overschreven.",
+            "The workspace already contains part of the managed structure; nothing was overwritten.",
             code="workspace_conflict",
         )
 
     opencntx = root / ".opencntx"
     if opencntx.is_symlink() or (opencntx.exists() and not opencntx.is_dir()):
         raise WorkspaceError(
-            ".opencntx bestaat maar is geen veilige gewone map.",
+            ".opencntx exists but is not a safe regular directory.",
             code="workspace_conflict",
         )
 
@@ -348,27 +348,27 @@ def _parse_frontmatter(path: Path) -> dict[str, str]:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
         raise WorkspaceError(
-            f"CONTROL/CURRENT.md is niet leesbaar als UTF-8: {exc}",
+            f"CONTROL/CURRENT.md is not readable as UTF-8: {exc}",
             code="current_unreadable",
         ) from exc
     lines = text.splitlines()
     if not lines or lines[0] != "---":
         raise WorkspaceError(
-            "CONTROL/CURRENT.md mist geldige frontmatter.",
+            "CONTROL/CURRENT.md lacks valid front matter.",
             code="current_invalid",
         )
     try:
         closing = lines.index("---", 1)
     except ValueError as exc:
         raise WorkspaceError(
-            "CONTROL/CURRENT.md mist het einde van de frontmatter.",
+            "CONTROL/CURRENT.md lacks the end of the front matter.",
             code="current_invalid",
         ) from exc
     values: dict[str, str] = {}
     for line in lines[1:closing]:
         if not line.strip() or ":" not in line:
             raise WorkspaceError(
-                "CONTROL/CURRENT.md bevat ongeldige frontmatter.",
+                "CONTROL/CURRENT.md contains invalid front matter.",
                 code="current_invalid",
             )
         key, value = line.split(":", 1)
@@ -376,7 +376,7 @@ def _parse_frontmatter(path: Path) -> dict[str, str]:
         value = value.strip()
         if not key or not value or key in values:
             raise WorkspaceError(
-                "CONTROL/CURRENT.md bevat dubbele of lege instellingen.",
+                "CONTROL/CURRENT.md contains duplicate or empty settings.",
                 code="current_invalid",
             )
         values[key] = value
@@ -398,14 +398,14 @@ def load_workspace_config(project_root: Path) -> WorkspaceConfig:
     if unknown or missing:
         key = min(unknown or missing)
         raise WorkspaceError(
-            f"CONTROL/CURRENT.md bevat een onbekende of ontbrekende instelling: {key}",
+            f"CONTROL/CURRENT.md contains an unknown or missing setting: {key}",
             code="current_invalid",
         )
     if values["format"] != WORKSPACE_FORMAT or values["format_version"] != str(
         WORKSPACE_FORMAT_VERSION
     ):
         raise WorkspaceError(
-            "CONTROL/CURRENT.md gebruikt een onbekend werkruimteformaat.",
+            "CONTROL/CURRENT.md uses an unknown workspace format.",
             code="current_invalid",
         )
 
@@ -414,12 +414,12 @@ def load_workspace_config(project_root: Path) -> WorkspaceConfig:
             value = int(values[key])
         except ValueError as exc:
             raise WorkspaceError(
-                f"CONTROL/CURRENT.md vereist een positief geheel getal voor {key}.",
+                f"CONTROL/CURRENT.md requires a positive integer for {key}.",
                 code="current_invalid",
             ) from exc
         if value <= 0:
             raise WorkspaceError(
-                f"CONTROL/CURRENT.md vereist een positief geheel getal voor {key}.",
+                f"CONTROL/CURRENT.md requires a positive integer for {key}.",
                 code="current_invalid",
             )
         return value
@@ -428,7 +428,7 @@ def load_workspace_config(project_root: Path) -> WorkspaceConfig:
     max_storage_bytes = positive_integer("max_storage_bytes")
     if max_source_bytes > max_storage_bytes:
         raise WorkspaceError(
-            "max_source_bytes mag niet groter zijn dan max_storage_bytes.",
+            "max_source_bytes must not exceed max_storage_bytes.",
             code="current_invalid",
         )
     return WorkspaceConfig(
@@ -442,12 +442,12 @@ def _load_json_object(path: Path, *, label: str) -> dict[str, Any]:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise WorkspaceError(
-            f"{label} is ongeldig of onleesbaar: {path.name}: {exc}",
+            f"{label} is invalid or unreadable: {path.name}: {exc}",
             code="stored_record_invalid",
         ) from exc
     if not isinstance(value, dict):
         raise WorkspaceError(
-            f"{label} moet een JSON-object zijn: {path.name}",
+            f"{label} must be a JSON object: {path.name}",
             code="stored_record_invalid",
         )
     return value
@@ -458,14 +458,14 @@ def _iter_child_directories(parent: Path, *, label: str) -> list[Path]:
         children = sorted(parent.iterdir(), key=lambda path: path.name)
     except OSError as exc:
         raise WorkspaceError(
-            f"{label} kan niet worden gelezen: {exc}",
+            f"{label} cannot be read: {exc}",
             code="stored_record_unavailable",
         ) from exc
     directories: list[Path] = []
     for child in children:
         if child.is_symlink() or not child.is_dir():
             raise WorkspaceError(
-                f"Onverwacht of onveilig pad in {label}: {child.name}",
+                f"Unexpected or unsafe path in {label}: {child.name}",
                 code="stored_record_invalid",
             )
         directories.append(child)
@@ -478,13 +478,13 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
     for year in _iter_child_directories(sources_root, label="SOURCES"):
         if re.fullmatch(r"\d{4}", year.name) is None:
             raise WorkspaceError(
-                f"Ongeldige jaarmap in SOURCES: {year.name}",
+                f"Invalid year directory in SOURCES: {year.name}",
                 code="stored_record_invalid",
             )
         for month in _iter_child_directories(year, label=f"SOURCES/{year.name}"):
             if re.fullmatch(r"\d{2}", month.name) is None:
                 raise WorkspaceError(
-                    f"Ongeldige maandmap in SOURCES: {month.name}",
+                    f"Invalid month directory in SOURCES: {month.name}",
                     code="stored_record_invalid",
                 )
             for source_directory in _iter_child_directories(
@@ -493,16 +493,16 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
                 source_id = source_directory.name
                 if SOURCE_ID_PATTERN.fullmatch(source_id) is None:
                     raise WorkspaceError(
-                        f"Ongeldige bronmap in SOURCES: {source_id}",
+                        f"Invalid source directory in SOURCES: {source_id}",
                         code="stored_record_invalid",
                     )
                 record_path = source_directory / "record.json"
                 if record_path.is_symlink() or not record_path.is_file():
                     raise WorkspaceError(
-                        f"Bronregistratie ontbreekt of is onveilig: {source_id}",
+                        f"Source record is missing or unsafe: {source_id}",
                         code="stored_record_invalid",
                     )
-                record = _load_json_object(record_path, label="Bronregistratie")
+                record = _load_json_object(record_path, label="Source record")
                 byte_count = record.get("bytes")
                 digest = record.get("sha256")
                 privacy = record.get("privacy")
@@ -521,19 +521,19 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
                     or not isinstance(stored_path_value, str)
                 ):
                     raise WorkspaceError(
-                        f"Bronregistratie bevat ongeldige velden: {source_id}",
+                        f"Source record contains invalid fields: {source_id}",
                         code="stored_record_invalid",
                     )
                 relative = PurePosixPath(stored_path_value)
                 if relative.is_absolute() or ".." in relative.parts:
                     raise WorkspaceError(
-                        f"Bronregistratie bevat een onveilig opslagpad: {source_id}",
+                        f"Source record contains an unsafe storage path: {source_id}",
                         code="stored_record_invalid",
                     )
                 original = root.joinpath(*relative.parts)
                 if original.is_symlink() or not original.is_file():
                     raise WorkspaceError(
-                        f"Opgeslagen origineel ontbreekt of is onveilig: {source_id}",
+                        f"Stored original is missing or unsafe: {source_id}",
                         code="stored_record_invalid",
                     )
                 try:
@@ -542,7 +542,7 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
                     actual_size = resolved_original.stat().st_size
                 except OSError as exc:
                     raise WorkspaceError(
-                        f"Opgeslagen origineel is niet toegankelijk: {source_id}: {exc}",
+                        f"Stored original is inaccessible: {source_id}: {exc}",
                         code="stored_record_unavailable",
                     ) from exc
                 if (
@@ -554,12 +554,12 @@ def _stored_sources(root: Path) -> dict[str, StoredSource]:
                     or actual_size != byte_count
                 ):
                     raise WorkspaceError(
-                        f"Opgeslagen origineel en registratie verschillen: {source_id}",
+                        f"Stored original and record differ: {source_id}",
                         code="stored_record_invalid",
                     )
                 if source_id in stored:
                     raise WorkspaceError(
-                        f"Dubbele source-ID gevonden: {source_id}",
+                        f"Duplicate source ID found: {source_id}",
                         code="stored_record_invalid",
                     )
                 stored[source_id] = StoredSource(
@@ -577,7 +577,7 @@ def _validate_privacy(privacy: str) -> str:
     normalized = privacy.strip().upper()
     if normalized not in PRIVACY_LABELS:
         raise WorkspaceError(
-            f"Onbekend privacylabel: {privacy}",
+            f"Unknown privacy label: {privacy}",
             code="privacy_invalid",
         )
     return normalized
@@ -646,7 +646,7 @@ def _hash_file(path: Path) -> tuple[int, str]:
                 byte_count += len(chunk)
     except OSError as exc:
         raise WorkspaceError(
-            f"De tijdelijke bronkopie kon niet worden gecontroleerd: {exc}",
+            f"The temporary source copy could not be verified: {exc}",
             code="temporary_verify_failed",
         ) from exc
     return byte_count, digest.hexdigest()
@@ -659,7 +659,7 @@ def _derived_storage_bytes(root: Path) -> int:
         return 0
     if derived_root.is_symlink() or not derived_root.is_dir():
         raise WorkspaceError(
-            ".opencntx/derived moet een veilige gewone map zijn.",
+            ".opencntx/derived must be a safe regular directory.",
             code="derived_storage_invalid",
         )
     total = 0
@@ -671,20 +671,20 @@ def _derived_storage_bytes(root: Path) -> int:
             for name in directory_names:
                 if (current_path / name).is_symlink():
                     raise WorkspaceError(
-                        "Een afleidingsmap mag geen symlink zijn.",
+                        "A derivation directory must not be a symlink.",
                         code="derived_storage_invalid",
                     )
             for name in file_names:
                 path = current_path / name
                 if path.is_symlink():
                     raise WorkspaceError(
-                        "Een afleidingsbestand mag geen symlink zijn.",
+                        "A derivation file must not be a symlink.",
                         code="derived_storage_invalid",
                     )
                 if name == "content.txt":
                     if not path.is_file():
                         raise WorkspaceError(
-                            "Afgeleide content moet een regulier bestand zijn.",
+                            "Derived content must be a regular file.",
                             code="derived_storage_invalid",
                         )
                     total += path.stat().st_size
@@ -692,7 +692,7 @@ def _derived_storage_bytes(root: Path) -> int:
         raise
     except OSError as exc:
         raise WorkspaceError(
-            f"Afgeleide opslag kan niet veilig worden gemeten: {exc}",
+            f"Derived storage cannot be measured safely: {exc}",
             code="derived_storage_unavailable",
         ) from exc
     return total
@@ -705,7 +705,7 @@ def _atomic_json(path: Path, value: dict[str, Any]) -> None:
         os.replace(temporary, path)
     except OSError as exc:
         raise WorkspaceError(
-            f"Registratie kon niet atomair worden geschreven: {exc}",
+            f"Record could not be written atomically: {exc}",
             code="receipt_write_failed",
         ) from exc
     finally:
@@ -788,7 +788,7 @@ def _new_source_id(captured_at: datetime, existing: dict[str, StoredSource]) -> 
         if source_id not in existing:
             return source_id
     raise WorkspaceError(
-        "Er kon geen unieke source-ID worden gemaakt.",
+        "A unique source ID could not be created.",
         code="source_id_failed",
     )
 
@@ -800,25 +800,25 @@ def _safe_month_directory(root: Path, captured_at: datetime) -> Path:
         candidate = current / name
         if candidate.is_symlink():
             raise WorkspaceError(
-                f"Bronopslagpad mag geen symlink zijn: {candidate.relative_to(root).as_posix()}",
+                f"Source storage path must not be a symlink: {candidate.relative_to(root).as_posix()}",
                 code="managed_path_symlink",
             )
         try:
             candidate.mkdir(exist_ok=True)
         except OSError as exc:
             raise WorkspaceError(
-                f"Bronopslagmap kon niet worden gemaakt: {exc}",
+                f"Source storage directory could not be created: {exc}",
                 code="source_directory_failed",
             ) from exc
         if not candidate.is_dir():
             raise WorkspaceError(
-                "Bronopslagpad is geen gewone map.",
+                "Source storage path is not a regular directory.",
                 code="source_directory_failed",
             )
         resolved = candidate.resolve(strict=True)
         if not resolved.is_relative_to(root):
             raise WorkspaceError(
-                "Bronopslagpad verlaat de projectroot.",
+                "Source storage path escapes the project root.",
                 code="managed_path_escape",
             )
         current = resolved
@@ -842,14 +842,14 @@ def _prepare_capture_plan(
         SOURCE_ID_PATTERN.fullmatch(supersedes) is None or supersedes not in stored
     ):
         raise WorkspaceError(
-            f"Onbekende supersedes-bron: {supersedes}",
+            f"Unknown superseded source: {supersedes}",
             code="supersedes_invalid",
         )
 
     requested_source = source_path.absolute()
     if requested_source.is_symlink():
         raise WorkspaceError(
-            "Het bronbestand mag geen symlink zijn.",
+            "The source file must not be a symlink.",
             code="source_symlink",
         )
     if not requested_source.is_file():
@@ -862,19 +862,19 @@ def _prepare_capture_plan(
         initial_stat = resolved_source.stat()
     except OSError as exc:
         raise WorkspaceError(
-            f"Het bronbestand is niet toegankelijk: {exc}",
+            f"The source file is inaccessible: {exc}",
             code="source_unavailable",
         ) from exc
     if resolved_source.is_relative_to(root / "SOURCES") or resolved_source.is_relative_to(
         root / ".opencntx"
     ):
         raise WorkspaceError(
-            "Een beheerde bron of interne OPENCNTX-staat kan niet opnieuw worden gecaptured.",
+            "A managed source or internal OPENCNTX state cannot be captured again.",
             code="source_managed_path",
         )
     if initial_stat.st_size > config.max_source_bytes:
         raise WorkspaceError(
-            f"Bronbudget overschreden: {initial_stat.st_size} > {config.max_source_bytes} bytes.",
+            f"Source budget exceeded: {initial_stat.st_size} > {config.max_source_bytes} bytes.",
             code="source_budget_exceeded",
         )
 
@@ -905,7 +905,7 @@ def _stage_capture(plan: _CapturePlan) -> tuple[Path, int, str]:
     opencntx = plan.root / ".opencntx"
     if opencntx.is_symlink() or not opencntx.is_dir():
         raise WorkspaceError(
-            ".opencntx moet een veilige gewone map zijn.",
+            ".opencntx must be a safe regular directory.",
             code="managed_path_invalid",
         )
     temporary = opencntx / f".capture-{uuid4().hex}"
@@ -920,7 +920,7 @@ def _stage_capture(plan: _CapturePlan) -> tuple[Path, int, str]:
             final_stat = plan.resolved_source.stat()
         except OSError as exc:
             raise WorkspaceError(
-                f"Het bronbestand kon niet volledig worden gecaptured: {exc}",
+                f"The source file could not be captured completely: {exc}",
                 code="source_read_failed",
             ) from exc
         changed = (
@@ -929,13 +929,13 @@ def _stage_capture(plan: _CapturePlan) -> tuple[Path, int, str]:
         )
         if changed:
             raise WorkspaceError(
-                "Het bronbestand veranderde tijdens capture; er is niets opgeslagen.",
+                "The source file changed during capture; nothing was stored.",
                 code="source_changed",
             )
         verified_bytes, verified_digest = _hash_file(temporary_original)
         if verified_bytes != byte_count or verified_digest != digest:
             raise WorkspaceError(
-                "De tijdelijke bronkopie wijkt af na schrijven; er is niets opgeslagen.",
+                "The temporary source copy differs after writing; nothing was stored.",
                 code="temporary_verify_failed",
             )
         return temporary, byte_count, digest
@@ -964,19 +964,19 @@ def _duplicate_capture(
     duplicate_bytes, duplicate_digest = _hash_file(duplicate.original_path)
     if duplicate_bytes != duplicate.byte_count or duplicate_digest != duplicate.sha256:
         raise WorkspaceError(
-            "De bestaande identieke bron wijkt af van haar registratie; "
-            "capture is gestopt voor controle.",
+            "The existing identical source differs from its record; "
+            "capture stopped for validation.",
             code="stored_source_drift",
         )
     if duplicate.privacy != plan.privacy:
         raise WorkspaceError(
-            "Een identieke bron bestaat al met een ander privacylabel; "
-            "de bestaande classificatie is niet gewijzigd.",
+            "An identical source already exists with a different privacy label; "
+            "the existing classification was not changed.",
             code="duplicate_privacy_conflict",
         )
     if plan.supersedes is not None:
         raise WorkspaceError(
-            "Een identieke bron kan niet als nieuwe vervangende versie worden opgeslagen.",
+            "An identical source cannot be stored as a new replacement version.",
             code="supersedes_duplicate",
         )
     shutil.rmtree(temporary, ignore_errors=True)
@@ -1012,7 +1012,7 @@ def _publish_capture(
     current_total += _derived_storage_bytes(plan.root)
     if current_total + byte_count > plan.config.max_storage_bytes:
         raise WorkspaceError(
-            "Totaal opslagbudget wordt overschreden: "
+            "Total storage budget would be exceeded: "
             f"{current_total + byte_count} > {plan.config.max_storage_bytes} bytes.",
             code="storage_budget_exceeded",
         )
@@ -1022,7 +1022,7 @@ def _publish_capture(
     final_directory = month_directory / source_id
     if final_directory.exists() or final_directory.is_symlink():
         raise WorkspaceError(
-            f"Doelbron bestaat onverwacht al: {source_id}",
+            f"Target source unexpectedly already exists: {source_id}",
             code="source_id_conflict",
         )
     stored_path = (
@@ -1053,7 +1053,7 @@ def _publish_capture(
         os.replace(temporary, final_directory)
     except OSError as exc:
         raise WorkspaceError(
-            f"De bron kon niet atomair zichtbaar worden gemaakt: {exc}",
+            f"The source could not be made visible atomically: {exc}",
             code="source_publish_failed",
         ) from exc
     if transaction is not None:
@@ -1150,7 +1150,7 @@ def _capture_source_unlocked(
         raise
     except OSError as exc:
         error = WorkspaceError(
-            f"De capture kon niet veilig worden voltooid: {exc}",
+            f"Capture could not be completed safely: {exc}",
             code="capture_io_failed",
         )
         if root is not None:

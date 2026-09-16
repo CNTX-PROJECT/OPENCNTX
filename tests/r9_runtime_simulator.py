@@ -15,7 +15,7 @@ from tests.r9_conformance.runtime_contracts import canonical_digest
 SCENARIO_FORMAT = "opencntx-r9-scenario-corpus"
 SCENARIO_VERSION = 1
 SCENARIO_COUNT = 72
-SCENARIO_TABLE_SHA256 = "dd9f091f30c996324f1472fc40b369228b0cd7cfb5824059284124b38309f4d6"
+SCENARIO_TABLE_SHA256 = "c4d08ca625f483b2a3ae5302cdd91504b2b7895fff54900ac99fa21cbaa8c201"
 ASSIGNMENT_29_SHA256 = "d0ba3cf043448e95687f749da95c2c5fe21cd4d11b3dd6e6515cc56dcf449b7c"
 SCENARIO_ID_PATTERN = re.compile(r"S29-(\d{3})\Z")
 

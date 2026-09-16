@@ -139,12 +139,12 @@ class WorkspaceTests(unittest.TestCase):
             latest = workspace / ".opencntx" / "latest"
             latest.mkdir(parents=True)
             marker = latest / "manifest.json"
-            marker.write_text("bewaar mij\n", encoding="utf-8")
+            marker.write_text("keep me\n", encoding="utf-8")
 
             result = init_workspace(workspace)
 
             self.assertTrue(result.created)
-            self.assertEqual(marker.read_text(encoding="utf-8"), "bewaar mij\n")
+            self.assertEqual(marker.read_text(encoding="utf-8"), "keep me\n")
             self.assertTrue((workspace / ".opencntx" / "receipts").is_dir())
 
     def test_init_refuses_partial_or_conflicting_structure(self) -> None:
@@ -153,12 +153,12 @@ class WorkspaceTests(unittest.TestCase):
             inbox = workspace / "INBOX"
             inbox.mkdir()
             marker = inbox / "owner.txt"
-            marker.write_text("bewaar mij", encoding="utf-8")
+            marker.write_text("keep me", encoding="utf-8")
 
-            with self.assertRaisesRegex(WorkspaceError, "niets overschreven"):
+            with self.assertRaisesRegex(WorkspaceError, "nothing was overwritten"):
                 init_workspace(workspace)
 
-            self.assertEqual(marker.read_text(encoding="utf-8"), "bewaar mij")
+            self.assertEqual(marker.read_text(encoding="utf-8"), "keep me")
             self.assertFalse((workspace / "CONTROL").exists())
 
     def test_init_failure_rolls_back_only_new_structure(self) -> None:
@@ -167,13 +167,13 @@ class WorkspaceTests(unittest.TestCase):
             latest = workspace / ".opencntx" / "latest"
             latest.mkdir(parents=True)
             marker = latest / "manifest.json"
-            marker.write_text("bestaande pakketstaat\n", encoding="utf-8")
+            marker.write_text("existing package state\n", encoding="utf-8")
             real_replace = os.replace
 
             def fail_during_init(source_path: object, destination_path: object) -> None:
                 destination = Path(destination_path)  # type: ignore[arg-type]
                 if destination == workspace / "SOURCES":
-                    raise OSError("gesimuleerde initialisatiefout")
+                    raise OSError("simulated initialization error")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
             with (
@@ -185,7 +185,7 @@ class WorkspaceTests(unittest.TestCase):
             ):
                 init_workspace(workspace)
 
-            self.assertEqual(marker.read_text(encoding="utf-8"), "bestaande pakketstaat\n")
+            self.assertEqual(marker.read_text(encoding="utf-8"), "existing package state\n")
             for relative in ("CONTROL", "INBOX", "SOURCES", "CHAPTERS"):
                 self.assertFalse((workspace / relative).exists())
             self.assertFalse((workspace / ".opencntx" / "receipts").exists())
@@ -196,7 +196,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             source = workspace / "INBOX" / "brief.md"
-            content = "Eerste regel\nTweede regel met café.\n".encode()
+            content = "First line\nSecond line with café.\n".encode()
             source.write_bytes(content)
             source_before = source.read_bytes()
 
@@ -227,7 +227,7 @@ class WorkspaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "beeld.bin"
+            source = workspace / "INBOX" / "image.bin"
             content = bytes(range(256)) + b"\x00\xff\x00"
             source.write_bytes(content)
 
@@ -244,10 +244,10 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             source = workspace / "INBOX" / "schema.txt"
-            source.write_text("zelfde bytes", encoding="utf-8")
+            source.write_text("same bytes", encoding="utf-8")
 
             first = capture_source(workspace, source)
-            second = capture_source(workspace, source, origin="tweede ontvangst")
+            second = capture_source(workspace, source, origin="second capture")
 
             self.assertEqual(first.status, "CAPTURED")
             self.assertEqual(second.status, "DUPLICATE")
@@ -261,11 +261,11 @@ class WorkspaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "privaat.txt"
-            source.write_text("dezelfde gevoelige bytes", encoding="utf-8")
+            source = workspace / "INBOX" / "private.txt"
+            source.write_text("same sensitive bytes", encoding="utf-8")
             first = capture_source(workspace, source, privacy="PRIVATE")
 
-            with self.assertRaisesRegex(WorkspaceError, "ander privacylabel"):
+            with self.assertRaisesRegex(WorkspaceError, "different privacy label"):
                 capture_source(workspace, source, privacy="PUBLIC")
 
             self.assertEqual(len(records(workspace)), 1)
@@ -280,14 +280,14 @@ class WorkspaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "bron.bin"
+            source = workspace / "INBOX" / "source.bin"
             source.write_bytes(b"ABCD")
             capture_source(workspace, source)
             record = read_json(records(workspace)[0])
             stored = workspace.joinpath(*Path(str(record["stored_path"])).parts)
             stored.write_bytes(b"WXYZ")
 
-            with self.assertRaisesRegex(WorkspaceError, "wijkt af"):
+            with self.assertRaisesRegex(WorkspaceError, "differs from its record"):
                 capture_source(workspace, source)
 
             self.assertEqual(len(records(workspace)), 1)
@@ -300,9 +300,9 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             source = workspace / "INBOX" / "plan.txt"
-            source.write_text("versie één", encoding="utf-8")
+            source.write_text("version one", encoding="utf-8")
             first = capture_source(workspace, source)
-            source.write_text("versie twee", encoding="utf-8")
+            source.write_text("version two", encoding="utf-8")
 
             second = capture_source(
                 workspace,
@@ -321,8 +321,8 @@ class WorkspaceTests(unittest.TestCase):
             self.assertEqual(second_record["supersedes"], first.source_id)
             self.assertEqual(second_record["privacy"], "PUBLIC")
 
-            source.write_text("versie drie", encoding="utf-8")
-            with self.assertRaisesRegex(WorkspaceError, "Onbekende supersedes-bron"):
+            source.write_text("version three", encoding="utf-8")
+            with self.assertRaisesRegex(WorkspaceError, "Unknown superseded source"):
                 capture_source(
                     workspace,
                     source,
@@ -347,7 +347,7 @@ class WorkspaceTests(unittest.TestCase):
 
             too_large = workspace / "INBOX" / "large.bin"
             too_large.write_bytes(b"12345")
-            with self.assertRaisesRegex(WorkspaceError, "Bronbudget overschreden"):
+            with self.assertRaisesRegex(WorkspaceError, "Source budget exceeded"):
                 capture_source(workspace, too_large)
 
             first = workspace / "INBOX" / "first.bin"
@@ -355,7 +355,7 @@ class WorkspaceTests(unittest.TestCase):
             capture_source(workspace, first)
             second = workspace / "INBOX" / "second.bin"
             second.write_bytes(b"56")
-            with self.assertRaisesRegex(WorkspaceError, "Totaal opslagbudget"):
+            with self.assertRaisesRegex(WorkspaceError, "Total storage budget"):
                 capture_source(workspace, second)
 
             self.assertEqual(len(records(workspace)), 1)
@@ -368,9 +368,9 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             current = workspace / "CONTROL" / "CURRENT.md"
-            current.write_text("---\nformat: verkeerd\n---\n", encoding="utf-8")
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("inhoud", encoding="utf-8")
+            current.write_text("---\nformat: wrong\n---\n", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("content", encoding="utf-8")
 
             with self.assertRaises(WorkspaceError):
                 capture_source(workspace, source)
@@ -385,12 +385,12 @@ class WorkspaceTests(unittest.TestCase):
             with self.assertRaisesRegex(WorkspaceError, "regular file"):
                 capture_source(workspace, workspace / "INBOX")
 
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("inhoud", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("content", encoding="utf-8")
             captured = capture_source(workspace, source)
             record = read_json(records(workspace)[0])
             managed = workspace.joinpath(*Path(str(record["stored_path"])).parts)
-            with self.assertRaisesRegex(WorkspaceError, "niet opnieuw"):
+            with self.assertRaisesRegex(WorkspaceError, "captured again"):
                 capture_source(workspace, managed)
             self.assertEqual(captured.status, "CAPTURED")
 
@@ -399,14 +399,14 @@ class WorkspaceTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             target = workspace / "INBOX" / "target.txt"
-            target.write_text("inhoud", encoding="utf-8")
+            target.write_text("content", encoding="utf-8")
             link = workspace / "INBOX" / "link.txt"
             try:
                 link.symlink_to(target)
             except OSError as exc:
-                self.skipTest(f"Symlinks zijn niet beschikbaar: {exc}")
+                self.skipTest(f"Symlinks are not available: {exc}")
 
-            with self.assertRaisesRegex(WorkspaceError, "geen symlink"):
+            with self.assertRaisesRegex(WorkspaceError, "must not be a symlink"):
                 capture_source(workspace, link)
 
             self.assertEqual(records(workspace), [])
@@ -415,8 +415,8 @@ class WorkspaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "verander.txt"
-            source.write_text("voor", encoding="utf-8")
+            source = workspace / "INBOX" / "changed.txt"
+            source.write_text("for", encoding="utf-8")
 
             from opencntx import workspace as workspace_module
 
@@ -424,7 +424,7 @@ class WorkspaceTests(unittest.TestCase):
 
             def copy_then_change(source_file: object, destination: object) -> tuple[int, str]:
                 result = original_copy(source_file, destination)  # type: ignore[arg-type]
-                source.write_text("na de kopie", encoding="utf-8")
+                source.write_text("after the copy", encoding="utf-8")
                 return result
 
             with (
@@ -432,7 +432,7 @@ class WorkspaceTests(unittest.TestCase):
                     "opencntx.workspace._copy_and_hash",
                     side_effect=copy_then_change,
                 ),
-                self.assertRaisesRegex(WorkspaceError, "veranderde tijdens capture"),
+                self.assertRaisesRegex(WorkspaceError, "changed during capture"),
             ):
                 capture_source(workspace, source)
 
@@ -445,15 +445,15 @@ class WorkspaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("inhoud", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("content", encoding="utf-8")
 
             real_replace = os.replace
 
             def fail_source_publish(source_path: object, destination_path: object) -> None:
                 destination = Path(destination_path)  # type: ignore[arg-type]
                 if destination.name.startswith("SRC-"):
-                    raise OSError("gesimuleerde publicatiefout")
+                    raise OSError("simulated publication error")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
             with (
@@ -461,7 +461,7 @@ class WorkspaceTests(unittest.TestCase):
                     "opencntx.workspace.os.replace",
                     side_effect=fail_source_publish,
                 ),
-                self.assertRaisesRegex(WorkspaceError, "atomair zichtbaar"),
+                self.assertRaisesRegex(WorkspaceError, "visible atomically"),
             ):
                 capture_source(workspace, source)
 
@@ -515,7 +515,7 @@ class WorkspaceTests(unittest.TestCase):
             failed = run_cli(
                 "workspace",
                 "capture",
-                "ontbreekt.txt",
+                "missing.txt",
                 cwd=workspace,
             )
 

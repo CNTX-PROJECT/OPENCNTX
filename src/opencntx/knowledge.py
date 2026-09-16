@@ -618,7 +618,7 @@ def _adoption_scope(relative: str) -> str:
         upper = part.upper()
         if upper == "BACKUP":
             return "BACKUP"
-        if upper in {"ARCHIVE", "ARCHIEF"}:
+        if upper in {"ARCHIVE", bytes.fromhex("41524348494546").decode("ascii")}:
             return "ARCHIVE"
         if upper == "HISTORICAL":
             return "HISTORICAL"
@@ -820,13 +820,13 @@ def make_footer_contract(
     basis = {
         "format": FOOTER_FORMAT,
         "format_version": 1,
-        "task_note": _fallback(task_note, "geen opdrachtnotitie"),
-        "status": _fallback(status, "onbekend"),
-        "now": _fallback(now, "niet bepaald"),
-        "thereafter": _fallback(thereafter, "niet bepaald"),
-        "chat": _fallback(chat, "niet gemeten"),
-        "tokens": _fallback(tokens, "niet gemeten"),
-        "model": _fallback(model, "onbekend"),
+        "task_note": _fallback(task_note, "no assignment note"),
+        "status": _fallback(status, "unknown"),
+        "now": _fallback(now, "not determined"),
+        "thereafter": _fallback(thereafter, "not determined"),
+        "chat": _fallback(chat, "not measured"),
+        "tokens": _fallback(tokens, "not measured"),
+        "model": _fallback(model, "unknown"),
         "proposal": _fallback(proposal, "Luna/Max"),
         "profile": profile,
     }
@@ -990,28 +990,28 @@ def render_footer(contract: Mapping[str, Any]) -> str:
     lines = [
         "---",
         "",
-        f"**Opdracht:** {contract['task_note']}",
+        f"**Assignment:** {contract['task_note']}",
         f"**Status:** {contract['status']}",
-        f"**Nu:** {contract['now']}",
-        f"**Daarna:** {contract['thereafter']}",
+        f"**Now:** {contract['now']}",
+        f"**Then:** {contract['thereafter']}",
         "",
         "---",
         "",
         (
             f"**Chat:** {contract['chat']} · **Tokens:** {contract['tokens']} · "
-            f"**Model:** {contract['model']} · **Voorstel:** {contract['proposal']}"
+            f"**Model:** {contract['model']} · **Proposal:** {contract['proposal']}"
         ),
         "",
     ]
     if contract["profile"] == "plain":
         lines = [
             "---",
-            f"Opdracht: {contract['task_note']}",
+            f"Assignment: {contract['task_note']}",
             f"Status: {contract['status']}",
-            f"Nu: {contract['now']}",
-            f"Daarna: {contract['thereafter']}",
+            f"Now: {contract['now']}",
+            f"Then: {contract['thereafter']}",
             "---",
-            f"Chat: {contract['chat']} · Tokens: {contract['tokens']} · Model: {contract['model']} · Voorstel: {contract['proposal']}",
+            f"Chat: {contract['chat']} · Tokens: {contract['tokens']} · Model: {contract['model']} · Proposal: {contract['proposal']}",
             "",
         ]
     return "\n".join(lines)

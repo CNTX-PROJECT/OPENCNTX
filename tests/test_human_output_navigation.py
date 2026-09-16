@@ -127,7 +127,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
 
     def test_multilingual_intent_round_trip_preserves_semantics(self) -> None:
         for language, text in (
-            ("nl", "Hou het kort en ga veilig verder."),
+            ("nl", "Keep it short and continue safely."),
             ("en", "Keep it short and continue safely."),
             ("fr", "Reste bref et continue prudemment."),
         ):
@@ -138,14 +138,14 @@ class HumanOutputNavigationTests(unittest.TestCase):
             self.assertEqual(readback["exclusions"], contract["exclusions"])
             self.assertEqual(readback["authority_state"], contract["authority_state"])
             self.assertEqual(validate_intent_contract(contract), contract)
-        altered = self.intent("nl", "Werk veilig.")
+        altered = self.intent("nl", "Work safe.")
         altered["goal"] = "Expanded goal"
         with self.assertRaisesRegex(ContinuityError, "digest"):
             validate_intent_contract(altered)
 
     def test_missing_material_decision_is_explicit(self) -> None:
         contract = build_intent_contract(
-            human_intent="Kies wat veilig is.",
+            human_intent="Choose what is safe.",
             language="nl",
             goal="Choose a storage boundary.",
             scope=[],
@@ -163,7 +163,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ContinuityError, "must be named"):
             build_intent_contract(
-                human_intent="Kies.",
+                human_intent="Choose.",
                 language="nl",
                 goal="Choose.",
                 scope=[],
@@ -213,24 +213,24 @@ class HumanOutputNavigationTests(unittest.TestCase):
         self.assertEqual(malformed["status"], "PARSE_ERROR")
         self.assertIsNone(malformed["total_tokens"])
 
-    def test_active_dutch_output_has_quiet_required_shape(self) -> None:
+    def test_active_localized_output_has_quiet_required_shape(self) -> None:
         capsule = execution_state_capsule(self.flow_project())
         contract = build_output_contract(
             execution_capsule=capsule,
             roadmap_label="R11 — 3/10",
-            summary="De controle loopt veilig verder.",
+            summary="The review runs safe further.",
             language="nl",
             metrics=self.metrics(),
             required_capability="STANDARD",
             reasoning_level="LOW",
-            thereafter="Controleer het volgende bewijs.",
+            thereafter="Inspect the next evidence.",
         )
         rendered = render_output(contract)
-        self.assertIn("De controle loopt veilig verder.\n\n\n---\n", rendered)
+        self.assertIn("The review runs safe further.\n\n\n---\n", rendered)
         self.assertIn("**Roadmap:** R11 — 3/10", rendered)
-        self.assertIn("**Nu:** TASK-1 — ACTIVE", rendered)
-        self.assertIn("**Daarna:** Controleer het volgende bewijs.", rendered)
-        self.assertIn("**Volgende opdracht:** TASK-2 — CONTINUE_AUTOMATICALLY", rendered)
+        self.assertIn("**Now:** TASK-1 — ACTIVE", rendered)
+        self.assertIn("**Then:** Inspect the next evidence.", rendered)
+        self.assertIn("**Next assignment:** TASK-2 — CONTINUE_AUTOMATICALLY", rendered)
         self.assertIn("**Chat:** 16,80 MB", rendered)
         self.assertIn(" · **Tokens:** 16.624.059", rendered)
         self.assertNotIn("```text", rendered)
@@ -247,7 +247,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
         contract = build_output_contract(
             execution_capsule=capsule,
             roadmap_label="R11 — assignment complete",
-            summary="De huidige opdracht is afgerond.",
+            summary="The current assignment is completed.",
             language="nl",
             metrics=self.metrics(),
             required_capability="STANDARD",
@@ -271,7 +271,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
         contract = build_output_contract(
             execution_capsule=capsule,
             roadmap_label="R11 — assignment transition",
-            summary="De eerste opdracht is bewezen.",
+            summary="The first assignment is proven.",
             language="nl",
             metrics=self.metrics(),
             required_capability="STANDARD",
@@ -293,7 +293,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
         blocked_contract = build_output_contract(
             execution_capsule=blocked,
             roadmap_label="R11 — blocked",
-            summary="De bewijsgrens blokkeert verdere uitvoering.",
+            summary="The evidence boundary blocks further execution.",
             language="en",
             metrics=self.metrics(),
             required_capability="ADVANCED",
@@ -337,14 +337,14 @@ class HumanOutputNavigationTests(unittest.TestCase):
     def test_custom_language_labels_and_detailed_profile(self) -> None:
         capsule = execution_state_capsule(self.flow_project())
         labels = {
-            "roadmap": "Feuille de route",
+            "roadmap": "Feuille the route",
             "now": "Maintenant",
             "thereafter": "Ensuite",
             "next_assignment": "Prochaine mission",
             "chat": "Conversation",
             "tokens": "Jetons",
             "required_model": "Capacité requise",
-            "unavailable": "indisponible de façon fiable",
+            "unavailable": "indisponible the façon fiable",
         }
         contract = build_output_contract(
             execution_capsule=capsule,
@@ -359,7 +359,7 @@ class HumanOutputNavigationTests(unittest.TestCase):
             technical_details=["Le digest d'état reste identique."],
         )
         rendered = render_output(contract)
-        self.assertIn("**Feuille de route:**", rendered)
+        self.assertIn("**Feuille the route:**", rendered)
         self.assertIn("- Le digest d'état reste identique.", rendered)
 
     def test_chat_and_note_namespaces_are_separate_and_sortable(self) -> None:

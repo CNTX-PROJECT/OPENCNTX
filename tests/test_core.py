@@ -249,7 +249,7 @@ max_bytes = 10000
         self.assertIn("warnings (1)", preview)
         self.assertIn("result: PACK_WOULD_SUCCEED", preview)
         self.assertIn("## Task", core.render_context("Goal", (source,)))
-        self.assertIn("## Taak", core.render_context("Goal", (source,), legacy=True))
+        self.assertIn("## Task", core.render_context("Goal", (source,), legacy=True))
         self.assertIn("`````text", core.render_context("Goal", (source,)))
         self.assertIn("Secret policy blocks", str(core._blocked_secret_error((finding,))))
         self.assertNotIn("security", core._manifest(config, selection, (source,), b"context"))

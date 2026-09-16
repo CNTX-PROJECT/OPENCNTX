@@ -48,8 +48,8 @@ from opencntx.workflow import (
 from opencntx.workspace import init_workspace
 
 TASK_ID = "TASK-20260817-0001"
-PLAYBOOK_ID = "PB-BRON-CONTROLE"
-ROLE_ID = "ROLE-BRON-REVIEWER"
+PLAYBOOK_ID = "PB-SOURCE-REVIEW"
+ROLE_ID = "ROLE-SOURCE-REVIEWER"
 ALLOWED_ACTIONS = ("inspect-source", "write-bounded-result")
 
 
@@ -74,15 +74,15 @@ def register_definitions(workspace: Path, *, approve: bool = True):
         workspace,
         PLAYBOOK_ID,
         revision=1,
-        title="Controleer één bron",
-        purpose="Controleer uitsluitend de toegewezen bron.",
-        inputs=["Eén taakgebonden contextpakket"],
+        title="Inspect one source",
+        purpose="Inspect only the assigned source.",
+        inputs=["One task-bound context package"],
         steps=[
-            "Controleer eerst alle digests.",
-            "Rapporteer feiten, aannames en onbekenden afzonderlijk.",
+            "Inspect all digests first.",
+            "Report facts, assumptions, and unknowns separately.",
         ],
-        stop_conditions=["Stop bij ontbrekende of gewijzigde bronbytes."],
-        evidence_requirements=["Exacte bron-ID, versie en SHA-256."],
+        stop_conditions=["Stop when source bytes are missing or changed."],
+        evidence_requirements=["Exact source ID, version, and SHA-256."],
         allowed_actions=ALLOWED_ACTIONS,
         forbidden_actions=["external-send", "subdelegate"],
         architect="ARCHITECT",
@@ -91,11 +91,11 @@ def register_definitions(workspace: Path, *, approve: bool = True):
         workspace,
         ROLE_ID,
         revision=1,
-        title="Begrensde bronreviewer",
-        responsibilities=["Controleer uitsluitend de toegewezen bron."],
+        title="Bounded source reviewer",
+        responsibilities=["Inspect only the assigned source."],
         allowed_actions=ALLOWED_ACTIONS,
         forbidden_actions=sorted(RESERVED_AUTHORITY_ACTIONS),
-        handoff="Lever resultaat en bewijs terug aan de ARCHITECT.",
+        handoff="Lever result en evidence back to the ARCHITECT.",
         architect="ARCHITECT",
     )
     if approve:
@@ -139,15 +139,15 @@ def start_execution(parent: Path, *, approve_definitions: bool = True):
     proposed = propose_task(
         workspace,
         TASK_ID,
-        title="Controleer begrensde projectcontext",
-        goal="Controleer uitsluitend de goedgekeurde projectcontext.",
-        definition_of_done="Resultaat verwijst naar alle gebruikte bronnen.",
+        title="Inspect bounded project context",
+        goal="Inspect only the approved project context.",
+        definition_of_done="Result refers to all used sources.",
         executor_role=ROLE_ID,
         input_paths=inputs,
         allowed_actions=ALLOWED_ACTIONS,
         forbidden_actions=["external-send", "subdelegate"],
-        expected_output="Eén lokaal resultaat met bewijs.",
-        acceptance_criteria=["Iedere claim verwijst naar een gepinde bron."],
+        expected_output="One local result with evidence.",
+        acceptance_criteria=["Every claim refers to a pinned source."],
         architect="ARCHITECT",
     )
     approve_task(
@@ -182,7 +182,7 @@ def prepare_ready_executor(parent: Path):
         role_revision=1,
         role_digest=role.definition_digest,
         context_manifest_digest=context.manifest_digest,
-        executor="UITVOERDER-1",
+        executor="EXECUTOR-1",
     )
     return workspace, playbook, role, proposed, context, prepared
 
@@ -204,13 +204,13 @@ def append_legacy_attempt(workspace: Path, number: int):
         chain,
         event_type="attempt",
         to_status="BLOCKED" if blocked else "IN_EXECUTION",
-        actor_id="UITVOERDER-1",
+        actor_id="EXECUTOR-1",
         payload={
             "proposal_digest": chain.proposal_digest,
             "attempt_number": number,
-            "error_code": "zelfde_fout",
-            "error_signature": "zelfde blokkade",
-            "new_basis": f"nieuwe basis {number}",
+            "error_code": "same_error",
+            "error_signature": "same block",
+            "new_basis": f"new basis {number}",
         },
         success_status="TASK_BLOCKED" if blocked else "TASK_ATTEMPT_RECORDED",
     )
@@ -288,12 +288,12 @@ class PlaybookTests(unittest.TestCase):
                 workspace,
                 PLAYBOOK_ID,
                 revision=1,
-                title="Controleer bron",
-                purpose="Controleer één bron.",
-                inputs=["Eén contextpakket"],
-                steps=["Controleer de digest."],
-                stop_conditions=["Stop bij drift."],
-                evidence_requirements=["Bewaar de SHA-256."],
+                title="Inspect source",
+                purpose="Inspect one source.",
+                inputs=["One context package"],
+                steps=["Inspect the digest."],
+                stop_conditions=["Stop at drift."],
+                evidence_requirements=["Preserve the SHA-256."],
                 allowed_actions=["inspect-source"],
                 forbidden_actions=["external-send"],
                 architect="ARCHITECT",
@@ -312,12 +312,12 @@ class PlaybookTests(unittest.TestCase):
                     workspace,
                     PLAYBOOK_ID,
                     revision=1,
-                    title="Anders",
-                    purpose="Anders.",
+        title="Different",
+        purpose="Different.",
                     inputs=["Input"],
-                    steps=["Stap"],
+                    steps=["Step"],
                     stop_conditions=["Stop"],
-                    evidence_requirements=["Bewijs"],
+                    evidence_requirements=["Evidence"],
                     allowed_actions=["inspect-source"],
                     forbidden_actions=["external-send"],
                     architect="ARCHITECT",
@@ -327,16 +327,16 @@ class PlaybookTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
-            with self.assertRaisesRegex(PlaybookError, "mist vaste verboden"):
+            with self.assertRaisesRegex(PlaybookError, "lacks fixed forbidden authority actions"):
                 register_role(
                     workspace,
                     ROLE_ID,
                     revision=1,
                     title="Reviewer",
-                    responsibilities=["Controleer."],
+                    responsibilities=["Inspect."],
                     allowed_actions=["inspect-source"],
                     forbidden_actions=["subdelegate"],
-                    handoff="Lever terug aan ARCHITECT.",
+                    handoff="Lever back to ARCHITECT.",
                     architect="ARCHITECT",
                 )
 
@@ -356,7 +356,7 @@ class PlaybookTests(unittest.TestCase):
             playbook, _ = register_definitions(workspace, approve=False)
             before_document = playbook.definition_path.read_bytes()
 
-            with self.assertRaisesRegex(PlaybookError, "Definitiedigest wijkt af"):
+            with self.assertRaisesRegex(PlaybookError, "Definition digest differs"):
                 approve_playbook(
                     workspace,
                     PLAYBOOK_ID,
@@ -378,7 +378,7 @@ class PlaybookTests(unittest.TestCase):
             self.assertEqual(status.status, "APPROVED")
             self.assertRegex(status.approval_digest or "", r"[0-9a-f]{64}\Z")
             self.assertEqual(playbook.definition_path.read_bytes(), before_document)
-            with self.assertRaisesRegex(PlaybookError, "al goedgekeurd"):
+            with self.assertRaisesRegex(PlaybookError, "already approved"):
                 approve_playbook(
                     workspace,
                     PLAYBOOK_ID,
@@ -397,12 +397,12 @@ class PlaybookTests(unittest.TestCase):
                     workspace,
                     PLAYBOOK_ID,
                     revision=2,
-                    title="Tweede",
-                    purpose="Tweede revisie.",
+                    title="Second",
+                    purpose="Second revision.",
                     inputs=["Input"],
-                    steps=["Stap"],
+                    steps=["Step"],
                     stop_conditions=["Stop"],
-                    evidence_requirements=["Bewijs"],
+                    evidence_requirements=["Evidence"],
                     allowed_actions=["inspect-source"],
                     forbidden_actions=["external-send"],
                     architect="ARCHITECT",
@@ -412,12 +412,12 @@ class PlaybookTests(unittest.TestCase):
                 workspace,
                 PLAYBOOK_ID,
                 revision=2,
-                title="Tweede",
-                purpose="Tweede revisie.",
+                title="Second",
+                purpose="Second revision.",
                 inputs=["Input"],
-                steps=["Stap"],
+                steps=["Step"],
                 stop_conditions=["Stop"],
-                evidence_requirements=["Bewijs"],
+                evidence_requirements=["Evidence"],
                 allowed_actions=["inspect-source"],
                 forbidden_actions=["external-send"],
                 architect="ARCHITECT",
@@ -432,23 +432,23 @@ class PlaybookTests(unittest.TestCase):
             init_workspace(workspace)
             common = {
                 "revision": 1,
-                "title": "Titel",
-                "purpose": "Doel.",
+                "title": "Title",
+                "purpose": "Goal.",
                 "inputs": ["Input"],
-                "steps": ["Stap"],
+                "steps": ["Step"],
                 "stop_conditions": ["Stop"],
-                "evidence_requirements": ["Bewijs"],
+                "evidence_requirements": ["Evidence"],
                 "allowed_actions": ["inspect-source"],
                 "forbidden_actions": ["external-send"],
                 "architect": "ARCHITECT",
             }
             with self.assertRaises(PlaybookError):
-                register_playbook(workspace, "pb-fout", **common)
+                register_playbook(workspace, "pb-error", **common)
             with self.assertRaises(PlaybookError):
                 register_playbook(
                     workspace,
                     PLAYBOOK_ID,
-                    **{**common, "allowed_actions": ["Lees bron"]},
+                    **{**common, "allowed_actions": ["Read source"]},
                 )
             with self.assertRaises(PlaybookError):
                 register_playbook(
@@ -456,8 +456,8 @@ class PlaybookTests(unittest.TestCase):
                     PLAYBOOK_ID,
                     **{**common, "forbidden_actions": ["inspect-source"]},
                 )
-            with self.assertRaisesRegex(PlaybookError, "absoluut persoonlijk pad"):
-                private_path = "Lees " + "C:" + r"\Users\Naam\private.txt"
+            with self.assertRaisesRegex(PlaybookError, "absolute personal path"):
+                private_path = "Read " + "C:" + r"\Users\Naam\private.txt"
                 register_playbook(
                     workspace,
                     PLAYBOOK_ID,
@@ -469,12 +469,12 @@ class PlaybookTests(unittest.TestCase):
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
             playbook, _ = register_definitions(workspace)
-            playbook.definition_path.write_text("gewijzigd\n", encoding="utf-8")
+            playbook.definition_path.write_text("changed\n", encoding="utf-8")
 
             status = playbook_status(workspace, PLAYBOOK_ID, 1)
             self.assertEqual(status.status, "STALE")
             self.assertFalse(verify_playbook(workspace, PLAYBOOK_ID, 1).ok)
-            self.assertEqual(playbook.definition_path.read_text(encoding="utf-8"), "gewijzigd\n")
+            self.assertEqual(playbook.definition_path.read_text(encoding="utf-8"), "changed\n")
 
     def test_unknown_definition_file_and_json_field_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -527,7 +527,7 @@ class PlaybookTests(unittest.TestCase):
             workspace, playbook, role, proposed, context = start_execution(
                 Path(temporary_directory), approve_definitions=False
             )
-            with self.assertRaisesRegex(PlaybookError, "niet exact door de OWNER"):
+            with self.assertRaisesRegex(PlaybookError, "not exactly approved by the OWNER"):
                 prepare_executor(
                     workspace,
                     TASK_ID,
@@ -540,7 +540,7 @@ class PlaybookTests(unittest.TestCase):
                     role_revision=1,
                     role_digest=role.definition_digest,
                     context_manifest_digest=context.manifest_digest,
-                    executor="UITVOERDER-1",
+                    executor="EXECUTOR-1",
                 )
 
     def test_executor_rejects_wrong_task_definition_and_context_digests(self) -> None:
@@ -560,7 +560,7 @@ class PlaybookTests(unittest.TestCase):
                 "role_revision": 1,
                 "role_digest": role.definition_digest,
                 "context_manifest_digest": context.manifest_digest,
-                "executor": "UITVOERDER-1",
+                "executor": "EXECUTOR-1",
             }
             for field in (
                 "proposal_digest",
@@ -577,23 +577,23 @@ class PlaybookTests(unittest.TestCase):
             workspace, playbook, _role, proposed, context = start_execution(parent)
             other_role = register_role(
                 workspace,
-                "ROLE-ANDERE",
+                "ROLE-OTHER",
                 revision=1,
-                title="Andere",
-                responsibilities=["Andere rol."],
+                title="Other",
+                responsibilities=["Other role."],
                 allowed_actions=ALLOWED_ACTIONS,
                 forbidden_actions=sorted(RESERVED_AUTHORITY_ACTIONS),
-                handoff="Lever terug aan ARCHITECT.",
+                handoff="Return back to ARCHITECT.",
                 architect="ARCHITECT",
             )
             approve_role(
                 workspace,
-                "ROLE-ANDERE",
+                "ROLE-OTHER",
                 revision=1,
                 definition_digest=other_role.definition_digest,
                 owner="OWNER",
             )
-            with self.assertRaisesRegex(PlaybookError, "Taakrol"):
+            with self.assertRaisesRegex(PlaybookError, "Task role"):
                 prepare_executor(
                     workspace,
                     TASK_ID,
@@ -602,11 +602,11 @@ class PlaybookTests(unittest.TestCase):
                     playbook_id=PLAYBOOK_ID,
                     playbook_revision=1,
                     playbook_digest=playbook.definition_digest,
-                    role_id="ROLE-ANDERE",
+                    role_id="ROLE-OTHER",
                     role_revision=1,
                     role_digest=other_role.definition_digest,
                     context_manifest_digest=context.manifest_digest,
-                    executor="UITVOERDER-1",
+                    executor="EXECUTOR-1",
                 )
 
     def test_action_outside_playbook_or_role_is_rejected(self) -> None:
@@ -626,15 +626,15 @@ class PlaybookTests(unittest.TestCase):
             proposed = propose_task(
                 workspace,
                 TASK_ID,
-                title="Te ruime taak",
-                goal="Controleer scope.",
-                definition_of_done="Bewijs bestaat.",
+                title="Too broad task",
+                goal="Inspect scope.",
+                definition_of_done="Evidence exists.",
                 executor_role=ROLE_ID,
                 input_paths=inputs,
                 allowed_actions=["inspect-source", "unknown-action"],
                 forbidden_actions=["external-send"],
-                expected_output="Resultaat.",
-                acceptance_criteria=["Bewijs."],
+                expected_output="Result.",
+                acceptance_criteria=["Evidence."],
                 architect="ARCHITECT",
             )
             approve_task(
@@ -652,7 +652,7 @@ class PlaybookTests(unittest.TestCase):
                 max_files=25,
                 max_bytes=100_000,
             )
-            with self.assertRaisesRegex(PlaybookError, "buiten playbook of rol"):
+            with self.assertRaisesRegex(PlaybookError, "falls outside the playbook or role"):
                 prepare_executor(
                     workspace,
                     TASK_ID,
@@ -665,7 +665,7 @@ class PlaybookTests(unittest.TestCase):
                     role_revision=1,
                     role_digest=role.definition_digest,
                     context_manifest_digest=context.manifest_digest,
-                    executor="UITVOERDER-1",
+                    executor="EXECUTOR-1",
                 )
 
     def test_second_executor_package_for_same_task_is_rejected(self) -> None:
@@ -673,7 +673,7 @@ class PlaybookTests(unittest.TestCase):
             workspace, playbook, role, proposed, context, _ = prepare_ready_executor(
                 Path(temporary_directory)
             )
-            with self.assertRaisesRegex(PlaybookError, "al een uitvoerderpakket"):
+            with self.assertRaisesRegex(PlaybookError, "already has an executor package"):
                 prepare_executor(
                     workspace,
                     TASK_ID,
@@ -686,7 +686,7 @@ class PlaybookTests(unittest.TestCase):
                     role_revision=1,
                     role_digest=role.definition_digest,
                     context_manifest_digest=context.manifest_digest,
-                    executor="UITVOERDER-2",
+                    executor="EXECUTOR-2",
                 )
 
     def test_assignment_and_context_drift_are_reported_read_only(self) -> None:
@@ -719,7 +719,7 @@ class PlaybookTests(unittest.TestCase):
             parent = Path(temporary_directory)
             workspace, _, _, _, _, prepared = prepare_ready_executor(parent)
             result_path = parent / "result.txt"
-            result_path.write_text("resultaat", encoding="utf-8")
+            result_path.write_text("result", encoding="utf-8")
             submit_result(
                 workspace,
                 TASK_ID,
@@ -727,7 +727,7 @@ class PlaybookTests(unittest.TestCase):
                 evidence_paths=[],
                 limitations=[],
                 open_questions=[],
-                executor="UITVOERDER-1",
+                executor="EXECUTOR-1",
             )
             status = executor_status(workspace, TASK_ID, prepared.executor_id)
             self.assertEqual(status.status, "TASK_FINISHED")
@@ -740,7 +740,7 @@ class PlaybookTests(unittest.TestCase):
             )
             for number in range(1, 4):
                 append_legacy_attempt(workspace, number)
-            with self.assertRaisesRegex(PlaybookError, "niet exact in IN_EXECUTION"):
+            with self.assertRaisesRegex(PlaybookError, "not exactly in IN_EXECUTION"):
                 prepare_executor(
                     workspace,
                     TASK_ID,
@@ -753,7 +753,7 @@ class PlaybookTests(unittest.TestCase):
                     role_revision=1,
                     role_digest=role.definition_digest,
                     context_manifest_digest=context.manifest_digest,
-                    executor="UITVOERDER-1",
+                    executor="EXECUTOR-1",
                 )
 
     def test_cli_register_approve_status_and_verify_are_explicit(self) -> None:
@@ -768,17 +768,17 @@ class PlaybookTests(unittest.TestCase):
                 "--revision",
                 "1",
                 "--title",
-                "Controleer bron",
+                "Inspect source",
                 "--purpose",
-                "Controleer één bron.",
+                "Inspect one source.",
                 "--input",
-                "Eén contextpakket",
+                "One context package",
                 "--step",
-                "Controleer de digest.",
+                "Inspect the digest.",
                 "--stop",
-                "Stop bij drift.",
+                "Stop at drift.",
                 "--evidence",
-                "Bewaar de SHA-256.",
+                "Preserve the SHA-256.",
                 "--allow",
                 "inspect-source",
                 "--forbid",
@@ -853,7 +853,7 @@ class PlaybookTests(unittest.TestCase):
                 "--context-manifest-digest",
                 context.manifest_digest,
                 "--executor",
-                "UITVOERDER-1",
+                "EXECUTOR-1",
                 "--root",
                 str(workspace),
                 cwd=workspace,

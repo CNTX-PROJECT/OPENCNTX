@@ -89,7 +89,7 @@ class PortableFollowupTests(unittest.TestCase):
         context = compile_goal_context(self.root, goal)
         self.assertEqual((context["decision"], context["reason"]), ("BLOCKED", "OWNER_STOP"))
         for language, message in (
-            ("nl", "Gestopt op jouw verzoek"),
+            ("nl", "Stopped at your request"),
             ("en", "Stopped at your request"),
         ):
             output = self.output(context, language)
@@ -129,7 +129,7 @@ class PortableFollowupTests(unittest.TestCase):
         self.save()
         goal = self.fixture.goal
         context = compile_goal_context(self.root, goal, proposed_outcome="PARENT-RESULT")
-        self.assertIn("Nog niet volledig afgerond", render_output(self.output(context)))
+        self.assertIn("Not fully complete", render_output(self.output(context)))
         self.assertIn("Not fully complete", render_output(self.output(context, "en")))
         for kwargs in (
             {"proposed_outcome": "OTHER"},

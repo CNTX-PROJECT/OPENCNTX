@@ -76,14 +76,14 @@ def _read_control_file(root: Path, relative: str) -> bytes:
     path = root / relative
     if path.is_symlink() or not path.is_file():
         raise ControlError(
-            f"Controlbestand ontbreekt of is onveilig: {relative}.",
+            f"Control file is missing or unsafe: {relative}.",
             code="control_file_invalid",
         )
     try:
         resolved = path.resolve(strict=True)
         if not resolved.is_relative_to(root):
             raise ControlError(
-                f"Controlbestand verlaat de werkruimte: {relative}.",
+                f"Control file escapes the workspace: {relative}.",
                 code="control_file_invalid",
             )
         content = path.read_bytes()
@@ -91,19 +91,19 @@ def _read_control_file(root: Path, relative: str) -> bytes:
         raise
     except OSError as exc:
         raise ControlError(
-            f"Controlbestand kan niet veilig worden gelezen: {relative}.",
+            f"Control file cannot be read safely: {relative}.",
             code="control_file_unavailable",
         ) from exc
     if b"\x00" in content or any(byte < 32 and byte not in (9, 10, 13) for byte in content):
         raise ControlError(
-            f"Controlbestand bevat onveilige controltekens: {relative}.",
+            f"Control file contains unsafe control characters: {relative}.",
             code="control_file_invalid",
         )
     try:
         content.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise ControlError(
-            f"Controlbestand is geen geldige UTF-8: {relative}.",
+            f"Control file is not valid UTF-8: {relative}.",
             code="control_file_invalid",
         ) from exc
     return content
@@ -123,13 +123,13 @@ def _extract_block(roadmap: bytes) -> bytes | None:
     end = roadmap.find(CONTROL_END)
     if start < 0 or end < start + len(CONTROL_START):
         raise ControlError(
-            "De control-markers in CONTROL/ROADMAP.md staan in ongeldige volgorde.",
+            "The control markers in CONTROL/ROADMAP.md are in an invalid order.",
             code="control_markers_invalid",
         )
     block = roadmap[start : end + len(CONTROL_END)]
     if len(block) > CONTROL_BLOCK_MAX_BYTES:
         raise ControlError(
-            "Het actuele roadmapblock is te groot: "
+            "The current roadmap block is too large: "
             f"{len(block)} > {CONTROL_BLOCK_MAX_BYTES} bytes.",
             code="control_block_too_large",
         )
@@ -156,12 +156,12 @@ def _render_snapshot(
         "# OPENCNTX control snapshot",
         "",
         (
-            "> Afgeleid en vervangbaar. Dit document verleent geen OWNER-bevoegdheid."
+            "> Derived legacy snapshot. This document grants no OWNER authority."
             if legacy
             else "> Derived and replaceable. This document grants no OWNER authority."
         ),
         "",
-        "## Actuele roadmapsturing" if legacy else "## Current roadmap control",
+        "## Current roadmap steering" if legacy else "## Current roadmap control",
         "",
     ]
     return ("\n".join(metadata) + block_text + "\n").encode("utf-8")
@@ -202,14 +202,14 @@ def inspect_control(project_root: Path, *, require_snapshot: bool = False) -> Co
         path = root / CONTROL_SNAPSHOT_PATH
         if path.is_symlink() or not path.is_file():
             raise ControlError(
-                "De beheerde control-snapshot ontbreekt of is onveilig; refresh vereist.",
+                "The managed control snapshot is missing or unsafe; refresh is required.",
                 code="control_snapshot_stale",
             )
         try:
             actual = path.read_bytes()
         except OSError as exc:
             raise ControlError(
-                "De beheerde control-snapshot kan niet worden gelezen.",
+                "The managed control snapshot cannot be read.",
                 code="control_snapshot_unavailable",
             ) from exc
         legacy_snapshot = _render_snapshot(
@@ -243,7 +243,7 @@ def _snapshot_target(root: Path) -> Path:
     path = root / CONTROL_SNAPSHOT_PATH
     if path.is_symlink() or (path.exists() and not path.is_file()):
         raise ControlError(
-            "Het beheerde control-snapshotpad is geen veilig regulier bestand.",
+            "The managed control snapshot path is not a safe regular file.",
             code="control_snapshot_unmanaged",
         )
     if path.exists():
@@ -251,12 +251,12 @@ def _snapshot_target(root: Path) -> Path:
             existing = path.read_bytes()
         except OSError as exc:
             raise ControlError(
-                "De bestaande control-snapshot kan niet veilig worden gelezen.",
+                "The existing control snapshot cannot be read safely.",
                 code="control_snapshot_unavailable",
             ) from exc
         if not existing.startswith(CONTROL_SNAPSHOT_HEADER):
             raise ControlError(
-                "Het control-snapshotpad bevat onbekende bytes; niets overschreven.",
+                "The control snapshot path contains unknown bytes; nothing was overwritten.",
                 code="control_snapshot_unmanaged",
             )
     return path
@@ -272,7 +272,7 @@ def _atomic_snapshot(path: Path, content: bytes) -> None:
         os.replace(temporary, path)
     except OSError as exc:
         raise ControlError(
-            "De control-snapshot kon niet atomair worden gepubliceerd.",
+            "The control snapshot could not be published atomically.",
             code="control_snapshot_write_failed",
         ) from exc
     finally:
@@ -327,7 +327,7 @@ def _write_receipt(
             os.fsync(output.fileno())
     except OSError as exc:
         raise ControlError(
-            "Het control-ontvangstbewijs kon niet worden geschreven.",
+            "The control receipt could not be written.",
             code="control_receipt_write_failed",
         ) from exc
     return path

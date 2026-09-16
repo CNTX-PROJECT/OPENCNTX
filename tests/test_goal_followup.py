@@ -181,7 +181,7 @@ class NativeFollowupTests(unittest.TestCase):
         self.assertEqual(host_fixture.snapshot(self.fixture), before)
         output = self.output(compile_goal_context(self.root, self.host.expected))
         self.assertEqual(output["next_action_state"], "BLOCKED")
-        self.assertIn("Gestopt op jouw verzoek", render_output(output))
+        self.assertIn("Stopped at your request", render_output(output))
         self.assertNotIn("```", render_output(output))
 
     def test_partial_output_continues_without_external_override(self) -> None:
