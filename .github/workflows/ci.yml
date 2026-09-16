@@ -135,9 +135,9 @@ jobs:
       - name: Require update, rollback, reapply, resume, and cleanup
         run: >-
           python tools/managed_install_acceptance.py
-          --candidate dist/opencntx-1.8.2-py3-none-any.whl
+          --candidate dist/opencntx-1.8.3-py3-none-any.whl
           --baseline dist/opencntx-1.7.6-py3-none-any.whl
-          --expected-candidate 1.8.2
+          --expected-candidate 1.8.3
           --expected-baseline 1.7.6
           --expected-baseline-sha256 b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f
 

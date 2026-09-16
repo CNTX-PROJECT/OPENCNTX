@@ -55,6 +55,15 @@ historical bytes remain unchanged. Installing the package does not automatically
 migrate roadmap storage or enable a host hook. See [Goal-bound workflows](goal-bound-workflows.md)
 and [Storage compatibility](GOAL_HANDOFF_CONTRACT.md) for the explicit version fence.
 
+Version 1.8.3 adds the rebuildable `ocx-search-index-v2` SQLite projection and
+`ocx-search-result-v2` query envelope. The projection is a local
+external-content FTS5 cache bound to a source root, scope digest and source
+digests; it is not a new canonical source store. The v1 metadata index and
+`ocx-search-result-v1` remain readable, and a runtime without SQLite FTS5
+reports metadata fallback. Search output has explicit source freshness, byte,
+snippet and estimated-token boundaries. Existing unmanaged adoption also
+reports its project state and requires a reviewed preview digest before binding.
+
 Version 1.4.0 released the additive visual-intent and joint-review contracts.
 It adds no command, runtime dependency, format major, mandatory migration,
 provider call, deployment, or package-index route.

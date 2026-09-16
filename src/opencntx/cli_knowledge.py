@@ -21,6 +21,7 @@ from .knowledge import (
     search_index,
     write_adoption_manifest,
 )
+from .search_index import build_search_index, search_full_text, search_index_status
 
 
 def register_knowledge_commands(
@@ -40,11 +41,37 @@ def register_knowledge_commands(
     build.add_argument("--max-files", type=int, default=10_000)
     build.add_argument("--max-bytes", type=int, default=25_000_000)
     build.add_argument("--max-depth", type=int, default=32)
-    search = index_commands.add_parser("search", help="search an existing index without writes")
+    build.add_argument(
+        "--metadata-only",
+        action="store_true",
+        help="keep the legacy metadata index only",
+    )
+    build.add_argument(
+        "--strict",
+        action="store_true",
+        help="rehash every source instead of reusing unchanged fingerprints",
+    )
+    search = index_commands.add_parser("search", help="search a local index without writes")
     search.add_argument("query")
-    search.add_argument("--index", default=".opencntx/index-v1.json")
+    search.add_argument("--root", default=".")
+    search.add_argument("--index", default=".opencntx/search-v2.sqlite")
     search.add_argument("--max-results", type=int, default=20)
     search.add_argument("--max-bytes", type=int, default=100_000)
+    search.add_argument("--max-tokens", type=int, default=25_000)
+    search.add_argument("--max-snippet-chars", type=int, default=600)
+    search.add_argument(
+        "--metadata-only",
+        action="store_true",
+        help="force the legacy index format for compatibility",
+    )
+    status = index_commands.add_parser("status", help="check search scope and source freshness")
+    status.add_argument("--root", default=".")
+    status.add_argument("--index", default=".opencntx/search-v2.sqlite")
+    status.add_argument(
+        "--fast",
+        action="store_true",
+        help="compare filesystem fingerprints without rehashing every source",
+    )
 
     technique = commands.add_parser("technique", help="store or recall evidence-bound procedures")
     technique_commands = technique.add_subparsers(dest="knowledge_technique_command", required=True)
@@ -91,6 +118,11 @@ def _json(value: object) -> None:
     print(json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True))
 
 
+def _index_path(root: Path, value: str) -> Path:
+    path = Path(value)
+    return path if path.is_absolute() else root / path
+
+
 def _dispatch_index(args: argparse.Namespace) -> int:
     if args.knowledge_index_command == "build":
         result = build_index(
@@ -100,21 +132,68 @@ def _dispatch_index(args: argparse.Namespace) -> int:
             max_bytes=args.max_bytes,
             max_depth=args.max_depth,
         )
+        response = {
+            "status": "INDEX_BUILT",
+            "path": args.output or str(Path(args.root) / ".opencntx" / "index-v1.json"),
+            "index_digest": result["index_digest"],
+            "stats": result["stats"],
+        }
+        if not args.metadata_only:
+            response["search_index"] = build_search_index(
+                Path(args.root),
+                max_files=args.max_files,
+                max_bytes=args.max_bytes,
+                max_depth=args.max_depth,
+                strict=args.strict,
+            )
+        _json(response)
+        return 0
+    if args.knowledge_index_command == "status":
+        root = Path(args.root)
         _json(
-            {
-                "status": "INDEX_BUILT",
-                "path": args.output or str(Path(args.root) / ".opencntx" / "index-v1.json"),
-                "index_digest": result["index_digest"],
-                "stats": result["stats"],
-            }
+            search_index_status(
+                root,
+                index=_index_path(root, args.index),
+                strict=not args.fast,
+            )
         )
         return 0
-    result = search_index(
-        load_index(Path(args.index)),
-        args.query,
-        max_results=args.max_results,
-        max_bytes=args.max_bytes,
-    )
+    root = Path(args.root)
+    index_path = _index_path(root, args.index)
+    if args.metadata_only or not str(args.index).lower().endswith(".sqlite"):
+        legacy_path = (
+            index_path
+            if not args.metadata_only or not str(args.index).lower().endswith(".sqlite")
+            else root / ".opencntx" / "index-v1.json"
+        )
+        result = search_index(
+            load_index(legacy_path),
+            args.query,
+            max_results=args.max_results,
+            max_bytes=args.max_bytes,
+        )
+        _json(result)
+        return 0
+    try:
+        result = search_full_text(
+            index_path,
+            args.query,
+            root=root,
+            max_results=args.max_results,
+            max_bytes=args.max_bytes,
+            max_tokens=args.max_tokens,
+            max_snippet_chars=args.max_snippet_chars,
+        )
+    except KnowledgeError:
+        if index_path.is_file():
+            raise
+        legacy = root / ".opencntx" / "index-v1.json"
+        result = search_index(
+            load_index(legacy),
+            args.query,
+            max_results=args.max_results,
+            max_bytes=args.max_bytes,
+        )
     _json(result)
     return 0
 
@@ -159,10 +238,7 @@ def _dispatch_adopt(args: argparse.Namespace) -> int:
 
 def _dispatch_footer(args: argparse.Namespace) -> int:
     if args.from_host_envelope is not None:
-        if any(
-            value is not None
-            for value in (args.chat, args.tokens, args.model, args.proposal)
-        ):
+        if any(value is not None for value in (args.chat, args.tokens, args.model, args.proposal)):
             raise KnowledgeError(
                 "Host envelope telemetry cannot be combined with explicit metric arguments."
             )

@@ -1,37 +1,40 @@
-# The OPENCNTX 1.8.2 knowledge layer
+# The OPENCNTX 1.8.3 knowledge layer
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-OPENCNTX 1.8.2 retains the first-party, local index for projects that have one main
+OPENCNTX 1.8.3 retains the first-party, local index for projects that have one main
 Markdown file with child files, nested child files, JSON records, roadmaps and
 technical notes. It keeps the original files authoritative and creates only
-digest-bound metadata under `.opencntx/`.
+digest-bound projections under `.opencntx/`.
 
 ## What it does
 
 1. **Builds a hierarchy.** Every supported Markdown, JSON, TOML, YAML or text
    file receives a stable `OCX-NODE-*` identity, relative path, parent, depth,
-   SHA-256 digest, privacy label, title, headings and a short preview.
+   SHA-256 digest, privacy label, title, headings and a short preview. UTF-8,
+   UTF-8 BOM and UTF-16 BOM sources are decoded without changing their source
+   bytes.
 2. **Resolves typed links.** Markdown and wiki links become bounded records such
    as `contains`, `requires`, `supports`, `history_of`, `supersedes`,
    `verify_live` and `references`. Unresolved targets remain visible instead
    of being silently dropped.
-3. **Searches exact-first.** Path, title and heading matches are preferred over
-   the short preview. Every result includes its score components and reason
-   codes. There is no embedding, vector database, remote index or hidden
-   semantic score.
-4. **Enforces a load budget.** Search returns `loaded`, `referenced` and
-   `skipped` states with byte totals. A byte budget is evidence about local
-   selection, not a promise about model tokens.
+3. **Searches full text locally.** The compatible `index-v1.json` remains
+   available while `search-v2.sqlite` uses capability-detected SQLite FTS5 for
+   Markdown and JSON bodies, identifiers, headings, paths and JSON paths. A
+   missing FTS5 capability falls back to the v1 metadata search.
+4. **Enforces freshness and load budgets.** Search status distinguishes
+   `CURRENT`, `STALE`, `PARTIAL`, `NEEDS_BUILD` and `INVALID`. Results return
+   `loaded`, `referenced`, `skipped` and `stale_source` states with exact byte
+   totals, bounded heading-aware snippets and an explicit token estimate.
 5. **Remembers proven techniques.** A technique card records its trigger,
    preconditions, steps, tools, risks, outputs, source digests and verification
    state. A card is recallable; OPENCNTX never executes its steps automatically.
-6. **Audits existing work safely.** An adoption manifest inventories existing
-   controls, roadmaps, tasks, playbooks, roles, chapters and technique cards,
-   classifies active versus archive boundaries, and reports case collisions,
-   duplicate ordinals, unresolved links, cycles and links/junctions. The
-   proposed action is `BIND_READ_ONLY`; ownership is never inferred as
-   permission to rewrite.
+6. **Audits existing work safely.** An adoption manifest inventories the full
+   supported-text scope, classifies active versus archive boundaries, and
+   reports case collisions, duplicate ordinals, unresolved links, cycles and
+   links/junctions. A contextless existing project is explicitly
+   `EXISTING_UNMANAGED_PARTIAL` and requires `AUDIT_THEN_BIND` with a reviewed
+   preview digest; ownership is never inferred as permission to rewrite.
 7. **Renders a universal footer.** The provider-neutral footer contract always
    emits a value or an explicit fallback (`no assignment note`, `unknown`,
    `not determined` or `not measured`). Exact JSON/CSV/code output can use the
@@ -43,13 +46,24 @@ From the project root:
 
 ```powershell
 opencntx knowledge index build --root .
-opencntx knowledge index search "current roadmap" --index .opencntx/index-v1.json
+opencntx knowledge index status --root .
+opencntx knowledge index search "current roadmap" --root .
 ```
 
-The build is deterministic and writes only the selected metadata file. It
-refuses unsafe paths, invalid UTF-8, source escapes, duplicate identities,
-unbounded depth, byte/file budget overflow and `contains` cycles. Run it again
-after a source change; unchanged source bytes keep their identity and digest.
+The build writes the compatible `index-v1.json` and, when SQLite FTS5 is
+available, an atomically published `search-v2.sqlite`. Generated directories
+such as `build`, `dist`, `site` and common tool caches are excluded by default.
+The v2 builder reuses unchanged size/mtime fingerprints and hashes changed
+files; pass `--strict` when every source must be rehashed. The status command is
+read-only and performs a strict digest check by default; `--fast` performs a
+quick fingerprint check. A failed refresh leaves the previous search database
+untouched.
+
+Search accepts `--max-bytes`, `--max-tokens` and `--max-snippet-chars`. The
+index stores normalized searchable fields as a local cache, but source files
+remain authoritative and matched sources are digest-checked before snippets
+are loaded. There is no embedding, vector database, remote index or hidden
+semantic score.
 
 ## Technique cards
 
@@ -74,12 +88,14 @@ opencntx knowledge adopt --root . --write \
   --expected-manifest-digest REVIEWED_PREVIEW_DIGEST
 ```
 
-The preview returns `audit.status` and a deterministic `manifest_digest`. The
-write command should receive that reviewed digest; it refuses source drift and
+The preview returns `audit.project_state`, `audit.status` and a deterministic
+`manifest_digest`. A new empty root is `EMPTY_NEW_PROJECT`. A project without
+context-management markers is `EXISTING_UNMANAGED_PARTIAL`; its write command
+must receive the reviewed preview digest. The command refuses source drift and
 writes only the digest-bound `.opencntx/adoption-v1.json` manifest. It does not
-move, rename, delete or rewrite project files. A `BLOCKED` audit remains an
-explicit review outcome and cannot be mistaken for a successful visual
-takeover.
+move, rename, delete or rewrite project files. A `BLOCKED` or `PARTIAL` audit
+remains an explicit review outcome and cannot be mistaken for a successful
+visual takeover.
 
 ## Footer profiles
 
@@ -108,9 +124,10 @@ transcript content.
 
 ## Boundaries
 
-The index is a local projection. It does not replace canonical project files,
-does not automatically reorganize a notes vault, does not select an AI model,
-does not grant authority, and does not upload data. OpenSpec, Zvec, embeddings
-and external search services are not runtime dependencies.
+The indexes are local projections. They do not replace canonical project files,
+do not automatically reorganize a notes vault, do not select an AI model, do
+not grant authority, and do not upload data. OpenSpec, Zvec, embeddings and
+external search services are not runtime dependencies. SQLite FTS5 is used
+only when the Python runtime exposes that local capability.
 
 [Security](security.md) · [Contracts and compatibility](contracts-and-compatibility.md) · [Releases](releases.md)

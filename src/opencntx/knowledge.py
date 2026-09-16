@@ -45,6 +45,24 @@ SHA256_PATTERN = re.compile(r"[0-9a-f]{64}\Z")
 
 TEXT_SUFFIXES = frozenset({".md", ".markdown", ".json", ".toml", ".yaml", ".yml", ".txt"})
 SKIP_DIRECTORIES = frozenset({".git", ".opencntx", ".venv", "venv", "__pycache__", "node_modules"})
+ADOPTION_SKIP_DIRECTORIES = frozenset(
+    {
+        *SKIP_DIRECTORIES,
+        ".cache",
+        ".obsidian",
+        ".hypothesis",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        "build",
+        "coverage",
+        "dist",
+        "htmlcov",
+        "out",
+        "site",
+        "target",
+    }
+)
 RELATIONS = frozenset(
     {"contains", "requires", "supports", "history_of", "supersedes", "verify_live", "references"}
 )
@@ -137,11 +155,20 @@ def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
     return selected
 
 
+def _decode_text(data: bytes) -> tuple[str, str]:
+    """Decode common Unicode text encodings without changing source bytes."""
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16"), "utf-16"
+    if data.startswith(b"\xef\xbb\xbf"):
+        return data.decode("utf-8-sig"), "utf-8-bom"
+    return data.decode("utf-8"), "utf-8"
+
+
 def _read_source(root: Path, path: Path) -> tuple[str, bytes, str]:
     relative = _relative(root, path)
     try:
         data = path.read_bytes()
-        text = data.decode("utf-8")
+        text, _encoding = _decode_text(data)
     except (OSError, UnicodeDecodeError) as exc:
         raise KnowledgeError(f"Source is not readable UTF-8 text: {relative}") from exc
     return relative, data, text
@@ -629,51 +656,90 @@ def _adoption_finding(code: str, path: str, detail: str) -> dict[str, str]:
     return {"code": code, "path": path, "detail": detail}
 
 
+def _adoption_candidates(root: Path, findings: list[dict[str, str]]) -> list[Path]:
+    candidates: list[Path] = []
+    for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+        current_path = Path(current)
+        kept_directories: list[str] = []
+        for name in sorted(directories):
+            path = current_path / name
+            if path.is_symlink():
+                findings.append(
+                    _adoption_finding(
+                        "LINK_PRESENT",
+                        _relative(root, path),
+                        "A symlink or junction needs explicit owner review.",
+                    )
+                )
+            elif name not in ADOPTION_SKIP_DIRECTORIES or name == ".opencntx":
+                kept_directories.append(name)
+        directories[:] = kept_directories
+        for name in sorted(names):
+            path = current_path / name
+            relative = _relative(root, path)
+            if path.is_symlink():
+                findings.append(
+                    _adoption_finding(
+                        "LINK_PRESENT",
+                        relative,
+                        "A symlink or junction needs explicit owner review.",
+                    )
+                )
+            elif path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
+                candidates.append(path)
+    return candidates
+
+
+def _adoption_project_state(root: Path, records: list[dict[str, Any]]) -> tuple[str, str]:
+    if not records:
+        return "EMPTY_NEW_PROJECT", "BOOTSTRAP_PROJECT"
+    managed_roots = {"CONTROL", "TASKS", "PLAYBOOKS", "ROLES", "CHAPTERS", "INBOX"}
+    managed = False
+    for record in records:
+        path = PurePosixPath(str(record["path"]))
+        first = path.parts[0].upper() if path.parts else ""
+        if first in managed_roots or str(record["kind"]) != "source":
+            managed = True
+            break
+    if (root / "opencntx.toml").is_file() or (root / ".opencntx" / "adoption-v1.json").is_file():
+        managed = True
+    return (
+        ("EXISTING_MANAGED", "BIND_READ_ONLY")
+        if managed
+        else ("EXISTING_UNMANAGED_PARTIAL", "AUDIT_THEN_BIND")
+    )
+
+
 def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, Any]:
     selected_root = _root(root)
     records: list[dict[str, Any]] = []
     texts: dict[str, str] = {}
     findings: list[dict[str, str]] = []
-    allowed_roots = ("CONTROL", "TASKS", "PLAYBOOKS", "ROLES", "CHAPTERS", "INBOX", ".opencntx")
-    candidates: list[Path] = []
-    for name in allowed_roots:
-        base = selected_root / name
-        if base.is_dir():
-            for path in base.rglob("*"):
-                if path.is_symlink():
-                    findings.append(
-                        _adoption_finding(
-                            "LINK_PRESENT",
-                            _relative(selected_root, path),
-                            "A symlink or junction needs explicit owner review.",
-                        )
-                    )
-                elif path.is_file():
-                    candidates.append(path)
-    config = selected_root / "opencntx.toml"
-    if config.is_symlink():
-        findings.append(
-            _adoption_finding(
-                "LINK_PRESENT", "opencntx.toml", "The project configuration is a link."
-            )
-        )
-    elif config.is_file():
-        candidates.append(config)
+    candidates = _adoption_candidates(selected_root, findings)
     for path in sorted(set(candidates), key=lambda item: _relative(selected_root, item)):
         relative = _relative(selected_root, path)
-        if relative in {".opencntx/index-v1.json", ".opencntx/adoption-v1.json"}:
+        if relative in {
+            ".opencntx/index-v1.json",
+            ".opencntx/adoption-v1.json",
+            ".opencntx/search-v2.json",
+        }:
             continue
         if relative.startswith(".opencntx/transactions/"):
             continue
         if path.suffix.lower() not in TEXT_SUFFIXES:
             continue
-        data = path.read_bytes()
         try:
-            texts[relative] = data.decode("utf-8")
+            data = path.read_bytes()
+        except OSError as exc:
+            findings.append(_adoption_finding("UNREADABLE_SOURCE", relative, str(exc)))
+            continue
+        encoding = "unknown"
+        try:
+            texts[relative], encoding = _decode_text(data)
         except UnicodeDecodeError:
             findings.append(
                 _adoption_finding(
-                    "INVALID_UTF8", relative, "The source is not valid UTF-8 text."
+                    "UNSUPPORTED_ENCODING", relative, "The source encoding is not supported."
                 )
             )
             texts[relative] = ""
@@ -684,6 +750,7 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
                 "scope": _adoption_scope(relative),
                 "bytes": len(data),
                 "digest": _digest(data),
+                "encoding": encoding,
                 "ownership": "EXISTING_LOCAL",
                 "state": "DISCOVERED",
                 "proposed_action": "BIND_READ_ONLY",
@@ -752,8 +819,17 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
             )
         )
     findings.sort(key=lambda item: (item["code"], item["path"], item["detail"]))
+    project_state, proposed_action = _adoption_project_state(selected_root, records)
     audit = {
-        "status": "READY" if not findings else "BLOCKED",
+        "status": (
+            "BLOCKED"
+            if findings
+            else "PARTIAL"
+            if project_state == "EXISTING_UNMANAGED_PARTIAL"
+            else "READY"
+        ),
+        "project_state": project_state,
+        "coverage": "FULL_SUPPORTED_TEXT_SCOPE",
         "findings": findings,
         "records": len(records),
         "links": len(links),
@@ -765,7 +841,7 @@ def build_adoption_manifest(root: Path, *, max_files: int = 5_000) -> dict[str, 
         "root_path_digest": _digest(str(selected_root).casefold().encode("utf-8")),
         "ownership": "EXISTING_LOCAL",
         "state": "DISCOVERED",
-        "proposed_action": "BIND_READ_ONLY",
+        "proposed_action": proposed_action,
         "records": records,
         "audit": audit,
         "source_tree_digest": _digest(_canonical_json({"records": records, "audit": audit})),
@@ -781,7 +857,14 @@ def write_adoption_manifest(
 ) -> dict[str, Any]:
     selected_root = _root(root)
     manifest = build_adoption_manifest(selected_root)
-    if expected_manifest_digest is not None and manifest["manifest_digest"] != expected_manifest_digest:
+    if manifest["proposed_action"] == "AUDIT_THEN_BIND" and expected_manifest_digest is None:
+        raise KnowledgeError(
+            "An existing unmanaged project requires a reviewed preview digest before binding."
+        )
+    if (
+        expected_manifest_digest is not None
+        and manifest["manifest_digest"] != expected_manifest_digest
+    ):
         raise KnowledgeError("The adoption source changed after its preview digest was approved.")
     store = selected_root / ".opencntx"
     if store.is_symlink() or (store.exists() and not store.is_dir()):
@@ -881,9 +964,7 @@ def validate_footer_host_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]
     chat_megabytes = _optional_host_metric(value["chat_megabytes"], "chat_megabytes")
     total_tokens = _optional_host_tokens(value["total_tokens"])
     model = None if value["model"] is None else _text(value["model"], "model", 200)
-    proposal = (
-        None if value["proposal"] is None else _text(value["proposal"], "proposal", 200)
-    )
+    proposal = None if value["proposal"] is None else _text(value["proposal"], "proposal", 200)
     source_digest = _host_digest(value["source_digest"], "source_digest")
     envelope_digest = _host_digest(value["envelope_digest"], "envelope_digest")
     if value["status"] == "OK" and (
@@ -893,7 +974,9 @@ def validate_footer_host_envelope(envelope: Mapping[str, Any]) -> dict[str, Any]
     if value["status"] == "UNAVAILABLE" and (
         chat_megabytes is not None or total_tokens is not None or model is not None
     ):
-        raise KnowledgeError("An unavailable footer host envelope cannot contain partial telemetry.")
+        raise KnowledgeError(
+            "An unavailable footer host envelope cannot contain partial telemetry."
+        )
     basis = {key: item for key, item in value.items() if key != "envelope_digest"}
     if envelope_digest != _digest(_canonical_json(basis)):
         raise KnowledgeError("Footer host envelope digest does not match its content.")
@@ -921,9 +1004,7 @@ def load_footer_envelope(path: Path, *, max_bytes: int = 65_536) -> dict[str, An
     try:
         if selected.stat().st_size > max_bytes:
             raise KnowledgeError("Footer host envelope exceeds its bounded size.")
-        value = json.loads(
-            selected.read_text(encoding="utf-8"), object_pairs_hook=_strict_object
-        )
+        value = json.loads(selected.read_text(encoding="utf-8"), object_pairs_hook=_strict_object)
     except KnowledgeError:
         raise
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:

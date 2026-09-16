@@ -8,7 +8,7 @@
 writing. The independent entry point also provides `install`, `update`,
 `resume`, and `repair`; candidate and rollback hashes are mandatory for an
 existing installation. Follow the exact checksum and recovery walkthrough in
-[Install and update OPENCNTX 1.8.2](install-and-update.md).
+[Install and update OPENCNTX 1.8.3](install-and-update.md).
 
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
@@ -96,12 +96,13 @@ required arguments and repeatable options.
 | 75 | `opencntx layout verify` | require the objective zero-finding stop rule without changing paths |
 | 76 | `opencntx layout plan preview` | build a deterministic read-only migration plan from explicit paths |
 | 77 | `opencntx layout plan verify` | fail closed if a saved READY plan or any preview base changed |
-| 78 | `opencntx knowledge index build` | build a deterministic hierarchical source index |
-| 79 | `opencntx knowledge index search` | exact-first search with explainable scores and byte states |
-| 80 | `opencntx knowledge technique add` | validate and store one evidence-bound technique card |
-| 81 | `opencntx knowledge technique list` | list locally stored technique cards |
-| 82 | `opencntx knowledge adopt` | audit, preview or write a digest-bound existing-project adoption manifest |
-| 83 | `opencntx knowledge footer` | render a complete provider-neutral footer contract or a validated host envelope |
+| 78 | `opencntx knowledge index build` | build the compatible metadata index and the v2 full-text index |
+| 79 | `opencntx knowledge index search` | exact-first full-text search with explainable scores and bounded snippets |
+| 80 | `opencntx knowledge index status` | inspect search scope and source freshness without writes |
+| 81 | `opencntx knowledge technique add` | validate and store one evidence-bound technique card |
+| 82 | `opencntx knowledge technique list` | list locally stored technique cards |
+| 83 | `opencntx knowledge adopt` | audit, preview or write a digest-bound existing-project adoption manifest |
+| 84 | `opencntx knowledge footer` | render a complete provider-neutral footer contract or a validated host envelope |
 
 ## Roadmap flow
 
