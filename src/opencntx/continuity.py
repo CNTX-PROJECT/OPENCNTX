@@ -1283,22 +1283,22 @@ def _legacy_detail_bytes_v1_1(assignment: dict[str, Any], check: dict[str, Any])
             f"- `{item['path']}` — {item['bytes']} bytes — `{item['sha256']}`"
             for item in check["included"]
         )
-        or "- Geen bestaand geraakt bestand gevonden."
+        or "- No existing touched file found."
     )
     done = "\n".join(f"- [ ] {item}" for item in assignment["definition_of_done"])
-    migration = assignment["migration"] or "Niet nodig."
+    migration = assignment["migration"] or "Not required."
     text = f"""# {assignment["id"]} — {assignment["title"]}
 
 ## Detail
 
 {assignment["detail"]}
 
-## Korte bestaande-check
+## Brief existing-state check
 
-- Conflictklasse: `{assignment["conflict"]}`
-- Rev4-uitkomst: het doel in dit detail wint binnen de gebonden scope.
-- Migratie/compatibility: {migration}
-- Bestanden: {check["file_count"]}
+- Conflict class: `{assignment["conflict"]}`
+- Rev4 outcome: the target in this detail wins within the bound scope.
+- Migration/compatibility: {migration}
+- Files: {check["file_count"]}
 - Bytes: {check["byte_count"]}
 
 {paths}
@@ -1462,7 +1462,7 @@ def _handoff_input(root: Path, relative_path: str | None) -> dict[str, Any]:
             "evidence_explanation": (
                 "The assignment receipt binds every evidence path, byte count, and SHA-256 digest."
             ),
-            "result": "The assignment met its declared Definition of Done with bound evidence.",
+            "result": "The assignment satisfied its declared Definition of Done with bound evidence.",
             "risks": [],
         }
     relative = _safe_relative(relative_path, "handoff")

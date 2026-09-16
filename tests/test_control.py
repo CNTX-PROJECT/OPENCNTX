@@ -143,7 +143,7 @@ class ControlTests(unittest.TestCase):
                 + b"x" * (CONTROL_BLOCK_MAX_BYTES - overhead + 1)
                 + CONTROL_END
             )
-            with self.assertRaisesRegex(ControlError, "te groot") as context:
+            with self.assertRaisesRegex(ControlError, "too large") as context:
                 inspect_control(workspace)
             self.assertEqual(context.exception.code, "control_block_too_large")
 
@@ -151,7 +151,7 @@ class ControlTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = self.make_workspace(Path(temporary_directory))
             self.roadmap(workspace).write_text(
-                "# ROADMAP\n\n## Actuele opdracht\n\nGeen.\n",
+                "# ROADMAP\n\n## Current assignment\n\nNone.\n",
                 encoding="utf-8",
                 newline="\n",
             )
@@ -163,7 +163,7 @@ class ControlTests(unittest.TestCase):
 
     def test_partial_duplicate_reversed_and_nested_markers_fail_closed(self) -> None:
         invalid = (
-            CONTROL_START + b"\nzonder eind",
+            CONTROL_START + b"\nwithout end",
             CONTROL_END + b"\nzonder start",
             CONTROL_START + b"\na" + CONTROL_START + b"\nb" + CONTROL_END,
             CONTROL_START + b"\na" + CONTROL_END + b"\n" + CONTROL_END,
@@ -204,7 +204,7 @@ class ControlTests(unittest.TestCase):
             previous = self.snapshot(workspace).read_bytes()
             current = workspace / "CONTROL" / "CURRENT.md"
             current.write_text(
-                current.read_text(encoding="utf-8") + "\n- Opmerking: gewijzigd\n",
+                current.read_text(encoding="utf-8") + "\n- Note: changed\n",
                 encoding="utf-8",
                 newline="\n",
             )
@@ -238,7 +238,7 @@ class ControlTests(unittest.TestCase):
             try:
                 self.snapshot(workspace).symlink_to(target)
             except (OSError, NotImplementedError):
-                self.skipTest("Symlinks zijn niet beschikbaar op dit platform.")
+                self.skipTest("Symlinks are not available on this platform.")
             with self.assertRaises(ControlError) as context:
                 refresh_control_snapshot(workspace)
             self.assertEqual(context.exception.code, "control_snapshot_unmanaged")
@@ -256,7 +256,7 @@ class ControlTests(unittest.TestCase):
             self.assertIn("Derived evidence", compact.stdout)
 
             self.roadmap(workspace).write_text(
-                "# ROADMAP\n\nGeen actieve opdracht.\n",
+                "# ROADMAP\n\nNo active assignment.\n",
                 encoding="utf-8",
                 newline="\n",
             )

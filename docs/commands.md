@@ -8,7 +8,7 @@
 writing. The independent entry point also provides `install`, `update`,
 `resume`, and `repair`; candidate and rollback hashes are mandatory for an
 existing installation. Follow the exact checksum and recovery walkthrough in
-[Install and update OPENCNTX 1.8.1](install-and-update.md).
+[Install and update OPENCNTX 1.8.2](install-and-update.md).
 
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).

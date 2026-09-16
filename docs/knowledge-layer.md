@@ -1,8 +1,8 @@
-# The OPENCNTX 1.8.1 knowledge layer
+# The OPENCNTX 1.8.2 knowledge layer
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-OPENCNTX 1.8.1 adds a first-party, local index for projects that have one main
+OPENCNTX 1.8.2 retains the first-party, local index for projects that have one main
 Markdown file with child files, nested child files, JSON records, roadmaps and
 technical notes. It keeps the original files authoritative and creates only
 digest-bound metadata under `.opencntx/`.
@@ -33,8 +33,8 @@ digest-bound metadata under `.opencntx/`.
    proposed action is `BIND_READ_ONLY`; ownership is never inferred as
    permission to rewrite.
 7. **Renders a universal footer.** The provider-neutral footer contract always
-   emits a value or an explicit fallback (`geen opdrachtnotitie`, `onbekend`,
-   `niet bepaald` or `niet gemeten`). Exact JSON/CSV/code output can use the
+   emits a value or an explicit fallback (`no assignment note`, `unknown`,
+   `not determined` or `not measured`). Exact JSON/CSV/code output can use the
    `exact` profile so the payload is never corrupted by Markdown.
 
 ## Build and search

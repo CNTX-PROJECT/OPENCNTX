@@ -20,7 +20,7 @@ from .roadmap_runtime import restore_sticky_leaf
 from .runtime_contracts import canonical_digest, validate_runtime_record
 
 SCENARIO_COUNT = 96
-SCENARIO_TABLE_SHA256 = "f0ce7bdd0092cfb27ebae24237f5b7373e41f60b75b29e9972be2516c2fa7c48"
+SCENARIO_TABLE_SHA256 = "9c55c88acb7c7981d8019df2dd44583746677276ee7ff9f747a898e0f017d8ef"
 ASSIGNMENT_33_PROPOSAL_SHA256 = "e5f476d2af3d65c600e4f0d49b04eaf3a8424beb685011dfc3268257ec2f2b8a"
 SCENARIO_ID_PATTERN = re.compile(r"S33-(\d{3})")
 DIGEST_PATTERN = re.compile(r"[0-9a-f]{64}")
@@ -594,7 +594,7 @@ def _breadcrumb(
     stack_digest: str,
 ) -> str:
     mode = project["collaboration_mode"]
-    collaboration = "SOLO" if mode == "SOLO" else f"TEAM {project['declared_human_count']} personen"
+    collaboration = "SOLO" if mode == "SOLO" else f"TEAM {project['declared_human_count']} people"
     frames = [
         {
             "roadmap_id": frame["roadmap_id"],

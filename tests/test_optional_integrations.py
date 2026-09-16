@@ -80,8 +80,8 @@ class OptionalIntegrationTests(unittest.TestCase):
 
     def test_started_roadmap_uses_remaining_label(self) -> None:
         choice = start_choice(interactive=False, started=True)
-        self.assertIn("resterende roadmap", choice["question"].lower())
-        self.assertEqual(choice["choices"][1]["label"], "Resterende roadmap")
+        self.assertIn("remaining roadmap", choice["question"].lower())
+        self.assertEqual(choice["choices"][1]["label"], "Remaining roadmap")
 
     def test_stale_ambiguous_or_unknown_start_selection_is_rejected(self) -> None:
         choice = start_choice(interactive=False)

@@ -92,7 +92,7 @@ def add_accepted_chapter(
         workspace,
         chapter_id,
         title=chapter_id.removeprefix("CH-").title(),
-        scope=f"Begrensde scope voor {chapter_id}.",
+        scope=f"Bounded scope for {chapter_id}.",
         source_ids=[source_id],
         dependency_ids=dependencies,
     )
@@ -111,20 +111,20 @@ def activate_task(
     proposed = propose_task(
         workspace,
         TASK_ID,
-        title="Controleer begrensde projectcontext",
-        goal="Controleer uitsluitend de goedgekeurde projectcontext.",
-        definition_of_done="Resultaat verwijst naar alle gebruikte bronnen.",
-        executor_role="ROLE-CONTROLEUR",
+        title="Inspect bounded project context",
+        goal="Inspect only the approved project context.",
+        definition_of_done="Result refers to all used sources.",
+        executor_role="ROLE-CONTROLLER",
         input_paths=[
             "CONTROL/OWNER.md",
             "CONTROL/ROADMAP.md",
             "CONTROL/CURRENT.md",
             *content_inputs,
         ],
-        allowed_actions=["Lees uitsluitend het taakgebonden contextpakket"],
-        forbidden_actions=["Geen externe verzending"],
-        expected_output="Eén lokaal resultaat met bewijs",
-        acceptance_criteria=["Iedere claim verwijst naar een gepinde bron"],
+        allowed_actions=["Read only the task-bound context package"],
+        forbidden_actions=["No external transmission"],
+        expected_output="One local result with evidence",
+        acceptance_criteria=["Every claim refers to a pinned source"],
         architect="ARCHITECT",
     )
     approved = approve_task(
@@ -142,7 +142,7 @@ def ready_workspace(
     parent: Path,
     *,
     privacy: str = "PRIVATE",
-    content: bytes = b"Exacte projectbron.\n",
+    content: bytes = b"Exact project source.\n",
     legacy: bool = False,
     roadmap_history: str = "",
 ) -> tuple[Path, str, str, str, object]:
@@ -161,7 +161,7 @@ def ready_workspace(
             newline="\n",
         )
     source_id, record_path, original_path = add_source(
-        workspace, "bron.txt", content, privacy=privacy
+        workspace, "source.txt", content, privacy=privacy
     )
     chapter_path = add_accepted_chapter(workspace, "CH-PLAN", source_id)
     rebuild_catalog(workspace)
@@ -256,7 +256,7 @@ class NavigatorTests(unittest.TestCase):
 
     def test_compact_mode_excludes_history_but_pins_full_roadmap(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            history = "\n## Historisch archief\n\nZEER-GROTE-OUDE-GESCHIEDENIS\n"
+            history = "\n## Historical archive\n\nVERY-LARGE-OLD-HISTORY\n"
             workspace, _, _, _, proposed = ready_workspace(
                 Path(temporary_directory), roadmap_history=history
             )
@@ -272,7 +272,7 @@ class NavigatorTests(unittest.TestCase):
             manifest = json.loads(
                 (result.package_path / "manifest.json").read_text(encoding="utf-8")
             )
-            self.assertNotIn("ZEER-GROTE-OUDE-GESCHIEDENIS", context)
+            self.assertNotIn("VERY-LARGE-OLD-HISTORY", context)
             self.assertIn("<!-- OPENCNTX:CONTROL:START -->", context)
             self.assertEqual(
                 manifest["navigation"]["control"]["roadmap_sha256"],
@@ -286,7 +286,7 @@ class NavigatorTests(unittest.TestCase):
 
     def test_legacy_mode_keeps_full_roadmap_and_old_hot_paths(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
-            history = "\n## Historisch archief\n\nLEGACY-GESCHIEDENIS\n"
+            history = "\n## Historical archive\n\nLEGACY-HISTORY\n"
             workspace, _, _, _, proposed = ready_workspace(
                 Path(temporary_directory), legacy=True, roadmap_history=history
             )
@@ -301,7 +301,7 @@ class NavigatorTests(unittest.TestCase):
             manifest = json.loads(
                 (result.package_path / "manifest.json").read_text(encoding="utf-8")
             )
-            self.assertIn("LEGACY-GESCHIEDENIS", context)
+            self.assertIn("LEGACY-HISTORY", context)
             self.assertEqual(
                 manifest["navigation"]["control"]["mode"],
                 "LEGACY_FULL_ROADMAP",
@@ -340,7 +340,7 @@ class NavigatorTests(unittest.TestCase):
     def test_compact_mode_fits_budget_that_rejects_same_legacy_history(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             parent = Path(temporary_directory)
-            history = "\n## Historisch\n\n" + ("oude-informatie\n" * 3_000)
+            history = "\n## Historical\n\n" + ("old-information\n" * 3_000)
             compact, _, _, _, compact_task = ready_workspace(
                 parent / "compact", roadmap_history=history
             )
@@ -380,7 +380,7 @@ class NavigatorTests(unittest.TestCase):
             snapshot_before = snapshot.read_bytes()
             roadmap = workspace / "CONTROL" / "ROADMAP.md"
             roadmap.write_text(
-                roadmap.read_text(encoding="utf-8") + "\nNieuwe geschiedenis.\n",
+                roadmap.read_text(encoding="utf-8") + "\nNieuwe history.\n",
                 encoding="utf-8",
                 newline="\n",
             )
@@ -396,22 +396,22 @@ class NavigatorTests(unittest.TestCase):
             parent = Path(temporary_directory)
             workspace = parent / "missing-control"
             init_workspace(workspace)
-            source_id, _, _ = add_source(workspace, "bron.txt", b"tekst\n")
+            source_id, _, _ = add_source(workspace, "source.txt", b"text\n")
             chapter = add_accepted_chapter(workspace, "CH-PLAN", source_id)
             rebuild_catalog(workspace)
             set_current(workspace)
             proposed = propose_task(
                 workspace,
                 TASK_ID,
-                title="Mist OWNER-input",
-                goal="Controleer begrensde context.",
-                definition_of_done="Context is begrensd.",
-                executor_role="ROLE-CONTROLEUR",
+                title="Missing OWNER input",
+                goal="Inspect bounded context.",
+                definition_of_done="Context is bounded.",
+                executor_role="ROLE-CONTROLLER",
                 input_paths=["CONTROL/ROADMAP.md", "CONTROL/CURRENT.md", chapter],
-                allowed_actions=["Alleen lezen"],
-                forbidden_actions=["Niet extern delen"],
-                expected_output="Lokaal resultaat",
-                acceptance_criteria=["Exacte bronnen"],
+                allowed_actions=["Only reading"],
+                forbidden_actions=["Do not share externally"],
+                expected_output="Local result",
+                acceptance_criteria=["Exact sources"],
                 architect="ARCHITECT",
             )
             approve_task(
@@ -439,15 +439,15 @@ class NavigatorTests(unittest.TestCase):
             proposed = propose_task(
                 workspace,
                 TASK_ID,
-                title="Mist inhoud",
-                goal="Controleer begrensde context.",
-                definition_of_done="Context is begrensd.",
-                executor_role="ROLE-CONTROLEUR",
+                title="Missing content",
+                goal="Inspect bounded context.",
+                definition_of_done="Context is bounded.",
+                executor_role="ROLE-CONTROLLER",
                 input_paths=list(HOT_PATHS_FOR_TEST),
-                allowed_actions=["Alleen lezen"],
-                forbidden_actions=["Niet extern delen"],
-                expected_output="Lokaal resultaat",
-                acceptance_criteria=["Exacte bronnen"],
+                allowed_actions=["Only reading"],
+                forbidden_actions=["Do not share externally"],
+                expected_output="Local result",
+                acceptance_criteria=["Exact sources"],
                 architect="ARCHITECT",
             )
             approve_task(
@@ -530,7 +530,7 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
-            source_id, _, _ = add_source(workspace, "bron.txt", b"tekst\n")
+            source_id, _, _ = add_source(workspace, "source.txt", b"text\n")
             chapter = add_accepted_chapter(workspace, "CH-PLAN", source_id)
             rebuild_catalog(workspace)
             proposed, _, _ = activate_task(workspace, [chapter], begin=False)
@@ -550,7 +550,7 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
-            source_id, _, _ = add_source(workspace, "bron.txt", b"tekst\n")
+            source_id, _, _ = add_source(workspace, "source.txt", b"text\n")
             chapter = add_accepted_chapter(workspace, "CH-PLAN", source_id)
             rebuild_catalog(workspace)
             proposed, _, _ = activate_task(
@@ -572,7 +572,7 @@ class NavigatorTests(unittest.TestCase):
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             chapter = workspace / "CHAPTERS" / "CH-PLAN" / "CHAPTER.md"
             text = chapter.read_text(encoding="utf-8").replace(
-                "Begrensde scope voor CH-PLAN.", "Gewijzigde begrensde scope."
+                "Bounded scope for CH-PLAN.", "Changed bounded scope."
             )
             chapter.write_text(text, encoding="utf-8", newline="\n")
 
@@ -612,7 +612,7 @@ class NavigatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
-            source_id, _, _ = add_source(workspace, "bron.txt", b"tekst\n")
+            source_id, _, _ = add_source(workspace, "source.txt", b"text\n")
             chapter = (
                 create_chapter(workspace, "CH-PLAN", title="Plan", source_ids=[source_id])
                 .chapter_path.relative_to(workspace)
@@ -637,7 +637,7 @@ class NavigatorTests(unittest.TestCase):
             workspace = parent / "workspace"
             init_workspace(workspace)
             source_id, record_path, _ = add_source(
-                workspace, "restricted.txt", b"beperkt\n", privacy="RESTRICTED"
+                workspace, "restricted.txt", b"restricted\n", privacy="RESTRICTED"
             )
             chapter = add_accepted_chapter(workspace, "CH-PLAN", source_id)
             rebuild_catalog(workspace)
@@ -655,7 +655,7 @@ class NavigatorTests(unittest.TestCase):
             other = parent / "allowed"
             init_workspace(other)
             source_id, record_path, _ = add_source(
-                other, "restricted.txt", b"beperkt\n", privacy="RESTRICTED"
+                other, "restricted.txt", b"restricted\n", privacy="RESTRICTED"
             )
             chapter = add_accepted_chapter(other, "CH-PLAN", source_id)
             rebuild_catalog(other)
@@ -674,7 +674,7 @@ class NavigatorTests(unittest.TestCase):
             workspace = Path(temporary_directory) / "workspace"
             init_workspace(workspace)
             source_id, record_path, _ = add_source(
-                workspace, "unknown.txt", b"onbekend\n", privacy="QUARANTINED"
+                workspace, "unknown.txt", b"unknown\n", privacy="QUARANTINED"
             )
             chapter = add_accepted_chapter(workspace, "CH-PLAN", source_id)
             rebuild_catalog(workspace)
@@ -692,7 +692,7 @@ class NavigatorTests(unittest.TestCase):
     def test_binary_source_stops_without_partial_context(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, _, _, _, proposed = ready_workspace(
-                Path(temporary_directory), content=b"tekst\x00binair"
+                Path(temporary_directory), content=b"text\x00binary"
             )
             with self.assertRaises(NavigatorError) as context:
                 build_context_package(
@@ -758,7 +758,7 @@ class NavigatorTests(unittest.TestCase):
             )
             current = workspace / "CONTROL" / "CURRENT.md"
             current.write_text(
-                current.read_text(encoding="utf-8") + "\ngewijzigd\n",
+                current.read_text(encoding="utf-8") + "\nchanged\n",
                 encoding="utf-8",
                 newline="\n",
             )
@@ -779,7 +779,7 @@ class NavigatorTests(unittest.TestCase):
             workspace, _, _, _, proposed = ready_workspace(Path(temporary_directory))
             catalog = workspace / ".opencntx" / "catalog.sqlite"
             connection = sqlite3.connect(catalog)
-            connection.execute("UPDATE chapters SET title = 'VERVALST'")
+            connection.execute("UPDATE chapters SET title = 'TAMPERED'")
             connection.commit()
             connection.close()
 
@@ -827,7 +827,7 @@ class NavigatorTests(unittest.TestCase):
             self.assertEqual(verify.returncode, 0, verify.stderr)
             self.assertIn("result: OK", verify.stdout)
 
-            (workspace / "CONTROL" / "OWNER.md").write_text("gewijzigd\n", encoding="utf-8")
+            (workspace / "CONTROL" / "OWNER.md").write_text("changed\n", encoding="utf-8")
             drift = run_cli(
                 "workspace",
                 "context",

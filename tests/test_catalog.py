@@ -97,15 +97,15 @@ class CatalogTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             source = workspace / "INBOX" / "schema.txt"
-            source.write_text("exacte bron", encoding="utf-8")
+            source.write_text("exact source", encoding="utf-8")
             captured = capture_source(workspace, source)
             index_before = (workspace / "CHAPTERS" / "INDEX.md").read_bytes()
 
             result = create_chapter(
                 workspace,
-                "CH-ELEKTRICITEIT",
-                title="Elektriciteit",
-                scope="Elektrische installatie.",
+                "CH-ELECTRICITY",
+                title="Electricity",
+                scope="Electrical installation.",
                 source_ids=[captured.source_id],
             )
 
@@ -116,11 +116,11 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(captured.sha256, content)
             self.assertEqual(content.count("## "), 9)
             before = result.chapter_path.read_bytes()
-            with self.assertRaisesRegex(CatalogError, "bestaat al"):
+            with self.assertRaisesRegex(CatalogError, "already exists"):
                 create_chapter(
                     workspace,
-                    "CH-ELEKTRICITEIT",
-                    title="Andere titel",
+                    "CH-ELECTRICITY",
+                    title="Other title",
                 )
             self.assertEqual(result.chapter_path.read_bytes(), before)
             self.assertEqual((workspace / "CHAPTERS" / "INDEX.md").read_bytes(), index_before)
@@ -131,38 +131,38 @@ class CatalogTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             with self.assertRaises(CatalogError):
-                create_chapter(workspace, "chapter one", title="Fout")
-            with self.assertRaisesRegex(CatalogError, "Onbekende bron"):
+                create_chapter(workspace, "chapter one", title="Error")
+            with self.assertRaisesRegex(CatalogError, "Unknown source"):
                 create_chapter(
                     workspace,
-                    "CH-ONBEKEND",
-                    title="Onbekend",
+                    "CH-UNKNOWN",
+                    title="Unknown",
                     source_ids=["SRC-20260816-000000000000"],
                 )
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("inhoud", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("content", encoding="utf-8")
             captured = capture_source(workspace, source)
-            stored_original(workspace, captured.source_id).write_text("gewijzigd", encoding="utf-8")
-            with self.assertRaisesRegex(CatalogError, "niet exact"):
+            stored_original(workspace, captured.source_id).write_text("changed", encoding="utf-8")
+            with self.assertRaisesRegex(CatalogError, "not exact"):
                 create_chapter(
                     workspace,
                     "CH-DRIFT",
                     title="Drift",
                     source_ids=[captured.source_id],
                 )
-            with self.assertRaisesRegex(CatalogError, "Dubbele --source"):
+            with self.assertRaisesRegex(CatalogError, "Duplicate --source"):
                 create_chapter(
                     workspace,
-                    "CH-DUBBEL",
-                    title="Dubbel",
+                    "CH-DUPLICATE",
+                    title="Duplicate",
                     source_ids=[captured.source_id, captured.source_id],
                 )
-            with self.assertRaisesRegex(CatalogError, "Onbekend afhankelijk"):
+            with self.assertRaisesRegex(CatalogError, "Unknown dependency chapter"):
                 create_chapter(
                     workspace,
                     "CH-DEPENDENCY",
                     title="Dependency",
-                    dependency_ids=["CH-ONTBREEKT"],
+                    dependency_ids=["CH-MISSING"],
                 )
 
     def test_empty_rebuild_is_valid_and_logically_deterministic(self) -> None:
@@ -214,7 +214,7 @@ class CatalogTests(unittest.TestCase):
                 workspace,
                 "CH-PLAN",
                 title="Plan",
-                scope="Planonderdelen.",
+                scope="Plan components.",
                 source_ids=[captured.source_id],
             )
             promote_chapter(workspace, "CH-PLAN")
@@ -280,19 +280,19 @@ class CatalogTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "versie.txt"
-            source.write_text("versie één", encoding="utf-8")
+            source = workspace / "INBOX" / "version.txt"
+            source.write_text("version one", encoding="utf-8")
             first = capture_source(workspace, source)
             create_chapter(
                 workspace,
-                "CH-VERSIES",
-                title="Versies",
+                "CH-VERSIONS",
+                title="Versions",
                 source_ids=[first.source_id],
             )
-            promote_chapter(workspace, "CH-VERSIES")
+            promote_chapter(workspace, "CH-VERSIONS")
             self.assertEqual(rebuild_catalog(workspace).freshness_counts["CURRENT"], 1)
 
-            source.write_text("versie twee", encoding="utf-8")
+            source.write_text("version two", encoding="utf-8")
             capture_source(workspace, source, supersedes=first.source_id)
             superseded = rebuild_catalog(workspace)
             self.assertEqual(superseded.freshness_counts["STALE"], 1)
@@ -330,12 +330,12 @@ class CatalogTests(unittest.TestCase):
             promote_chapter(workspace, "CH-BASIS")
             create_chapter(
                 workspace,
-                "CH-AFHANKELIJK",
-                title="Afhankelijk",
+                "CH-DEPENDENT",
+                title="Dependent",
                 source_ids=[captured.source_id],
                 dependency_ids=["CH-BASIS"],
             )
-            promote_chapter(workspace, "CH-AFHANKELIJK")
+            promote_chapter(workspace, "CH-DEPENDENT")
             self.assertEqual(rebuild_catalog(workspace).freshness_counts["CURRENT"], 2)
 
             stored_original(workspace, captured.source_id).write_text("drift", encoding="utf-8")
@@ -346,10 +346,10 @@ class CatalogTests(unittest.TestCase):
             basis = chapter_path(workspace, "CH-BASIS")
             text = basis.read_text(encoding="utf-8").replace(
                 "dependency_ids = []",
-                'dependency_ids = ["CH-AFHANKELIJK"]',
+                'dependency_ids = ["CH-DEPENDENT"]',
             )
             basis.write_text(text, encoding="utf-8", newline="\n")
-            with self.assertRaisesRegex(CatalogError, "cyclus"):
+            with self.assertRaisesRegex(CatalogError, "cycle"):
                 rebuild_catalog(workspace)
             self.assertEqual(stale.catalog_path.read_bytes(), old_catalog)
             receipts = sorted((workspace / ".opencntx" / "receipts").glob("CAT-*.json"))
@@ -359,20 +359,20 @@ class CatalogTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("bron", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("source", encoding="utf-8")
             captured = capture_source(workspace, source)
             create_chapter(
                 workspace,
-                "CH-ONVOLLEDIG",
-                title="Onvolledig",
+                "CH-INCOMPLETE",
+                title="Incomplete",
                 source_ids=[captured.source_id],
             )
-            promote_chapter(workspace, "CH-ONVOLLEDIG")
-            path = chapter_path(workspace, "CH-ONVOLLEDIG")
+            promote_chapter(workspace, "CH-INCOMPLETE")
+            path = chapter_path(workspace, "CH-INCOMPLETE")
             text = path.read_text(encoding="utf-8")
             text = text.replace(captured.source_id, "SRC-20260816-000000000000")
-            text = text.replace("dependency_ids = []", 'dependency_ids = ["CH-ONTBREEKT"]')
+            text = text.replace("dependency_ids = []", 'dependency_ids = ["CH-MISSING"]')
             path.write_text(text, encoding="utf-8", newline="\n")
 
             result = rebuild_catalog(workspace)
@@ -392,10 +392,10 @@ class CatalogTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             init_workspace(workspace)
             index = workspace / "CHAPTERS" / "INDEX.md"
-            index.write_text("# Mijn unieke handmatige notitie\n", encoding="utf-8")
+            index.write_text("# My unique manual note\n", encoding="utf-8")
             before = index.read_bytes()
 
-            with self.assertRaisesRegex(CatalogError, "niets overschreven"):
+            with self.assertRaisesRegex(CatalogError, "nothing was overwritten"):
                 rebuild_catalog(workspace)
 
             self.assertEqual(index.read_bytes(), before)
@@ -416,11 +416,11 @@ class CatalogTests(unittest.TestCase):
                 encoding="utf-8",
                 newline="\n",
             )
-            with self.assertRaisesRegex(CatalogError, "onbekende of ontbrekende"):
+            with self.assertRaisesRegex(CatalogError, "unknown or missing"):
                 rebuild_catalog(workspace)
 
             path.write_text(
-                original.replace("## Freshness\n", "## Verkeerde sectie\n"),
+                original.replace("## Freshness\n", "## Wrong section\n"),
                 encoding="utf-8",
                 newline="\n",
             )
@@ -434,13 +434,13 @@ class CatalogTests(unittest.TestCase):
             first = rebuild_catalog(workspace)
             catalog_before = first.catalog_path.read_bytes()
             first.index_path.write_text(
-                first.index_path.read_text(encoding="utf-8") + "handmatige toevoeging\n",
+                first.index_path.read_text(encoding="utf-8") + "manual addition\n",
                 encoding="utf-8",
                 newline="\n",
             )
             index_before = first.index_path.read_bytes()
 
-            with self.assertRaisesRegex(CatalogError, "niets overschreven"):
+            with self.assertRaisesRegex(CatalogError, "nothing was overwritten"):
                 rebuild_catalog(workspace)
 
             self.assertEqual(first.index_path.read_bytes(), index_before)
@@ -453,13 +453,13 @@ class CatalogTests(unittest.TestCase):
             first = rebuild_catalog(workspace)
             first.catalog_path.unlink()
             first.index_path.write_text(
-                first.index_path.read_text(encoding="utf-8") + "handmatig\n",
+                first.index_path.read_text(encoding="utf-8") + "manual\n",
                 encoding="utf-8",
                 newline="\n",
             )
             index_before = first.index_path.read_bytes()
 
-            with self.assertRaisesRegex(CatalogError, "niets overschreven"):
+            with self.assertRaisesRegex(CatalogError, "nothing was overwritten"):
                 rebuild_catalog(workspace)
 
             self.assertEqual(first.index_path.read_bytes(), index_before)
@@ -477,7 +477,7 @@ class CatalogTests(unittest.TestCase):
             try:
                 path.symlink_to(real)
             except OSError as exc:
-                self.skipTest(f"Symlinks zijn niet beschikbaar: {exc}")
+                self.skipTest(f"Symlinks are not available: {exc}")
 
             with self.assertRaisesRegex(CatalogError, "symlink"):
                 rebuild_catalog(workspace)
@@ -486,9 +486,9 @@ class CatalogTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            create_chapter(workspace, "CH-LEEG", title="Leeg")
+            create_chapter(workspace, "CH-EMPTY", title="Empty")
             first = rebuild_catalog(workspace)
-            first.catalog_path.write_bytes(b"geen sqlite")
+            first.catalog_path.write_bytes(b"no sqlite")
 
             second = rebuild_catalog(workspace)
 
@@ -503,14 +503,14 @@ class CatalogTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            secret_content = "BRONINHOUD-DIE-NIET-IN-DE-CATALOGUS-MAG"
-            source = workspace / "INBOX" / "bron.txt"
+            secret_content = "SOURCE CONTENT-DIE-NOT-IN-DE-CATALOG-MAY"
+            source = workspace / "INBOX" / "source.txt"
             source.write_text(secret_content, encoding="utf-8")
             captured = capture_source(workspace, source)
-            title = "Titel | x'; DROP TABLE sources; --"
+            title = "Title | x'; DROP TABLE sources; --"
             create_chapter(
                 workspace,
-                "CH-INJECTIE",
+                "CH-INJECTION",
                 title=title,
                 source_ids=[captured.source_id],
             )
@@ -521,33 +521,33 @@ class CatalogTests(unittest.TestCase):
                 catalog_value(
                     workspace,
                     "SELECT title FROM chapters WHERE chapter_id = ?",
-                    ("CH-INJECTIE",),
+                    ("CH-INJECTION",),
                 ),
                 title,
             )
             self.assertEqual(catalog_value(workspace, "SELECT COUNT(*) FROM sources"), 1)
             self.assertNotIn(secret_content.encode("utf-8"), result.catalog_path.read_bytes())
             self.assertNotIn(secret_content, result.index_path.read_text(encoding="utf-8"))
-            self.assertIn("Titel \\|", result.index_path.read_text(encoding="utf-8"))
+            self.assertIn("Title \\|", result.index_path.read_text(encoding="utf-8"))
             self.assertNotIn(str(workspace), result.receipt_path.read_text(encoding="utf-8"))
 
     def test_publish_failure_never_changes_official_sources_or_chapters(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace = Path(temporary_directory)
             init_workspace(workspace)
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("officieel", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("official", encoding="utf-8")
             captured = capture_source(workspace, source)
             create_chapter(
                 workspace,
-                "CH-OFFICIEEL",
-                title="Officieel",
+                "CH-OFFICIAL",
+                title="Official",
                 source_ids=[captured.source_id],
             )
             official_before = {
                 path.relative_to(workspace).as_posix(): path.read_bytes()
                 for path in list((workspace / "SOURCES").rglob("*"))
-                + list((workspace / "CHAPTERS" / "CH-OFFICIEEL").rglob("*"))
+                    + list((workspace / "CHAPTERS" / "CH-OFFICIAL").rglob("*"))
                 if path.is_file()
             }
             real_replace = os.replace
@@ -555,19 +555,19 @@ class CatalogTests(unittest.TestCase):
             def fail_index_publish(source_path: object, destination_path: object) -> None:
                 destination = Path(destination_path)  # type: ignore[arg-type]
                 if destination == workspace / "CHAPTERS" / "INDEX.md":
-                    raise OSError("gesimuleerde indexfout")
+                    raise OSError("simulated index failure")
                 real_replace(source_path, destination_path)  # type: ignore[arg-type]
 
             with (
                 mock.patch("opencntx.catalog.os.replace", side_effect=fail_index_publish),
-                self.assertRaisesRegex(CatalogError, "niet volledig"),
+                self.assertRaisesRegex(CatalogError, "published completely"),
             ):
                 rebuild_catalog(workspace)
 
             official_after = {
                 path.relative_to(workspace).as_posix(): path.read_bytes()
                 for path in list((workspace / "SOURCES").rglob("*"))
-                + list((workspace / "CHAPTERS" / "CH-OFFICIEEL").rglob("*"))
+                    + list((workspace / "CHAPTERS" / "CH-OFFICIAL").rglob("*"))
                 if path.is_file()
             }
             self.assertEqual(official_after, official_before)
@@ -582,8 +582,8 @@ class CatalogTests(unittest.TestCase):
             workspace = Path(temporary_directory)
             initialized = run_cli("workspace", "init", cwd=workspace)
             self.assertEqual(initialized.returncode, 0, initialized.stderr)
-            source = workspace / "INBOX" / "bron.txt"
-            source.write_text("bron", encoding="utf-8")
+            source = workspace / "INBOX" / "source.txt"
+            source.write_text("source", encoding="utf-8")
             captured = run_cli(
                 "workspace",
                 "capture",
@@ -601,7 +601,7 @@ class CatalogTests(unittest.TestCase):
                 "create",
                 "CH-CLI",
                 "--title",
-                "CLI-hoofdstuk",
+                "CLI-chapter",
                 "--source",
                 source_id,
                 cwd=workspace,

@@ -299,13 +299,13 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             project_root = Path(temporary_directory)
             config_path = project_root / "opencntx.toml"
-            config_path.write_text("bewaar mij\n", encoding="utf-8")
+            config_path.write_text("keep me\n", encoding="utf-8")
 
             result = run_cli("init", cwd=project_root)
 
             self.assertEqual(result.returncode, 2)
             self.assertIn("nothing was overwritten", result.stderr)
-            self.assertEqual(config_path.read_text(encoding="utf-8"), "bewaar mij\n")
+            self.assertEqual(config_path.read_text(encoding="utf-8"), "keep me\n")
 
     def test_workspace_doctor_is_read_only_on_a_new_workspace(self) -> None:
         from opencntx.workspace import init_workspace

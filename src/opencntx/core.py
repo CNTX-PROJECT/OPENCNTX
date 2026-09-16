@@ -505,11 +505,11 @@ def render_context(goal: str, sources: tuple[Source, ...], *, legacy: bool = Fal
     lines = [
         "# OPENCNTX Context Package",
         "",
-        "## Taak" if legacy else "## Task",
+        "## Task",
         "",
         goal,
         "",
-        "## Bronnen" if legacy else "## Sources",
+        "## Source material" if legacy else "## Sources",
     ]
     for source in sources:
         fence = _markdown_fence(source.text)

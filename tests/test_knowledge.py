@@ -65,7 +65,7 @@ class KnowledgeIndexTests(unittest.TestCase):
             encoding="utf-8",
         )
         (temporary / "main" / "child.md").write_text(
-            "# Child\n\nA proven technique lives here.\n",
+            "# Child\n\after proven technique lives here.\n",
             encoding="utf-8",
         )
         (temporary / "roadmap.json").write_text(
@@ -161,8 +161,8 @@ class KnowledgeIndexTests(unittest.TestCase):
     def test_footer_always_has_fallbacks_and_exact_profile(self) -> None:
         contract = make_footer_contract()
         rendered = render_footer(contract)
-        self.assertIn("geen opdrachtnotitie", rendered)
-        self.assertIn("niet gemeten", rendered)
+        self.assertIn("no assignment note", rendered)
+        self.assertIn("not measured", rendered)
         self.assertIn(" · **Tokens:** ", rendered)
         self.assertTrue(contract["contract_digest"])
 
@@ -211,7 +211,7 @@ class KnowledgeIndexTests(unittest.TestCase):
             model=None,
         )
         contract = make_footer_contract_from_host_envelope(unavailable)
-        self.assertIn("niet gemeten", render_footer(contract))
+        self.assertIn("not measured", render_footer(contract))
 
     def test_cli_knowledge_routes_cover_build_search_technique_adoption_and_footer(self) -> None:
         root = self._project()
@@ -271,7 +271,7 @@ class KnowledgeIndexTests(unittest.TestCase):
             for profile in ("commonmark", "portable", "plain"):
                 footer = run_knowledge_cli(["knowledge", "footer", "--profile", profile], cwd=root)
                 self.assertEqual(footer[0], 0, footer[2])
-                self.assertIn("Opdracht", footer[1])
+                self.assertIn("Assignment", footer[1])
             exact = run_knowledge_cli(["knowledge", "footer", "--profile", "exact"], cwd=root)
             self.assertEqual(exact[0], 0, exact[2])
             self.assertIn("rendered_digest", json.loads(exact[1]))
@@ -369,7 +369,7 @@ class KnowledgeIndexTests(unittest.TestCase):
                 render_footer(make_footer_contract() | {"contract_digest": "tampered"})
             with self.assertRaises(KnowledgeError):
                 make_footer_contract(profile="unsupported")
-            self.assertIn("Opdracht:", render_footer(make_footer_contract(profile="plain")))
+            self.assertIn("Assignment:", render_footer(make_footer_contract(profile="plain")))
 
             for relative in (
                 "CONTROL/ROADMAP.md",
@@ -422,7 +422,7 @@ class KnowledgeIndexTests(unittest.TestCase):
                 "# A\n\nRequires [[b|B]] and [missing](missing.md).\nExternal [web](https://example.com).\n",
                 encoding="utf-8",
             )
-            (root / "b.md").write_text("# B\n\nA stable heading.\n", encoding="utf-8")
+            (root / "b.md").write_text("# B\n\after stable heading.\n", encoding="utf-8")
             index = build_index(root)
             self.assertEqual(len(index["links"]), 2)
             self.assertIn("unresolved_target", {link["reason"] for link in index["links"]})

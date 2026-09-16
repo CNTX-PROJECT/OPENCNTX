@@ -2,13 +2,28 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.8.2 - 2026-09-16
+
+Published GitHub release. This release makes the OPENCNTX-owned public surface
+English across active source, CLI output, documentation, examples, tests,
+fixtures and guidance. It adds a fail-closed public-language gate to local
+quality checks and CI, preserves machine identifiers and durable-format
+compatibility, and normalizes retained R9 fixture prose with rebound digest
+evidence. Historical language codes remain accepted as compatibility input but
+no longer produce a second OPENCNTX product language.
+
+The 1.8.1 managed-installation, host-footer, adoption-audit and rollback
+hardening remains intact. This release does not translate human-owned project
+files, import Obsidian backups, enable host synchronization or close the real
+project `VISUAL_ARTIST` takeover gate.
+
 ## 1.8.1 - 2026-09-15
 
 Published GitHub release. This release aligns the
 rendered footer telemetry separators with the owner-facing contract and
 revalidates the managed installation/update route against the v1.7.6 offline
 rollback artifact. Host-supplied telemetry remains explicit: missing values
-must render as `niet gemeten` or `onbekend` instead of being invented. The
+must render as `not measured` or `unknown` instead of being invented. The
 read-only installation inventory now recognizes the active
 `.opencntx/latest/manifest.json` projection instead of reporting a packed
 project as absent. The release also adds a closed, session-bound

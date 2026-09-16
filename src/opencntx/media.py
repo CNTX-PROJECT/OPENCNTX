@@ -238,7 +238,7 @@ def _write_new(path: Path, content: bytes) -> None:
             os.fsync(destination.fileno())
     except FileExistsError as exc:
         raise MediaError(
-            f"Beheerd mediabestand bestaat al: {path.name}.",
+            f"Managed media file already exists: {path.name}.",
             code="media_record_exists",
         ) from exc
     except OSError as exc:
@@ -248,21 +248,21 @@ def _write_new(path: Path, content: bytes) -> None:
             except OSError:
                 pass
         raise MediaError(
-            f"Beheerd mediabestand kon niet veilig worden geschreven: {path.name}: {exc}",
+            f"Managed media file could not be written safely: {path.name}: {exc}",
             code="media_write_failed",
         ) from exc
 
 
 def _read_json(path: Path, fields: set[str], *, label: str) -> dict[str, Any]:
     if path.is_symlink() or not path.is_file():
-        raise MediaError(f"{label} ontbreekt of is onveilig.", code="media_record_invalid")
+        raise MediaError(f"{label} is missing or unsafe.", code="media_record_invalid")
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise MediaError(f"{label} is ongeldig.", code="media_record_invalid") from exc
+        raise MediaError(f"{label} is invalid.", code="media_record_invalid") from exc
     if not isinstance(value, dict) or set(value) != fields:
         raise MediaError(
-            f"{label} heeft onbekende of ontbrekende velden.",
+            f"{label} has unknown or missing fields.",
             code="media_record_invalid",
         )
     return value
@@ -270,15 +270,15 @@ def _read_json(path: Path, fields: set[str], *, label: str) -> dict[str, Any]:
 
 def _short_text(value: object, *, field: str, allow_empty: bool = False) -> str:
     if not isinstance(value, str):
-        raise MediaError(f"{field} moet tekst zijn.", code="media_input_invalid")
+        raise MediaError(f"{field} must be text.", code="media_input_invalid")
     normalized = value.strip()
     if (not normalized and not allow_empty) or len(normalized) > MAX_SHORT_TEXT:
-        raise MediaError(f"{field} heeft een ongeldige lengte.", code="media_input_invalid")
+        raise MediaError(f"{field} has an invalid length.", code="media_input_invalid")
     if any(ord(character) < 32 or ord(character) == 127 for character in normalized):
-        raise MediaError(f"{field} bevat onveilige tekens.", code="media_input_invalid")
+        raise MediaError(f"{field} contains unsafe characters.", code="media_input_invalid")
     if re.match(r"^(?:[A-Za-z]:[\\/]|[/\\]{1,2})", normalized):
         raise MediaError(
-            f"{field} mag geen absoluut persoonlijk pad bevatten.",
+            f"{field} must not contain an absolute personal path.",
             code="media_input_invalid",
         )
     return normalized
@@ -288,30 +288,30 @@ def _text_list(
     values: object, *, field: str, maximum: int, allow_empty: bool = True
 ) -> tuple[str, ...]:
     if not isinstance(values, (list, tuple)):
-        raise MediaError(f"{field} moet een lijst zijn.", code="media_input_invalid")
+        raise MediaError(f"{field} must be a list.", code="media_input_invalid")
     if (not values and not allow_empty) or len(values) > maximum:
-        raise MediaError(f"{field} heeft een ongeldige lengte.", code="media_input_invalid")
+        raise MediaError(f"{field} has an invalid length.", code="media_input_invalid")
     result = tuple(_short_text(value, field=field) for value in values)
     if len(set(result)) != len(result):
-        raise MediaError(f"{field} bevat dubbele waarden.", code="media_input_invalid")
+        raise MediaError(f"{field} contains duplicate values.", code="media_input_invalid")
     return result
 
 
 def _source_id(value: object) -> str:
     if not isinstance(value, str) or SOURCE_ID_PATTERN.fullmatch(value) is None:
-        raise MediaError("Ongeldige source-ID.", code="media_source_id_invalid")
+        raise MediaError("Invalid source ID.", code="media_source_id_invalid")
     return value
 
 
 def _derivation_id(value: object) -> str:
     if not isinstance(value, str) or DERIVATION_ID_PATTERN.fullmatch(value) is None:
-        raise MediaError("Ongeldige derivation-ID.", code="media_derivation_id_invalid")
+        raise MediaError("Invalid derivation ID.", code="media_derivation_id_invalid")
     return value
 
 
 def _digest(value: object, *, field: str) -> str:
     if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
-        raise MediaError(f"Ongeldige SHA-256 voor {field}.", code="media_digest_invalid")
+        raise MediaError(f"Invalid SHA-256 for {field}.", code="media_digest_invalid")
     return value
 
 
@@ -320,17 +320,17 @@ def _exact_source(root: Path, source_id: str, *, allow_quarantined: bool) -> _Ex
     stored = _stored_sources(root)
     source = stored.get(normalized)
     if source is None:
-        raise MediaError(f"Onbekende bron: {normalized}.", code="media_source_unknown")
+        raise MediaError(f"Unknown source: {normalized}.", code="media_source_unknown")
     byte_count, source_sha256 = _hash_file(source.original_path)
     if byte_count != source.byte_count or source_sha256 != source.sha256:
         raise MediaError(
-            f"Originele bronbytes wijken af: {normalized}.",
+            f"Original source bytes differ: {normalized}.",
             code="media_source_stale",
         )
     _, record_sha256 = _hash_file(source.record_path)
     if source.privacy == "QUARANTINED" and not allow_quarantined:
         raise MediaError(
-            f"Bron {normalized} is QUARANTINED en wordt niet verwerkt.",
+            f"Source {normalized} is QUARANTINED and will not be processed.",
             code="media_source_quarantined",
         )
     return _ExactSource(stored=source, record_sha256=record_sha256)
@@ -339,12 +339,12 @@ def _exact_source(root: Path, source_id: str, *, allow_quarantined: bool) -> _Ex
 def _derived_root(root: Path, *, create: bool) -> Path:
     opencntx = root / ".opencntx"
     if opencntx.is_symlink() or not opencntx.is_dir():
-        raise MediaError(".opencntx is onveilig.", code="media_storage_invalid")
+        raise MediaError(".opencntx is unsafe.", code="media_storage_invalid")
     derived = opencntx / "derived"
     if derived.exists():
         if derived.is_symlink() or not derived.is_dir():
             raise MediaError(
-                ".opencntx/derived moet een veilige gewone map zijn.",
+                ".opencntx/derived must be a safe regular directory.",
                 code="media_storage_invalid",
             )
     elif create:
@@ -352,7 +352,7 @@ def _derived_root(root: Path, *, create: bool) -> Path:
             derived.mkdir()
         except OSError as exc:
             raise MediaError(
-                f"Afleidingsopslag kon niet worden gemaakt: {exc}",
+                f"Derivation storage could not be created: {exc}",
                 code="media_storage_write_failed",
             ) from exc
     return derived
@@ -376,7 +376,7 @@ def _validate_utf8_file(path: Path, expected_bytes: int, expected_sha256: str) -
                     for character in text
                 ):
                     raise MediaError(
-                        "Afgeleide tekst bevat onveilige controltekens.",
+                        "Derived text contains unsafe control characters.",
                         code="media_text_invalid",
                     )
             tail = decoder.decode(b"", final=True)
@@ -385,18 +385,18 @@ def _validate_utf8_file(path: Path, expected_bytes: int, expected_sha256: str) -
                 for character in tail
             ):
                 raise MediaError(
-                    "Afgeleide tekst bevat onveilige controltekens.",
+                    "Derived text contains unsafe control characters.",
                     code="media_text_invalid",
                 )
     except MediaError:
         raise
     except (OSError, UnicodeDecodeError) as exc:
         raise MediaError(
-            "Afgeleide tekst is niet veilig leesbaar als UTF-8.",
+            "Derived text is not safely readable as UTF-8.",
             code="media_text_invalid",
         ) from exc
     if byte_count != expected_bytes or digest.hexdigest() != expected_sha256:
-        raise MediaError("Afgeleide tekstbytes wijken af.", code="media_content_stale")
+        raise MediaError("Derived text bytes differ.", code="media_content_stale")
 
 
 def _validate_record(
@@ -417,7 +417,7 @@ def _validate_record(
         or isinstance(value.get("content_bytes"), bool)
         or value["content_bytes"] < 0
     ):
-        raise MediaError("Afleidingsrecord is ongeldig.", code="media_record_invalid")
+        raise MediaError("Derivation record is invalid.", code="media_record_invalid")
     _digest(value.get("content_sha256"), field="content_sha256")
     _short_text(value.get("created_at"), field="created_at")
     _short_text(value.get("producer"), field="producer")
@@ -427,7 +427,7 @@ def _validate_record(
         _derivation_id(supersedes)
         if supersedes == derivation_id:
             raise MediaError(
-                "Een afleiding kan zichzelf niet vervangen.",
+                "A derivation cannot supersede itself.",
                 code="media_supersedes_invalid",
             )
 
@@ -442,7 +442,7 @@ def _validate_review(value: dict[str, Any], record: dict[str, Any], record_sha25
         or value.get("content_sha256") != record["content_sha256"]
         or value.get("decision") not in DECISIONS
     ):
-        raise MediaError("Reviewrecord is ongeldig.", code="media_review_invalid")
+        raise MediaError("Review record is invalid.", code="media_review_invalid")
     _short_text(value.get("reviewed_at"), field="reviewed_at")
     _short_text(value.get("reviewer"), field="reviewer")
     _text_list(value.get("findings"), field="findings", maximum=MAX_FINDINGS, allow_empty=False)
@@ -465,7 +465,7 @@ def _validate_promotion(
 ) -> None:
     if review is None or review.get("decision") != "ACCEPT" or review_sha256 is None:
         raise MediaError(
-            "Promotie mist een geaccepteerde exacte review.",
+            "Promotion lacks an accepted exact review.",
             code="media_promotion_invalid",
         )
     if (
@@ -479,14 +479,14 @@ def _validate_promotion(
         or value.get("content_sha256") != record["content_sha256"]
         or value.get("capture_status") not in {"CAPTURED", "DUPLICATE"}
     ):
-        raise MediaError("Promotierecord is ongeldig.", code="media_promotion_invalid")
+        raise MediaError("Promotion record is invalid.", code="media_promotion_invalid")
     _short_text(value.get("promoted_at"), field="promoted_at")
     promoted_source_id = _source_id(value.get("promoted_source_id"))
     promoted_digest = _digest(value.get("promoted_source_sha256"), field="promoted_source_sha256")
     sources = _stored_sources(root)
     promoted = sources.get(promoted_source_id)
     if promoted is None:
-        raise MediaError("Gepromoveerde bron ontbreekt.", code="media_promotion_stale")
+        raise MediaError("Promoted source is missing.", code="media_promotion_stale")
     size, digest = _hash_file(promoted.original_path)
     if (
         digest != promoted_digest
@@ -495,7 +495,7 @@ def _validate_promotion(
         or promoted.privacy != record["privacy"]
     ):
         raise MediaError(
-            "Gepromoveerde bronbytes of privacy wijken af.",
+            "Promoted source bytes or privacy differ.",
             code="media_promotion_stale",
         )
     promoted_record = _read_json(
@@ -514,19 +514,19 @@ def _validate_promotion(
             "stored_path",
             "supersedes",
         },
-        label="Gepromoveerd bronrecord",
+        label="Promoted source record",
     )
     _, promoted_record_sha256 = _hash_file(promoted.record_path)
     if value.get("promoted_source_record_sha256") != promoted_record_sha256:
         raise MediaError(
-            "Gepromoveerd bronrecord wijkt af.",
+            "Promoted source record differs.",
             code="media_promotion_stale",
         )
     if value.get("capture_status") == "CAPTURED" and promoted_record.get(
         "origin"
     ) != _promotion_origin(record):
         raise MediaError(
-            "Gepromoveerde bron mist de exacte mediaherkomst.",
+            "Promoted source lacks the exact media provenance.",
             code="media_promotion_stale",
         )
 
@@ -541,7 +541,7 @@ def _validate_removal(value: dict[str, Any], record: dict[str, Any], record_sha2
         or value.get("record_sha256") != record_sha256
         or value.get("content_sha256") != record["content_sha256"]
     ):
-        raise MediaError("Verwijderrecord is ongeldig.", code="media_removal_invalid")
+        raise MediaError("Removal record is invalid.", code="media_removal_invalid")
     _short_text(value.get("removed_at"), field="removed_at")
     _short_text(value.get("owner"), field="owner")
 
@@ -555,7 +555,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
         source_children = sorted(derived_root.iterdir(), key=lambda path: path.name)
     except OSError as exc:
         raise MediaError(
-            "Afleidingsopslag is niet leesbaar.", code="media_storage_invalid"
+            "Derivation storage is not readable.", code="media_storage_invalid"
         ) from exc
     for child in source_children:
         if (
@@ -564,7 +564,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
             or SOURCE_ID_PATTERN.fullmatch(child.name) is None
         ):
             raise MediaError(
-                "Afleidingsopslag bevat een onverwacht of onveilig bronpad.",
+            "Derivation storage contains an unexpected or unsafe source path.",
                 code="media_storage_invalid",
             )
     source_directory = derived_root / source_id
@@ -575,7 +575,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
         children = sorted(source_directory.iterdir(), key=lambda path: path.name)
     except OSError as exc:
         raise MediaError(
-            "Bronafleidingen zijn niet leesbaar.", code="media_storage_invalid"
+            "Source derivations are not readable.", code="media_storage_invalid"
         ) from exc
     for directory in children:
         if (
@@ -584,43 +584,43 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
             or DERIVATION_ID_PATTERN.fullmatch(directory.name) is None
         ):
             raise MediaError(
-                "Bronafleidingen bevatten een onverwacht of onveilig pad.",
+            "Source derivations contain an unexpected or unsafe path.",
                 code="media_storage_invalid",
             )
         names = {path.name for path in directory.iterdir()}
         if not names.issubset(DERIVATION_FILES) or "record.json" not in names:
             raise MediaError(
-                f"Afleiding {directory.name} bevat onverwachte of ontbrekende bestanden.",
+                f"Derivation {directory.name} contains unexpected or missing files.",
                 code="media_storage_invalid",
             )
         for path in directory.iterdir():
             if path.is_symlink() or not path.is_file():
                 raise MediaError(
-                    f"Afleiding {directory.name} bevat een onveilig bestand.",
+                    f"Derivation {directory.name} contains an unsafe file.",
                     code="media_storage_invalid",
                 )
         record_path = directory / "record.json"
-        record = _read_json(record_path, RECORD_FIELDS, label="Afleidingsrecord")
+        record = _read_json(record_path, RECORD_FIELDS, label="Derivation record")
         _, record_sha256 = _hash_file(record_path)
         _validate_record(record, source, source_id, directory.name)
 
         removal: dict[str, Any] | None = None
         removal_path = directory / "removed.json"
         if removal_path.exists():
-            removal = _read_json(removal_path, REMOVAL_FIELDS, label="Verwijderrecord")
+            removal = _read_json(removal_path, REMOVAL_FIELDS, label="Removal record")
             _validate_removal(removal, record, record_sha256)
 
         content_path = directory / "content.txt"
         if removal is None:
             if content_path.is_symlink() or not content_path.is_file():
                 raise MediaError(
-                    f"Afgeleide tekst ontbreekt: {directory.name}.",
+                    f"Derived text is missing: {directory.name}.",
                     code="media_content_stale",
                 )
             _validate_utf8_file(content_path, record["content_bytes"], record["content_sha256"])
         elif content_path.exists() or content_path.is_symlink():
             raise MediaError(
-                f"Verwijderde afleiding bevat nog actieve tekst: {directory.name}.",
+                f"Removed derivation still contains active text: {directory.name}.",
                 code="media_removal_invalid",
             )
 
@@ -663,7 +663,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
         supersedes = derivation.record["supersedes_derivation_id"]
         if supersedes is not None and supersedes not in derivations:
             raise MediaError(
-                "Afleiding verwijst naar een onbekende voorganger.",
+                "Derivation points to an unknown predecessor.",
                 code="media_supersedes_invalid",
             )
     for derivation_id in derivations:
@@ -672,7 +672,7 @@ def _load_derivations(root: Path, source_id: str) -> dict[str, _Derivation]:
         while current is not None:
             if current in seen:
                 raise MediaError(
-                    "Afleidingen bevatten een supersedes-cyclus.",
+                "Derivations contain a supersedes cycle.",
                     code="media_supersedes_cycle",
                 )
             seen.add(current)
@@ -685,7 +685,7 @@ def _new_derivation_id(created_at: datetime, existing: dict[str, _Derivation]) -
         value = f"DRV-{created_at.strftime('%Y%m%d')}-{uuid4().hex[:12]}"
         if value not in existing:
             return value
-    raise MediaError("Kon geen uniek derivation-ID maken.", code="media_id_conflict")
+    raise MediaError("Could not create a unique derivation ID.", code="media_id_conflict")
 
 
 def _receipt_path(root: Path, operation: str) -> Path:
@@ -734,7 +734,7 @@ def _copy_utf8(source: BinaryIO, destination: BinaryIO, maximum: int) -> tuple[i
             byte_count += len(chunk)
             if byte_count > maximum:
                 raise MediaError(
-                    f"Afgeleide tekst overschrijdt max_source_bytes: {byte_count} > {maximum}.",
+                    f"Derived text exceeds max_source_bytes: {byte_count} > {maximum}.",
                     code="media_source_budget_exceeded",
                 )
             text = decoder.decode(chunk)
@@ -743,7 +743,7 @@ def _copy_utf8(source: BinaryIO, destination: BinaryIO, maximum: int) -> tuple[i
                 for character in text
             ):
                 raise MediaError(
-                    "Afgeleide tekst bevat onveilige controltekens.",
+                    "Derived text contains unsafe control characters.",
                     code="media_text_invalid",
                 )
             destination.write(chunk)
@@ -754,12 +754,12 @@ def _copy_utf8(source: BinaryIO, destination: BinaryIO, maximum: int) -> tuple[i
             for character in tail
         ):
             raise MediaError(
-                "Afgeleide tekst bevat onveilige controltekens.",
+                "Derived text contains unsafe control characters.",
                 code="media_text_invalid",
             )
     except UnicodeDecodeError as exc:
         raise MediaError(
-            "Afgeleide tekst moet volledig geldig UTF-8 zijn.",
+            "Derived text must be fully valid UTF-8.",
             code="media_text_invalid",
         ) from exc
     destination.flush()
@@ -785,10 +785,10 @@ def _prepare_registration_plan(
     normalized_kind = kind.strip().upper()
     normalized_class = producer_class.strip().upper()
     if normalized_kind not in KINDS:
-        raise MediaError("Onbekende afleidingssoort.", code="media_kind_invalid")
+        raise MediaError("Unknown derivation kind.", code="media_kind_invalid")
     if normalized_class not in PRODUCER_CLASSES:
         raise MediaError(
-            "Onbekende producer-class.",
+            "Unknown producer class.",
             code="media_producer_class_invalid",
         )
     normalized_producer = _short_text(producer, field="producer")
@@ -803,7 +803,7 @@ def _prepare_registration_plan(
         supersedes = _derivation_id(supersedes_derivation_id)
         if supersedes not in existing:
             raise MediaError(
-                "Onbekende supersedes-afleiding.",
+            "Unknown supersedes derivation.",
                 code="media_supersedes_invalid",
             )
 
@@ -818,17 +818,17 @@ def _prepare_registration_plan(
         initial_stat = resolved.stat()
     except OSError as exc:
         raise MediaError(
-            "Afgeleide tekst is niet toegankelijk.",
+            "Derived text is inaccessible.",
             code="media_text_unavailable",
         ) from exc
     if resolved.is_relative_to(root / "SOURCES") or resolved.is_relative_to(root / ".opencntx"):
         raise MediaError(
-            "Beheerde bron- of afleidingsopslag kan niet als invoer worden gebruikt.",
+            "Managed source or derivation storage cannot be used as input.",
             code="media_text_managed_path",
         )
     if initial_stat.st_size > config.max_source_bytes:
         raise MediaError(
-            "Afgeleide tekst overschrijdt max_source_bytes.",
+            "Derived text exceeds max_source_bytes.",
             code="media_source_budget_exceeded",
         )
 
@@ -869,7 +869,7 @@ def _stage_derivation(plan: _RegistrationPlan) -> tuple[Path, int, str]:
         final_stat = plan.resolved_text.stat()
         if _source_identity(plan.initial_stat) != _source_identity(final_stat):
             raise MediaError(
-                "Afgeleide tekst wijzigde tijdens het lezen.",
+                "Derived text changed while being read.",
                 code="media_text_changed",
             )
         return staging, content_bytes, content_sha256
@@ -878,7 +878,7 @@ def _stage_derivation(plan: _RegistrationPlan) -> tuple[Path, int, str]:
             shutil.rmtree(staging, ignore_errors=True)
         if isinstance(exc, OSError):
             raise MediaError(
-                f"Afleiding kon niet atomair worden geregistreerd: {exc}",
+                f"Derivation could not be registered atomically: {exc}",
                 code="media_register_failed",
             ) from exc
         raise
@@ -936,7 +936,7 @@ def _build_derivation_record(
     total = source_total + _derived_storage_bytes(plan.root) + content_bytes
     if total > plan.config.max_storage_bytes:
         raise MediaError(
-            f"Totaal opslagbudget wordt overschreden: {total} > "
+            f"Total storage budget would be exceeded: {total} > "
             f"{plan.config.max_storage_bytes} bytes.",
             code="media_storage_budget_exceeded",
         )
@@ -982,7 +982,7 @@ def _publish_derivation(
         if source_directory.exists():
             if source_directory.is_symlink() or not source_directory.is_dir():
                 raise MediaError(
-                    "Bronafleidingsmap is onveilig.",
+                    "Source derivation directory is unsafe.",
                     code="media_storage_invalid",
                 )
         else:
@@ -991,7 +991,7 @@ def _publish_derivation(
         final_directory = source_directory / derivation_id
         if final_directory.exists() or final_directory.is_symlink():
             raise MediaError(
-                "Derivation-ID bestaat onverwacht al.",
+                "Derivation ID already exists unexpectedly.",
                 code="media_id_conflict",
             )
         os.replace(staging, final_directory)
@@ -1024,7 +1024,7 @@ def _publish_derivation(
                 pass
         if isinstance(exc, OSError):
             raise MediaError(
-                f"Afleiding kon niet atomair worden geregistreerd: {exc}",
+                f"Derivation could not be registered atomically: {exc}",
                 code="media_register_failed",
             ) from exc
         raise
@@ -1088,7 +1088,7 @@ def _one_derivation(root: Path, source_id: str, derivation_id: str) -> _Derivati
     derivation = derivations.get(normalized_derivation_id)
     if derivation is None:
         raise MediaError(
-            f"Onbekende afleiding: {normalized_derivation_id}.",
+            f"Unknown derivation: {normalized_derivation_id}.",
             code="media_derivation_unknown",
         )
     return derivation
@@ -1115,11 +1115,11 @@ def review_derivation(
         )
     expected_content = _digest(content_sha256, field="content_sha256")
     if expected_content != derivation.record["content_sha256"]:
-        raise MediaError("Contentdigest verschilt.", code="media_digest_mismatch")
+        raise MediaError("Content digest differs.", code="media_digest_mismatch")
     normalized_decision = decision.strip().upper()
     if normalized_decision not in DECISIONS:
         raise MediaError(
-            "Reviewbeslissing moet ACCEPT of REJECT zijn.", code="media_decision_invalid"
+            "Review decision must be ACCEPT or REJECT.", code="media_decision_invalid"
         )
     normalized_findings = _text_list(
         list(findings), field="findings", maximum=MAX_FINDINGS, allow_empty=False
@@ -1193,11 +1193,11 @@ def promote_derivation(
     expected_review = _digest(review_digest, field="review_digest")
     if derivation.status != "REVIEWED" or derivation.review_sha256 is None:
         raise MediaError(
-            "Alleen een exact REVIEWED afleiding kan worden gepromoveerd.",
+            "Only an exact REVIEWED derivation can be promoted.",
             code="media_promotion_state_invalid",
         )
     if derivation.review_sha256 != expected_review:
-        raise MediaError("Reviewdigest verschilt.", code="media_digest_mismatch")
+        raise MediaError("Review digest differs.", code="media_digest_mismatch")
 
     temporary_path: Path | None = None
     capture_result: CaptureResult | None = None
@@ -1219,13 +1219,13 @@ def promote_derivation(
         )
         if capture_result.sha256 != derivation.record["content_sha256"]:
             raise MediaError(
-                "Gepromoveerde capture verschilt van de afleiding.",
+                "Promoted capture differs from the derivation.",
                 code="media_promotion_stale",
             )
         promoted_source = _stored_sources(root).get(capture_result.source_id)
         if promoted_source is None:
             raise MediaError(
-                "Gepromoveerde bronregistratie ontbreekt.",
+                "Promoted source registration is missing.",
                 code="media_promotion_stale",
             )
         _, promoted_source_record_sha256 = _hash_file(promoted_source.record_path)
@@ -1261,7 +1261,7 @@ def promote_derivation(
             _rollback_capture(root, capture_result)
         if isinstance(exc, OSError):
             raise MediaError(
-                f"Afleiding kon niet veilig worden gepromoveerd: {exc}",
+                f"Derivation could not be promoted safely: {exc}",
                 code="media_promotion_failed",
             ) from exc
         raise
@@ -1294,14 +1294,14 @@ def remove_derivation(
     _exact_source(root, source_id, allow_quarantined=True)
     derivation = _one_derivation(root, source_id, derivation_id)
     if derivation.status == "REMOVED":
-        raise MediaError("Afgeleide tekst is al verwijderd.", code="media_removal_state_invalid")
+        raise MediaError("Derived text has already been removed.", code="media_removal_state_invalid")
     expected_record = _digest(record_digest, field="record_digest")
     expected_content = _digest(content_sha256, field="content_sha256")
     if (
         expected_record != derivation.record_sha256
         or expected_content != derivation.record["content_sha256"]
     ):
-        raise MediaError("Verwijderdigests verschillen.", code="media_digest_mismatch")
+        raise MediaError("Removal digests differ.", code="media_digest_mismatch")
     normalized_owner = _short_text(owner, field="owner")
     removal = {
         "content_sha256": expected_content,
@@ -1346,7 +1346,7 @@ def remove_derivation(
             os.replace(temporary_content, content_path)
         if isinstance(exc, OSError):
             raise MediaError(
-                f"Afgeleide tekst kon niet veilig worden verwijderd: {exc}",
+                f"Derived text could not be removed safely: {exc}",
                 code="media_removal_failed",
             ) from exc
         raise
@@ -1404,13 +1404,13 @@ def media_status(
     if derivation_id is not None:
         if normalized_derivation_id is None:
             raise MediaError(
-                "De afleidings-ID is intern onvolledig.",
+                "The derivation ID is internally incomplete.",
                 code="media_record_invalid",
             )
         selected = derivations.get(normalized_derivation_id)
         if selected is None:
             raise MediaError(
-                f"Onbekende afleiding: {normalized_derivation_id}.",
+                f"Unknown derivation: {normalized_derivation_id}.",
                 code="media_derivation_unknown",
             )
         derivations = {normalized_derivation_id: selected}

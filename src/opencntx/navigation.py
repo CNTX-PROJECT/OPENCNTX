@@ -30,20 +30,17 @@ GENERIC_WORDS = frozenset(
     {
         "chat",
         "conversation",
-        "gesprek",
+        "dialogue",
         "issue",
         "new",
-        "nieuw",
         "project",
         "session",
-        "sessie",
+        "chat-session",
         "task",
-        "taak",
         "test",
         "update",
-        "vervolg",
+        "follow-up",
         "work",
-        "werk",
     }
 )
 WORD_PATTERN = re.compile(r"[^\W_]+(?:[-'][^\W_]+)*", re.UNICODE)

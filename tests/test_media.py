@@ -70,7 +70,7 @@ def setup_media(
     *,
     privacy: str = "PRIVATE",
     original_bytes: bytes = b"\x89PNG\r\n\x1a\nopaque-media",
-    derived_text: str = "Herkenbare afgeleide tekst.\n",
+    derived_text: str = "Recognizable derived text.\n",
 ) -> tuple[Path, object, Path]:
     workspace = parent / "workspace"
     init_workspace(workspace)
@@ -101,7 +101,7 @@ def accept_default(workspace: Path, registered: object):
         registered.derivation_id,
         content_sha256=registered.content_sha256,
         decision="ACCEPT",
-        findings=["Pagina 1 handmatig vergeleken"],
+        findings=["Pagina 1 manual compared"],
         reviewer="ARCHITECT",
     )
     status = media_status(workspace, registered.source_id, registered.derivation_id)[0]
@@ -192,7 +192,7 @@ class MediaTests(unittest.TestCase):
             self.assertEqual(len(directories), 1)
 
     def test_register_rejects_invalid_utf8_and_nul_without_partial_state(self) -> None:
-        for content in (b"\xff\xfe", b"tekst\x00verborgen"):
+        for content in (b"\xff\xfe", b"text\x00hidden"):
             with (
                 self.subTest(content=content),
                 tempfile.TemporaryDirectory() as temporary_directory,
@@ -214,7 +214,7 @@ class MediaTests(unittest.TestCase):
             _, source = source_record(workspace, captured.source_id)
             managed = workspace.joinpath(*Path(str(source["stored_path"])).parts)
 
-            with self.assertRaisesRegex(MediaError, "Beheerde"):
+            with self.assertRaisesRegex(MediaError, "Managed"):
                 register_derivation(
                     workspace,
                     captured.source_id,
@@ -223,7 +223,7 @@ class MediaTests(unittest.TestCase):
                     producer_class="LOCAL_TOOL",
                     producer="tool",
                 )
-            with self.assertRaisesRegex(MediaError, "absoluut persoonlijk pad"):
+            with self.assertRaisesRegex(MediaError, "absolute personal path"):
                 register_derivation(
                     workspace,
                     captured.source_id,
@@ -290,7 +290,7 @@ class MediaTests(unittest.TestCase):
                 registered.derivation_id,
                 content_sha256=registered.content_sha256,
                 decision="REJECT",
-                findings=["Tekst wijkt af"],
+                findings=["Text differs from the record"],
                 reviewer="ARCHITECT",
             )
             entry = media_status(workspace, captured.source_id, registered.derivation_id)[0]
@@ -308,14 +308,14 @@ class MediaTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             workspace, captured, text_path = setup_media(Path(temporary_directory))
             registered = register_default(workspace, captured, text_path)
-            with self.assertRaisesRegex(MediaError, "verschilt"):
+            with self.assertRaisesRegex(MediaError, "differs"):
                 review_derivation(
                     workspace,
                     captured.source_id,
                     registered.derivation_id,
                     content_sha256="0" * 64,
                     decision="ACCEPT",
-                    findings=["controle"],
+                    findings=["review"],
                     reviewer="ARCHITECT",
                 )
             accept_default(workspace, registered)
@@ -327,7 +327,7 @@ class MediaTests(unittest.TestCase):
                     registered.derivation_id,
                     content_sha256=registered.content_sha256,
                     decision="ACCEPT",
-                    findings=["tweede controle"],
+                    findings=["second review"],
                     reviewer="ARCHITECT",
                 )
 
@@ -365,7 +365,7 @@ class MediaTests(unittest.TestCase):
             registered = register_default(workspace, captured, text_path)
             accept_default(workspace, registered)
 
-            with self.assertRaisesRegex(MediaError, "Reviewdigest verschilt"):
+            with self.assertRaisesRegex(MediaError, "Review digest differs"):
                 promote_derivation(
                     workspace,
                     captured.source_id,
@@ -461,7 +461,7 @@ class MediaTests(unittest.TestCase):
             workspace, captured, text_path = setup_media(Path(temporary_directory))
             registered = register_default(workspace, captured, text_path)
 
-            with self.assertRaisesRegex(MediaError, "verschillen"):
+            with self.assertRaisesRegex(MediaError, "differ"):
                 remove_derivation(
                     workspace,
                     captured.source_id,
@@ -482,7 +482,7 @@ class MediaTests(unittest.TestCase):
             parent = Path(temporary_directory)
             workspace, captured, text_path = setup_media(parent)
             first = register_default(workspace, captured, text_path)
-            text_path.write_text("Nieuwe afgeleide versie.\n", encoding="utf-8")
+            text_path.write_text("New derived version.\n", encoding="utf-8")
 
             second = register_derivation(
                 workspace,
@@ -510,7 +510,7 @@ class MediaTests(unittest.TestCase):
                 workspace, captured.source_id, registered.derivation_id
             )
             content = directory / "content.txt"
-            content.write_text("Gemuteerde tekst.\n", encoding="utf-8")
+            content.write_text("Mutated text.\n", encoding="utf-8")
             before = {path: path.read_bytes() for path in directory.iterdir() if path.is_file()}
 
             entry = media_status(workspace, captured.source_id, registered.derivation_id)[0]
@@ -530,7 +530,7 @@ class MediaTests(unittest.TestCase):
             )
             (directory / "surprise.bin").write_bytes(b"unexpected")
 
-            with self.assertRaisesRegex(MediaError, "onverwachte"):
+            with self.assertRaisesRegex(MediaError, "unexpected"):
                 media_status(workspace, captured.source_id)
 
     def test_active_derived_bytes_count_toward_future_capture_budget(self) -> None:
@@ -544,7 +544,7 @@ class MediaTests(unittest.TestCase):
             extra = workspace / "INBOX" / "extra.bin"
             extra.write_bytes(b"xyz")
 
-            with self.assertRaisesRegex(WorkspaceError, "opslagbudget"):
+            with self.assertRaisesRegex(WorkspaceError, "storage budget"):
                 capture_source(workspace, extra)
 
             self.assertEqual(len(list((workspace / "SOURCES").glob("*/*/SRC-*"))), 1)
@@ -557,7 +557,7 @@ class MediaTests(unittest.TestCase):
             )
             set_budgets(workspace, source_bytes=10, storage_bytes=10)
 
-            with self.assertRaisesRegex(MediaError, "opslagbudget"):
+            with self.assertRaisesRegex(MediaError, "storage budget"):
                 register_default(workspace, captured, text_path)
 
             self.assertEqual(
@@ -624,7 +624,7 @@ class MediaTests(unittest.TestCase):
                 "--decision",
                 "ACCEPT",
                 "--finding",
-                "handmatig gecontroleerd",
+                "manual checked",
                 "--reviewer",
                 "ARCHITECT",
                 "--root",

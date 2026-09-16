@@ -19,6 +19,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_ROOT = ROOT / "src"
 if str(SOURCE_ROOT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ROOT))
+TOOLS_ROOT = ROOT / "tools"
+if str(TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TOOLS_ROOT))
+
+import public_language_gate
 
 from opencntx import __version__
 from opencntx.cli import build_parser
@@ -74,6 +79,8 @@ GUIDES = {
     "release-1.8.0.md",
     "roadmap-1.8.0.md",
     "roadmap-1.8.1.md",
+    "release-1.8.2.md",
+    "roadmap-1.8.2.md",
 }
 
 LIGHT_DIAGRAMS = {
@@ -399,25 +406,8 @@ class PublicQualityTests(unittest.TestCase):
             *(DOCS / name for name in sorted(GUIDES)),
             DOCS / "README.md",
         ]
-        forbidden_phrases = (
-            "Versiestatus",
-            "Installeren",
-            "Toegevoegd",
-            "Bekende beperkingen",
-            "documentatie-index",
-            "werkruimte",
-            "hoofdstuk",
-            "veiligheidsgrenzen",
-            "Meld een",
-            "Voor u begint",
-            "Gedragscode",
-            "Bijdragen aan",
-        )
-        for path in public_files:
-            with self.subTest(path=path.relative_to(ROOT)):
-                text = path.read_text(encoding="utf-8")
-                for phrase in forbidden_phrases:
-                    self.assertNotIn(phrase, text)
+        result = public_language_gate.check_public_english(public_files)
+        self.assertEqual([], result["findings"])
 
     def test_documentation_diagrams_are_safe_accessible_and_complete(self) -> None:
         diagram_root = ROOT / "assets" / "docs"
@@ -563,6 +553,7 @@ class PublicQualityTests(unittest.TestCase):
             'python tools/quality_gate.py coverage "${{ runner.temp }}/opencntx-coverage.json"',
             "python tools/quality_gate.py lint",
             "python tools/quality_gate.py types",
+            "python tools/quality_gate.py language",
             "python -m pip install --disable-pip-version-check -r requirements-security.txt",
             "python -m pip_audit -r requirements-quality.txt --format json",
             "tools/r8_hardening.py",

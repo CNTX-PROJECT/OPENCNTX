@@ -40,7 +40,7 @@ class VisualDesignTests(unittest.TestCase):
         first = intent()
         second = intent()
         self.assertEqual(ROLE_ID, "VISUAL_ARTIST")
-        self.assertEqual(ROLE_LABELS["nl"], "VISUEEL ARTIST")
+        self.assertEqual(ROLE_LABELS["nl"], "VISUAL ARTIST")
         self.assertEqual(first, second)
         self.assertEqual(validate_visual_intent(first), first)
         self.assertRegex(str(first["intent_digest"]), r"^[0-9a-f]{64}$")

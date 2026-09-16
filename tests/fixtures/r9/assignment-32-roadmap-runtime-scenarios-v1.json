@@ -6,7 +6,7 @@
     {
       "scenario_id": "S32-001",
       "operation": "graph",
-      "scenario": "geldige hoofdroadmaprevisie",
+      "scenario": "valid main roadmap revision",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -33,7 +33,7 @@
     {
       "scenario_id": "S32-002",
       "operation": "graph",
-      "scenario": "geldige onderroadmap met volledige parent- en returnbinding",
+      "scenario": "valid subroadmap with complete parent and return binding",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -60,7 +60,7 @@
     {
       "scenario_id": "S32-003",
       "operation": "graph",
-      "scenario": "onderroadmap zonder parent-roadmap",
+      "scenario": "subroadmap without parent-roadmap",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -87,7 +87,7 @@
     {
       "scenario_id": "S32-004",
       "operation": "graph",
-      "scenario": "onbekende parent-roadmap",
+      "scenario": "unknown parent-roadmap",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -114,7 +114,7 @@
     {
       "scenario_id": "S32-005",
       "operation": "graph",
-      "scenario": "onbekende parent-node",
+      "scenario": "unknown parent-node",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -141,21 +141,21 @@
     {
       "scenario_id": "S32-006",
       "operation": "graph",
-      "scenario": "onbekende return-node",
+      "scenario": "unknown return node",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
           "availability": "AVAILABLE",
           "role": "ARCHITECT"
         },
-        "case": "unknown-return-node",
+        "case": "unknown-return node",
         "workstream": {
           "current_leaf_id": "ASSIGNMENT_32",
           "roadmap_id": "ROADMAP_CHILD",
           "workstream_id": "WORKSTREAM_MAIN"
         }
       },
-      "input_digest": "a1bc6d5dd2d0d8660fce446dcfe526adde56917fbbda16394687e75d5c61ea8c",
+      "input_digest": "fe1437e28895914eb2bcad87ab99d594cafdb4a9c880ff0a92bcb4c9460efcee",
       "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
       "expected_mode": "LOCKED_EXECUTION",
       "expected_current_leaf_id": "ASSIGNMENT_32",
@@ -168,7 +168,7 @@
     {
       "scenario_id": "S32-007",
       "operation": "graph",
-      "scenario": "graphcycle",
+      "scenario": "graph cycle",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -222,7 +222,7 @@
     {
       "scenario_id": "S32-009",
       "operation": "graph",
-      "scenario": "node met meerdere parents",
+      "scenario": "node with multiple parents",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -249,7 +249,7 @@
     {
       "scenario_id": "S32-010",
       "operation": "revision",
-      "scenario": "exact gebonden actuele revisie",
+      "scenario": "exact bound current revision",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -276,7 +276,7 @@
     {
       "scenario_id": "S32-011",
       "operation": "revision",
-      "scenario": "stale roadmaprevisie",
+      "scenario": "stale roadmap revision",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -303,7 +303,7 @@
     {
       "scenario_id": "S32-012",
       "operation": "revision",
-      "scenario": "zelfde roadmap-ID en revisie met gewijzigde bytes",
+      "scenario": "same roadmap-ID and revision with changed bytes",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -330,7 +330,7 @@
     {
       "scenario_id": "S32-013",
       "operation": "stack",
-      "scenario": "geldige hoofdroadmapstack met één frame",
+      "scenario": "valid main roadmap stack with one frame",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -357,7 +357,7 @@
     {
       "scenario_id": "S32-014",
       "operation": "stack",
-      "scenario": "geldige push van één onderroadmap",
+      "scenario": "valid push of one subroadmap",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -384,7 +384,7 @@
     {
       "scenario_id": "S32-015",
       "operation": "stack",
-      "scenario": "exact acht geneste frames",
+      "scenario": "exact eight nested frames",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -411,7 +411,7 @@
     {
       "scenario_id": "S32-016",
       "operation": "stack",
-      "scenario": "negende frame",
+      "scenario": "ninth frame",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -438,7 +438,7 @@
     {
       "scenario_id": "S32-017",
       "operation": "stack",
-      "scenario": "eerste frame is geen hoofdroadmap",
+      "scenario": "first frame is no main roadmap",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -465,7 +465,7 @@
     {
       "scenario_id": "S32-018",
       "operation": "stack",
-      "scenario": "dubbel roadmap-ID in dezelfde stack",
+      "scenario": "duplicate roadmap-ID in same stack",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -492,7 +492,7 @@
     {
       "scenario_id": "S32-019",
       "operation": "stack",
-      "scenario": "zelfde stack ongeacht inputdictvolgorde",
+      "scenario": "same stack regardless of input dictionary order",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -519,7 +519,7 @@
     {
       "scenario_id": "S32-020",
       "operation": "stack",
-      "scenario": "stale roadmap-stackdigest",
+      "scenario": "stale roadmap stack digest",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -546,7 +546,7 @@
     {
       "scenario_id": "S32-021",
       "operation": "sticky",
-      "scenario": "sessieherstart behoudt exact current leaf",
+      "scenario": "session restart retains exact current leaf",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -573,7 +573,7 @@
     {
       "scenario_id": "S32-022",
       "operation": "sticky",
-      "scenario": "modelwissel behoudt exact current leaf",
+      "scenario": "model switch retains exact current leaf",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -600,7 +600,7 @@
     {
       "scenario_id": "S32-023",
       "operation": "sticky",
-      "scenario": "contextcompaction behoudt exact current leaf",
+      "scenario": "context compaction retains exact current leaf",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -627,7 +627,7 @@
     {
       "scenario_id": "S32-024",
       "operation": "sticky",
-      "scenario": "actor gebruikt stack van andere werkstroom",
+      "scenario": "actor uses stack of other workflow",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -656,7 +656,7 @@
     {
       "scenario_id": "S32-025",
       "operation": "workstream",
-      "scenario": "SOLO met één actor en één muterende leaf",
+      "scenario": "SOLO with one actor and one mutating leaf",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -683,7 +683,7 @@
     {
       "scenario_id": "S32-026",
       "operation": "workstream",
-      "scenario": "TEAM 2 met disjuncte werkstromen",
+      "scenario": "TEAM 2 with disjoint workflows",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -710,7 +710,7 @@
     {
       "scenario_id": "S32-027",
       "operation": "workstream",
-      "scenario": "TEAM 64 contractgrens",
+      "scenario": "TEAM 64 contract boundary",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -764,7 +764,7 @@
     {
       "scenario_id": "S32-029",
       "operation": "workstream",
-      "scenario": "ontbrekende actorbinding",
+      "scenario": "missing actor binding",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -793,7 +793,7 @@
     {
       "scenario_id": "S32-030",
       "operation": "workstream",
-      "scenario": "dubbel workstream-ID",
+      "scenario": "duplicate workstream-ID",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -822,7 +822,7 @@
     {
       "scenario_id": "S32-031",
       "operation": "workstream",
-      "scenario": "zelfde actor op twee muterende leaves",
+      "scenario": "same actor on two mutating leaves",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -851,7 +851,7 @@
     {
       "scenario_id": "S32-032",
       "operation": "workstream",
-      "scenario": "actor unavailable zonder overdracht",
+      "scenario": "actor unavailable without handoff",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -880,7 +880,7 @@
     {
       "scenario_id": "S32-033",
       "operation": "workstream",
-      "scenario": "geldige reassignment met oude historie intact",
+      "scenario": "valid reassignment with old history intact",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -907,7 +907,7 @@
     {
       "scenario_id": "S32-034",
       "operation": "workstream",
-      "scenario": "max parallelism hoger dan actor- of werkstroomcapaciteit",
+      "scenario": "max parallelism higher than actor or workstream capacity",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -936,7 +936,7 @@
     {
       "scenario_id": "S32-035",
       "operation": "dependency",
-      "scenario": "dependency nog niet gesloten",
+      "scenario": "dependency still not closed",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -965,7 +965,7 @@
     {
       "scenario_id": "S32-036",
       "operation": "dependency",
-      "scenario": "alle dependencies gesloten",
+      "scenario": "all dependencies closed",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -992,7 +992,7 @@
     {
       "scenario_id": "S32-037",
       "operation": "resource",
-      "scenario": "disjuncte niet-exclusieve claims",
+      "scenario": "disjoint non-exclusive claims",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1019,7 +1019,7 @@
     {
       "scenario_id": "S32-038",
       "operation": "resource",
-      "scenario": "overlappende conflictset",
+      "scenario": "overlapping conflict set",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1048,7 +1048,7 @@
     {
       "scenario_id": "S32-039",
       "operation": "resource",
-      "scenario": "overlappende exclusieve resource",
+      "scenario": "overlapping exclusive resource",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1077,7 +1077,7 @@
     {
       "scenario_id": "S32-040",
       "operation": "integration",
-      "scenario": "gedeeld integratiepunt",
+      "scenario": "shared integration point",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1104,7 +1104,7 @@
     {
       "scenario_id": "S32-041",
       "operation": "return",
-      "scenario": "child DONE maar niet OWNER_ACCEPTED",
+      "scenario": "child DONE but not OWNER_ACCEPTED",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1131,7 +1131,7 @@
     {
       "scenario_id": "S32-042",
       "operation": "return",
-      "scenario": "child OWNER_ACCEPTED maar niet CLOSED",
+      "scenario": "child OWNER_ACCEPTED but not CLOSED",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1158,7 +1158,7 @@
     {
       "scenario_id": "S32-043",
       "operation": "return",
-      "scenario": "child CLOSED zonder OWNER_ACCEPTED",
+      "scenario": "child CLOSED without OWNER_ACCEPTED",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1185,7 +1185,7 @@
     {
       "scenario_id": "S32-044",
       "operation": "return",
-      "scenario": "geldige childsluiting activeert returnmodus",
+      "scenario": "valid child closure activates return mode",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1212,7 +1212,7 @@
     {
       "scenario_id": "S32-045",
       "operation": "return",
-      "scenario": "return buiten RETURN_TO_PARENT-modus",
+      "scenario": "return outside RETURN_TO_PARENT mode",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1239,7 +1239,7 @@
     {
       "scenario_id": "S32-046",
       "operation": "return",
-      "scenario": "closed-roadmap-ID wijkt af van topframe",
+      "scenario": "closed roadmap ID differs from top frame",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1266,21 +1266,21 @@
     {
       "scenario_id": "S32-047",
       "operation": "return",
-      "scenario": "aangeleverde return-node wijkt af van topframe",
+      "scenario": "supplied return node differs from top frame",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
           "availability": "AVAILABLE",
           "role": "ARCHITECT"
         },
-        "case": "wrong-return-node",
+        "case": "wrong-return node",
         "workstream": {
           "current_leaf_id": "ASSIGNMENT_32",
           "roadmap_id": "ROADMAP_CHILD",
           "workstream_id": "WORKSTREAM_MAIN"
         }
       },
-      "input_digest": "fd70ae7983402bf58c49f545b0dfc10408d12c3cfa7b39928266b321e364a8cc",
+      "input_digest": "826a4ecbe950c01641fbbb1c7aff56758d3fafe0654ffc6b6b6062020bf208fe",
       "expected_result_code": "BLOCKED_INVALID_RETURN_TO_PARENT",
       "expected_mode": "LOCKED_EXECUTION",
       "expected_current_leaf_id": "ASSIGNMENT_32",
@@ -1293,7 +1293,7 @@
     {
       "scenario_id": "S32-048",
       "operation": "return",
-      "scenario": "parentrevisie gewijzigd na childactivatie",
+      "scenario": "parent revision changed after child activation",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1320,7 +1320,7 @@
     {
       "scenario_id": "S32-049",
       "operation": "return",
-      "scenario": "parentframe ontbreekt",
+      "scenario": "parent frame missing",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1347,7 +1347,7 @@
     {
       "scenario_id": "S32-050",
       "operation": "return",
-      "scenario": "eventketen of event-head ongeldig",
+      "scenario": "event chain of event head invalid",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1374,7 +1374,7 @@
     {
       "scenario_id": "S32-051",
       "operation": "return",
-      "scenario": "Definition of Done onvolledig",
+      "scenario": "Definition of Done incomplete",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1401,7 +1401,7 @@
     {
       "scenario_id": "S32-052",
       "operation": "return",
-      "scenario": "geldige return popt exact één frame",
+      "scenario": "valid return pops exact one frame",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1428,7 +1428,7 @@
     {
       "scenario_id": "S32-053",
       "operation": "return",
-      "scenario": "geneste return popt uitsluitend current child",
+      "scenario": "nested return pops only current child",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1455,7 +1455,7 @@
     {
       "scenario_id": "S32-054",
       "operation": "return",
-      "scenario": "reeds bestaande volgende node wordt hoogstens READY",
+      "scenario": "already existing next node is at most READY",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1482,7 +1482,7 @@
     {
       "scenario_id": "S32-055",
       "operation": "return",
-      "scenario": "return probeert assignment automatisch te starten",
+      "scenario": "return attempts to start assignment automatically",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1509,7 +1509,7 @@
     {
       "scenario_id": "S32-056",
       "operation": "return",
-      "scenario": "hoofdroadmapsluiting met actieve child of werkstroom",
+      "scenario": "main roadmap closure with active workflow child",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1538,7 +1538,7 @@
     {
       "scenario_id": "S32-057",
       "operation": "integration",
-      "scenario": "twee werkstromen claimen gedeelde integratie tegelijk",
+      "scenario": "two workflows claim shared integration simultaneously",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1565,7 +1565,7 @@
     {
       "scenario_id": "S32-058",
       "operation": "integration",
-      "scenario": "vaste sorteersleutel bepaalt integratievolgorde",
+      "scenario": "fixed sort key determines integration order",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1592,7 +1592,7 @@
     {
       "scenario_id": "S32-059",
       "operation": "integration",
-      "scenario": "exact één actieve integrator",
+      "scenario": "exact one active integrator",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1619,7 +1619,7 @@
     {
       "scenario_id": "S32-060",
       "operation": "integration",
-      "scenario": "onafhankelijke disjuncte werkstromen",
+      "scenario": "independent disjoint workflows",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1646,7 +1646,7 @@
     {
       "scenario_id": "S32-061",
       "operation": "integration",
-      "scenario": "overlappende doelpaden ondanks aparte resources",
+      "scenario": "overlapping target paths despite separate resources",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1675,7 +1675,7 @@
     {
       "scenario_id": "S32-062",
       "operation": "pointer",
-      "scenario": "compare-and-swap met exact previous digest",
+      "scenario": "compare-and-swap with exact previous digest",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1702,7 +1702,7 @@
     {
       "scenario_id": "S32-063",
       "operation": "pointer",
-      "scenario": "compare-and-swap met stale previous digest",
+      "scenario": "compare-and-swap with stale previous digest",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1729,7 +1729,7 @@
     {
       "scenario_id": "S32-064",
       "operation": "event",
-      "scenario": "identieke eventreplay",
+      "scenario": "identical event replay",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1756,7 +1756,7 @@
     {
       "scenario_id": "S32-065",
       "operation": "event",
-      "scenario": "event uit volgorde",
+      "scenario": "event disabled order",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1783,7 +1783,7 @@
     {
       "scenario_id": "S32-066",
       "operation": "event",
-      "scenario": "zelfde event-ID met andere payload",
+      "scenario": "same event-ID with other payload",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1810,7 +1810,7 @@
     {
       "scenario_id": "S32-067",
       "operation": "event",
-      "scenario": "twee gelijktijdige childsluitingen",
+      "scenario": "two simultaneous child closures",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1837,7 +1837,7 @@
     {
       "scenario_id": "S32-068",
       "operation": "event",
-      "scenario": "onbekend eventtype",
+      "scenario": "unknown event type",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1864,7 +1864,7 @@
     {
       "scenario_id": "S32-069",
       "operation": "projection",
-      "scenario": "hoofdstatus volledig rebuildable uit records en events",
+      "scenario": "main status is complete and rebuildable from records and events",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1891,7 +1891,7 @@
     {
       "scenario_id": "S32-070",
       "operation": "projection",
-      "scenario": "teamstatus volledig rebuildable uit bindings en claims",
+      "scenario": "team status is complete and rebuildable from bindings and claims",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1918,7 +1918,7 @@
     {
       "scenario_id": "S32-071",
       "operation": "projection",
-      "scenario": "inputvolgorde verandert projectiedigest niet",
+      "scenario": "input order changes projection digest not",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1945,7 +1945,7 @@
     {
       "scenario_id": "S32-072",
       "operation": "projection",
-      "scenario": "hoofdstatus bevat alleen IDs status tellingen en digests",
+      "scenario": "main status contains only IDs status counts and digests",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1972,7 +1972,7 @@
     {
       "scenario_id": "S32-073",
       "operation": "projection",
-      "scenario": "teamstatus bevat alleen eigen werkstroomsamenvatting",
+      "scenario": "team status contains only its own workstream summary",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -1999,7 +1999,7 @@
     {
       "scenario_id": "S32-074",
       "operation": "projection",
-      "scenario": "sibling-leafdetail wordt aangeboden",
+      "scenario": "sibling-leaf detail is offered",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2026,7 +2026,7 @@
     {
       "scenario_id": "S32-075",
       "operation": "projection",
-      "scenario": "toekomst-leafdetail wordt aangeboden",
+      "scenario": "future-leaf detail is offered",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2053,7 +2053,7 @@
     {
       "scenario_id": "S32-076",
       "operation": "projection",
-      "scenario": "ander teamleafdetail wordt aangeboden",
+      "scenario": "other team leaf detail is offered",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2080,7 +2080,7 @@
     {
       "scenario_id": "S32-077",
       "operation": "projection",
-      "scenario": "volledige hoofdroadmaptekst wordt aangeboden",
+      "scenario": "complete main roadmap text is offered",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2107,7 +2107,7 @@
     {
       "scenario_id": "S32-078",
       "operation": "projection",
-      "scenario": "onbekende status wordt niet gegokt",
+      "scenario": "unknown status is not guessed",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2134,7 +2134,7 @@
     {
       "scenario_id": "S32-079",
       "operation": "projection",
-      "scenario": "conflictstatus blijft zichtbaar zonder leafinhoud",
+      "scenario": "conflict status remains visible without leaf content",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2161,7 +2161,7 @@
     {
       "scenario_id": "S32-080",
       "operation": "projection",
-      "scenario": "rebuild na geldige return wijst parentpositie aan",
+      "scenario": "rebuild after valid return points to the parent position",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2188,7 +2188,7 @@
     {
       "scenario_id": "S32-081",
       "operation": "boundary",
-      "scenario": "geen CLI storage sync hook of persistente filesystemwrite",
+      "scenario": "no CLI storage sync hook or persistent filesystem write",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2215,7 +2215,7 @@
     {
       "scenario_id": "S32-082",
       "operation": "regression",
-      "scenario": "exact 72 Opdracht-29-scenarios byte-ongewijzigd",
+      "scenario": "exact 72 Assignment-29-scenarios byte-unchanged",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2242,7 +2242,7 @@
     {
       "scenario_id": "S32-083",
       "operation": "regression",
-      "scenario": "exact 68 Opdracht-31-scenarios byte-ongewijzigd",
+      "scenario": "exact 68 Assignment-31-scenarios byte-unchanged",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",
@@ -2269,7 +2269,7 @@
     {
       "scenario_id": "S32-084",
       "operation": "exclusion",
-      "scenario": "OpenSpec niet gelezen geïmporteerd gemuteerd of genoemd als runtimebron",
+      "scenario": "OpenSpec is not read, imported, mutated, or mentioned as a runtime source",
       "input": {
         "actor": {
           "actor_id": "ACTOR_ARCHITECT",

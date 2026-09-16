@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import language_gate
+import public_language_gate
 import schema_purpose_gate
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -255,6 +256,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("types")
     subparsers.add_parser("start-here")
     subparsers.add_parser("language")
+    subparsers.add_parser("public-english")
     subparsers.add_parser("schemas")
     coverage = subparsers.add_parser("coverage")
     coverage.add_argument("report", type=Path)
@@ -276,6 +278,9 @@ def main(argv: list[str] | None = None) -> int:
             check_start_here_budget()
         if args.command in {"language", "all"}:
             language_gate.check_language()
+            public_language_gate.check_public_english()
+        if args.command == "public-english":
+            public_language_gate.check_public_english()
         if args.command in {"schemas", "all"}:
             schema_purpose_gate.check_schema_purposes()
         if args.command == "coverage":

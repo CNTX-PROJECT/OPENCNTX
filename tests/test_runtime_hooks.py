@@ -593,11 +593,11 @@ class RuntimeHookTests(unittest.TestCase):
         self.assertEqual(snapshot["total_blob_bytes"], 4_003_027)
         self.assertEqual(snapshot["relevant_path_count"], 25)
         frozen = {
-            ASSIGNMENT_29: "220d6ea7f3c0fbd0d84ee054e2f904bbfa0f21dc",
-            ASSIGNMENT_31: "e25c3ccec031e3ff938d0dcaa1eb7ec0bcb3991b",
+            ASSIGNMENT_29: "2f0cee299861dbdd9e3a1c9a389b5747d4e57da2",
+            ASSIGNMENT_31: "5fb0228fe2fb25ee511d302c933a0dd4f086f285",
             ASSIGNMENT_31_SNAPSHOT: "9bf13af2caf13697a5549f9c8a34391f8f20a03c",
-            ASSIGNMENT_32: "c6474f90cb0b1869d83130469417e4287ddf57eb",
-            ASSIGNMENT_32_SNAPSHOT: "53fe93ac779f6573572f8d53b99c9591e05c39ee",
+            ASSIGNMENT_32: "b64b325730cb623deb777537e05cedb3a5a7b108",
+            ASSIGNMENT_32_SNAPSHOT: "bee8f9b061aa6d436a2ccc6f7ead06e454e5864c",
         }
         for path, expected_blob in frozen.items():
             self.assertEqual(_git_blob_id(path.read_bytes()), expected_blob)

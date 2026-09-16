@@ -8,17 +8,18 @@ is authoritative for available downloads.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
-## Published software — v1.8.1 Stable
+## Published software — v1.8.2 Stable
 
-[Download v1.8.1](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.1) ·
-[Release scope and limitations](release-1.8.1.md) ·
+[Download v1.8.2](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.2) ·
+[Release scope and limitations](release-1.8.2.md) ·
 [Installation and managed update](install-and-update.md)
 
-Version 1.8.1 adds managed installation hardening, session-bound host-footer
-telemetry, active manifest recognition, wheel `RECORD` validation, serialized
-transitions and fail-closed adoption audits. It retains the local knowledge
-layer, hierarchical source nodes, typed links, exact-first search, evidence-
-bound technique cards and provider-neutral footer from 1.8.0.
+Version 1.8.2 makes the public repository surface English and adds a
+fail-closed language gate to the local quality and CI routes. It retains the
+managed installation hardening, session-bound host-footer telemetry, active
+manifest recognition, wheel `RECORD` validation, serialized transitions and
+fail-closed adoption audits from 1.8.1, together with the local knowledge layer
+from 1.8.0.
 
 The former 1.6.x downgrade/reset path is repaired. A valid retained v1 snapshot
 inside a v2 goal-storage envelope is restored only in a new staged copy; the
@@ -27,8 +28,8 @@ passed the staged-copy checkpoint matrix.
 
 The published distribution contains exactly:
 
-- `opencntx-1.8.1-py3-none-any.whl`
-- `opencntx-1.8.1.tar.gz`
+- `opencntx-1.8.2-py3-none-any.whl`
+- `opencntx-1.8.2.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
@@ -41,14 +42,22 @@ and is never implied by a version number.
 The release scope distinguishes implemented behavior from deferred extensions;
 a roadmap checkbox is never a substitute for release evidence.
 
-## Previous published software — v1.8.0 Stable
+## Previous published software — v1.8.1 Stable
+
+[Download v1.8.1](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.1) ·
+[Release scope and limitations](release-1.8.1.md)
+
+Version 1.8.1 introduced managed installation, host-footer and adoption
+hardening. It remains the exact rollback source for a 1.8.2 update and the
+compatibility bridge from the 1.8.0 knowledge-layer release.
+
+## Earlier published software — v1.8.0 Stable
 
 [Download v1.8.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.0) ·
 [Release scope and limitations](release-1.8.0.md)
 
-Version 1.8.0 introduced the local knowledge layer and remains the verified
-offline rollback reference for 1.8.1. Its read-only adoption and provider-
-neutral footer contracts remain compatible with this release.
+Version 1.8.0 introduced the local knowledge layer. Its read-only adoption and
+provider-neutral footer contracts remain compatible with this release.
 
 Contributors who deliberately need the current source can use:
 
@@ -61,11 +70,12 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
-The exact v1.8.1 source, four release assets and managed installation route are
-published together. The [1.8.1 roadmap](roadmap-1.8.1.md) records the accepted
-release evidence and explicit integration boundaries; the [1.8.0 release](release-1.8.0.md)
-remains the compatibility and rollback reference, with v1.7.6 retained for
-the normal offline recovery route.
+The exact v1.8.2 source, four release assets and managed installation route are
+published together. The [1.8.2 roadmap](roadmap-1.8.2.md) records the English
+surface and compatibility evidence; the [1.8.1 roadmap](roadmap-1.8.1.md)
+records the integration boundaries retained by this release. The [1.8.0
+release](release-1.8.0.md) remains the knowledge-layer compatibility reference,
+with v1.7.6 retained for the normal offline recovery route.
 
 | Item | Current boundary |
 |---|---|

@@ -34,13 +34,13 @@ LABEL_KEYS = frozenset(
 DEFAULT_LABELS = {
     "nl": {
         "roadmap": "Roadmap",
-        "now": "Nu",
-        "thereafter": "Daarna",
-        "next_assignment": "Volgende opdracht",
+        "now": "Now",
+        "thereafter": "Then",
+        "next_assignment": "Next assignment",
         "chat": "Chat",
         "tokens": "Tokens",
-        "required_model": "Vereist model",
-        "unavailable": "niet betrouwbaar beschikbaar",
+        "required_model": "Required model",
+        "unavailable": "not reliably available",
     },
     "en": {
         "roadmap": "Roadmap",
@@ -220,30 +220,11 @@ def build_output_contract(
         )
         opened = ", ".join(goal_context["open_outcome_ids"])
         if goal_context.get("reason") == "REBIND_INDEPENDENT_OUTCOME":
-            thereafter = (
-                "Bind de onafhankelijke uitkomst: "
-                if language.lower() == "nl"
-                else "Bind independent outcome: "
-            ) + str(goal_context["next_outcome_id"])
+            thereafter = "Bind independent outcome: " + str(goal_context["next_outcome_id"])
         if goal_context["reason"] == "OWNER_STOP":
-            summary = (
-                "Gestopt op jouw verzoek."
-                if language.lower() == "nl"
-                else "Stopped at your request."
-            )
+            summary = "Stopped at your request."
         elif goal_context["goal_status"] != "TECHNICALLY_COMPLETE":
-            summary = (
-                "Nog niet volledig afgerond. Open: "
-                if language.lower() == "nl"
-                else "Not fully complete. Open: "
-            ) + (
-                opened
-                or (
-                    "gezamenlijke conclusie"
-                    if language.lower() == "nl"
-                    else "integrated conclusion"
-                )
-            )
+            summary = "Not fully complete. Open: " + (opened or "integrated conclusion")
     if decision["decision"] == "RECONCILE_REQUIRED" and decision["reason"] == "CAPSULE_INVALID":
         raise _fail("output_state_invalid", "Execution capsule is invalid.")
     if metrics.get("status") not in METRIC_STATUSES:

@@ -6,7 +6,7 @@
     {
       "scenario_id": "S31-001",
       "operation": "inspection",
-      "scenario": "toegestane metadataread",
+      "scenario": "allowed metadata read",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -28,7 +28,7 @@
     {
       "scenario_id": "S31-002",
       "operation": "inspection",
-      "scenario": "pad buiten read-allowlist",
+      "scenario": "path outside read-allowlist",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -72,7 +72,7 @@
     {
       "scenario_id": "S31-004",
       "operation": "inspection",
-      "scenario": "absolute of niet-portabel pad",
+      "scenario": "absolute or non-portable path",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -94,7 +94,7 @@
     {
       "scenario_id": "S31-005",
       "operation": "inspection",
-      "scenario": "symlink ontsnapt uit projectroot",
+      "scenario": "symlink escapes disabled project root",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -116,7 +116,7 @@
     {
       "scenario_id": "S31-006",
       "operation": "inspection",
-      "scenario": "muterende intakeactie",
+      "scenario": "mutating intake action",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "write-file",
@@ -138,7 +138,7 @@
     {
       "scenario_id": "S31-007",
       "operation": "inspection",
-      "scenario": "OpenSpec-pad of alias",
+      "scenario": "OpenSpec path or alias",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -160,7 +160,7 @@
     {
       "scenario_id": "S31-008",
       "operation": "budget",
-      "scenario": "exact 40 inspectieacties",
+      "scenario": "exact 40 inspection actions",
       "input": {
         "kind": "inspection",
         "counts": {
@@ -181,7 +181,7 @@
     {
       "scenario_id": "S31-009",
       "operation": "budget",
-      "scenario": "41 inspectieacties",
+      "scenario": "41 inspection actions",
       "input": {
         "kind": "inspection",
         "counts": {
@@ -202,7 +202,7 @@
     {
       "scenario_id": "S31-010",
       "operation": "budget",
-      "scenario": "exact 3 rondes 8 totaal 5 per ronde",
+      "scenario": "exact 3 rounds 8 total 5 per round",
       "input": {
         "kind": "questions",
         "counts": {
@@ -222,7 +222,7 @@
     {
       "scenario_id": "S31-011",
       "operation": "budget",
-      "scenario": "vraagbudget overschreden",
+      "scenario": "question budget exceeded",
       "input": {
         "kind": "questions",
         "counts": {
@@ -242,7 +242,7 @@
     {
       "scenario_id": "S31-012",
       "operation": "budget",
-      "scenario": "exact 1000 records 4MiB metadata 30 minuten",
+      "scenario": "exact 1000 records 4MiB metadata 30 minutes",
       "input": {
         "kind": "inspection",
         "counts": {
@@ -263,7 +263,7 @@
     {
       "scenario_id": "S31-013",
       "operation": "budget",
-      "scenario": "inventory- byte- of tijdgrens overschreden",
+      "scenario": "inventory byte or time limit exceeded",
       "input": {
         "kind": "inspection",
         "counts": {
@@ -419,7 +419,7 @@
     {
       "scenario_id": "S31-023",
       "operation": "evidence",
-      "scenario": "onbekende bewijsstatus",
+      "scenario": "unknown evidence status",
       "input": {
         "status": "UNKNOWN_STATUS"
       },
@@ -434,7 +434,7 @@
     {
       "scenario_id": "S31-024",
       "operation": "readiness",
-      "scenario": "alle verplichte velden bewezen",
+      "scenario": "all required fields proven",
       "input": {
         "required_fields": [
           "project_root",
@@ -459,7 +459,7 @@
     {
       "scenario_id": "S31-025",
       "operation": "readiness",
-      "scenario": "verplicht veld ontbreekt",
+      "scenario": "required field missing",
       "input": {
         "required_fields": [
           "project_root",
@@ -483,7 +483,7 @@
     {
       "scenario_id": "S31-026",
       "operation": "readiness",
-      "scenario": "blokkerend conflict",
+      "scenario": "blocking conflict",
       "input": {
         "required_fields": [
           "project_root",
@@ -508,7 +508,7 @@
     {
       "scenario_id": "S31-027",
       "operation": "readiness",
-      "scenario": "hoge onzekerheid raakt beschermde grens",
+      "scenario": "high uncertainty reaches protected boundary",
       "input": {
         "required_fields": [
           "project_root",
@@ -533,7 +533,7 @@
     {
       "scenario_id": "S31-028",
       "operation": "questions",
-      "scenario": "uitsluitend irreducibele vragen gesorteerd en uniek",
+      "scenario": "only irreducible questions sorted and unique",
       "input": {
         "required_fields": [
           "scope",
@@ -559,7 +559,7 @@
     {
       "scenario_id": "S31-029",
       "operation": "questions",
-      "scenario": "live bewezen feit veroorzaakt geen vraag",
+      "scenario": "live proven fact causes no question",
       "input": {
         "required_fields": [
           "owner"
@@ -582,7 +582,7 @@
     {
       "scenario_id": "S31-030",
       "operation": "mode",
-      "scenario": "nieuw project",
+      "scenario": "new project",
       "input": {
         "facts": {
           "new_project": true
@@ -599,7 +599,7 @@
     {
       "scenario_id": "S31-031",
       "operation": "mode",
-      "scenario": "bestaand gezond project",
+      "scenario": "existing healthy project",
       "input": {
         "facts": {
           "healthy_existing": true
@@ -616,7 +616,7 @@
     {
       "scenario_id": "S31-032",
       "operation": "mode",
-      "scenario": "bestaand legacyproject zonder roadmap",
+      "scenario": "existing legacy project without roadmap",
       "input": {
         "facts": {
           "legacy_without_roadmap": true
@@ -633,7 +633,7 @@
     {
       "scenario_id": "S31-033",
       "operation": "mode",
-      "scenario": "migratieverzoek",
+      "scenario": "migration request",
       "input": {
         "facts": {
           "migration": true
@@ -650,7 +650,7 @@
     {
       "scenario_id": "S31-034",
       "operation": "mode",
-      "scenario": "read-only onderzoek",
+      "scenario": "read-only research",
       "input": {
         "facts": {
           "read_only": true
@@ -667,7 +667,7 @@
     {
       "scenario_id": "S31-035",
       "operation": "mode",
-      "scenario": "onvoldoende modusbewijs",
+      "scenario": "insufficient mode evidence",
       "input": {
         "facts": {}
       },
@@ -682,7 +682,7 @@
     {
       "scenario_id": "S31-036",
       "operation": "scope",
-      "scenario": "volledig project",
+      "scenario": "complete project",
       "input": {
         "requested_scope": "FULL_PROJECT",
         "parent_project_id": null,
@@ -699,7 +699,7 @@
     {
       "scenario_id": "S31-037",
       "operation": "scope",
-      "scenario": "subproject met geldige parent",
+      "scenario": "subproject with valid parent",
       "input": {
         "requested_scope": "SUBPROJECT",
         "parent_project_id": "PROJECT_PARENT",
@@ -716,7 +716,7 @@
     {
       "scenario_id": "S31-038",
       "operation": "scope",
-      "scenario": "component met geldige parent",
+      "scenario": "component with valid parent",
       "input": {
         "requested_scope": "COMPONENT",
         "parent_project_id": "PROJECT_PARENT",
@@ -733,7 +733,7 @@
     {
       "scenario_id": "S31-039",
       "operation": "scope",
-      "scenario": "deelproject zonder parent of NO_PARENT_PROJECT",
+      "scenario": "subproject without parent or NO_PARENT_PROJECT",
       "input": {
         "requested_scope": "SUBPROJECT",
         "parent_project_id": null,
@@ -750,7 +750,7 @@
     {
       "scenario_id": "S31-040",
       "operation": "scope",
-      "scenario": "expliciet NO_PARENT_PROJECT",
+      "scenario": "explicit NO_PARENT_PROJECT",
       "input": {
         "requested_scope": "COMPONENT",
         "parent_project_id": null,
@@ -767,7 +767,7 @@
     {
       "scenario_id": "S31-041",
       "operation": "scope",
-      "scenario": "\u00e9\u00e9n opdracht zonder verbreding",
+      "scenario": "one assignment without expansion",
       "input": {
         "requested_scope": "ONE_ASSIGNMENT",
         "parent_project_id": null,
@@ -784,7 +784,7 @@
     {
       "scenario_id": "S31-042",
       "operation": "scope",
-      "scenario": "read-only slice zonder mutatie",
+      "scenario": "read-only slice without mutation",
       "input": {
         "requested_scope": "READ_ONLY_SLICE",
         "parent_project_id": null,
@@ -821,7 +821,7 @@
     {
       "scenario_id": "S31-044",
       "operation": "scale",
-      "scenario": "hoogste as maakt small",
+      "scenario": "highest axis makes small",
       "input": {
         "counts": {
           "assignment_count": 1,
@@ -841,7 +841,7 @@
     {
       "scenario_id": "S31-045",
       "operation": "scale",
-      "scenario": "hoogste as maakt medium",
+      "scenario": "highest axis makes medium",
       "input": {
         "counts": {
           "assignment_count": 9,
@@ -861,7 +861,7 @@
     {
       "scenario_id": "S31-046",
       "operation": "scale",
-      "scenario": "hoogste as maakt large",
+      "scenario": "highest axis makes large",
       "input": {
         "counts": {
           "assignment_count": 31,
@@ -881,7 +881,7 @@
     {
       "scenario_id": "S31-047",
       "operation": "scale",
-      "scenario": "hoogste as maakt mega",
+      "scenario": "highest axis makes mega",
       "input": {
         "counts": {
           "assignment_count": 121,
@@ -901,7 +901,7 @@
     {
       "scenario_id": "S31-048",
       "operation": "scale",
-      "scenario": "onbekende telling",
+      "scenario": "unknown count",
       "input": {
         "counts": {
           "assignment_count": null,
@@ -921,7 +921,7 @@
     {
       "scenario_id": "S31-049",
       "operation": "risk",
-      "scenario": "HIGH verhoogt proceszwaarte maar niet omvang",
+      "scenario": "HIGH increases process weight but not scope",
       "input": {
         "complexity": "HIGH",
         "governance": "LOW",
@@ -938,7 +938,7 @@
     {
       "scenario_id": "S31-050",
       "operation": "risk",
-      "scenario": "CRITICAL complexiteit of risico",
+      "scenario": "CRITICAL complexity or risk",
       "input": {
         "complexity": "CRITICAL",
         "governance": "LOW",
@@ -955,7 +955,7 @@
     {
       "scenario_id": "S31-051",
       "operation": "team",
-      "scenario": "\u00e9\u00e9n mens",
+      "scenario": "one person",
       "input": {
         "actors": [
           {
@@ -984,7 +984,7 @@
     {
       "scenario_id": "S31-052",
       "operation": "team",
-      "scenario": "twee mensen",
+      "scenario": "two people",
       "input": {
         "actors": [
           {
@@ -1019,7 +1019,7 @@
     {
       "scenario_id": "S31-053",
       "operation": "team",
-      "scenario": "64 mensen grens",
+      "scenario": "64 people boundary",
       "input": {
         "actors": [
           {
@@ -1426,7 +1426,7 @@
     {
       "scenario_id": "S31-054",
       "operation": "team",
-      "scenario": "65 mensen",
+      "scenario": "65 people",
       "input": {
         "actors": [
           {
@@ -1839,7 +1839,7 @@
     {
       "scenario_id": "S31-055",
       "operation": "team",
-      "scenario": "ontbrekende actor of verzonnen rol",
+      "scenario": "missing actor of invented role",
       "input": {
         "actors": [
           {
@@ -1874,7 +1874,7 @@
     {
       "scenario_id": "S31-056",
       "operation": "team",
-      "scenario": "unavailable zonder overdracht",
+      "scenario": "unavailable without handoff",
       "input": {
         "actors": [
           {
@@ -1903,7 +1903,7 @@
     {
       "scenario_id": "S31-057",
       "operation": "team",
-      "scenario": "geldige reassignment",
+      "scenario": "valid reassignment",
       "input": {
         "actors": [
           {
@@ -1938,7 +1938,7 @@
     {
       "scenario_id": "S31-058",
       "operation": "team",
-      "scenario": "dependency groen maar resourceconflict",
+      "scenario": "dependency green but resource conflict",
       "input": {
         "actors": [
           {
@@ -1973,7 +1973,7 @@
     {
       "scenario_id": "S31-059",
       "operation": "team",
-      "scenario": "gedeeld integratiepunt",
+      "scenario": "shared integration point",
       "input": {
         "actors": [
           {
@@ -2008,7 +2008,7 @@
     {
       "scenario_id": "S31-060",
       "operation": "team",
-      "scenario": "rollen capaciteit en paralleliteit geldig",
+      "scenario": "roles capacity and parallelism valid",
       "input": {
         "actors": [
           {
@@ -2043,7 +2043,7 @@
     {
       "scenario_id": "S31-061",
       "operation": "team",
-      "scenario": "AI-slots tellen niet als mensen of OWNER",
+      "scenario": "AI-slot count does not include OWNER people",
       "input": {
         "actors": [
           {
@@ -2078,7 +2078,7 @@
     {
       "scenario_id": "S31-062",
       "operation": "preview",
-      "scenario": "zelfde input ongeacht volgorde",
+      "scenario": "same input regardless order",
       "input": {
         "assertion": "DETERMINISTIC_PROPOSAL",
         "proposal_input": {
@@ -2098,7 +2098,7 @@
     {
       "scenario_id": "S31-063",
       "operation": "preview",
-      "scenario": "voorstel bindt project roadmap of team niet",
+      "scenario": "proposal does not bind a team project roadmap",
       "input": {
         "assertion": "ZERO_BINDINGS",
         "proposal_input": {
@@ -2117,7 +2117,7 @@
     {
       "scenario_id": "S31-064",
       "operation": "preview",
-      "scenario": "voorstel activeert geen assignment of werkstroom",
+      "scenario": "proposal activates no workflow assignment",
       "input": {
         "assertion": "ZERO_ACTIVATIONS",
         "proposal_input": {
@@ -2136,7 +2136,7 @@
     {
       "scenario_id": "S31-065",
       "operation": "snapshot",
-      "scenario": "OPENCNTX-PUBLIC commit en tree exact",
+      "scenario": "OPENCNTX-PUBLIC commit and tree exact",
       "input": {
         "expected": {
           "format": "opencntx-r9-public-snapshot",
@@ -2176,7 +2176,7 @@
     {
       "scenario_id": "S31-066",
       "operation": "snapshot",
-      "scenario": "snapshotdigest of tree wijkt af",
+      "scenario": "tree snapshot digest differs",
       "input": {
         "expected": {
           "format": "opencntx-r9-public-snapshot",
@@ -2216,7 +2216,7 @@
     {
       "scenario_id": "S31-067",
       "operation": "exclusion",
-      "scenario": "OpenSpec nergens geladen en geen placeholder",
+      "scenario": "OpenSpec is not loaded anywhere and no placeholder",
       "input": {
         "trigger": "BEFORE_ACTION",
         "action": "read-metadata",
@@ -2238,7 +2238,7 @@
     {
       "scenario_id": "S31-068",
       "operation": "writes",
-      "scenario": "volledige Opdracht-31-corpus",
+      "scenario": "complete Assignment-31 corpus",
       "input": {
         "corpus": "assignment-31",
         "write_targets": []
@@ -2253,5 +2253,5 @@
     }
   ],
   "scenario_count": 68,
-  "scenario_table_sha256": "7b207dad374cddcd67d7fc403d6b7117a63a58cecc75ad26fc962449ceef6f2b"
+  "scenario_table_sha256": "133e9837c1c52611f28baf2f586493bb73b4ae77345975262efd4a8194847fb4"
 }

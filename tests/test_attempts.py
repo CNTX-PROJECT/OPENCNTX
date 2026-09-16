@@ -382,7 +382,7 @@ class ObjectiveAttemptTests(unittest.TestCase):
             self.assertEqual(action_error.exception.code, "executor_action_out_of_scope")
             result = append_attempt(parent, workspace, prepared.executor_id, basis, 1)
             event = _load_chain(workspace, TASK_ID).events[-1]
-            self.assertEqual(event.actor_id, "UITVOERDER-1")
+            self.assertEqual(event.actor_id, "EXECUTOR-1")
             self.assertEqual(event.payload["executor_id"], prepared.executor_id)
             self.assertRegex(event.payload["context_manifest_digest"], r"[0-9a-f]{64}\Z")
             self.assertIn(
