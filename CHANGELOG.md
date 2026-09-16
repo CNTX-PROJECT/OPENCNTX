@@ -2,6 +2,18 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.8.3 - 2026-09-16
+
+Published GitHub release. This release adds a capability-detected local SQLite
+FTS5 projection for full-text Markdown and JSON search, exact identifiers and
+JSON paths, generated-output scope exclusion, UTF-16/BOM compatibility, raw
+JSON fallback, incremental refresh and explicit freshness status. Search now
+returns digest-checked heading-aware snippets with separate byte and estimated
+token limits. Existing-project adoption discovers the full supported-text scope
+and requires `AUDIT_THEN_BIND` with a reviewed preview digest for contextless
+trees. The compatible v1 metadata index, managed installation, rollback,
+English public surface and real-project `VISUAL_ARTIST` owner gate remain intact.
+
 ## 1.8.2 - 2026-09-16
 
 Published GitHub release. This release makes the OPENCNTX-owned public surface

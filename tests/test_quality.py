@@ -81,6 +81,8 @@ GUIDES = {
     "roadmap-1.8.1.md",
     "release-1.8.2.md",
     "roadmap-1.8.2.md",
+    "release-1.8.3.md",
+    "roadmap-1.8.3.md",
 }
 
 LIGHT_DIAGRAMS = {
@@ -245,8 +247,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(78, len(executable_paths))
-        self.assertEqual(83, len(documented_paths))
+        self.assertEqual(79, len(executable_paths))
+        self.assertEqual(84, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()

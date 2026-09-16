@@ -11,6 +11,7 @@ _SIZES = frozenset({"SHORT", "MEDIUM", "LARGE", "MEGA"})
 _CONTEXT_ROLES = frozenset({"CURRENT_STEP", "RETURN_ANCHOR", "DECISION", "SUPPORTING"})
 _ROLE_PRIORITY = {"CURRENT_STEP": 0, "RETURN_ANCHOR": 1, "DECISION": 2, "SUPPORTING": 3}
 _REQUIRED_ROLES = frozenset({"CURRENT_STEP", "RETURN_ANCHOR", "DECISION"})
+_TOKEN_DIVISOR = 4
 
 
 def _identifier(value: str | None, name: str, *, required: bool = False) -> str | None:
@@ -151,16 +152,25 @@ def _validated_source(source: ContextSource) -> ContextSource:
     return source
 
 
+def _estimated_tokens(byte_count: int) -> int:
+    return max(1, (byte_count + _TOKEN_DIVISOR - 1) // _TOKEN_DIVISOR)
+
+
 def plan_context_load(
     sources: Sequence[ContextSource],
     *,
     previous_digests: Mapping[str, str] | None = None,
     available_source_ids: Sequence[str] | None = None,
     max_bytes: int = 250_000,
+    max_tokens: int | None = None,
 ) -> dict[str, Any]:
     """Load anchors and changed sources, while referencing unchanged material by digest."""
     if type(max_bytes) is not int or not 1 <= max_bytes <= 100_000_000:
         raise ValueError("context byte budget is outside its boundary")
+    if max_tokens is not None and (
+        type(max_tokens) is not int or not 1 <= max_tokens <= 100_000_000
+    ):
+        raise ValueError("context token budget is outside its boundary")
     previous = {} if previous_digests is None else dict(previous_digests)
     available = None if available_source_ids is None else set(available_source_ids)
     validated = tuple(_validated_source(source) for source in sources)
@@ -174,6 +184,12 @@ def plan_context_load(
     required_ids: list[str] = []
     loaded_bytes = 0
     referenced_bytes = 0
+    loaded_tokens = 0
+    required_token_floor = sum(
+        _estimated_tokens(source.byte_count) for source in ordered if source.role in _REQUIRED_ROLES
+    )
+    if max_tokens is not None and required_token_floor > max_tokens:
+        raise ValueError("required context exceeds the token budget")
     for source in ordered:
         unchanged = previous.get(source.source_id) == source.sha256
         required = source.role in _REQUIRED_ROLES
@@ -184,9 +200,12 @@ def plan_context_load(
             reference.append(source.source_id)
             referenced_bytes += source.byte_count
             continue
-        if loaded_bytes + source.byte_count <= max_bytes:
+        token_cost = _estimated_tokens(source.byte_count)
+        token_fits = max_tokens is None or loaded_tokens + token_cost <= max_tokens
+        if loaded_bytes + source.byte_count <= max_bytes and token_fits:
             load.append(source.source_id)
             loaded_bytes += source.byte_count
+            loaded_tokens += token_cost
             continue
         if required:
             raise ValueError("required context exceeds the byte budget")
@@ -203,6 +222,7 @@ def plan_context_load(
         "format": "opencntx-context-load-plan",
         "format_version": 1,
         "max_bytes": max_bytes,
+        "max_tokens": max_tokens,
         "naive_bytes": naive_bytes,
         "loaded_bytes": loaded_bytes,
         "referenced_bytes": referenced_bytes,
@@ -214,6 +234,15 @@ def plan_context_load(
         "reference_source_ids": reference,
         "skipped_source_ids": skipped,
         "required_source_ids": required_ids,
+        "estimated_loaded_tokens": loaded_tokens,
+        "required_token_floor": required_token_floor,
+        "token_budget_status": (
+            "UNBOUNDED"
+            if max_tokens is None
+            else "OK"
+            if loaded_tokens <= max_tokens
+            else "EXCEEDED"
+        ),
         "omitted_source_ids": list(skipped),
         "availability_checked": available is not None,
     }

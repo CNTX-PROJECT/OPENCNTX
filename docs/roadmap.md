@@ -8,16 +8,17 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 10 · v1.8.2 Stable English-surface release published · remaining work tracked.**
+**Revision 11 · v1.8.3 Stable full-text and compatibility release published · remaining work tracked.**
 
 **[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.8.2 adds the public English-language gate and retains the
-managed-installation, host-footer, adoption and knowledge-layer work from
-1.8.1 and 1.8.0. The complete historical plan retains unfinished work;
+Version 1.8.3 adds local full-text search, incremental source indexing,
+freshness status, bounded snippets and token-aware output while retaining the
+public English-language gate, managed installation, host-footer, adoption and
+knowledge-layer work from 1.8.2, 1.8.1 and 1.8.0. The complete historical plan retains unfinished work;
 publication status is based on the GitHub Release.
 
-## What 1.8.2 improves
+## What 1.8.3 improves
 
 | Priority | Intended result |
 |---|---|
@@ -39,6 +40,12 @@ publication status is based on the GitHub Release.
 | Recoverable managed updates | Validate wheel records, serialize transitions and retain exact rollback |
 | Truthful host integration | Accept only complete, session-bound footer telemetry |
 | Safer adoption audits | Block ambiguous ordinals, links, cycles and ownership boundaries |
+| Faster body recall | Search Markdown and JSON bodies with a local SQLite FTS5 index |
+| Exact structured recall | Match identifiers, JSON paths and JSON values with explainable scores |
+| Lower refresh cost | Reuse unchanged source fingerprints and publish the new index atomically |
+| Truthful freshness | Report `CURRENT`, `STALE`, `PARTIAL`, `NEEDS_BUILD` or `INVALID` explicitly |
+| Controlled output | Bound source bytes, snippet size and estimated tokens independently |
+| Safer unmanaged adoption | Discover the full supported-text scope and require `AUDIT_THEN_BIND` |
 
 These claims apply only to the tested native routes in the release scope. Host
 policies, legitimate safety boundaries, missing access and explicit user stops
@@ -75,8 +82,10 @@ than adding global policy layers.
 
 | Record | Where to read it |
 |---|---|
-| Current 1.8.2 release scope | [English surface and compatibility release](release-1.8.2.md) |
-| Current 1.8.2 release roadmap | [English surface roadmap](roadmap-1.8.2.md) |
+| Current 1.8.3 release scope | [Full-text search and compatibility release](release-1.8.3.md) |
+| Current 1.8.3 release roadmap | [Full-text search roadmap](roadmap-1.8.3.md) |
+| Previous 1.8.2 release scope | [English surface and compatibility release](release-1.8.2.md) |
+| Previous 1.8.2 release roadmap | [English surface roadmap](roadmap-1.8.2.md) |
 | Previous 1.8.1 release scope | [Compatibility and installation release](release-1.8.1.md) |
 | Previous 1.8.0 release scope | [Knowledge-layer release](release-1.8.0.md) |
 | 1.7.6 release scope | [Managed delivery release](release-1.7.6.md) |
