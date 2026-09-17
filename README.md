@@ -4,7 +4,7 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **v1.8.3 Stable release**
+Local first · Any model · Your files, your decisions · **v1.8.4 Stable release**
 
 [Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 
@@ -33,7 +33,7 @@ GitHub holds only committed and pushed files; keep separate backups for untracke
 3. **Work and check:** you or your AI tool perform the task and verify the result.
 4. **Save and continue:** record evidence and preserve the next step.
 
-OPENCNTX packages and verifies files. v1.8.3 also provides a local knowledge
+OPENCNTX packages and verifies files. v1.8.4 also provides a local knowledge
 layer for hierarchical sources, full-text search, typed links, explainable
 results, technique memory, safe adoption and provider-neutral footers. See the [knowledge layer
 guide](docs/knowledge-layer.md). It does not run an AI or interpret chat intent.
@@ -71,7 +71,7 @@ technical evidence one link away. [Explore the visual tour](docs/visual-tour.md)
 With Python 3.11–3.14, Git and pipx available:
 
 ```powershell
-pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.3/opencntx-1.8.3-py3-none-any.whl"
+pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.4/opencntx-1.8.4-py3-none-any.whl"
 opencntx --version
 ```
 

@@ -2,9 +2,10 @@
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-Version 1.8.4 is a candidate until its release gates have fresh evidence.
-The published baseline is 1.8.3. A green historical suite is not evidence
-that the candidate fixes every independent audit finding.
+Version 1.8.4 qualifies the package and explicit CLI routes against 1.8.3.
+On 2026-09-17 the owner approved publication with automatic native chat-host
+integration excluded. G10 live Desktop/CLI chat-host activation remains
+unverified follow-up work, not a release claim or a passed test.
 
 ## Required work
 
@@ -49,8 +50,10 @@ old snapshot over newer user work.
 8. G08: the supported VISUAL_ARTIST integration passes preview, apply, verify,
    repeated application and rollback, retaining human review requirements.
 9. G09: footer compatibility and structured-output isolation pass.
-10. G10: declared host routes, context changes and task handoff pass; simulated
-    delivery is not presented as live model-residency proof.
+10. G10: explicit package and fresh-process CLI routes preserve context binding
+    and output isolation. Native Desktop/CLI chat-host activation, hook trust
+    and live context-resume qualification are outside the approved 1.8.4 scope.
+    Simulated delivery is not live model-residency proof.
 11. G11: performance goals have repeatable measurements; token savings require
     complete task-level provider evidence before being advertised.
 12. G12: full regression, quality, build, install and release-byte checks pass.
@@ -124,10 +127,11 @@ Raw samples: [1.8.3 baseline](evidence/1.8.4/benchmark-1.8.3.json) and
 |---|---|---|
 | Python package | Typed context binding, negative cases, presentation and recovery tests | No claim that an LLM has accepted the data |
 | CLI in fresh processes | Retrieval pilot, persisted index, conditional concurrent writers and footer isolation | No automatic native chat-hook activation |
-| Native Desktop/CLI chat hosts | Existing adapter contracts and local helper | Native hook trust and live host/context-resume evidence remain open under G10 |
+| Native Desktop/CLI chat hosts | Existing adapter contracts and local helper | Excluded from 1.8.4; native hook trust and live host/context-resume evidence remain open |
 
-The last row is a required host-qualification gap. Passing library and CLI
-tests does not silently close the two-host release gate.
+The owner explicitly excluded the last row from the 1.8.4 release on
+2026-09-17. Passing library and CLI tests does not close this retained
+follow-up. Installing this release does not activate native chat hooks.
 
 Native hook trust remains host-owned. Do not edit trust hashes or bypass native
 review to manufacture integration evidence. Human visual approval must refer

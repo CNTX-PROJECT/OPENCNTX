@@ -8,47 +8,39 @@ is authoritative for available downloads.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
-## Local candidate: v1.8.4
+## Published software — v1.8.4 Stable
 
-[Candidate scope](release-1.8.4.md) and [qualification gates](roadmap-1.8.4.md)
-cover audit hardening, safe upgrades and portable presentation. This development
-version is not a published stable release. The current download below remains
-1.8.3 until exact candidate qualification and publication complete.
-
-## Published software — v1.8.3 Stable
-
-[Download v1.8.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.3) ·
-[Release scope and limitations](release-1.8.3.md) ·
+[Download v1.8.4](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4) ·
+[Release scope and limitations](release-1.8.4.md) ·
 [Installation and managed update](install-and-update.md)
 
-Version 1.8.3 adds a local SQLite FTS5 full-text projection for Markdown and
-JSON, exact identifier and JSON-path recall, incremental refresh, explicit
-scope/freshness status, bounded snippets and hard byte/token budgets. It also
-broadens existing-project adoption discovery while requiring `AUDIT_THEN_BIND`
-for contextless projects. It retains the English public surface and managed
-installation, session-bound host-footer, wheel `RECORD`, serialized transition
-and fail-closed compatibility contracts from 1.8.2 and 1.8.1.
-
-The former 1.6.x downgrade/reset path is repaired. A valid retained v1 snapshot
-inside a v2 goal-storage envelope is restored only in a new staged copy; the
-source remains unchanged. The actual 1.6.0, 1.6.1, 1.6.2 and 1.6.3 writers
-passed the staged-copy checkpoint matrix.
+Version 1.8.4 hardens bounded knowledge I/O, conditional updates, current
+evidence, index publication, FTS integrity and retrieval. Shared snapshots
+avoid unnecessary indexing work. It adds opt-in delivery reports, partial
+footer metrics and reviewed, reversible visual text integration while retaining
+existing v1 contracts. Automatic native chat-host integration is excluded;
+native hook trust and live host qualification remain follow-up work.
 
 The published distribution contains exactly:
 
-- `opencntx-1.8.3-py3-none-any.whl`
-- `opencntx-1.8.3.tar.gz`
+- `opencntx-1.8.4-py3-none-any.whl`
+- `opencntx-1.8.4.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
 Read [Release artifacts](release-artifacts.md) for build records, checksums and
-verification. There is no published PyPI/TestPyPI package.
+verification. There is no published PyPI/TestPyPI package. The
+[qualification roadmap](roadmap-1.8.4.md) records evidence and scope boundaries.
 
-Remaining work outside this bounded release stays on the [roadmap page](roadmap.md)
-and is never implied by a version number.
+## Previous published software — v1.8.3 Stable
 
-The release scope distinguishes implemented behavior from deferred extensions;
-a roadmap checkbox is never a substitute for release evidence.
+[Download v1.8.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.3) ·
+[Release scope and limitations](release-1.8.3.md)
+
+Version 1.8.3 introduced the local SQLite FTS5 full-text projection and
+broader adoption discovery, retaining managed installation and earlier
+compatibility contracts. Its staged-copy legacy recovery evidence remains
+part of the historical compatibility record.
 
 ## Previous published software — v1.8.2 Stable
 
@@ -86,8 +78,9 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
-The exact v1.8.3 source, four release assets and managed installation route are
-published together. The [1.8.3 roadmap](roadmap-1.8.3.md) records the full-text
+The exact v1.8.4 source, four release assets and managed installation route are
+published together. The [1.8.4 roadmap](roadmap-1.8.4.md) records audit,
+upgrade and presentation qualification. The [1.8.3 roadmap](roadmap-1.8.3.md) records the full-text
 and compatibility evidence; the [1.8.2 roadmap](roadmap-1.8.2.md) records the
 English surface; the [1.8.1 roadmap](roadmap-1.8.1.md)
 records the integration boundaries retained by this release. The [1.8.0

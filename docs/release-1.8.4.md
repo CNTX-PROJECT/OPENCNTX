@@ -1,11 +1,11 @@
-# OPENCNTX 1.8.4 candidate — audit hardening and portable presentation
+# OPENCNTX 1.8.4 — audit hardening and portable presentation
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-**Status: local candidate; not a published release.** See the
-[qualification roadmap](roadmap-1.8.4.md) for mandatory release gates.
+**Stable release scope, 2026-09-17.** See the
+[qualification roadmap](roadmap-1.8.4.md) for evidence and explicit boundaries.
 
-## Implemented candidate changes
+## Delivered changes
 
 - Validate portable technique IDs, distinguish create from digest-conditional
   update, protect writers with the existing transaction layer, and bound recall.
@@ -52,11 +52,26 @@ they are operational artifacts. The existing v1 footer route is unchanged.
 Existing private owner profiles and local translations remain host-owned;
 the public package and its default presentation remain in English.
 
-## Claims requiring release evidence
+## Qualification and scope
+
+All 22 audit acceptance scenarios pass. Qualification covers exact upgrade
+artifacts from 1.8.3, 1.8.2, 1.8.1, 1.8.0 and 1.7.6, offline recovery and
+preservation of existing project data. CI covers Windows and Ubuntu with
+Python 3.11–3.14 and immutable historical writers. The approved visual text
+preview passes apply, an identical repeat with zero writes, and exact rollback.
+
+Thirty warm samples show a 61.69% improvement in the 10,000-file no-op index
+median. The [roadmap](roadmap-1.8.4.md) records raw samples and memory/query
+tradeoffs; this is not a universal performance or token-saving claim.
+
+The owner explicitly excluded automatic native Desktop/CLI chat-host
+integration from this release on 2026-09-17. Native hook trust and live
+context-resume tests remain follow-up work. Installation does not activate
+chat hooks. The package and explicit CLI presentation routes are included.
 
 No universal token-saving percentage, arbitrary-provider residency, unqualified
 upgrade path, unattended visual adoption or native-hook activation is claimed.
-The 1.8.4 tag and four distribution assets must not be published as stable until
-the exact candidate passes the qualification roadmap.
+The release consists of the exact tag, wheel, source archive, checksums and
+build record; see [release artifacts](release-artifacts.md).
 
 [Documentation home](README.md)
