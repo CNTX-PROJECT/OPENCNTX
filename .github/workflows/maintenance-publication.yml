@@ -4,17 +4,46 @@ on:
     branches: [maintenance/github-cleanup-20260918]
 permissions:
   contents: read
+concurrency:
+  group: opencntx-publication-maintenance
+  cancel-in-progress: false
 jobs:
-  diagnose:
+  preserve:
+    if: contains(github.event.head_commit.message, '[preserve-publication]')
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
-      - name: Read workflow validation message
-        shell: python {0}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Preserve exact repository and release files
+        run: python tools/preserve_publication.py
+      - name: Store and verify the maintenance backup, not a software release
+        shell: bash
         run: |
-          import re, urllib.request
-          url='https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/35287688589'
-          text=urllib.request.urlopen(url, timeout=30).read().decode()
-          for line in text.splitlines():
-              if any(word in line.lower() for word in ('not allowed','invalid workflow','upload-artifact','annotation','workflow error')):
-                  print(re.sub('<[^>]+>', ' ', line)[:4000])
+          set -euo pipefail
+          gh release create archive-20260918 "$RUNNER_TEMP/opencntx-preserved/OPENCNTX_before_cleanup.zip" "$RUNNER_TEMP/opencntx-preserved/preservation.json" --target 6fc196b5ec90370c93c204a115ac58c73fd2bb32 --title 'Historical backup — before repository cleanup' --notes 'Owner-authorized backup of Git history, release metadata and exact release files before removing pre-1.7.0 listings. This is an archive, not a software version. Use v1.8.5 for installation. Files are individually hashed inside the ZIP; preservation.json identifies the archive hash. Original release identities cannot necessarily be recreated after deletion.' --latest=false
+          mkdir "$RUNNER_TEMP/backup-readback"
+          gh release download archive-20260918 --dir "$RUNNER_TEMP/backup-readback"
+          cmp "$RUNNER_TEMP/opencntx-preserved/OPENCNTX_before_cleanup.zip" "$RUNNER_TEMP/backup-readback/OPENCNTX_before_cleanup.zip"
+          echo 'BACKUP_REMOTE_BYTES_VERIFIED'
+      - name: Recover the missing 1.7.6 baseline without substituting its identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
+          git worktree add --detach "$RUNNER_TEMP/baseline176" v1.7.6
+          cd "$RUNNER_TEMP/baseline176"
+          python tools/release_artifacts.py build --repository . --output dist --expected-commit "$(git rev-parse HEAD)" --expected-tree "$(git rev-parse 'HEAD^{tree}')" > "$RUNNER_TEMP/baseline-build.log" 2>&1 || { tail -60 "$RUNNER_TEMP/baseline-build.log"; exit 1; }
+          sha256sum dist/*
+          python -c "import pathlib,hashlib; p=pathlib.Path('dist/opencntx-1.7.6-py3-none-any.whl'); actual=hashlib.sha256(p.read_bytes()).hexdigest(); print('BASELINE176',actual); assert actual == 'b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f'"
