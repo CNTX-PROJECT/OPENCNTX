@@ -74,6 +74,11 @@ old snapshot over newer user work.
 - Root identity in old durable formats is retained. Search caches bind to
   case-sensitive root paths on POSIX and normalized Windows paths; relocation
   requires rebuilding the cache. Copying a cache is not project adoption.
+- Enumeration refuses more than 1,000,000 visited filesystem entries or
+  10,000 technique cards. Recall reads at most 1,000 cards per requested page,
+  at most 100,000 bytes each. Status pagination is opt-in to preserve the old
+  envelope. Filesystem enumeration itself is not a hard OS-level memory or
+  timeout guarantee; source-content and serialized-delivery limits are separate.
 - Footer v1 remains closed. Partial metrics use a separate v2 host envelope,
   bound to session, context generation and source digest, with per-field provenance.
 
@@ -84,6 +89,45 @@ process startup separately from cold filesystem cache. Target a 30% improvement
 in the representative 10,000-file no-op median, without more than 10% p95
 regression on small profiles. Report all reads/writes and task success. A
 character-based token estimate is not an exact provider tokenizer.
+
+### Recorded indexing comparison
+
+Thirty warm repetitions on Windows 11 build 26200, Python 3.12.10,
+AMD64 Family 23 Model 113. Both versions used identical synthetic corpus
+bytes and the ordinary v1 plus v2 build workload. This is not a cold-cache
+or provider-token benchmark.
+
+| Corpus | 1.8.3 no-op p50 / p95 | 1.8.4 no-op p50 / p95 | Candidate source reads / index publications |
+|---|---|---|---|
+| 12 files, 916 bytes | 63.14 / 67.66 ms | 15.65 / 16.18 ms | 0 / 0 per repetition |
+| 10,000 files, 730,040 bytes | 4704.07 / 4996.67 ms | 1802.19 / 1838.85 ms | 0 / 0 per repetition |
+
+The large-profile median improved by 61.69%; the small-profile p95 also
+improved. The 30% no-op target and small-index regression limit pass for
+these workloads. Retrieval goldens remained correct through modify, add,
+rename and delete operations.
+
+There are measured costs: the separate 10,000-file Python-heap sample grew
+from 28.31 MB to 37.37 MB while both projections shared one snapshot. The
+single retrieval samples rose from about 2–3 ms to 9 ms with the additional
+source and delivery checks; those single samples are not a search p95.
+New-process help/version medians stayed around 225–228 ms. No lazy-import
+rewrite or universal latency, memory, token or cost improvement is claimed.
+
+Raw samples: [1.8.3 baseline](evidence/1.8.4/benchmark-1.8.3.json) and
+[1.8.4 candidate](evidence/1.8.4/benchmark-1.8.4.json). Reproduce with
+`tools/release_184_benchmark.py --source SOURCE_CHECKOUT --output REPORT.json`.
+
+### Host qualification boundary
+
+| Route | Available evidence | Remaining requirement |
+|---|---|---|
+| Python package | Typed context binding, negative cases, presentation and recovery tests | No claim that an LLM has accepted the data |
+| CLI in fresh processes | Retrieval pilot, persisted index, conditional concurrent writers and footer isolation | No automatic native chat-hook activation |
+| Native Desktop/CLI chat hosts | Existing adapter contracts and local helper | Native hook trust and live host/context-resume evidence remain open under G10 |
+
+The last row is a required host-qualification gap. Passing library and CLI
+tests does not silently close the two-host release gate.
 
 Native hook trust remains host-owned. Do not edit trust hashes or bypass native
 review to manufacture integration evidence. Human visual approval must refer

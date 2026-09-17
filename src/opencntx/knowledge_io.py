@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import os
+import re
 import stat
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+
+MAX_SCAN_ENTRIES = 1_000_000
 
 
 class KnowledgeError(ValueError):
@@ -78,7 +81,12 @@ def check_delivery(relative: str, text: str, digest: str) -> None:
     from .security import CONFIDENCE_HIGH, CONFIDENCE_WARNING, scan_text
 
     findings = scan_text(path=relative, text=text, source_sha256=digest)
-    if any(item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings):
+    # Retrieval also withholds opaque provider-prefixed values, including
+    # synthetic canaries containing separators that are not live key syntax.
+    opaque_provider_value = re.search(r"\bsk_live_[A-Za-z0-9_-]{20,}\b", text)
+    if opaque_provider_value or any(
+        item.confidence in {CONFIDENCE_HIGH, CONFIDENCE_WARNING} for item in findings
+    ):
         raise KnowledgeError("Source delivery blocked by the local secret policy.")
 
 

@@ -29,7 +29,14 @@ from .knowledge import (
     _root_id,
     build_index,
 )
-from .knowledge_io import bounded_read, check_delivery, publication_lock, safe_output, safe_path
+from .knowledge_io import (
+    MAX_SCAN_ENTRIES,
+    bounded_read,
+    check_delivery,
+    publication_lock,
+    safe_output,
+    safe_path,
+)
 
 SEARCH_INDEX_FORMAT = "ocx-search-index-v2"
 SEARCH_RESULT_FORMAT = "ocx-search-result-v2"
@@ -120,7 +127,11 @@ def _candidate_paths(
 ) -> list[SearchCandidate]:
     candidates: list[SearchCandidate] = []
     total_bytes = 0
+    visited_entries = 0
     for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+        visited_entries += len(directories) + len(names)
+        if visited_entries > MAX_SCAN_ENTRIES:
+            raise KnowledgeError("Source enumeration exceeds the entry budget.")
         current_path = Path(current)
         directories[:] = sorted(
             name
@@ -1267,6 +1278,7 @@ def search_delivery(
     while True:
         value = basis | {"report_digest": _digest(_canonical_json(basis))}
         serialized = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+        check_delivery("search-delivery.json", serialized, value["report_digest"])
         if (
             len(serialized.encode("utf-8")) <= max_output_bytes
             and _token_estimate(serialized) <= max_tokens

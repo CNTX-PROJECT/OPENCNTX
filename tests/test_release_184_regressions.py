@@ -143,12 +143,12 @@ class Release184Regressions(unittest.TestCase):
         self.assertEqual(search_index_status(self.root)["status"], "CURRENT")
 
     def test_secret_delivery_is_blocked_without_echoing_value(self) -> None:
-        secret = "ghp_" + "Q" * 36
-        self.source.write_text("needle " + secret, encoding="utf-8")
-        database = self.build()
-        with self.assertRaises(KnowledgeError) as caught:
-            search_full_text(database, "needle", root=self.root)
-        self.assertNotIn(secret, str(caught.exception))
+        for secret in ("ghp_" + "Q" * 36, "sk_live_OPENCNTX_SYNTHETIC_000000000000"):
+            self.source.write_text("needle " + secret, encoding="utf-8")
+            database = self.build()
+            with self.subTest(secret_kind=secret[:4]), self.assertRaises(KnowledgeError) as caught:
+                search_full_text(database, "needle", root=self.root)
+            self.assertNotIn(secret, str(caught.exception))
 
     def test_proven_evidence_must_be_current(self) -> None:
         proven = card()
@@ -296,6 +296,22 @@ class Release184Regressions(unittest.TestCase):
         self.assertEqual(target.read_bytes(), before)
         save_technique(self.root, card(name="Corrected"), expected_digest=recalled["card_digest"])
         self.assertEqual(list_techniques(self.root)[0]["name"], "Corrected")
+
+    def test_enumeration_caps_fail_before_reading_or_publishing(self) -> None:
+        import opencntx.knowledge as knowledge_module
+
+        (self.root / "binary.bin").write_bytes(b"not indexed")
+        with patch.object(knowledge_module, "MAX_SCAN_ENTRIES", 1), self.assertRaises(KnowledgeError):
+            build_index(self.root)
+        with patch.object(search_module, "MAX_SCAN_ENTRIES", 1), self.assertRaises(KnowledgeError):
+            build_search_index(self.root)
+        self.assertFalse((self.root / ".opencntx/index-v1.json").exists())
+        self.assertFalse((self.root / ".opencntx/search-v2.sqlite").exists())
+        store = self.root / ".opencntx/techniques"
+        store.mkdir(parents=True)
+        paths = (store / f"entry-{number}.json" for number in range(10_001))
+        with patch.object(Path, "glob", return_value=paths), self.assertRaises(KnowledgeError):
+            list_techniques(self.root)
 
 
 if __name__ == "__main__":

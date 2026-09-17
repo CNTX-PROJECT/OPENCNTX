@@ -14,10 +14,11 @@ import os
 import re
 import tempfile
 from collections.abc import Iterable, Mapping
+from itertools import islice
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from .knowledge_io import KnowledgeError, bounded_read, check_delivery, safe_path
+from .knowledge_io import MAX_SCAN_ENTRIES, KnowledgeError, bounded_read, check_delivery, safe_path
 
 INDEX_FORMAT = "ocx-index-v1"
 SOURCE_NODE_FORMAT = "ocx-source-node-v1"
@@ -133,7 +134,11 @@ def _relative(root: Path, path: Path) -> str:
 
 def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
     selected: list[Path] = []
+    visited_entries = 0
     for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+        visited_entries += len(directories) + len(names)
+        if visited_entries > MAX_SCAN_ENTRIES:
+            raise KnowledgeError("Source enumeration exceeds the entry budget.")
         current_path = Path(current)
         directories[:] = sorted(
             name
@@ -143,10 +148,10 @@ def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
         for name in sorted(names):
             candidate = current_path / name
             relative = _relative(root, candidate)
-            if len(PurePosixPath(relative).parts) > max_depth:
-                raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
             if candidate.is_symlink() or candidate.suffix.lower() not in TEXT_SUFFIXES:
                 continue
+            if len(PurePosixPath(relative).parts) > max_depth:
+                raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
             selected.append(candidate)
             if len(selected) > max_files:
                 raise KnowledgeError(f"Source count exceeds max_files={max_files}.")
@@ -683,7 +688,10 @@ def list_techniques(root: Path, *, limit: int = 100, offset: int = 0) -> list[di
     if not directory.is_dir():
         return []
     cards: list[dict[str, Any]] = []
-    for path in sorted(directory.glob("*.json"))[offset : offset + limit]:
+    catalog = list(islice(directory.glob("*.json"), 10_001))
+    if len(catalog) > 10_000:
+        raise KnowledgeError("Technique catalog exceeds the 10000-card enumeration budget.")
+    for path in sorted(catalog)[offset : offset + limit]:
         try:
             value = json.loads(bounded_read(selected_root, _relative(selected_root, path), 100_000))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:

@@ -134,6 +134,16 @@ class Release184CliTests(unittest.TestCase):
         for name, text in sources.items():
             self.assertEqual((self.root / name).read_text(encoding="utf-8"), text)
 
+    def test_original_audit_canary_cannot_leave_the_cli(self) -> None:
+        canary = "sk_live_OPENCNTX_SYNTHETIC_000000000000"
+        (self.root / "private.md").write_text("Synthetic credential " + canary, encoding="utf-8")
+        built = self.cli("knowledge", "index", "build")
+        self.assertEqual(built.returncode, 0, built.stderr)
+        result = self.cli("knowledge", "index", "search", "credential")
+        self.assertEqual(result.returncode, 2)
+        self.assertNotIn(canary, result.stdout + result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
