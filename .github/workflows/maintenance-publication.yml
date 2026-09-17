@@ -4,15 +4,29 @@ on:
     branches: [maintenance/github-cleanup-20260918]
 permissions:
   contents: read
-  checks: read
+concurrency:
+  group: opencntx-publication-maintenance
+  cancel-in-progress: false
 jobs:
-  diagnose:
+  preserve:
+    if: contains(github.event.head_commit.message, '[preserve-publication]')
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 12
     steps:
-      - name: Read workflow annotations
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Preserve repository and exact release assets without deleting anything
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api repos/CNTX-PROJECT/OPENCNTX/check-suites/95571763631/check-runs --jq '.check_runs[] | {id,output}'
-          gh api repos/CNTX-PROJECT/OPENCNTX/actions/permissions/selected-actions || true
+        run: python tools/preserve_publication.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: opencntx-before-cleanup
+          path: ${{ runner.temp }}/opencntx-preserved/*
+          retention-days: 90
+          if-no-files-found: error
