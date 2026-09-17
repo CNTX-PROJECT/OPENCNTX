@@ -5,15 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "opencntx"
 version = "1.8.5"
-description = "EXPERIMENTAL owner preview: opt-in compact retrieval output on the 1.8.4 engine."
-readme = "docs/release-1.8.5-preview.md"
+description = "Local, bounded context packages with optional compact search output."
+readme = "docs/release-1.8.5.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{ name = "OPENCNTX contributors" }]
 keywords = ["ai", "cli", "context-management", "local-first", "verification"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX :: Linux",
@@ -83,5 +82,5 @@ fail_under = 78
 show_missing = true
 
 [tool.opencntx.release]
-published_version = "1.8.4"
-status = "local-candidate"
+published_version = "1.8.5"
+status = "published"
