@@ -5,6 +5,8 @@
 Use this page to distinguish published software, development source and future
 plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
 is authoritative for available downloads.
+The release scope distinguishes shipped behavior from remaining work; a
+roadmap checkbox is never a substitute for release evidence.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
