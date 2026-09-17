@@ -1,142 +1,95 @@
-# Install and update OPENCNTX 1.8.4
+# Install and update OPENCNTX 1.8.5
 
-OPENCNTX 1.8.4 supports Python 3.11 through 3.14. The qualified persistent
-installation routes are pipx and a dedicated pip virtual environment. A shared
-Python, editable checkout, unknown package owner, synchronized state directory,
-or custom wrapper is diagnosis-only until separately qualified.
+[Project home](../README.md) · [Documentation](README.md) · [Release status](releases.md) · [Troubleshooting](troubleshooting.md)
 
-## First inspect what already exists
+Use the exact published wheel. Inspect an existing installation before updating; do not install a second copy over an unknown owner or custom wrapper. Python 3.11–3.14 is the source compatibility range. The original 1.8.5 artifact checks ran on Ubuntu/Python 3.12; see [platform evidence](platforms.md).
 
-Do not install a second copy over an unknown installation. Download the 1.8.4
-wheel and `SHA256SUMS` from the [1.8.4 release], verify the published checksum,
-and run the independent manager from that wheel:
+## 1. Acquire and inspect
+
+The following PowerShell commands download the regular artifact, not the older same-version preview:
 
 ```powershell
-$release = "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.4"
+$ErrorActionPreference = 'Stop'
+$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5'
+$wheel = 'opencntx-1.8.5-py3-none-any.whl'
+$expected = '83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce'
+Invoke-WebRequest "$release/$wheel" -OutFile $wheel
 Invoke-WebRequest "$release/SHA256SUMS" -OutFile SHA256SUMS
-Invoke-WebRequest "$release/opencntx-1.8.4-py3-none-any.whl" -OutFile opencntx-1.8.4-py3-none-any.whl
-$expected = ((Get-Content SHA256SUMS | Where-Object { $_ -match 'opencntx-1.8.4-py3-none-any.whl$' }) -split '\s+')[0]
-$actual = (Get-FileHash opencntx-1.8.4-py3-none-any.whl -Algorithm SHA256).Hash.ToLowerInvariant()
-if ($actual -ne $expected) { throw "OPENCNTX wheel checksum mismatch" }
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install status
+Invoke-WebRequest "$release/BUILD-RECORD.json" -OutFile BUILD-RECORD.json
+$actual = (Get-FileHash $wheel -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($actual -ne $expected) { throw 'OPENCNTX wheel checksum mismatch' }
+pipx run --spec ".\$wheel" opencntx-install status
+if ($LASTEXITCODE -ne 0) { throw 'Installation inspection failed' }
 ```
 
-`status` is read-only. It reports the package owner, executable and interpreter,
-project state supplied with repeatable `--project`, pending update journals,
-storage boundary, ownership classes and the proposed write set. `DIAGNOSIS_ONLY`
-means stop and reconcile that installation; it is not permission to replace it.
+Inspect the executable, interpreter, owner and pending journals. `DIAGNOSIS_ONLY` is not permission to replace that installation. Pass repeatable `--project` arguments when checking project roots.
 
-## Fresh pipx installation
+## 2. Update an existing managed 1.8.4 installation
 
-After the checksum check above reports no existing installation:
+Stage the exact previous wheel for offline rollback before activation:
 
 ```powershell
-pipx install .\opencntx-1.8.4-py3-none-any.whl
+$oldWheel = 'opencntx-1.8.4-py3-none-any.whl'
+$oldHash = 'b3fe658c5071b17e1835be65cc10df3c025dd03677c1be45c9b8aeb977d011d9'
+Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.4/$oldWheel" -OutFile $oldWheel
+if ((Get-FileHash $oldWheel -Algorithm SHA256).Hash.ToLowerInvariant() -ne $oldHash) {
+    throw 'Rollback wheel checksum mismatch'
+}
+pipx run --spec ".\$wheel" opencntx-install update `
+  --artifact ".\$wheel" --sha256 $expected --version 1.8.5 `
+  --rollback-artifact ".\$oldWheel" --rollback-sha256 $oldHash
+if ($LASTEXITCODE -ne 0) { throw 'Managed update failed; inspect recovery status' }
+opencntx --version
+if ($LASTEXITCODE -ne 0) { throw 'Version readback failed' }
+opencntx-install status
+if ($LASTEXITCODE -ne 0) { throw 'Post-update inspection failed' }
+```
+
+The expected version is `opencntx 1.8.5`. The earlier preview used the same version string but different bytes; a preview installation requires explicit same-version artifact replacement and its exact active wheel as rollback input, not an assumed 1.8.4 rollback identity.
+
+The installer retains the previous wheel and checks activation. This does not authorize rewriting human-owned documents or migrating project structure.
+
+## 3. Dedicated virtual environment
+
+Select the inspected interpreter explicitly:
+
+```powershell
+pipx run --spec ".\$wheel" opencntx-install `
+  --python 'C:\path\to\venv\Scripts\python.exe' update `
+  --artifact ".\$wheel" --sha256 $expected --version 1.8.5 `
+  --rollback-artifact ".\$oldWheel" --rollback-sha256 $oldHash
+```
+
+On Linux use the environment's `bin/python`. Do not infer package ownership only from a directory name.
+
+## 4. New installation
+
+Only after inspection confirms there is no installation to preserve:
+
+```powershell
+pipx install ".\$wheel"
+if ($LASTEXITCODE -ne 0) { throw 'Installation failed' }
 opencntx --version
 opencntx-install status
 ```
 
-The expected version output is `opencntx 1.8.4`.
+Then follow [Start here](start-here.md) or [Core commands](core.md).
 
-## Update a pipx installation from 1.7.6
+## 5. Interrupted update
 
-Keep the verified 1.7.6 wheel available for offline rollback:
-
-```powershell
-Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.6/opencntx-1.7.6-py3-none-any.whl" -OutFile opencntx-1.7.6-py3-none-any.whl
-$oldSums = Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.6/SHA256SUMS"
-$oldLine = ($oldSums.Content -split "`n" | Where-Object { $_ -match 'opencntx-1.7.6-py3-none-any.whl$' } | Select-Object -First 1)
-$oldHash = ($oldLine -split '\s+')[0]
-if ((Get-FileHash opencntx-1.7.6-py3-none-any.whl -Algorithm SHA256).Hash.ToLowerInvariant() -ne $oldHash) { throw "Rollback wheel checksum mismatch" }
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install update `
-  --artifact .\opencntx-1.8.4-py3-none-any.whl --sha256 $expected --version 1.8.4 `
-  --rollback-artifact .\opencntx-1.7.6-py3-none-any.whl --rollback-sha256 $oldHash
-opencntx --version
-opencntx-install status
-```
-
-Activation is accepted only after package metadata, import/version, help, a real
-checkpoint, and fresh-process resume all pass. A failed candidate is restored
-from the already staged rollback wheel without importing the candidate.
-
-## Update a pipx installation from 1.8.0
-
-Keep the exact v1.8.0 wheel available as the offline rollback source when
-upgrading an existing v1.8.0 installation. The same managed route also
-supports a changed same-version wheel by retaining the exact active wheel.
+From a fresh shell, use the independent manager from the verified wheel:
 
 ```powershell
-Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.0/opencntx-1.8.0-py3-none-any.whl" -OutFile opencntx-1.8.0-py3-none-any.whl
-$oldSums = Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.0/SHA256SUMS"
-$oldLine = ($oldSums.Content -split "`n" | Where-Object { $_ -match 'opencntx-1.8.0-py3-none-any.whl$' } | Select-Object -First 1)
-$oldHash = ($oldLine -split '\s+')[0]
-if ((Get-FileHash opencntx-1.8.0-py3-none-any.whl -Algorithm SHA256).Hash.ToLowerInvariant() -ne $oldHash) { throw "Rollback wheel checksum mismatch" }
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install update `
-  --artifact .\opencntx-1.8.4-py3-none-any.whl --sha256 $expected --version 1.8.4 `
-  --rollback-artifact .\opencntx-1.8.0-py3-none-any.whl --rollback-sha256 $oldHash
-opencntx --version
-opencntx-install status
+pipx run --spec .\opencntx-1.8.5-py3-none-any.whl opencntx-install resume
 ```
 
-Review the existing project inventory and adoption preview before any
-integration write. A blocked audit remains blocked; the installer never treats
-package health as permission to move or rewrite human-owned project files.
+Inspect `NEW_HEALTHY`, `OLD_RESTORED` or `RECOVERY_REQUIRED`. A journal or matching hash alone does not prove healthy activation. Package rollback and project-data restoration remain separate.
 
-## Update a pipx installation from 1.8.1
+## 6. Check the new command
 
-Keep the exact v1.8.1 wheel available as the offline rollback source when
-upgrading an existing v1.8.1 installation. Verify its published checksum before
-using it as the rollback artifact:
-
-```powershell
-Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.1/opencntx-1.8.1-py3-none-any.whl" -OutFile opencntx-1.8.1-py3-none-any.whl
-$oldSums = Invoke-WebRequest "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.1/SHA256SUMS"
-$oldLine = ($oldSums.Content -split "`n" | Where-Object { $_ -match 'opencntx-1.8.1-py3-none-any.whl$' } | Select-Object -First 1)
-$oldHash = ($oldLine -split '\s+')[0]
-if ((Get-FileHash opencntx-1.8.1-py3-none-any.whl -Algorithm SHA256).Hash.ToLowerInvariant() -ne $oldHash) { throw "Rollback wheel checksum mismatch" }
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install update `
-  --artifact .\opencntx-1.8.4-py3-none-any.whl --sha256 $expected --version 1.8.4 `
-  --rollback-artifact .\opencntx-1.8.1-py3-none-any.whl --rollback-sha256 $oldHash
-opencntx --version
-opencntx-install status
+```text
+opencntx knowledge index build --root "PROJECT_PATH"
+opencntx preview-search "your query" --root "PROJECT_PATH" --compact --delivery-report
 ```
 
-The update retains the exact pre-update wheel and only activates the candidate
-after package health and fresh-process checks pass.
-
-## Dedicated virtual environment
-
-Pass the environment's Python explicitly. The manager will keep using that
-interpreter after activation and during rollback:
-
-```powershell
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install `
-  --python C:\path\to\venv\Scripts\python.exe update `
-  --artifact .\opencntx-1.8.4-py3-none-any.whl --sha256 $expected --version 1.8.4 `
-  --rollback-artifact .\opencntx-1.7.6-py3-none-any.whl --rollback-sha256 $oldHash
-```
-
-On Linux, use the virtual environment's `bin/python` path.
-
-## Resume or targeted repair
-
-An interrupted operation is journaled before activation. Resume the newest
-operation from a fresh shell with:
-
-```powershell
-pipx run --spec .\opencntx-1.8.4-py3-none-any.whl opencntx-install resume
-```
-
-Use `repair --plan-id PLAN_ID` only for a specific journal reported by status.
-Both commands either prove `NEW_HEALTHY`, prove `OLD_RESTORED`, or return
-`RECOVERY_REQUIRED` with retained data. They never infer health from hashes.
-
-The default manager state is `%LOCALAPPDATA%\OPENCNTX\install-manager` on
-Windows and `$XDG_STATE_HOME/opencntx/install-manager` (or
-`~/.local/state/opencntx/install-manager`) on Linux. OPENCNTX removes only
-marker-bound staging and superseded candidate caches. It retains the current
-candidate, the offline rollback wheel and at most ten terminal journals. Unknown
-files, user projects, custom rules, credentials and history are not cleanup
-targets.
-
-[1.8.4 release]: https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4
+The ordinary search command remains available. This does not activate a chat host or execute the remaining development roadmap.
