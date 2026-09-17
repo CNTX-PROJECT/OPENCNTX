@@ -102,7 +102,10 @@ required arguments and repeatable options.
 | 81 | `opencntx knowledge technique add` | validate and store one evidence-bound technique card |
 | 82 | `opencntx knowledge technique list` | list locally stored technique cards |
 | 83 | `opencntx knowledge adopt` | audit, preview or write a digest-bound existing-project adoption manifest |
-| 84 | `opencntx knowledge footer` | render a complete provider-neutral footer contract or a validated host envelope |
+| 84 | `opencntx knowledge visual preview` | preview a bounded text integration and bind its source, intent and output digests |
+| 85 | `opencntx knowledge visual apply` | apply the exact preview after a complete human-approved review |
+| 86 | `opencntx knowledge visual rollback` | restore the original document only when no later edits would be overwritten |
+| 87 | `opencntx knowledge footer` | render a provider-neutral footer contract or a negotiated host envelope |
 
 ## Roadmap flow
 

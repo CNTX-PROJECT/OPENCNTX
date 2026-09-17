@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.4 candidate — audit hardening and portable presentation
 
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+
 **Status: local candidate; not a published release.** See the
 [qualification roadmap](roadmap-1.8.4.md) for mandatory release gates.
 
@@ -34,6 +36,7 @@
 opencntx knowledge index search QUERY --delivery-report --max-output-bytes 10000
 opencntx knowledge technique add --input card.json --expected-digest PREVIOUS_CARD_DIGEST
 opencntx knowledge technique list --limit 50 --offset 0
+opencntx knowledge index status --limit 100 --offset 0
 opencntx knowledge visual preview --document docs/overview.md --intent intent.json
 opencntx knowledge visual apply --plan plan.json --intent intent.json --review review.json
 opencntx knowledge visual rollback --plan plan.json
@@ -55,3 +58,5 @@ No universal token-saving percentage, arbitrary-provider residency, unqualified
 upgrade path, unattended visual adoption or native-hook activation is claimed.
 The 1.8.4 tag and four distribution assets must not be published as stable until
 the exact candidate passes the qualification roadmap.
+
+[Documentation home](README.md)

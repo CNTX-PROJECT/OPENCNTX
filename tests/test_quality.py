@@ -83,6 +83,8 @@ GUIDES = {
     "roadmap-1.8.2.md",
     "release-1.8.3.md",
     "roadmap-1.8.3.md",
+    "release-1.8.4.md",
+    "roadmap-1.8.4.md",
 }
 
 LIGHT_DIAGRAMS = {
@@ -214,8 +216,8 @@ class PublicQualityTests(unittest.TestCase):
     def test_all_local_markdown_links_resolve_within_repository(self) -> None:
         markdown_files = sorted(
             path
-            for path in ROOT.rglob("*.md")
-            if ".git" not in path.parts and ".opencntx" not in path.parts
+            for path in public_language_gate._tracked_paths()
+            if path.suffix == ".md"
         )
         self.assertTrue(markdown_files)
 
@@ -247,8 +249,8 @@ class PublicQualityTests(unittest.TestCase):
             ORIENTATION_COMMAND_PATHS + executable_paths,
             documented_paths,
         )
-        self.assertEqual(79, len(executable_paths))
-        self.assertEqual(84, len(documented_paths))
+        self.assertEqual(82, len(executable_paths))
+        self.assertEqual(87, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()

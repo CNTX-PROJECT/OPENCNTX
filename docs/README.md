@@ -75,6 +75,7 @@ imply that every host has connected that API to its own chat interface.
 - [Platforms and CI](platforms.md) — supported environments and evidence limits.
 - [Release artifacts](release-artifacts.md) — builds, checksums and provenance.
 - [Visual system](visual-system.md) · [Brand guide](brand.md) — accessible presentation and assets.
+- [1.8.4 candidate scope](release-1.8.4.md) · [1.8.4 qualification roadmap](roadmap-1.8.4.md) — audit fixes and mandatory release evidence.
 - [1.8.3 release scope](release-1.8.3.md) · [1.8.3 roadmap](roadmap-1.8.3.md) · [1.8.2 release scope](release-1.8.2.md) · [1.8.2 roadmap](roadmap-1.8.2.md) · [1.8.1 release scope](release-1.8.1.md) · [1.8.1 roadmap](roadmap-1.8.1.md) · [1.8.0 release scope](release-1.8.0.md) — delivered behavior and release gates.
 - [Contributing](../CONTRIBUTING.md) · [Changelog](../CHANGELOG.md) — development and history.
 

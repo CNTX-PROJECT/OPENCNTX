@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.4 qualification roadmap
 
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+
 Version 1.8.4 is a candidate until its release gates have fresh evidence.
 The published baseline is 1.8.3. A green historical suite is not evidence
 that the candidate fixes every independent audit finding.
@@ -83,3 +85,5 @@ character-based token estimate is not an exact provider tokenizer.
 Native hook trust remains host-owned. Do not edit trust hashes or bypass native
 review to manufacture integration evidence. Human visual approval must refer
 to the actual proposed change; disposable test approval is only a fixture.
+
+[Documentation home](README.md)

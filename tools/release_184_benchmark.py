@@ -9,6 +9,7 @@ import json
 import os
 import platform
 import statistics
+import subprocess
 import sys
 import tempfile
 import time
@@ -121,6 +122,28 @@ def main():
     import opencntx
     from opencntx import knowledge, search_index
 
+    startup = {}
+    for command in ("--version", "--help"):
+        values = []
+        for _ in range(args.samples):
+            _, elapsed = measure(
+                lambda command=command: subprocess.run(  # noqa: S603, RUF100
+                    [sys.executable, "-m", "opencntx", command],
+                    cwd=args.source,
+                    env={**os.environ, "PYTHONPATH": str(args.source / "src")},
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    check=True,
+                    timeout=30,
+                )
+            )
+            values.append(elapsed)
+        startup[command] = {
+            "samples_ms": values,
+            "p50_ms": statistics.median(values),
+            "p95_ms": sorted(values)[(95 * args.samples + 99) // 100 - 1],
+        }
+
     result = {
         "format": "opencntx-release-184-benchmark-v1",
         "version": opencntx.__version__,
@@ -129,6 +152,7 @@ def main():
         "processor": os.environ.get("PROCESSOR_IDENTIFIER", platform.processor()),
         "cache": "warm filesystem; no cold-cache claim",
         "tokenizer": "none; no provider token or cost claim",
+        "new_process_warm_filesystem": startup,
         "profiles": [
             profile(count, args.samples, knowledge, search_index) for count in (12, 10000)
         ],

@@ -8,9 +8,12 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from opencntx.knowledge import list_techniques, save_technique
 from tests.test_presentation import BINDING, envelope
+from tests.test_release_184_regressions import card
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -78,6 +81,58 @@ class Release184CliTests(unittest.TestCase):
         rejected = self.cli("knowledge", "index", "search", "needle", "--max-tokens", "1")
         self.assertNotEqual(rejected.returncode, 0)
         self.assertNotIn("Traceback", rejected.stderr)
+
+    def test_two_process_technique_updates_have_exactly_one_winner(self) -> None:
+        initial = card()
+        save_technique(self.root, initial)
+        paths = []
+        for number in range(2):
+            path = self.root / f"update-{number}.json"
+            path.write_text(json.dumps(card(name=f"Writer {number}")), encoding="utf-8")
+            paths.append(path)
+
+        def update(path: Path):
+            return self.cli(
+                "knowledge",
+                "technique",
+                "add",
+                "--input",
+                str(path),
+                "--expected-digest",
+                initial["card_digest"],
+            )
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = list(pool.map(update, paths))
+        self.assertEqual(sum(result.returncode == 0 for result in results), 1)
+        self.assertEqual(len(list_techniques(self.root)), 1)
+        self.assertTrue(all("Traceback" not in result.stderr for result in results))
+
+    def test_sanitized_pilot_retrieves_facts_after_process_restart(self) -> None:
+        sources = {
+            "configuration.yaml": "sensor:\n  - name: Living Room Temperature\n    unique_id: sensor.living_room_temperature\n    platform: mqtt\n",
+            "decision.md": "# Current decision\nThe legacy MQTT route was replaced by WebSocket because duplicate updates occurred.\n",
+            "change-policy.md": "# Safe change conditions\nPreserve unique_id and entity_id. Propose a YAML edit only; do not execute it.\n",
+            "history.md": "# History\nOld MQTT settings are retained only for historical comparison.\n",
+        }
+        for name, text in sources.items():
+            (self.root / name).write_text(text, encoding="utf-8")
+        built = self.cli("knowledge", "index", "build")
+        self.assertEqual(built.returncode, 0, built.stderr)
+        questions = (
+            ("sensor living room temperature", "configuration.yaml"),
+            ("legacy MQTT replaced WebSocket duplicate updates", "decision.md"),
+            ("preserve unique_id entity_id propose YAML", "change-policy.md"),
+        )
+        for query, expected in questions:
+            # Each call is a fresh CLI process reading the same persisted index.
+            result = self.cli("knowledge", "index", "search", query, "--delivery-report")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            report = json.loads(result.stdout)
+            loaded = [item["path"] for item in report["items"] if item["state"] == "loaded"]
+            self.assertIn(expected, loaded)
+        for name, text in sources.items():
+            self.assertEqual((self.root / name).read_text(encoding="utf-8"), text)
 
 
 if __name__ == "__main__":
