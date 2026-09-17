@@ -121,7 +121,7 @@ class KnowledgeIndexTests(unittest.TestCase):
                 tools=["opencntx knowledge index"],
                 risks=["A stale index may omit a changed source"],
                 outputs=["A bounded result manifest"],
-                source_digests=["a" * 64],
+                source_digests=[hashlib.sha256((root / "main.md").read_bytes()).hexdigest()],
                 verification_state="PROVEN",
             )
             self.assertTrue(save_technique(root, card).is_file())
@@ -419,7 +419,7 @@ class KnowledgeIndexTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="opencntx-links-") as temporary_directory:
             root = Path(temporary_directory)
             (root / "a.md").write_text(
-                "# A\n\nRequires [[b|B]] and [missing](missing.md).\nExternal [web](https://example.com).\n",
+                "# A\n\nRequires: [[b|B]] and [missing](missing.md).\nExternal [web](https://example.com).\n",
                 encoding="utf-8",
             )
             (root / "b.md").write_text("# B\n\after stable heading.\n", encoding="utf-8")
@@ -430,8 +430,8 @@ class KnowledgeIndexTests(unittest.TestCase):
 
             cycle_root = root / "cycle"
             cycle_root.mkdir()
-            (cycle_root / "a.md").write_text("# A\nContains [B](b.md).\n", encoding="utf-8")
-            (cycle_root / "b.md").write_text("# B\nContains [A](a.md).\n", encoding="utf-8")
+            (cycle_root / "a.md").write_text("# A\nContains: [B](b.md).\n", encoding="utf-8")
+            (cycle_root / "b.md").write_text("# B\nContains: [A](a.md).\n", encoding="utf-8")
             with self.assertRaises(KnowledgeError):
                 build_index(cycle_root)
 

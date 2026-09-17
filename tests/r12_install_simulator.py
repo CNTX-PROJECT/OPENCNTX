@@ -1,4 +1,4 @@
-"""Long 1.8.2 clean-install and 1.8.0-to-1.8.2 transition simulation.
+"""Exact-artifact clean-install, upgrade and offline rollback simulation.
 
 This is an opt-in integration simulator. It creates disposable virtual
 environments and disposable projects only; it never touches a registered
@@ -23,6 +23,21 @@ from typing import Any
 from opencntx.install_manager import InstallManagerError, managed_update
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _wheel_version(path: Path) -> str:
+    with zipfile.ZipFile(path) as archive:
+        metadata = [name for name in archive.namelist() if name.endswith(".dist-info/METADATA")]
+        if len(metadata) != 1:
+            raise ValueError("Wheel must contain exactly one distribution metadata file.")
+        versions = [
+            line.split(": ", 1)[1]
+            for line in archive.read(metadata[0]).decode("utf-8").splitlines()
+            if line.startswith("Version: ")
+        ]
+        if len(versions) != 1:
+            raise ValueError("Wheel version is ambiguous.")
+        return versions[0]
 
 
 def _sha256(path: Path) -> str:
@@ -193,21 +208,23 @@ def _make_broken_candidate(candidate: Path, destination: Path) -> Path:
 
 def _rollback_probe(parent: Path, baseline: Path, candidate: Path) -> dict[str, Any]:
     python = _create_venv(parent, "rollback-venv", baseline)
-    broken = _make_broken_candidate(candidate, parent / "broken-1.8.2.whl")
+    broken = _make_broken_candidate(candidate, parent / "broken-candidate.whl")
     broken_hash = _sha256(broken)
     baseline_hash = _sha256(baseline)
     result = managed_update(
         artifact=str(broken),
         sha256=broken_hash,
-        version="1.8.2",
+        version=_wheel_version(candidate),
         rollback_artifact=str(baseline),
         rollback_sha256=baseline_hash,
         state_root=parent / "rollback-state",
         python=python,
     )
     version = _run([str(python), "-I", "-B", "-m", "opencntx", "--version"], cwd=parent).strip()
-    if result["status"] != "OLD_RESTORED" or version != "opencntx 1.8.0":
-        raise RuntimeError(f"Real candidate rollback did not restore 1.8.0: {result}, {version}")
+    if result["status"] != "OLD_RESTORED" or version != f"opencntx {_wheel_version(baseline)}":
+        raise RuntimeError(
+            f"Real candidate rollback did not restore the exact baseline: {result}, {version}"
+        )
     return {"status": result["status"], "restored_version": version}
 
 
@@ -236,14 +253,14 @@ def _clean_install(parent: Path, candidate: Path) -> dict[str, Any]:
     project = _prepare_project(parent, "clean-project")
     _init_and_seed(python, project)
     before = _snapshot_sources(project)
-    exercised = _exercise_project(python, project, expected_version="1.8.2")
+    exercised = _exercise_project(python, project, expected_version=_wheel_version(candidate))
     after = _snapshot_sources(project)
     if before != after:
         raise RuntimeError("Clean installation changed human-owned project files")
     return {"human_source_unchanged": True, "runtime": exercised}
 
 
-def _upgrade_from_180(
+def _upgrade_from_baseline(
     parent: Path,
     baseline: Path,
     candidate: Path,
@@ -259,27 +276,27 @@ def _upgrade_from_180(
     first = managed_update(
         artifact=str(candidate),
         sha256=candidate_hash,
-        version="1.8.2",
+        version=_wheel_version(candidate),
         rollback_artifact=str(baseline),
         rollback_sha256=baseline_hash,
         state_root=parent / "managed-state",
         python=python,
     )
     if first["status"] != "NEW_HEALTHY":
-        raise RuntimeError(f"1.8.0-to-1.8.2 update failed: {first}")
+        raise RuntimeError(f"Exact-artifact update failed: {first}")
     reapply_statuses = []
     for _ in range(cycles):
         result = managed_update(
             artifact=str(candidate),
             sha256=candidate_hash,
-            version="1.8.2",
+            version=_wheel_version(candidate),
             rollback_artifact=str(baseline),
             rollback_sha256=baseline_hash,
             state_root=parent / "managed-state",
             python=python,
         )
         reapply_statuses.append((result["status"], bool(result.get("reused"))))
-    exercised = _exercise_project(python, project, expected_version="1.8.2")
+    exercised = _exercise_project(python, project, expected_version=_wheel_version(candidate))
     blocked = _blocked_adoption_probe(python, parent)
     after = _snapshot_sources(project)
     if before != after:
@@ -349,7 +366,11 @@ def run(candidate: Path, baseline: Path, *, cycles: int) -> dict[str, Any]:
             "lock_probe": _lock_probe(parent),
             "status": "PASS",
             "rollback_probe": _rollback_probe(parent, baseline, candidate),
-            "upgrade_1_8_0_to_1_8_2": _upgrade_from_180(parent, baseline, candidate, cycles),
+            "upgrade": _upgrade_from_baseline(parent, baseline, candidate, cycles),
+            "baseline_version": _wheel_version(baseline),
+            "candidate_version": _wheel_version(candidate),
+            "baseline_sha256": _sha256(baseline),
+            "candidate_sha256": _sha256(candidate),
         }
     return result
 
@@ -360,7 +381,11 @@ def main() -> int:
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--cycles", type=int, default=8)
     arguments = parser.parse_args()
-    result = run(arguments.candidate.resolve(strict=True), arguments.baseline.resolve(strict=True), cycles=arguments.cycles)
+    result = run(
+        arguments.candidate.resolve(strict=True),
+        arguments.baseline.resolve(strict=True),
+        cycles=arguments.cycles,
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

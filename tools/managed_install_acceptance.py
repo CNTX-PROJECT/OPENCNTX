@@ -38,7 +38,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate", type=Path, required=True)
     parser.add_argument("--baseline", type=Path, required=True)
-    parser.add_argument("--expected-candidate", default="1.8.3")
+    parser.add_argument("--expected-candidate", default="1.8.4")
     parser.add_argument("--expected-baseline", default="1.7.6")
     parser.add_argument(
         "--expected-baseline-sha256",

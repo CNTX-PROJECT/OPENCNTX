@@ -2,6 +2,16 @@
 
 All notable OPENCNTX changes are recorded here.
 
+## 1.8.4 - Unreleased
+
+Candidate audit hardening: contained and bounded knowledge I/O, conditional
+technique updates, current evidence recall, generation-safe search publication,
+FTS integrity, bounded JSON extraction, Unicode offsets, exact-first retrieval,
+shared index snapshots and complete output envelopes. Adds opt-in portable
+presentation and reversible reviewed visual text integration while preserving
+closed v1 consumers. See [candidate notes](docs/release-1.8.4.md) and the
+[qualification roadmap](docs/roadmap-1.8.4.md). Release gates remain open.
+
 ## 1.8.3 - 2026-09-16
 
 Published GitHub release. This release adds a capability-detected local SQLite

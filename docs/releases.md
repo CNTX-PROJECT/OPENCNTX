@@ -8,6 +8,13 @@ is authoritative for available downloads.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
+## Local candidate: v1.8.4
+
+[Candidate scope](release-1.8.4.md) and [qualification gates](roadmap-1.8.4.md)
+cover audit hardening, safe upgrades and portable presentation. This development
+version is not a published stable release. The current download below remains
+1.8.3 until exact candidate qualification and publication complete.
+
 ## Published software — v1.8.3 Stable
 
 [Download v1.8.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.3) ·

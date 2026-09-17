@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import sqlite3
 import tempfile
+from contextlib import closing, nullcontext
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -17,6 +19,7 @@ from .knowledge import (
     TEXT_SUFFIXES,
     TOKEN_PATTERN,
     KnowledgeError,
+    _atomic_json,
     _canonical_json,
     _decode_text,
     _digest,
@@ -24,7 +27,9 @@ from .knowledge import (
     _relative,
     _root,
     _root_id,
+    build_index,
 )
+from .knowledge_io import bounded_read, check_delivery, publication_lock, safe_output, safe_path
 
 SEARCH_INDEX_FORMAT = "ocx-search-index-v2"
 SEARCH_RESULT_FORMAT = "ocx-search-result-v2"
@@ -101,6 +106,11 @@ def _scope(*, max_files: int, max_bytes: int, max_depth: int) -> dict[str, Any]:
     }
 
 
+def _root_binding(root: Path) -> str:
+    value = str(root).casefold() if os.name == "nt" else str(root)
+    return _digest(value.encode("utf-8"))
+
+
 def _scope_digest(scope: dict[str, Any]) -> str:
     return _digest(_canonical_json(scope))
 
@@ -175,40 +185,42 @@ def _flatten_json(
     identifiers: list[str],
     *,
     depth: int = 0,
-) -> None:
-    if depth > MAX_JSON_DEPTH or len(paths) + len(values) >= MAX_JSON_ITEMS:
-        return
+) -> bool:
+    if depth > MAX_JSON_DEPTH:
+        return False
+    complete = True
     if isinstance(value, dict):
         for key, item in value.items():
+            if len(paths) + len(values) >= MAX_JSON_ITEMS:
+                return False
             child = f"{path}.{key}"
             paths.append(child)
-            normalized_key = str(key).casefold()
-            if (normalized_key in IDENTIFIER_KEYS or normalized_key.endswith("_id")) and isinstance(
+            normalized = str(key).casefold()
+            if (normalized in IDENTIFIER_KEYS or normalized.endswith("_id")) and isinstance(
                 item, (str, int, float, bool)
             ):
                 identifiers.append(str(item))
-            _flatten_json(
-                item,
-                child,
-                paths,
-                values,
-                identifiers,
-                depth=depth + 1,
+            complete = (
+                _flatten_json(item, child, paths, values, identifiers, depth=depth + 1) and complete
             )
-        return
+        return complete
     if isinstance(value, list):
+        complete = len(value) <= 256
         for number, item in enumerate(value[:256]):
-            _flatten_json(
-                item,
-                f"{path}[{number}]",
-                paths,
-                values,
-                identifiers,
-                depth=depth + 1,
+            if len(paths) + len(values) >= MAX_JSON_ITEMS:
+                return False
+            complete = (
+                _flatten_json(
+                    item, f"{path}[{number}]", paths, values, identifiers, depth=depth + 1
+                )
+                and complete
             )
-        return
+        return complete
     if value is not None:
+        if len(paths) + len(values) >= MAX_JSON_ITEMS:
+            return False
         values.append(str(value))
+    return True
 
 
 def _json_fields(text: str) -> tuple[str, str, str, str]:
@@ -217,8 +229,13 @@ def _json_fields(text: str) -> tuple[str, str, str, str]:
         values: list[str] = []
         paths: list[str] = []
         identifiers: list[str] = []
-        _flatten_json(value, "$", paths, values, identifiers)
-        return "VALID", " ".join(paths), " ".join(values), " ".join(identifiers)
+        complete = _flatten_json(value, "$", paths, values, identifiers)
+        return (
+            "VALID" if complete else "PARTIAL",
+            " ".join(paths),
+            " ".join(values),
+            " ".join(identifiers),
+        )
     except (TypeError, ValueError, json.JSONDecodeError):
         lines = [line for line in text.splitlines() if line.strip()]
         if len(lines) >= 2:
@@ -231,9 +248,18 @@ def _json_fields(text: str) -> tuple[str, str, str, str]:
                 paths = []
                 values = []
                 identifiers = []
+                complete = len(parsed) <= 256
                 for number, item in enumerate(parsed[:256]):
-                    _flatten_json(item, f"$[line:{number + 1}]", paths, values, identifiers)
-                return "JSONL", " ".join(paths), " ".join(values), " ".join(identifiers)
+                    complete = (
+                        _flatten_json(item, f"$[line:{number + 1}]", paths, values, identifiers)
+                        and complete
+                    )
+                return (
+                    "JSONL" if complete else "PARTIAL",
+                    " ".join(paths),
+                    " ".join(values),
+                    " ".join(identifiers),
+                )
         return "RAW_FALLBACK", "", "", ""
 
 
@@ -322,7 +348,7 @@ def _fts5_available() -> bool:
 
 
 def _database_path(root: Path, index: Path | None) -> Path:
-    return (index or root / ".opencntx" / SEARCH_INDEX_FILENAME).expanduser().absolute()
+    return safe_output(index or root / ".opencntx" / SEARCH_INDEX_FILENAME)
 
 
 def _meta_read(connection: sqlite3.Connection) -> dict[str, Any]:
@@ -340,6 +366,26 @@ def _meta_read(connection: sqlite3.Connection) -> dict[str, Any]:
         raise KnowledgeError("Unsupported or invalid OCX search index format.")
     if result.get("engine") != "sqlite-fts5-external-content":
         raise KnowledgeError("OCX search index engine is unsupported.")
+    required = {
+        "root_path_digest",
+        "scope",
+        "scope_digest",
+        "source_tree_digest",
+        "index_digest",
+        "stats",
+    }
+    if (
+        not required <= set(result)
+        or not isinstance(result["scope"], dict)
+        or not isinstance(result["stats"], dict)
+    ):
+        raise KnowledgeError("Search index metadata fields are incomplete.")
+    for field in ("root_path_digest", "scope_digest", "source_tree_digest", "index_digest"):
+        if (
+            not isinstance(result[field], str)
+            or re.fullmatch(r"[0-9a-f]{64}", result[field]) is None
+        ):
+            raise KnowledgeError("Search index metadata digest is invalid.")
     return result
 
 
@@ -351,8 +397,9 @@ def _previous_documents(path: Path, *, root: Path, scope_digest: str) -> dict[st
         connection = sqlite3.connect(path)
         meta = _meta_read(connection)
         if (
-            meta.get("root_path_digest") != _digest(str(root).casefold().encode("utf-8"))
+            meta.get("root_path_digest") != _root_binding(root)
             or meta.get("scope_digest") != scope_digest
+            or meta.get("parser_revision") != 2
         ):
             return {}
         rows = connection.execute(
@@ -433,7 +480,12 @@ def _insert_document(connection: sqlite3.Connection, document: SearchDocument) -
 
 
 def _write_database(
-    destination: Path, documents: list[SearchDocument], metadata: dict[str, Any]
+    destination: Path,
+    documents: list[SearchDocument],
+    metadata: dict[str, Any],
+    *,
+    expected_generation: str | None = None,
+    _locked: bool = False,
 ) -> None:
     if destination.is_symlink() or (destination.exists() and not destination.is_file()):
         raise KnowledgeError("Search index destination is not a safe regular file.")
@@ -463,6 +515,9 @@ def _write_database(
                         ),
                     ),
                 )
+            connection.execute(
+                "INSERT INTO documents_fts(documents_fts, rank) VALUES('integrity-check', 1)"
+            )
             connection.commit()
             integrity = connection.execute("PRAGMA integrity_check").fetchone()
             if integrity != ("ok",):
@@ -471,8 +526,11 @@ def _write_database(
             connection.close()
         if temporary is None:
             raise KnowledgeError("Search index temporary file was not created.")
-        os.replace(temporary, destination)
-        temporary = None
+        with nullcontext() if _locked else publication_lock(destination):
+            if _generation(destination) != expected_generation:
+                raise KnowledgeError("A newer index generation was published; retry the build.")
+            os.replace(temporary, destination)
+            temporary = None
     except (OSError, sqlite3.Error) as exc:
         raise KnowledgeError(
             "Search index publication failed; the previous index was kept."
@@ -480,6 +538,73 @@ def _write_database(
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
+
+
+def _generation(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    try:
+        with closing(_open_database(path)) as connection:
+            return str(_meta_read(connection)["index_digest"])
+    except (KnowledgeError, KeyError):
+        # An invalid cache is replaceable, but bind replacement to those exact bytes.
+        return "INVALID:" + _digest(path.read_bytes())
+
+
+def _publish_indexes(
+    destination: Path,
+    documents: list[SearchDocument],
+    metadata: dict[str, Any],
+    expected_generation: str | None,
+    *,
+    write_search: bool,
+    legacy_output: Path | None,
+    legacy: dict[str, Any] | None,
+) -> None:
+    """Serialize writers and restore the old cache if the second projection fails.
+
+    Each file replacement is atomic. This does not promise cross-file atomicity
+    to old v1 readers or recovery from power loss between the two replacements.
+    """
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with publication_lock(destination):
+        if _generation(destination) != expected_generation:
+            raise KnowledgeError("A newer index generation was published; retry the build.")
+        legacy_bytes = _canonical_json(legacy) if legacy is not None else None
+        write_legacy = legacy_output is not None and (
+            not legacy_output.is_file() or legacy_output.read_bytes() != legacy_bytes
+        )
+        if not write_search and not write_legacy:
+            return
+        backup: Path | None = None
+        existed = destination.is_file()
+        try:
+            if write_search and existed and write_legacy:
+                with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as handle:
+                    backup = Path(handle.name)
+                shutil.copyfile(destination, backup)
+            if write_search:
+                _write_database(
+                    destination,
+                    documents,
+                    metadata,
+                    expected_generation=expected_generation,
+                    _locked=True,
+                )
+            if write_legacy and legacy_output is not None and legacy is not None:
+                _atomic_json(legacy_output, legacy)
+        except (OSError, KnowledgeError) as exc:
+            if backup is not None:
+                os.replace(backup, destination)
+                backup = None
+            elif write_search and not existed:
+                destination.unlink(missing_ok=True)
+            raise KnowledgeError(
+                "Index projection publication failed; previous cache restored."
+            ) from exc
+        finally:
+            if backup is not None:
+                backup.unlink(missing_ok=True)
 
 
 def _source_tree_digest(documents: list[SearchDocument]) -> str:
@@ -510,7 +635,9 @@ def _build_metadata(
         "files": len(documents),
         "bytes": sum(document.bytes for document in documents),
         "indexed_files": sum(document.source_status == "INDEXED" for document in documents),
-        "fallback_files": sum(document.parse_status == "RAW_FALLBACK" for document in documents),
+        "fallback_files": sum(
+            document.parse_status in {"RAW_FALLBACK", "PARTIAL"} for document in documents
+        ),
         "unsupported_encoding_files": sum(
             document.source_status == "UNSUPPORTED_ENCODING" for document in documents
         ),
@@ -522,7 +649,8 @@ def _build_metadata(
         "format_version": SEARCH_INDEX_VERSION,
         "engine": "sqlite-fts5-external-content",
         "root_id": _root_id(root),
-        "root_path_digest": _digest(str(root).casefold().encode("utf-8")),
+        "parser_revision": 2,
+        "root_path_digest": _root_binding(root),
         "scope": scope,
         "scope_digest": _scope_digest(scope),
         "source_tree_digest": _source_tree_digest(documents),
@@ -542,6 +670,7 @@ def build_search_index(
     max_bytes: int = 25_000_000,
     max_depth: int = 32,
     strict: bool = False,
+    legacy_output: Path | None = None,
 ) -> dict[str, Any]:
     """Build or incrementally refresh the atomic v2 full-text index."""
     max_files = _positive(max_files, "max_files", 1_000_000)
@@ -550,11 +679,11 @@ def build_search_index(
     selected_root = _root(root)
     scope = _scope(max_files=max_files, max_bytes=max_bytes, max_depth=max_depth)
     destination = _database_path(selected_root, index)
-    store = selected_root / ".opencntx"
+    store = safe_path(selected_root, ".opencntx", directory=True)
     if store.is_symlink() or (store.exists() and not store.is_dir()):
         raise KnowledgeError("The project metadata store is not a safe product-owned directory.")
     if not _fts5_available():
-        return {
+        fallback: dict[str, Any] = {
             "format": SEARCH_INDEX_FORMAT,
             "format_version": SEARCH_INDEX_VERSION,
             "status": "FALLBACK_METADATA",
@@ -562,6 +691,16 @@ def build_search_index(
             "path": str(destination),
             "scope": scope,
         }
+        if legacy_output is not None:
+            fallback["legacy_index"] = build_index(
+                selected_root,
+                output=legacy_output,
+                max_files=max_files,
+                max_bytes=max_bytes,
+                max_depth=max_depth,
+            )
+        return fallback
+    expected_generation = _generation(destination)
     candidates = _candidate_paths(
         selected_root,
         max_files=max_files,
@@ -587,7 +726,7 @@ def build_search_index(
             reused_files += 1
         else:
             try:
-                data = candidate.path.read_bytes()
+                data = bounded_read(selected_root, candidate.relative, max_bytes - total_bytes)
             except OSError as exc:
                 raise KnowledgeError(f"Search source cannot be read: {candidate.relative}") from exc
             document = _document_from_bytes(selected_root, candidate, data)
@@ -604,8 +743,41 @@ def build_search_index(
         read_files=read_files,
         strict=strict,
     )
-    _write_database(destination, documents, metadata)
-    return {
+    unchanged = len(previous) == len(documents) and all(
+        previous.get(document.path) == document for document in documents
+    )
+    write_search = not unchanged or not destination.is_file()
+    if unchanged and destination.is_file():
+        try:
+            with closing(_open_database(destination)) as existing:
+                _check_fts_integrity(existing)
+                old_metadata = _meta_read(existing)
+            metadata["index_digest"] = old_metadata["index_digest"]
+        except KnowledgeError as exc:
+            if not strict:
+                raise KnowledgeError("The cached index is corrupt; rebuild with --strict.") from exc
+            write_search = True
+    legacy: dict[str, Any] = {}
+    if legacy_output is not None:
+        legacy["legacy_index"] = build_index(
+            selected_root,
+            output=legacy_output,
+            max_files=max_files,
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            _snapshot=[(doc.path, doc.digest, doc.bytes, doc.body) for doc in documents],
+            _publish=False,
+        )
+    _publish_indexes(
+        destination,
+        documents,
+        metadata,
+        expected_generation,
+        write_search=write_search,
+        legacy_output=legacy_output,
+        legacy=legacy.get("legacy_index"),
+    )
+    return legacy | {
         "format": SEARCH_INDEX_FORMAT,
         "format_version": SEARCH_INDEX_VERSION,
         "status": "SEARCH_INDEX_BUILT",
@@ -634,6 +806,17 @@ def _open_database(path: Path) -> sqlite3.Connection:
         if isinstance(exc, KnowledgeError):
             raise
         raise KnowledgeError(f"OCX search index cannot be opened: {path}") from exc
+
+
+def _check_fts_integrity(connection: sqlite3.Connection) -> None:
+    clone = sqlite3.connect(":memory:")
+    try:
+        connection.backup(clone)
+        clone.execute("INSERT INTO documents_fts(documents_fts, rank) VALUES('integrity-check', 1)")
+    except sqlite3.Error as exc:
+        raise KnowledgeError("FTS5 content/index integrity check failed.") from exc
+    finally:
+        clone.close()
 
 
 def _current_candidates(
@@ -675,13 +858,15 @@ def search_index_status(
     try:
         connection = _open_database(destination)
         metadata = _meta_read(connection)
-        expected_root_digest = _digest(str(selected_root).casefold().encode("utf-8"))
+        expected_root_digest = _root_binding(selected_root)
         if metadata.get("root_path_digest") != expected_root_digest:
             return base | {
                 "status": "STALE_SCOPE",
                 "reason": "INDEX_ROOT_DIFFERS",
                 "index_digest": metadata.get("index_digest"),
             }
+        if strict:
+            _check_fts_integrity(connection)
         candidates, scan_error = _current_candidates(selected_root, metadata)
         if scan_error:
             return base | {
@@ -705,8 +890,8 @@ def search_index_status(
                 continue
             if strict:
                 try:
-                    data = candidate.path.read_bytes()
-                except OSError:
+                    data = bounded_read(selected_root, candidate.relative, candidate.bytes)
+                except (OSError, KnowledgeError):
                     changed.append(relative)
                     continue
                 if _digest(data) != str(row[1]):
@@ -729,7 +914,7 @@ def search_index_status(
             "removed": removed,
             "changed": changed,
         }
-    except KnowledgeError as exc:
+    except (KnowledgeError, sqlite3.Error, ValueError, TypeError, KeyError) as exc:
         return base | {"status": "INVALID", "reason": str(exc)}
     finally:
         if connection is not None:
@@ -744,14 +929,48 @@ def _fts_query(terms: list[str], *, operator: str) -> str:
     return f" {operator} ".join(quoted)
 
 
+def status_page(status: dict[str, Any], *, limit: int = 100, offset: int = 0) -> dict[str, Any]:
+    """Negotiate pagination without changing the legacy status envelope."""
+    _positive(limit, "limit", 1000)
+    if isinstance(offset, bool) or not isinstance(offset, int) or offset < 0:
+        raise KnowledgeError("offset must be a nonnegative integer.")
+    changes = [
+        {"change": name, "path": path}
+        for name in ("added", "removed", "changed")
+        for path in status.get(name, [])
+    ]
+    end = min(offset + limit, len(changes))
+    return {
+        "format": "ocx-search-status-page-v1",
+        "format_version": 1,
+        "summary": {
+            key: value
+            for key, value in status.items()
+            if key not in {"added", "removed", "changed"}
+        },
+        "counts": {name: len(status.get(name, [])) for name in ("added", "removed", "changed")},
+        "items": changes[offset:end],
+        "offset": offset,
+        "limit": limit,
+        "total": len(changes),
+        "next_offset": end if end < len(changes) else None,
+    }
+
+
 def _matched_rows(
-    connection: sqlite3.Connection, terms: list[str], max_rows: int
+    connection: sqlite3.Connection, terms: list[str], max_rows: int, *, exact_query: str = ""
 ) -> list[tuple[Any, ...]]:
+    exact = connection.execute(
+        "SELECT rowid,doc_id,path,title,headings,identifiers,json_paths,json_values,'',"
+        "digest,bytes,mtime_ns,encoding,parse_status,source_status FROM documents "
+        "WHERE path = ? COLLATE NOCASE OR doc_id = ? COLLATE NOCASE ORDER BY path LIMIT ?",
+        (exact_query, exact_query, max_rows),
+    ).fetchall()
     for operator in ("AND", "OR"):
         try:
             rows = connection.execute(
                 "SELECT d.rowid,d.doc_id,d.path,d.title,d.headings,d.identifiers,d.json_paths,"
-                "d.json_values,d.body,d.digest,d.bytes,d.mtime_ns,d.encoding,d.parse_status,"
+                "d.json_values,'',d.digest,d.bytes,d.mtime_ns,d.encoding,d.parse_status,"
                 "d.source_status FROM documents_fts "
                 "JOIN documents d ON d.rowid = documents_fts.rowid "
                 "WHERE documents_fts MATCH ? ORDER BY bm25(documents_fts), d.path LIMIT ?",
@@ -760,8 +979,9 @@ def _matched_rows(
         except sqlite3.OperationalError as exc:
             raise KnowledgeError("OCX FTS5 query failed.") from exc
         if rows:
-            return rows
-    return []
+            seen = {row[0] for row in exact}
+            return exact + [row for row in rows if row[0] not in seen]
+    return exact
 
 
 def _score_document(
@@ -811,14 +1031,22 @@ def _token_estimate(text: str) -> int:
 def _snippet(text: str, terms: list[str], max_chars: int) -> tuple[str, int, int]:
     lowered = text.casefold()
     positions = [position for term in terms if (position := lowered.find(term)) >= 0]
-    position = min(positions) if positions else 0
+    folded_position = min(positions) if positions else 0
+    position = 0
+    folded_offset = 0
+    for position, character in enumerate(text):
+        if folded_offset >= folded_position:
+            break
+        folded_offset += len(character.casefold())
     line_start_offset = text.rfind("\n", 0, position) + 1
     heading_offset = line_start_offset
     for match in re.finditer(r"^#{1,6}\s+.+$", text[:line_start_offset], flags=re.MULTILINE):
         heading_offset = match.start()
     start = max(heading_offset, position - max_chars // 3)
     end = min(len(text), start + max_chars)
-    excerpt = text[start:end].strip()
+    while start < end and text[start].isspace():
+        start += 1
+    excerpt = text[start:end].rstrip()
     if len(excerpt) > max_chars:
         excerpt = excerpt[:max_chars].rstrip()
     line_start = text.count("\n", 0, start) + 1
@@ -845,12 +1073,24 @@ def search_full_text(
     connection = _open_database(index)
     try:
         metadata = _meta_read(connection)
-        rows = _matched_rows(connection, terms, max_results * 10)
+        selected_root = _root(root) if root is not None else None
+        if selected_root is not None and metadata.get("root_path_digest") != _root_binding(
+            selected_root
+        ):
+            raise KnowledgeError("Search index belongs to a different project root.")
+        rows = _matched_rows(connection, terms, max_results * 10, exact_query=query)
         documents: list[SearchDocument] = []
         for row in rows:
             documents.append(_document_from_row(row[1:]))
         scored = [(*_score_document(document, terms), document) for document in documents]
-        scored.sort(key=lambda item: (-item[0], item[3].path, item[3].doc_id))
+        order = {document.doc_id: number for number, document in enumerate(documents)}
+        scored.sort(
+            key=lambda item: (
+                item[3].path.casefold() != query.casefold(),
+                -item[0],
+                order[item[3].doc_id],
+            )
+        )
         selected_root = _root(root) if root is not None else None
         results: list[dict[str, Any]] = []
         loaded_bytes = 0
@@ -895,11 +1135,10 @@ def search_full_text(
             snippet_chars = min(
                 max_snippet_chars, max(1, remaining_tokens * TOKEN_ESTIMATE_DIVISOR)
             )
-            source = selected_root / PurePosixPath(document.path)
             try:
-                data = source.read_bytes()
+                data = bounded_read(selected_root, document.path, max_bytes - loaded_bytes)
                 text, encoding = _decode_text(data)
-            except (OSError, UnicodeDecodeError):
+            except (OSError, UnicodeDecodeError, KnowledgeError):
                 item["state"] = "stale_source"
                 stale_sources.append(document.path)
                 results.append(item)
@@ -910,6 +1149,7 @@ def search_full_text(
                 stale_sources.append(document.path)
                 results.append(item)
                 continue
+            check_delivery(document.path, text, document.digest)
             excerpt, line_start, line_end = _snippet(text, terms, snippet_chars)
             token_estimate = _token_estimate(excerpt)
             if token_estimate > remaining_tokens:
@@ -954,6 +1194,86 @@ def search_full_text(
             "stale_sources": stale_sources,
             "token_estimate_method": "ceil(characters / 4)",
         }
-        return basis | {"result_digest": _digest(_canonical_json(basis))}
+        return _bounded_result(basis, max_tokens)
     finally:
         connection.close()
+
+
+def _bounded_result(basis: dict[str, Any], max_tokens: int) -> dict[str, Any]:
+    """Bound the complete existing JSON envelope using its declared estimator."""
+    while True:
+        result = basis | {"result_digest": _digest(_canonical_json(basis))}
+        serialized = json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+        check_delivery("search-result.json", serialized, result["result_digest"])
+        if _token_estimate(serialized) <= max_tokens:
+            return result
+        if not basis["results"]:
+            raise KnowledgeError("Output envelope exceeds max_tokens; increase the budget.")
+        removed = basis["results"].pop()
+        basis["skipped_bytes"] += removed["bytes"]
+        basis["estimated_tokens"] -= removed["token_estimate"]
+        basis["status"] = "PARTIAL"
+
+
+def search_delivery(
+    index: Path,
+    query: str,
+    *,
+    root: Path,
+    max_results: int = 20,
+    max_bytes: int = 100_000,
+    max_tokens: int = 25_000,
+    max_output_bytes: int = 100_000,
+    max_snippet_chars: int = DEFAULT_SNIPPET_CHARS,
+) -> dict[str, Any]:
+    """Opt-in delivery report with source coverage, complete-output bounds and explicit units."""
+    _positive(max_output_bytes, "max_output_bytes", 10_000_000)
+    result = search_full_text(
+        index,
+        query,
+        root=root,
+        max_results=max_results,
+        max_bytes=max_bytes,
+        max_tokens=max_tokens,
+        max_snippet_chars=max_snippet_chars,
+    )
+    coverage = search_index_status(root, index=index, strict=False)
+    with closing(_open_database(index)) as connection:
+        _check_fts_integrity(connection)
+    inspected = {key: coverage.get(key) for key in ("status", "added", "removed", "changed")}
+    inspected["method"] = "STAT_SCAN_WITH_FTS_INTEGRITY"
+    inspected["source_digest_recheck"] = "SELECTED_DELIVERED_SOURCES_ONLY"
+    basis = {
+        "format": "ocx-search-delivery-v1",
+        "format_version": 1,
+        "query": query,
+        "index_digest": result["index_digest"],
+        "coverage": inspected,
+        "items": result["results"],
+        "source_bytes_read": result["loaded_bytes"],
+        "source_budget_bytes": max_bytes,
+        "output_budget_bytes": max_output_bytes,
+        "output_budget_estimated_tokens": max_tokens,
+        "token_method": "ceil(serialized_characters / 4); not a provider tokenizer",
+        "complete": (
+            result["status"] != "PARTIAL"
+            and coverage.get("status") == "CURRENT"
+            and all(item["state"] == "loaded" for item in result["results"])
+        ),
+        "completeness_scope": "RETURNED_ITEMS_ONLY; query and candidate limits still apply",
+        "omitted_results": 0,
+        "absence_proven": False,
+    }
+    while True:
+        value = basis | {"report_digest": _digest(_canonical_json(basis))}
+        serialized = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+        if (
+            len(serialized.encode("utf-8")) <= max_output_bytes
+            and _token_estimate(serialized) <= max_tokens
+        ):
+            return value
+        if not basis["items"]:
+            raise KnowledgeError("Delivery report envelope exceeds the output budget.")
+        basis["items"].pop()
+        basis["omitted_results"] += 1
+        basis["complete"] = False

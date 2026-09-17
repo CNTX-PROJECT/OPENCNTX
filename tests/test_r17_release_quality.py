@@ -78,10 +78,10 @@ class LanguageQualityTests(unittest.TestCase):
 class SchemaPurposeTests(unittest.TestCase):
     def test_every_r17_schema_has_one_unique_declared_need(self) -> None:
         result = schema_purpose_gate.check_schema_purposes()
-        self.assertEqual(90, result["schema_count"])
+        self.assertEqual(91, result["schema_count"])
         self.assertEqual(73, result["baseline_count"])
-        self.assertEqual(17, result["new_schema_count"])
-        self.assertEqual(17, result["unique_purposes"])
+        self.assertEqual(18, result["new_schema_count"])
+        self.assertEqual(18, result["unique_purposes"])
         self.assertEqual([], result["undeclared_new"])
 
     def test_an_undeclared_schema_fails_closed(self) -> None:
