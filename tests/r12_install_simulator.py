@@ -278,12 +278,14 @@ def _upgrade_from_baseline(
                 "-I",
                 "-B",
                 "-c",
-                "from pathlib import Path; "
-                "from opencntx.knowledge import make_technique_card, save_technique; "
-                "card=make_technique_card(technique_id='legacy-procedure', name='Legacy procedure', "
-                "trigger='Upgrade fixture', preconditions=[], steps=['Inspect'], tools=[], "
-                "risks=[], outputs=[], source_digests=[], verification_state='PROVEN'); "
-                "save_technique(Path.cwd(), card)",
+                (
+                    "from pathlib import Path; "
+                    "from opencntx.knowledge import make_technique_card, save_technique; "
+                    "card=make_technique_card(technique_id='legacy-procedure', name='Legacy procedure', "
+                    "trigger='Upgrade fixture', preconditions=[], steps=['Inspect'], tools=[], "
+                    "risks=[], outputs=[], source_digests=[], verification_state='PROVEN'); "
+                    "save_technique(Path.cwd(), card)"
+                ),
             ],
             cwd=project,
         )
@@ -324,9 +326,11 @@ def _upgrade_from_baseline(
                 "-I",
                 "-B",
                 "-c",
-                "from pathlib import Path; from opencntx.knowledge import list_techniques; "
-                "cards=list_techniques(Path.cwd()); "
-                "assert cards[0]['verification_state']=='STALE'; print('STALE')",
+                (
+                    "from pathlib import Path; from opencntx.knowledge import list_techniques; "
+                    "cards=list_techniques(Path.cwd()); "
+                    "assert cards[0]['verification_state']=='STALE'; print('STALE')"
+                ),
             ],
             cwd=project,
         )
