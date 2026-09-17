@@ -8,17 +8,18 @@ Use [Workflow continuity](continuity.md) instead.
 
 ## Latest release and roadmap
 
-**Revision 11 · v1.8.3 Stable full-text and compatibility release published · remaining work tracked.**
+**Revision 12 · v1.8.4 Stable audit hardening and portable presentation · remaining work tracked.**
 
 **[Read the complete historical reliability roadmap →](roadmap-plan.md)**
 
-Version 1.8.3 adds local full-text search, incremental source indexing,
-freshness status, bounded snippets and token-aware output while retaining the
-public English-language gate, managed installation, host-footer, adoption and
-knowledge-layer work from 1.8.2, 1.8.1 and 1.8.0. The complete historical plan retains unfinished work;
-publication status is based on the GitHub Release.
+Version 1.8.4 hardens knowledge boundaries, evidence, retrieval and index
+publication; improves measured no-op indexing; and adds optional delivery,
+footer and reversible visual text routes. Automatic native chat-host
+integration is explicitly excluded. Native trust and live host qualification
+remain open. See the [1.8.4 roadmap](roadmap-1.8.4.md) for measured evidence
+and the [release scope](release-1.8.4.md) for supported boundaries.
 
-## What 1.8.3 improves
+## Retained and improved capabilities
 
 | Priority | Intended result |
 |---|---|
@@ -82,8 +83,8 @@ than adding global policy layers.
 
 | Record | Where to read it |
 |---|---|
-| Current 1.8.3 release scope | [Full-text search and compatibility release](release-1.8.3.md) |
-| Current 1.8.3 release roadmap | [Full-text search roadmap](roadmap-1.8.3.md) |
+| Current 1.8.4 release scope | [Audit hardening and portable presentation](release-1.8.4.md) |
+| Current 1.8.4 release roadmap | [Qualification roadmap](roadmap-1.8.4.md) |
 | Previous 1.8.2 release scope | [English surface and compatibility release](release-1.8.2.md) |
 | Previous 1.8.2 release roadmap | [English surface roadmap](roadmap-1.8.2.md) |
 | Previous 1.8.1 release scope | [Compatibility and installation release](release-1.8.1.md) |

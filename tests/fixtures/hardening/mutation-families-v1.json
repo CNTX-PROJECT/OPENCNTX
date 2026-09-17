@@ -4,15 +4,23 @@
   "families": {
     "PACKAGE": {
       "representative": "core-pack",
-      "operations": ["core-pack"]
+      "operations": [
+        "core-pack"
+      ]
     },
     "SOURCE_CATALOG": {
       "representative": "capture",
-      "operations": ["capture", "chapter-create", "catalog-rebuild"]
+      "operations": [
+        "capture",
+        "chapter-create",
+        "catalog-rebuild"
+      ]
     },
     "CONTROL": {
       "representative": "control-refresh",
-      "operations": ["control-refresh"]
+      "operations": [
+        "control-refresh"
+      ]
     },
     "TASK_WORKFLOW": {
       "representative": "task-propose",
@@ -31,7 +39,10 @@
     },
     "CONTEXT_EXECUTOR": {
       "representative": "context-build",
-      "operations": ["context-build", "executor-prepare"]
+      "operations": [
+        "context-build",
+        "executor-prepare"
+      ]
     },
     "DEFINITION": {
       "representative": "playbook-register",
@@ -39,16 +50,28 @@
         "playbook-register",
         "role-register",
         "playbook-approve",
-        "role-approve"
+        "role-approve",
+        "knowledge-technique"
       ]
     },
     "DERIVED_MEDIA": {
       "representative": "media-register",
-      "operations": ["media-register", "media-review", "media-promote", "media-remove"]
+      "operations": [
+        "media-register",
+        "media-review",
+        "media-promote",
+        "media-remove",
+        "visual-integration",
+        "visual-integration-rollback"
+      ]
     },
     "LIFECYCLE": {
       "representative": "lifecycle-migrate",
-      "operations": ["lifecycle-migrate", "lifecycle-cleanup", "lifecycle-restore"],
+      "operations": [
+        "lifecycle-migrate",
+        "lifecycle-cleanup",
+        "lifecycle-restore"
+      ],
       "targeted_hooks": [
         "MIGRATION_BEFORE_STATE",
         "MIGRATION_AFTER_STATE",

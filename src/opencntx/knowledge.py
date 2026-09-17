@@ -14,8 +14,11 @@ import os
 import re
 import tempfile
 from collections.abc import Iterable, Mapping
+from itertools import islice
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+from .knowledge_io import MAX_SCAN_ENTRIES, KnowledgeError, bounded_read, check_delivery, safe_path
 
 INDEX_FORMAT = "ocx-index-v1"
 SOURCE_NODE_FORMAT = "ocx-source-node-v1"
@@ -71,10 +74,6 @@ TOKEN_PATTERN = re.compile(r"[\w-]+", re.UNICODE)
 MARKDOWN_LINK = re.compile(r"!??\[([^\]]+)\]\(([^)]+)\)")
 WIKI_LINK = re.compile(r"\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|[^\]]+)?\]\]")
 HEADING = re.compile(r"^#{1,6}\s+(.+?)\s*$", re.MULTILINE)
-
-
-class KnowledgeError(ValueError):
-    """A fail-closed knowledge contract error."""
 
 
 def _canonical_json(value: Mapping[str, Any]) -> bytes:
@@ -135,20 +134,24 @@ def _relative(root: Path, path: Path) -> str:
 
 def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
     selected: list[Path] = []
+    visited_entries = 0
     for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+        visited_entries += len(directories) + len(names)
+        if visited_entries > MAX_SCAN_ENTRIES:
+            raise KnowledgeError("Source enumeration exceeds the entry budget.")
         current_path = Path(current)
         directories[:] = sorted(
             name
             for name in directories
-            if name not in SKIP_DIRECTORIES and not (current_path / name).is_symlink()
+            if name not in ADOPTION_SKIP_DIRECTORIES and not (current_path / name).is_symlink()
         )
         for name in sorted(names):
             candidate = current_path / name
             relative = _relative(root, candidate)
-            if len(PurePosixPath(relative).parts) > max_depth:
-                raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
             if candidate.is_symlink() or candidate.suffix.lower() not in TEXT_SUFFIXES:
                 continue
+            if len(PurePosixPath(relative).parts) > max_depth:
+                raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
             selected.append(candidate)
             if len(selected) > max_files:
                 raise KnowledgeError(f"Source count exceeds max_files={max_files}.")
@@ -164,10 +167,10 @@ def _decode_text(data: bytes) -> tuple[str, str]:
     return data.decode("utf-8"), "utf-8"
 
 
-def _read_source(root: Path, path: Path) -> tuple[str, bytes, str]:
+def _read_source(root: Path, path: Path, maximum: int = 25_000_000) -> tuple[str, bytes, str]:
     relative = _relative(root, path)
     try:
-        data = path.read_bytes()
+        data = bounded_read(root, relative, maximum)
         text, _encoding = _decode_text(data)
     except (OSError, UnicodeDecodeError) as exc:
         raise KnowledgeError(f"Source is not readable UTF-8 text: {relative}") from exc
@@ -212,7 +215,7 @@ def _parent_id(relative: str, by_path: Mapping[str, str], root_id: str) -> str:
 def _relation(line: str) -> str:
     lowered = line.casefold()
     for relation in sorted(RELATIONS - {"references"}, key=len, reverse=True):
-        if relation in lowered:
+        if re.match(r"^\s*(?:[-*]\s+)?" + re.escape(relation) + r"\s*:", lowered):
             return relation
     return "references"
 
@@ -228,14 +231,14 @@ def _link_targets(text: str) -> Iterable[tuple[str, str, str]]:
             yield (
                 path.replace("\\", "/"),
                 anchor,
-                _relation(text[max(0, match.start() - 100) : match.end() + 100]),
+                _relation(text[text.rfind("\n", 0, match.start()) + 1 : match.end()]),
             )
     for match in WIKI_LINK.finditer(text):
         path, anchor = match.groups()
         yield (
             path.strip().replace("\\", "/"),
             (anchor or "").strip(),
-            _relation(text[max(0, match.start() - 100) : match.end() + 100]),
+            _relation(text[text.rfind("\n", 0, match.start()) + 1 : match.end()]),
         )
 
 
@@ -338,6 +341,8 @@ def build_index(
     max_files: int = 10_000,
     max_bytes: int = 25_000_000,
     max_depth: int = 32,
+    _snapshot: list[tuple[str, str, int, str]] | None = None,
+    _publish: bool = True,
 ) -> dict[str, Any]:
     """Build a deterministic index without changing any source file."""
     if any(
@@ -347,15 +352,26 @@ def build_index(
         raise KnowledgeError("Index budgets must be positive integers.")
     selected_root = _root(root)
     root_id = _root_id(selected_root)
-    paths = _source_paths(selected_root, max_files, max_depth)
+    records = _snapshot
+    if records is None:
+        records = []
+        remaining = max_bytes
+        for path in _source_paths(selected_root, max_files, max_depth):
+            relative = _relative(selected_root, path)
+            data = bounded_read(selected_root, relative, remaining)
+            remaining -= len(data)
+            try:
+                text, _encoding = _decode_text(data)
+            except UnicodeDecodeError:
+                text = ""
+            records.append((relative, _digest(data), len(data), text))
     nodes: list[dict[str, Any]] = []
     texts: dict[str, str] = {}
     total_bytes = 0
-    for path in paths:
-        relative, data, text = _read_source(selected_root, path)
-        total_bytes += len(data)
-        if total_bytes > max_bytes:
-            raise KnowledgeError(f"Index byte budget exceeded: {total_bytes} > {max_bytes}.")
+    for relative, digest, size, text in records:
+        total_bytes += size
+        if total_bytes > max_bytes or len(nodes) >= max_files:
+            raise KnowledgeError("Index snapshot exceeds its source budget.")
         preview, headings = _summary(text)
         nodes.append(
             {
@@ -366,8 +382,8 @@ def build_index(
                 "parent_id": None,
                 "path": relative,
                 "depth": len(PurePosixPath(relative).parts),
-                "digest": _digest(data),
-                "bytes": len(data),
+                "digest": digest,
+                "bytes": size,
                 "title": headings[0] if headings else PurePosixPath(relative).stem,
                 "headings": headings,
                 "summary": preview,
@@ -398,8 +414,13 @@ def build_index(
         },
     }
     result = basis | {"index_digest": _digest(_canonical_json(basis))}
-    destination = output or selected_root / ".opencntx" / "index-v1.json"
-    _atomic_json(destination, result)
+    from .knowledge_io import safe_output
+
+    destination = safe_output(output or selected_root / ".opencntx" / "index-v1.json")
+    if _publish and (
+        not destination.is_file() or destination.read_bytes() != _canonical_json(result)
+    ):
+        _atomic_json(destination, result)
     return result
 
 
@@ -522,10 +543,13 @@ def search_index(
         "referenced_bytes": referenced_bytes,
         "skipped_bytes": skipped_bytes,
     }
+    check_delivery(
+        "search-result.json", json.dumps(basis, ensure_ascii=False), _digest(_canonical_json(basis))
+    )
     return basis | {"result_digest": _digest(_canonical_json(basis))}
 
 
-def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
+def _technique_basis(card: Mapping[str, Any], *, legacy_read: bool = False) -> dict[str, Any]:
     required = {
         "format",
         "format_version",
@@ -544,7 +568,21 @@ def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
         raise KnowledgeError("Technique card fields differ from ocx-technique-card-v1.")
     if card["format"] != TECHNIQUE_FORMAT or card["format_version"] != 1:
         raise KnowledgeError("Technique card format is unsupported.")
-    _text(card["technique_id"], "technique_id", 120)
+    identifier = _text(card["technique_id"], "technique_id", 120)
+    reserved = {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        *(f"COM{i}" for i in range(10)),
+        *(f"LPT{i}" for i in range(10)),
+    }
+    if (
+        not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,119}", identifier)
+        or identifier.endswith(".")
+        or identifier.split(".")[0].upper() in reserved
+    ):
+        raise KnowledgeError("technique_id must be a portable single file identifier.")
     _text(card["name"], "name", 300)
     _text(card["trigger"], "trigger", 500)
     for field in ("preconditions", "steps", "tools", "risks", "outputs"):
@@ -554,12 +592,20 @@ def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
         not isinstance(item, str) or not re.fullmatch(r"[0-9a-f]{64}", item) for item in digests
     ):
         raise KnowledgeError("source_digests must contain SHA-256 values.")
+    if card["verification_state"] == "PROVEN" and not digests and not legacy_read:
+        raise KnowledgeError("PROVEN requires non-empty source digest evidence.")
     if card["verification_state"] not in VERIFICATION_STATES:
         raise KnowledgeError("verification_state is unsupported.")
     basis = {key: value for key, value in card.items() if key != "card_digest"}
     if card["card_digest"] != _digest(_canonical_json(basis)):
         raise KnowledgeError("Technique card digest does not match its content.")
     return dict(card)
+
+
+def _stale_technique(card: Mapping[str, Any]) -> dict[str, Any]:
+    basis = {key: value for key, value in card.items() if key != "card_digest"}
+    basis["verification_state"] = "STALE"
+    return basis | {"card_digest": _digest(_canonical_json(basis))}
 
 
 def make_technique_card(
@@ -593,28 +639,78 @@ def make_technique_card(
     return _technique_basis(card)
 
 
-def save_technique(root: Path, card: Mapping[str, Any]) -> Path:
+def save_technique(
+    root: Path, card: Mapping[str, Any], *, expected_digest: str | None = None
+) -> Path:
+    """Create once, or update with the exact previously observed card digest."""
+    from .integrity import IntegrityError, writer_transaction
+
     selected_root = _root(root)
     valid = _technique_basis(card)
-    destination = selected_root / ".opencntx" / "techniques" / f"{valid['technique_id']}.json"
-    _atomic_json(destination, valid)
-    return destination
+    try:
+        with writer_transaction(selected_root, "knowledge-technique") as transaction:
+            store = safe_path(selected_root, ".opencntx/techniques", directory=True)
+            store.mkdir(exist_ok=True)
+            relative = f".opencntx/techniques/{valid['technique_id']}.json"
+            destination = safe_path(selected_root, relative)
+            if destination.exists():
+                current = _technique_basis(
+                    json.loads(bounded_read(selected_root, relative, 100_000)), legacy_read=True
+                )
+                if expected_digest is None and current == valid:
+                    return destination
+                accepted_digests = {current["card_digest"]}
+                if current["verification_state"] == "PROVEN":
+                    # Recall can project PROVEN to STALE without rewriting disk.
+                    # Bind the update to either view of these exact card fields.
+                    accepted_digests.add(_stale_technique(current)["card_digest"])
+                if expected_digest not in accepted_digests:
+                    raise KnowledgeError("Technique update requires the current expected digest.")
+            elif expected_digest is not None:
+                raise KnowledgeError("Technique update target does not exist.")
+            transaction.track_target(destination)
+            _atomic_json(destination, valid)
+            transaction.mark_target_published(destination)
+            return destination
+    except (IntegrityError, OSError, json.JSONDecodeError) as exc:
+        raise KnowledgeError("Technique write failed; existing state was preserved.") from exc
 
 
-def list_techniques(root: Path) -> list[dict[str, Any]]:
+def list_techniques(root: Path, *, limit: int = 100, offset: int = 0) -> list[dict[str, Any]]:
     selected_root = _root(root)
-    directory = selected_root / ".opencntx" / "techniques"
+    if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 1000:
+        raise KnowledgeError("Technique limit must be between 1 and 1000.")
+    if not isinstance(offset, int) or isinstance(offset, bool) or offset < 0:
+        raise KnowledgeError("Technique offset must be non-negative.")
+    if not (selected_root / ".opencntx").exists():
+        return []
+    directory = safe_path(selected_root, ".opencntx/techniques", directory=True)
     if not directory.is_dir():
         return []
     cards: list[dict[str, Any]] = []
-    for path in sorted(directory.glob("*.json")):
+    catalog = list(islice(directory.glob("*.json"), 10_001))
+    if len(catalog) > 10_000:
+        raise KnowledgeError("Technique catalog exceeds the 10000-card enumeration budget.")
+    for path in sorted(catalog)[offset : offset + limit]:
         try:
-            value = json.loads(path.read_text(encoding="utf-8"))
+            value = json.loads(bounded_read(selected_root, _relative(selected_root, path), 100_000))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise KnowledgeError(f"Technique card cannot be read: {path.name}") from exc
         if not isinstance(value, dict):
             raise KnowledgeError(f"Technique card is not an object: {path.name}")
-        cards.append(_technique_basis(value))
+        cards.append(_technique_basis(value, legacy_read=True))
+    if any(card["verification_state"] == "PROVEN" for card in cards):
+        current_digests: set[str] = set()
+        remaining = 25_000_000
+        for path in _source_paths(selected_root, 10_000, 32):
+            data = bounded_read(selected_root, _relative(selected_root, path), remaining)
+            remaining -= len(data)
+            current_digests.add(_digest(data))
+        for card in cards:
+            if card["verification_state"] == "PROVEN" and (
+                not card["source_digests"] or not set(card["source_digests"]) <= current_digests
+            ):
+                card.update(_stale_technique(card))
     return cards
 
 

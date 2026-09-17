@@ -87,7 +87,7 @@ jobs:
           ], check=True)
 
   managed-install:
-    name: Managed install / ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    name: Upgrade ${{ matrix.baseline-version }} / ${{ matrix.os }} / Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -95,10 +95,21 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.11", "3.12", "3.13", "3.14"]
+        baseline-version: ["1.7.6"]
+        include:
+          - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.0"}
+          - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.0"}
+          - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.1"}
+          - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.1"}
+          - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.2"}
+          - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.2"}
+          - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.3"}
+          - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.3"}
     env:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUTF8: "1"
       PYTHONPATH: src
+      BASELINE_VERSION: ${{ matrix.baseline-version }}
     steps:
       - name: Check out candidate
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -114,6 +125,8 @@ jobs:
       - name: Build exact candidate and acquire frozen baseline
         shell: python {0}
         run: |
+          import hashlib
+          import os
           import pathlib
           import subprocess
           import sys
@@ -126,20 +139,39 @@ jobs:
               "--repository", ".", "--output", "dist",
               "--expected-commit", commit, "--expected-tree", tree,
           ], check=True)
-          baseline = pathlib.Path("dist/opencntx-1.7.6-py3-none-any.whl")
+          version = os.environ["BASELINE_VERSION"]
+          hashes = {
+              "1.7.6": "b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f",
+              "1.8.0": "6dfd5bc701db86da3dafc406869d795e00ae1e926358fb03224565650055fa72",
+              "1.8.1": "c23a1bb694dd8d8d7ee65c56c9d43f03c9ebcfa26daaeab2bf2563a227f76a7d",
+              "1.8.2": "527de5197a231365bbf55dc36fe407956548f963f5dbd34fa4f54e3c2e226554",
+              "1.8.3": "ae65a2885250c140c142b9d9a21521a91248c9128f7d9967d7ff44ec92b1005f",
+          }
+          baseline = pathlib.Path(f"dist/opencntx-{version}-py3-none-any.whl")
           urllib.request.urlretrieve(
-              "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.7.6/"
-              "opencntx-1.7.6-py3-none-any.whl",
+              f"https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v{version}/"
+              f"opencntx-{version}-py3-none-any.whl",
               baseline,
           )
+          if hashlib.sha256(baseline.read_bytes()).hexdigest() != hashes[version]:
+              raise SystemExit("Baseline wheel differs from frozen published bytes")
+          with pathlib.Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as stream:
+              stream.write(f"BASELINE_SHA256={hashes[version]}\n")
       - name: Require update, rollback, reapply, resume, and cleanup
         run: >-
           python tools/managed_install_acceptance.py
-          --candidate dist/opencntx-1.8.3-py3-none-any.whl
-          --baseline dist/opencntx-1.7.6-py3-none-any.whl
-          --expected-candidate 1.8.3
-          --expected-baseline 1.7.6
-          --expected-baseline-sha256 b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f
+          --candidate dist/opencntx-1.8.4-py3-none-any.whl
+          --baseline dist/opencntx-${{ matrix.baseline-version }}-py3-none-any.whl
+          --expected-candidate 1.8.4
+          --expected-baseline ${{ matrix.baseline-version }}
+          --expected-baseline-sha256 ${{ env.BASELINE_SHA256 }}
+      - name: Preserve existing projects through update and failed activation
+        if: matrix.python-version == '3.12'
+        run: >-
+          python tests/r12_install_simulator.py
+          --candidate dist/opencntx-1.8.4-py3-none-any.whl
+          --baseline dist/opencntx-${{ matrix.baseline-version }}-py3-none-any.whl
+          --cycles 4
 
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}

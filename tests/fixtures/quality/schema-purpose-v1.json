@@ -20,6 +20,7 @@
     "recovery-report-v2.schema.json": "Compact terminal or continuing report across all classified recovery attempts.",
     "verification-lease-v1.schema.json": "Exact input and guard fingerprints that prevent unsafe lightweight reuse.",
     "transactional-update-plan-v2.schema.json": "Bind transactional update plans to exact project states and managed candidate profile readbacks.",
-    "knowledge-contracts-v1.schema.json": "Closed local metadata envelopes for hierarchical sources, typed links, search, techniques, adoption and footers."
+    "knowledge-contracts-v1.schema.json": "Closed local metadata envelopes for hierarchical sources, typed links, search, techniques, adoption and footers.",
+    "footer-host-envelope-v2.schema.json": "Bind partial measured footer metrics and per-field provenance to one host context without changing closed v1 consumers."
   }
 }
