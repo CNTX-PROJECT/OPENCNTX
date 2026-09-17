@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.8.4"
-description = "Create small, explicit, verifiable context packages for one AI task."
-readme = "README.md"
+version = "1.8.5"
+description = "EXPERIMENTAL owner preview: opt-in compact retrieval output on the 1.8.4 engine."
+readme = "docs/release-1.8.5-preview.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{ name = "OPENCNTX contributors" }]
 keywords = ["ai", "cli", "context-management", "local-first", "verification"]
 classifiers = [
-  "Development Status :: 5 - Production/Stable",
+  "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX :: Linux",
@@ -84,4 +84,4 @@ show_missing = true
 
 [tool.opencntx.release]
 published_version = "1.8.4"
-status = "published"
+status = "local-candidate"

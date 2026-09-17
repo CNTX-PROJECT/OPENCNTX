@@ -1,3 +1,3 @@
-"""OPENCNTX public package."""
+"""OPENCNTX: experimental owner preview; not a qualified stable release."""
 
-__version__ = "1.8.4"
+__version__ = "1.8.5"
