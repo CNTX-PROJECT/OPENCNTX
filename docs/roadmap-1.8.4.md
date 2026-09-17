@@ -63,6 +63,9 @@ old snapshot over newer user work.
 - PROVEN requires nonempty digest evidence. Recall reports STALE when that
   evidence cannot be found in current bounded project sources; stored card
   bytes are preserved. This does not prove that a procedure is correct.
+  Legacy empty PROVEN cards remain readable as STALE. Conditional correction
+  accepts the digest of either the exact stored card or its STALE recall view;
+  changes to any other card field invalidate both bindings.
 - Only explicit `Requires:`, `Contains:` and other declared relation prefixes
   create hard relationships. Ordinary prose, including negation, is a reference.
 - Legacy v1 search is a metadata-only contract. Its historical `loaded` field

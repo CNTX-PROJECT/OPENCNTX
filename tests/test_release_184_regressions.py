@@ -278,6 +278,25 @@ class Release184Regressions(unittest.TestCase):
         with self.assertRaises(KnowledgeError):
             build_index(self.root, output=link)
 
+    def test_old_empty_proven_card_is_readable_stale_and_can_be_corrected(self) -> None:
+        from opencntx.knowledge import _canonical_json, _digest
+
+        previous = card()
+        previous["verification_state"] = "PROVEN"
+        previous["card_digest"] = _digest(
+            _canonical_json({key: value for key, value in previous.items() if key != "card_digest"})
+        )
+        store = self.root / ".opencntx" / "techniques"
+        store.mkdir(parents=True)
+        target = store / "procedure.json"
+        before = _canonical_json(previous)
+        target.write_bytes(before)
+        recalled = list_techniques(self.root)[0]
+        self.assertEqual(recalled["verification_state"], "STALE")
+        self.assertEqual(target.read_bytes(), before)
+        save_technique(self.root, card(name="Corrected"), expected_digest=recalled["card_digest"])
+        self.assertEqual(list_techniques(self.root)[0]["name"], "Corrected")
+
 
 if __name__ == "__main__":
     unittest.main()

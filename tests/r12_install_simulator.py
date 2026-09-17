@@ -269,6 +269,26 @@ def _upgrade_from_baseline(
     python = _create_venv(parent, "upgrade-venv", baseline)
     project = _prepare_project(parent, "upgrade-project")
     _init_and_seed(python, project)
+    legacy_card: Path | None = None
+    legacy_card_before: bytes | None = None
+    if tuple(int(part) for part in _wheel_version(baseline).split(".")) >= (1, 8, 0):
+        _run(
+            [
+                str(python),
+                "-I",
+                "-B",
+                "-c",
+                "from pathlib import Path; "
+                "from opencntx.knowledge import make_technique_card, save_technique; "
+                "card=make_technique_card(technique_id='legacy-procedure', name='Legacy procedure', "
+                "trigger='Upgrade fixture', preconditions=[], steps=['Inspect'], tools=[], "
+                "risks=[], outputs=[], source_digests=[], verification_state='PROVEN'); "
+                "save_technique(Path.cwd(), card)",
+            ],
+            cwd=project,
+        )
+        legacy_card = project / ".opencntx" / "techniques" / "legacy-procedure.json"
+        legacy_card_before = legacy_card.read_bytes()
     before = _snapshot_sources(project)
     _run([str(python), "-I", "-B", "-m", "opencntx", "pack"], cwd=project)
     baseline_hash = _sha256(baseline)
@@ -297,6 +317,21 @@ def _upgrade_from_baseline(
         )
         reapply_statuses.append((result["status"], bool(result.get("reused"))))
     exercised = _exercise_project(python, project, expected_version=_wheel_version(candidate))
+    if legacy_card is not None:
+        recalled = _run(
+            [
+                str(python),
+                "-I",
+                "-B",
+                "-c",
+                "from pathlib import Path; from opencntx.knowledge import list_techniques; "
+                "cards=list_techniques(Path.cwd()); "
+                "assert cards[0]['verification_state']=='STALE'; print('STALE')",
+            ],
+            cwd=project,
+        )
+        if recalled.strip() != "STALE" or legacy_card.read_bytes() != legacy_card_before:
+            raise RuntimeError("Legacy evidence projection did not preserve its stored bytes")
     blocked = _blocked_adoption_probe(python, parent)
     after = _snapshot_sources(project)
     if before != after:
@@ -307,6 +342,7 @@ def _upgrade_from_baseline(
         "reapply_statuses": reapply_statuses,
         "runtime": exercised,
         "blocked_visual_adoption": blocked,
+        "legacy_empty_proven_readable_stale_without_write": legacy_card is not None,
     }
 
 

@@ -544,7 +544,7 @@ def search_index(
     return basis | {"result_digest": _digest(_canonical_json(basis))}
 
 
-def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
+def _technique_basis(card: Mapping[str, Any], *, legacy_read: bool = False) -> dict[str, Any]:
     required = {
         "format",
         "format_version",
@@ -587,7 +587,7 @@ def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
         not isinstance(item, str) or not re.fullmatch(r"[0-9a-f]{64}", item) for item in digests
     ):
         raise KnowledgeError("source_digests must contain SHA-256 values.")
-    if card["verification_state"] == "PROVEN" and not digests:
+    if card["verification_state"] == "PROVEN" and not digests and not legacy_read:
         raise KnowledgeError("PROVEN requires non-empty source digest evidence.")
     if card["verification_state"] not in VERIFICATION_STATES:
         raise KnowledgeError("verification_state is unsupported.")
@@ -595,6 +595,12 @@ def _technique_basis(card: Mapping[str, Any]) -> dict[str, Any]:
     if card["card_digest"] != _digest(_canonical_json(basis)):
         raise KnowledgeError("Technique card digest does not match its content.")
     return dict(card)
+
+
+def _stale_technique(card: Mapping[str, Any]) -> dict[str, Any]:
+    basis = {key: value for key, value in card.items() if key != "card_digest"}
+    basis["verification_state"] = "STALE"
+    return basis | {"card_digest": _digest(_canonical_json(basis))}
 
 
 def make_technique_card(
@@ -644,11 +650,16 @@ def save_technique(
             destination = safe_path(selected_root, relative)
             if destination.exists():
                 current = _technique_basis(
-                    json.loads(bounded_read(selected_root, relative, 100_000))
+                    json.loads(bounded_read(selected_root, relative, 100_000)), legacy_read=True
                 )
                 if expected_digest is None and current == valid:
                     return destination
-                if expected_digest != current["card_digest"]:
+                accepted_digests = {current["card_digest"]}
+                if current["verification_state"] == "PROVEN":
+                    # Recall can project PROVEN to STALE without rewriting disk.
+                    # Bind the update to either view of these exact card fields.
+                    accepted_digests.add(_stale_technique(current)["card_digest"])
+                if expected_digest not in accepted_digests:
                     raise KnowledgeError("Technique update requires the current expected digest.")
             elif expected_digest is not None:
                 raise KnowledgeError("Technique update target does not exist.")
@@ -679,7 +690,7 @@ def list_techniques(root: Path, *, limit: int = 100, offset: int = 0) -> list[di
             raise KnowledgeError(f"Technique card cannot be read: {path.name}") from exc
         if not isinstance(value, dict):
             raise KnowledgeError(f"Technique card is not an object: {path.name}")
-        cards.append(_technique_basis(value))
+        cards.append(_technique_basis(value, legacy_read=True))
     if any(card["verification_state"] == "PROVEN" for card in cards):
         current_digests: set[str] = set()
         remaining = 25_000_000
@@ -688,13 +699,10 @@ def list_techniques(root: Path, *, limit: int = 100, offset: int = 0) -> list[di
             remaining -= len(data)
             current_digests.add(_digest(data))
         for card in cards:
-            if (
-                card["verification_state"] == "PROVEN"
-                and not set(card["source_digests"]) <= current_digests
+            if card["verification_state"] == "PROVEN" and (
+                not card["source_digests"] or not set(card["source_digests"]) <= current_digests
             ):
-                card["verification_state"] = "STALE"
-                basis = {key: value for key, value in card.items() if key != "card_digest"}
-                card["card_digest"] = _digest(_canonical_json(basis))
+                card.update(_stale_technique(card))
     return cards
 
 
