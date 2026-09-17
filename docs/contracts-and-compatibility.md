@@ -68,15 +68,7 @@ Version 1.4.0 released the additive visual-intent and joint-review contracts.
 It adds no command, runtime dependency, format major, mandatory migration,
 provider call, deployment, or package-index route.
 
-After a stable release, documentation may be corrected without inventing a
-new package version. The release-version gate permits that state only when the
-stable tag is an ancestor of HEAD, at least one documentation file changed,
-all changes are additions or modifications, and every changed path belongs to
-the narrow documentation or gate-verification allowlist. Documentation includes
-the official dependency-free site HTML and its README; only the exact visual
-baseline manifest may accompany changed site bytes as visual verification
-support. Runtime, packaging, release, workflow, deletion, rename, site scripts,
-styles, data, and unknown paths remain fail-closed.
+After a release, the strict release-version gate still rejects changed source at the same version. The separately selected `--maintenance` mode permits named documentation and verification maintenance only when all runtime/schema bytes, package metadata, build manifest, dependencies and license are content-identical to the published tag. It reports `RELEASE_RUNTIME_ALIGNED_MAINTENANCE`, not a new release or artifact qualification. This content check supports squash-merged publication repairs without inventing tag ancestry. Unknown paths, runtime changes, unclean checkouts and arbitrary deletions fail closed. The immutable release tag and downloadable files are never replaced by a maintenance commit.
 
 Backward-compatible continuity maintenance may strengthen validation by using
 digest fields already present in the v1 event ledger. Recovery counters describe

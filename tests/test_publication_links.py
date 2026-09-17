@@ -1,13 +1,18 @@
 """Offline documentation regression checks, including deliberately broken fixtures."""
+
 from __future__ import annotations
 
+import importlib
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from publication_links import anchors, check_links, references
+_module = importlib.import_module("publication_links")
+anchors = _module.anchors
+check_links = _module.check_links
+references = _module.references
 
 
 class PublicationLinkTests(unittest.TestCase):

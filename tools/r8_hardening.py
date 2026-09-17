@@ -11,7 +11,6 @@ import queue
 import subprocess
 import sys
 import tempfile
-import urllib.request
 import venv
 from pathlib import Path
 from typing import Any
@@ -32,10 +31,7 @@ from opencntx.integrity import (
 from opencntx.workspace import init_workspace
 
 FAMILY_REGISTER = ROOT / "tests" / "fixtures" / "hardening" / "mutation-families-v1.json"
-V030_WHEEL_URL = (
-    "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/"
-    "v0.3.0/opencntx-0.3.0-py3-none-any.whl"
-)
+V030_WHEEL_PATH = ROOT / "tests/fixtures/release-baselines/opencntx-0.3.0-py3-none-any.whl"
 V030_WHEEL_SHA256 = "6dee59d5255c73278400c05217abb298abb50a51f5998c7fb9d1c41e8e027cc6"
 CRASH_EXIT = 86
 LOCK_FAILURES = {
@@ -510,8 +506,7 @@ def run_upgrade(candidate: Path, evidence: Path) -> dict[str, object]:
     with tempfile.TemporaryDirectory(prefix="opencntx-r8-23-upgrade-") as temp_name:
         root = Path(temp_name)
         official = root / "opencntx-0.3.0-py3-none-any.whl"
-        with urllib.request.urlopen(V030_WHEEL_URL, timeout=60) as response:
-            official.write_bytes(response.read())
+        official.write_bytes(V030_WHEEL_PATH.read_bytes())
         if _sha256(official.read_bytes()) != V030_WHEEL_SHA256:
             raise HardeningError("official v0.3.0 wheel hash differs")
         environment = root / "venv"

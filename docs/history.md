@@ -29,3 +29,10 @@ Pre-1.7.0 details are separated from current navigation. [Archived changelog](hi
 The [before-cleanup backup](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/archive-20260918) contains the Git bundle, release metadata and individually hashed files. This is an archive, not a software update. Required historical data fixtures remain in the repository.
 
 Historical results retain their original version and platform scope. They are not qualification of a different artifact or automatic chat integration.
+
+<details>
+<summary>Historical foundation diagram</summary>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg"><img src="../assets/docs/roadmap.svg" alt="Historical foundation milestones, not the current development plan"></picture>
+
+</details>

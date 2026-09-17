@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.2 — English surface and compatibility roadmap
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This roadmap records the bounded work for the 1.8.2 release. It is additive

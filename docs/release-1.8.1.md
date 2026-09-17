@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.1
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [Install and update](install-and-update.md) · [Releases](releases.md)
 
 OPENCNTX 1.8.1 is a compatibility and installation-hardening release. It

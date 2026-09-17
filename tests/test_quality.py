@@ -97,9 +97,15 @@ LIGHT_DIAGRAMS = {
     "workspace-map.svg",
 }
 DARK_DIAGRAMS = {name.replace(".svg", "-dark.svg") for name in LIGHT_DIAGRAMS}
-DIAGRAMS = LIGHT_DIAGRAMS | DARK_DIAGRAMS | {
-    "knowledge-ecosystem.svg", "task-journey.svg", "owner-knowledge.svg",
-}
+DIAGRAMS = (
+    LIGHT_DIAGRAMS
+    | DARK_DIAGRAMS
+    | {
+        "knowledge-ecosystem.svg",
+        "task-journey.svg",
+        "owner-knowledge.svg",
+    }
+)
 
 PRIMARY_NAVIGATION = (
     "[Overview](../README.md) · [Get started](start-here.md) · "
@@ -215,9 +221,7 @@ def _local_links(path: Path) -> list[str]:
 class PublicQualityTests(unittest.TestCase):
     def test_all_local_markdown_links_resolve_within_repository(self) -> None:
         markdown_files = sorted(
-            path
-            for path in public_language_gate._tracked_paths()
-            if path.suffix == ".md"
+            path for path in public_language_gate._tracked_paths() if path.suffix == ".md"
         )
         self.assertTrue(markdown_files)
 
@@ -672,10 +676,10 @@ class PublicQualityTests(unittest.TestCase):
             self.assertEqual(metadata["tool"]["opencntx"]["release"]["status"], "local-candidate")
             self.assertIn(f"Local candidate: v{package_version}", releases)
             self.assertIn(f"## {package_version} -", CHANGELOG.read_text(encoding="utf-8"))
-        self.assertIn(
-            "Development Status :: 5 - Production/Stable",
-            project["classifiers"],
-        )
+        publication = json.loads((DOCS / "publication.json").read_text(encoding="utf-8"))
+        self.assertEqual("regular", publication["release_kind"])
+        self.assertEqual(version, publication["version"])
+        self.assertEqual("targeted-ubuntu-python312", publication["artifact_qualification"])
         self.assertNotIn("Development Status :: 4 - Beta", project["classifiers"])
         self.assertNotIn("Development Status :: 3 - Alpha", project["classifiers"])
         changelog = CHANGELOG.read_text(encoding="utf-8")
@@ -695,7 +699,7 @@ class PublicQualityTests(unittest.TestCase):
             "git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git",
             releases,
         )
-        self.assertIn(f"v{version} Stable", readme)
+        self.assertIn(f"Download v{version}", readme)
         self.assertNotIn(f"v{version} candidate", readme)
         self.assertIn("The workspace is a **Stable, optional** route", workspace)
         self.assertIn("installed --version output differs", release_tool)
@@ -708,7 +712,7 @@ class PublicQualityTests(unittest.TestCase):
         for public_surface in (readme, start_here, faq, roadmap, release_artifacts):
             with self.subTest(surface=public_surface[:40]):
                 self.assertIn(f"v{version}", public_surface)
-                self.assertIn("Stable", public_surface)
+                self.assertIn("release", public_surface.lower())
                 self.assertNotIn("v1.0.0rc1", public_surface)
                 self.assertNotIn("Development Status :: 4 - Beta", public_surface)
 

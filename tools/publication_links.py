@@ -1,4 +1,5 @@
 """Check public relative links, HTML assets and publication identities offline."""
+
 from __future__ import annotations
 
 import argparse
@@ -15,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class LinkParser(HTMLParser):
     """Collect navigable links and explicit HTML anchors."""
+
     def __init__(self) -> None:
         super().__init__()
         self.links: list[str] = []
@@ -62,8 +64,14 @@ def anchors(text: str) -> set[str]:
 
 
 def check_links(root: Path) -> dict[str, object]:
-    pages = sorted({*root.glob("*.md"), *root.glob("docs/**/*.md"), *root.glob("site/**/*.md"),
-                    *root.glob("site/**/*.html")})
+    pages = sorted(
+        {
+            *root.glob("*.md"),
+            *root.glob("docs/**/*.md"),
+            *root.glob("site/**/*.md"),
+            *root.glob("site/**/*.html"),
+        }
+    )
     errors = []
     count = 0
     external = set()
@@ -80,7 +88,12 @@ def check_links(root: Path) -> dict[str, object]:
             elif parsed.fragment and target.suffix in {".md", ".html"}:
                 if unquote(parsed.fragment) not in anchors(target.read_text(encoding="utf-8")):
                     errors.append(f"{page.relative_to(root)}: missing anchor {link}")
-    return {"pages": len(pages), "links": count, "external_urls": sorted(external), "errors": errors}
+    return {
+        "pages": len(pages),
+        "links": count,
+        "external_urls": sorted(external),
+        "errors": errors,
+    }
 
 
 def check_baselines(root: Path) -> None:

@@ -78,3 +78,7 @@ edit generated avatar/icon PNGs or `SHA256SUMS` by hand.
 
 By contributing, you agree that your contribution is licensed under the
 existing [Apache-2.0 License](LICENSE).
+
+## Publication maintenance
+
+Keep current instructions aligned with [publication.json](docs/publication.json). Run `python tools/publication_links.py` and the selected publication-maintenance gate alongside full CI. A release is not complete while its landing page describes another version or its integration branch remains unhandled. Preserve immutable artifacts and historical compatibility evidence; see [repository maintenance](docs/repository-maintenance.md).

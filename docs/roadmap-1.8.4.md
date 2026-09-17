@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.4 qualification roadmap
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 Version 1.8.4 qualifies the package and explicit CLI routes against 1.8.3.

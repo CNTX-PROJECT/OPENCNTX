@@ -1,5 +1,8 @@
 # Roadmap continuity and AUTO PILOT
 
+> Current download: **v1.8.5**. The original release evidence is limited to the [documented artifact checks](releases.md); retained Stable contracts are not a claim of full new platform or live-host qualification.
+
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 The additive `flow` route keeps one roadmap, one current assignment detail and
@@ -14,7 +17,7 @@ privacy, integrity, and evidence checks.
 
 ## Fast route
 
-The commands in this guide remain Stable in the current v1.8.4 release. The
+The commands in this guide remain Stable in the current v1.8.5 release. The
 [adaptive AI workflow](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice
 without changing authority. It does not add a released CLI command.

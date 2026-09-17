@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.1 — compatibility and integration roadmap
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This is the roadmap for the published `1.8.1` release. The published

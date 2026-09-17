@@ -27,3 +27,5 @@ probe first; the replacement cannot be relabelled as a probe. LARGE/MEGA require
 verified hierarchy, supplied by the next integration stage. Without it broad
 execution refuses. A default SHORT assessment only describes this known small
 fixture operation, never an arbitrary real-world task or unrestricted shell.
+
+[Technical reference](reference.md) · [Current release](releases.md)

@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.6 — delivery, clean upgrades and publication roadmap
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 Status: RELEASE_PUBLISHED_AND_INSTALLATION_HEALTHY
 Date: 2026-09-12
 Baseline: published v1.7.5, commit 685d3738782c1e0ef2ebc7398d1f76593fae54b8

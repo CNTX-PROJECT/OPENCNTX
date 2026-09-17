@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.3 — Reliability release
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Install](start-here.md) · [Releases](releases.md) · [Roadmap](roadmap.md)
 
 Version 1.7.3 converts the highest-priority failures found by the 1.7.2

@@ -1,5 +1,7 @@
 # Privacy, storage, and format lifecycle
 
+> Contract reference. Earlier version numbers identify when behavior was introduced, not the current download. See [release status](releases.md) for 1.8.5 and its evidence boundaries.
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 This Stable workspace surface makes local trust, storage, compatibility, and
@@ -129,7 +131,7 @@ depends on measured need; no database becomes mandatory.
 It also defines disabled-by-default contracts for project-isolated continuity
 destinations such as a notes application or synchronized folder. Those
 contracts do not bundle product-specific connectors or authorize network
-writes. Stable v1.6.0 behavior remains the lifecycle and optional private
+writes. retained behavior remains the lifecycle and optional private
 Git/GitHub routes documented today.
 
 ## Sharing boundary

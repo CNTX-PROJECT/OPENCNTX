@@ -1,4 +1,5 @@
 """Verify a maintenance checkout against unchanged published runtime bytes."""
+
 from __future__ import annotations
 
 import json
@@ -8,18 +9,31 @@ from typing import Any
 from release_version_gate import ReleaseVersionError, _git, _project_version
 
 MAINTENANCE_FILES = {
-    "README.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md", "SUPPORT.md",
-    ".github/workflows/ci.yml", ".github/ISSUE_TEMPLATE/bug_report.yml",
-    "site/index.html", "site/README.md", "assets/design-system/visual-baseline-v1.json",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "SUPPORT.md",
+    ".github/workflows/ci.yml",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    "site/index.html",
+    "site/README.md",
+    "assets/design-system/visual-baseline-v1.json",
     "tests/fixtures/quality/current-version-surfaces-v1.json",
-    "tests/test_quality.py", "tests/test_public_roadmap.py",
-    "tests/test_publication_maintenance.py", "tests/test_publication_links.py",
-    "tools/release_version_gate.py", "tools/publication_maintenance.py",
-    "tools/publication_links.py", "tools/r8_hardening.py",
+    "tests/test_quality.py",
+    "tests/test_public_roadmap.py",
+    "tests/test_publication_maintenance.py",
+    "tests/test_publication_links.py",
+    "tools/release_version_gate.py",
+    "tools/publication_maintenance.py",
+    "tools/publication_links.py",
+    "tools/r8_hardening.py",
 }
 RETIRED_HELPERS = {
-    ".github/workflows/owner-preview-185.yml", ".github/workflows/release-185.yml",
-    "tools/build_owner_preview_185.py", "tools/build_release_185.py",
+    ".github/workflows/owner-preview-185.yml",
+    ".github/workflows/release-185.yml",
+    "tools/build_owner_preview_185.py",
+    "tools/build_release_185.py",
 }
 
 
@@ -59,8 +73,14 @@ def inspect_maintenance(repository: Path) -> dict[str, Any]:
     if record.get("source_commit") != source:
         raise ReleaseVersionError("publication source does not match the immutable tag")
     # Includes all source/schema bytes, build metadata, dependencies and legal identity.
-    protected = ["src", "pyproject.toml", "MANIFEST.in", "LICENSE",
-                 "requirements-quality.txt", "requirements-security.txt"]
+    protected = [
+        "src",
+        "pyproject.toml",
+        "MANIFEST.in",
+        "LICENSE",
+        "requirements-quality.txt",
+        "requirements-security.txt",
+    ]
     if _git(root, "diff", "--name-only", source, "HEAD", "--", *protected):
         raise ReleaseVersionError("runtime or packaging changed; a new package version is required")
     raw = _git(root, "diff", "--name-status", "--no-renames", source, "HEAD")
@@ -75,8 +95,13 @@ def inspect_maintenance(repository: Path) -> dict[str, Any]:
     else:
         result = "RELEASE_RUNTIME_ALIGNED_MAINTENANCE"
     return {
-        "format": "opencntx-publication-maintenance-v1", "result": result,
-        "project_version": version, "latest_tag": tag, "release_commit": source,
-        "head": _git(root, "rev-parse", "HEAD"), "changes": changes,
-        "artifact_equivalence_claimed": False, "ancestry_claimed": False,
+        "format": "opencntx-publication-maintenance-v1",
+        "result": result,
+        "project_version": version,
+        "latest_tag": tag,
+        "release_commit": source,
+        "head": _git(root, "rev-parse", "HEAD"),
+        "changes": changes,
+        "artifact_equivalence_claimed": False,
+        "ancestry_claimed": False,
     }

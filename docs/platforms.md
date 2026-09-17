@@ -112,3 +112,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 tools/render_brand.py --check
 - [Contribution guide](../CONTRIBUTING.md)
 
 [Documentation home](README.md)
+
+## Original 1.8.5 artifact versus maintenance source
+
+The original 1.8.5 artifacts were checked on Ubuntu/Python 3.12 within the [limited release scope](releases.md). The live `CI_ACTIVE` matrix evaluates the exact maintenance source commit on each listed platform. Source results do not change the original build record or establish native chat integration.

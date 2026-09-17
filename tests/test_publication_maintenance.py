@@ -1,13 +1,16 @@
 """Negative controls for content-based publication maintenance, not a release bypass."""
+
 from __future__ import annotations
 
+import importlib
 import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from publication_maintenance import allowed_change
+_module = importlib.import_module("publication_maintenance")
+allowed_change = _module.allowed_change
 
 
 class MaintenanceBoundaryTests(unittest.TestCase):
@@ -17,8 +20,15 @@ class MaintenanceBoundaryTests(unittest.TestCase):
         self.assertTrue(allowed_change("M", "tools/release_version_gate.py"))
 
     def test_runtime_and_unknown_changes_fail(self) -> None:
-        for path in ("src/opencntx/cli.py", "pyproject.toml", "MANIFEST.in", "LICENSE",
-                     "requirements-quality.txt", "tools/unknown.py", "../README.md"):
+        for path in (
+            "src/opencntx/cli.py",
+            "pyproject.toml",
+            "MANIFEST.in",
+            "LICENSE",
+            "requirements-quality.txt",
+            "tools/unknown.py",
+            "../README.md",
+        ):
             with self.subTest(path=path):
                 self.assertFalse(allowed_change("M", path))
 
@@ -36,6 +46,7 @@ class MaintenanceBoundaryTests(unittest.TestCase):
     def test_dirty_checkout_is_rejected_before_identity_claims(self) -> None:
         from publication_maintenance import inspect_maintenance
         from release_version_gate import ReleaseVersionError
+
         with patch("publication_maintenance._git", return_value=" M README.md"):
             with self.assertRaisesRegex(ReleaseVersionError, "clean"):
                 inspect_maintenance(Path("."))

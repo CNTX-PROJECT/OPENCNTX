@@ -1,35 +1,40 @@
 # Release artifacts
 
+> Current download: **v1.8.5**. The original release evidence is limited to the [documented artifact checks](releases.md); retained Stable contracts are not a claim of full new platform or live-host qualification.
+
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
-This page defines the four files for the `v1.8.4` GitHub Release and
+This page defines the four files for the `v1.8.5` GitHub Release and
 explains how contributors reproduce the exact local build. It does not grant
 authority to publish a new release or package-index upload.
 
 ## Current public distribution
 
-The Stable release target is `v1.8.4`; published availability is established only by its
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4).
+The published 1.8.5 BUILD-RECORD uses the limited publication builder described in its release notes. The standard reproducible builder and verification commands below describe new local candidates; they do not certify or rewrite those already published files. For the published bytes, compare the exact values in [publication.json](publication.json) and SHA256SUMS. Do not treat a standard-format verification failure on that distinct record as permission to overwrite the release.
+
+The Stable release target is `v1.8.5`; published availability is established only by its
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5).
 Install or update it from the verified wheel as described in
 [Install and update](install-and-update.md).
 
 - OPENCNTX is not published on PyPI or TestPyPI.
 - The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
   build record attached to it.
-- The v1.8.4 GitHub Release must contain exactly the four files named below.
+- The v1.8.5 GitHub Release must contain exactly the four files named below.
 
-Its published artifacts are `opencntx-1.8.4-py3-none-any.whl`,
-`opencntx-1.8.4.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`.
+Its published artifacts are `opencntx-1.8.5-py3-none-any.whl`,
+`opencntx-1.8.5.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`.
 
 Any file built locally is a verification build until it is one of the
 four exact assets attached to the immutable GitHub Release.
 
-## Reproducible local v1.8.4 output
+## Reproducible local v1.8.5 output
 
-The local release helper emits exactly four v1.8.4 files:
+The local release helper emits exactly four v1.8.5 files:
 
-1. `opencntx-1.8.4-py3-none-any.whl`;
-2. `opencntx-1.8.4.tar.gz`;
+1. `opencntx-1.8.5-py3-none-any.whl`;
+2. `opencntx-1.8.5.tar.gz`;
 3. `SHA256SUMS` for those two artifacts;
 4. `BUILD-RECORD.json`.
 
@@ -50,7 +55,7 @@ python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.8.4 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit $commit --expected-tree $tree
 ```
 
 Ubuntu:
@@ -60,7 +65,7 @@ python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0
 commit=$(git rev-parse HEAD)
 tree=$(git rev-parse 'HEAD^{tree}')
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.4 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
 The helper exports the exact Git tree to two independent temporary source
@@ -98,8 +103,8 @@ must support:
 Run the same bounded smoke for both local artifacts:
 
 ```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.4-py3-none-any.whl --expected-version 1.8.4
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.4.tar.gz --expected-version 1.8.4
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.5-py3-none-any.whl --expected-version 1.8.5
+python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.5.tar.gz --expected-version 1.8.5
 ```
 
 This tests a local verification build. It is not proof that an external package-index

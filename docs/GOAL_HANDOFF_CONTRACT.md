@@ -47,3 +47,5 @@ Portable state/handoff behavior is tested on Windows and Linux. The physical
 reference writer is Windows-only. Local test results do not prove remote CI,
 arbitrary Codex host interception, universal semantics or sudden power-loss
 durability. No active installation or publication is implied by this candidate.
+
+[Technical reference](reference.md) · [Current release](releases.md)

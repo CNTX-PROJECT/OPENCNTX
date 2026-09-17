@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.6
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 OPENCNTX 1.7.6 makes installation recovery and connected task continuation
 testable product behavior instead of host assumptions.
 

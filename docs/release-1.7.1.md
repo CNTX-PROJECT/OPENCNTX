@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.1 — Documentation release
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Public roadmap](roadmap.md) · [Full English plan](roadmap-plan.md) · [Changelog](../CHANGELOG.md)
 
 ## What changed

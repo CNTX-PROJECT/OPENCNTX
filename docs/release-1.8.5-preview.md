@@ -1,3 +1,5 @@
+> Historical test-build note. The regular [1.8.5 release](releases.md) supersedes this preview. Statements below describe its original publication, not current status.
+
 # OPENCNTX 1.8.5 — experimental owner preview 1
 
 This is an installable **test build**, published at the owner's explicit request. It is **not the completed 1.8.5 roadmap and not a qualified stable release**. The latest stable release remains 1.8.4. Main and existing installations are not changed by this publication.
