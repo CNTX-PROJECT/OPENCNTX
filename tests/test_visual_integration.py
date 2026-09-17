@@ -81,6 +81,27 @@ class VisualIntegrationTests(unittest.TestCase):
             apply_visual_integration(self.root, self.plan, self.brief, self.review)
         self.assertEqual(self.source.read_bytes(), self.before)
 
+    def test_malformed_plan_types_and_receipt_fail_without_source_changes(self) -> None:
+        from opencntx.knowledge import _canonical_json, _digest
+
+        for field, value in (("format_version", True), ("path", []), ("mode", "UNKNOWN")):
+            plan = self.plan | {field: value}
+            plan["plan_digest"] = _digest(
+                _canonical_json({key: item for key, item in plan.items() if key != "plan_digest"})
+            )
+            with self.subTest(field=field), self.assertRaises(KnowledgeError):
+                apply_visual_integration(self.root, plan, self.brief, self.review)
+            self.assertEqual(self.source.read_bytes(), self.before)
+        apply_visual_integration(self.root, self.plan, self.brief, self.review)
+        integrated = self.source.read_bytes()
+        receipt = self.root / ".opencntx/visual-integrations" / (self.plan["plan_digest"] + ".json")
+        receipt.write_bytes(b"[]")
+        with self.assertRaises(KnowledgeError):
+            apply_visual_integration(self.root, self.plan, self.brief, self.review)
+        self.assertEqual(self.source.read_bytes(), integrated)
+        rollback_visual_integration(self.root, self.plan)
+        self.assertEqual(self.source.read_bytes(), self.before)
+
 
 if __name__ == "__main__":
     unittest.main()

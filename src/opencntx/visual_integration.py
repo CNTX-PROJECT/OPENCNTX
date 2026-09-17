@@ -7,7 +7,16 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from .knowledge import KnowledgeError, _atomic_json, _canonical_json, _digest, _root
+from .knowledge import (
+    KnowledgeError,
+    _atomic_json,
+    _canonical_json,
+    _digest,
+    _host_digest,
+    _root,
+    _strict_object,
+    _text,
+)
 from .knowledge_io import bounded_read, safe_path
 from .presentation import visual_projection
 from .visual_design import validate_visual_intent, validate_visual_review
@@ -21,6 +30,9 @@ def preview_visual_integration(
 ) -> dict[str, Any]:
     """Preserve the existing bytes and append a visible, owned text projection."""
     selected = _root(root)
+    if type(maximum_bytes) is not int or not 0 < maximum_bytes <= 25_000_000:
+        raise KnowledgeError("Visual integration budget is invalid.")
+    _text(relative, "document path", 1000)
     if not relative.endswith(".md") or relative.startswith(".opencntx/"):
         raise KnowledgeError("Visual integration requires an existing Markdown source.")
     source = safe_path(selected, relative)
@@ -71,6 +83,7 @@ def _validate_plan(root: Path, plan: Mapping[str, Any]) -> dict[str, Any]:
     if (
         set(plan) != fields
         or plan["format"] != "ocx-visual-integration-plan-v1"
+        or type(plan["format_version"]) is not int
         or plan["format_version"] != 1
     ):
         raise KnowledgeError("Visual integration plan fields or version differ.")
@@ -81,6 +94,14 @@ def _validate_plan(root: Path, plan: Mapping[str, Any]) -> dict[str, Any]:
         raise KnowledgeError("Visual integration plan digest or root differs.")
     if type(plan["maximum_bytes"]) is not int or not 0 < plan["maximum_bytes"] <= 25_000_000:
         raise KnowledgeError("Visual integration budget is invalid.")
+    _text(plan["path"], "document path", 1000)
+    _text(plan["append_text"], "appended text", plan["maximum_bytes"])
+    if plan["mode"] != "TEXT_FALLBACK":
+        raise KnowledgeError("Visual integration mode is unsupported.")
+    if not plan["path"].endswith(".md") or plan["path"].startswith(".opencntx/"):
+        raise KnowledgeError("Visual integration requires an existing Markdown source.")
+    for name in ("source_digest", "result_digest", "intent_digest"):
+        _host_digest(plan[name], name)
     return dict(plan)
 
 
@@ -112,19 +133,6 @@ def apply_visual_integration(
         raise KnowledgeError("Visual integration requires the exact approved visual review.")
     relative = valid["path"]
     receipt_relative = f".opencntx/visual-integrations/{valid['plan_digest']}.json"
-    current = bounded_read(selected, relative, valid["maximum_bytes"])
-    if _digest(current) == valid["result_digest"]:
-        receipt = json.loads(bounded_read(selected, receipt_relative, 100_000))
-        if receipt.get("plan_digest") != valid["plan_digest"] or receipt.get(
-            "result_digest"
-        ) != _digest(current):
-            raise KnowledgeError("Visual integration receipt differs.")
-        return receipt | {"writes": 0}
-    if (
-        preview_visual_integration(selected, relative, brief, maximum_bytes=valid["maximum_bytes"])
-        != valid
-    ):
-        raise KnowledgeError("Visual source changed after the reviewed preview.")
     receipt = {
         "format": "ocx-visual-integration-receipt-v1",
         "format_version": 1,
@@ -135,6 +143,22 @@ def apply_visual_integration(
         "path": relative,
         "mode": "TEXT_FALLBACK",
     }
+    current = bounded_read(selected, relative, valid["maximum_bytes"])
+    if _digest(current) == valid["result_digest"]:
+        try:
+            stored = json.loads(
+                bounded_read(selected, receipt_relative, 100_000), object_pairs_hook=_strict_object
+            )
+        except (ValueError, UnicodeError) as exc:
+            raise KnowledgeError("Visual integration receipt is invalid.") from exc
+        if stored != receipt:
+            raise KnowledgeError("Visual integration receipt differs.")
+        return receipt | {"writes": 0}
+    if (
+        preview_visual_integration(selected, relative, brief, maximum_bytes=valid["maximum_bytes"])
+        != valid
+    ):
+        raise KnowledgeError("Visual source changed after the reviewed preview.")
     try:
         with writer_transaction(selected, "visual-integration") as transaction:
             if (
