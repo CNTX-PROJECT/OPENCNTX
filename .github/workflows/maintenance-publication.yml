@@ -4,29 +4,17 @@ on:
     branches: [maintenance/github-cleanup-20260918]
 permissions:
   contents: read
-concurrency:
-  group: opencntx-publication-maintenance
-  cancel-in-progress: false
 jobs:
-  preserve:
-    if: contains(github.event.head_commit.message, '[preserve-publication]')
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 3
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
-        with:
-          python-version: '3.12'
-      - name: Preserve repository and exact release assets without deleting anything
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python tools/preserve_publication.py
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: opencntx-before-cleanup
-          path: ${{ runner.temp }}/opencntx-preserved/*
-          retention-days: 90
-          if-no-files-found: error
+      - name: Read workflow validation message
+        shell: python {0}
+        run: |
+          import re, urllib.request
+          url='https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/35287688589'
+          text=urllib.request.urlopen(url, timeout=30).read().decode()
+          for line in text.splitlines():
+              if any(word in line.lower() for word in ('not allowed','invalid workflow','upload-artifact','annotation','workflow error')):
+                  print(re.sub('<[^>]+>', ' ', line)[:4000])
