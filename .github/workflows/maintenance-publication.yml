@@ -30,9 +30,47 @@ jobs:
           python-version: '3.13'
       - name: Install existing development tools
         run: python -m pip install --disable-pip-version-check -r requirements-quality.txt
-      - name: Prepare and test the bounded maintenance change
-        shell: bash
+      - name: Prepare source and stage objects without changing a protected ref
+        shell: python {0}
         run: |
-          set -euo pipefail
-          cp temporary_prepare_publication.py "$RUNNER_TEMP/prepare.py"
-          python "$RUNNER_TEMP/prepare.py"
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          program = Path('temporary_prepare_publication.py').read_text()
+          replacement = '''import base64, urllib.request
+          def stage_api(endpoint, payload):
+              request=urllib.request.Request('https://api.github.com/repos/CNTX-PROJECT/OPENCNTX/'+endpoint, data=json.dumps(payload).encode(), headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'], 'Content-Type':'application/json','Accept':'application/vnd.github+json'}, method='POST')
+              with urllib.request.urlopen(request,timeout=45) as response:
+                  return json.load(response)
+          parent=os.environ['GITHUB_SHA']
+          elements=[]
+          raw=subprocess.check_output(['git','diff','--name-status','--no-renames',parent,'HEAD'],text=True)
+          for line in raw.splitlines():
+              status,path=line.split('\\t',1)
+              if status=='D':
+                  elements.append({'path':path,'mode':'100644','type':'blob','sha':None})
+                  continue
+              data=(ROOT/path).read_bytes()
+              try:
+                  content=data.decode('utf-8')
+              except UnicodeError:
+                  blob=stage_api('git/blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})
+                  elements.append({'path':path,'mode':'100644','type':'blob','sha':blob['sha']})
+              else:
+                  elements.append({'path':path,'mode':'100644','type':'blob','content':content})
+          base_tree=subprocess.check_output(['git','rev-parse',parent+'^{tree}'],text=True).strip()
+          prepared_tree=stage_api('git/trees',{'base_tree':base_tree,'tree':elements})['sha']
+          local_tree=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip()
+          if prepared_tree!=local_tree:
+              raise RuntimeError('Remote staged tree differs from tested tree')
+          prepared=stage_api('git/commits',{'message':'maintenance: reconcile 1.8.5 publication, navigation and preserved compatibility baselines','tree':prepared_tree,'parents':[parent]})
+          print('REMOTE_PREPARED_COMMIT',prepared['sha'],'TREE',prepared_tree,flush=True)
+          '''
+          old="command(['gh','auth','setup-git'])\ncommand(['git','push','origin','HEAD:refs/heads/'+BRANCH])"
+          if old not in program:
+              raise RuntimeError('Expected preparation push section missing')
+          program=program.replace(old,replacement)
+          path=Path(os.environ['RUNNER_TEMP'])/'prepare.py'
+          path.write_text(program)
+          raise SystemExit(subprocess.call([sys.executable,str(path)]))
