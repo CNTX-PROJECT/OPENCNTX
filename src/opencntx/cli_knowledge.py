@@ -390,19 +390,22 @@ def _dispatch_visual(args: argparse.Namespace) -> int:
         rollback_visual_integration,
     )
 
-    if args.knowledge_visual_command == "preview":
-        result = preview_visual_integration(
-            Path(args.root), args.document, _visual_object(args.intent)
-        )
-    elif args.knowledge_visual_command == "apply":
-        result = apply_visual_integration(
-            Path(args.root),
-            _visual_object(args.plan),
-            _visual_object(args.intent),
-            _visual_object(args.review),
-        )
-    else:
-        result = rollback_visual_integration(Path(args.root), _visual_object(args.plan))
+    try:
+        if args.knowledge_visual_command == "preview":
+            result = preview_visual_integration(
+                Path(args.root), args.document, _visual_object(args.intent)
+            )
+        elif args.knowledge_visual_command == "apply":
+            result = apply_visual_integration(
+                Path(args.root),
+                _visual_object(args.plan),
+                _visual_object(args.intent),
+                _visual_object(args.review),
+            )
+        else:
+            result = rollback_visual_integration(Path(args.root), _visual_object(args.plan))
+    except OSError as exc:
+        raise KnowledgeError("Visual integration filesystem operation failed.") from exc
     _json(result)
     return 0
 

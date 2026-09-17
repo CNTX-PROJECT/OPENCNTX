@@ -144,6 +144,17 @@ class Release184CliTests(unittest.TestCase):
         self.assertNotIn(canary, result.stdout + result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
+    def test_missing_visual_source_has_a_public_error_without_traceback(self) -> None:
+        from tests.test_visual_design import intent
+
+        path = self.root / "intent.json"
+        path.write_text(json.dumps(intent()), encoding="utf-8")
+        result = self.cli(
+            "knowledge", "visual", "preview", "--document", "missing.md", "--intent", str(path)
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertNotIn("Traceback", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
