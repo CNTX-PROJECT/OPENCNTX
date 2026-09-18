@@ -118,7 +118,7 @@ class RefactorContractTests(unittest.TestCase):
         self.assertEqual("734ad894e20a34013f155ba8e7d3172cedd24c2e", overlay["basis_commit"])
         self.assertEqual({"root-help"}, set(overlay["overrides"]))
         for name, fields in overlay["overrides"].items():
-            self.assertEqual({"stdout_sha256"}, set(fields))
+            self.assertEqual({"stdout_sha256", "stdout_sha256_by_python_minor"}, set(fields))
             contract["cases"][name].update(fields)
         environment = os.environ.copy()
         environment["PYTHONPATH"] = str(ROOT / "src")
