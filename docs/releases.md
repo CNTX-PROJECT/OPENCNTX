@@ -1,58 +1,139 @@
 # Releases and current status
 
-[Project home](../README.md) · [Documentation](README.md) · [Install or update](install-and-update.md) · [Current work](roadmap.md)
+[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+
+Use this page to distinguish published software, development source and future
+plans. [GitHub Releases](https://github.com/CNTX-PROJECT/OPENCNTX/releases)
+is authoritative for available downloads.
+The release scope distinguishes shipped behavior from remaining work; a
+roadmap checkbox is never a substitute for release evidence.
+
+Release verification is live in the public workflow (`CI_ACTIVE`).
 
 ## Published package: v1.8.5
 
-[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) · [Release scope](release-1.8.5.md).
+[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) ·
+[Release scope and limitations](release-1.8.5.md) ·
+[Installation and managed update](install-and-update.md)
 
-This is a regular, immutable GitHub release, not a prerelease. Publication status does not mean that every proposed optimization or platform test is complete.
+Version 1.8.5 adds optional compact JSON output through `preview-search --compact`
+while retaining the existing engine, formats and installer. The original build
+records targeted source tests, installed-wheel checks and managed 1.8.4 transitions
+on Ubuntu/Python 3.12, not full new platform or live-host qualification.
+The remaining work is tracked separately in the [current roadmap](roadmap.md).
 
-### Implemented change
+The published distribution contains `opencntx-1.8.5-py3-none-any.whl`,
+`opencntx-1.8.5.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`. See
+[publication identities](publication.json) and [artifact verification](release-artifacts.md).
 
-`opencntx preview-search QUERY --compact` emits the existing retrieval result without pretty-print whitespace. Result fields, snippets, states and digests are retained. `--delivery-report` uses the existing bounded delivery route. The ordinary `knowledge index search` command and underlying 1.8.4 engine, stored formats and managed installer are unchanged.
+## Previous published software — v1.8.4 Stable
 
-The `preview-search` spelling is retained for compatibility with the preceding test build.
+[Download v1.8.4](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4) ·
+[Release scope and limitations](release-1.8.4.md) ·
+[Installation and managed update](install-and-update.md)
 
-### Exact artifact identity
+Version 1.8.4 hardens bounded knowledge I/O, conditional updates, current
+evidence, index publication, FTS integrity and retrieval. Shared snapshots
+avoid unnecessary indexing work. It adds opt-in delivery reports, partial
+footer metrics and reviewed, reversible visual text integration while retaining
+existing v1 contracts. Automatic native chat-host integration is excluded;
+native hook trust and live host qualification remain follow-up work.
 
-| Item | Value |
-|---|---|
-| Tag | `v1.8.5` |
-| Source commit | `734ad894e20a34013f155ba8e7d3172cedd24c2e` |
-| Wheel | `opencntx-1.8.5-py3-none-any.whl` |
-| Wheel SHA-256 | `83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce` |
-| Source archive | `opencntx-1.8.5.tar.gz` |
-| Verification records | `SHA256SUMS`, `BUILD-RECORD.json` |
+The published distribution contains exactly:
 
-The machine-readable [publication record](publication.json) pins these identities. A previous test wheel also reports 1.8.5, so a version string alone cannot distinguish it from this artifact.
+- `opencntx-1.8.4-py3-none-any.whl`
+- `opencntx-1.8.4.tar.gz`
+- `SHA256SUMS`
+- `BUILD-RECORD.json`
 
-### Evidence and remaining work
+Read [Release artifacts](release-artifacts.md) for build records, checksums and
+verification. There is no published PyPI/TestPyPI package. The
+[qualification roadmap](roadmap-1.8.4.md) records evidence and scope boundaries.
 
-The original publication ran 45 targeted source tests, six compact-output tests against the installed wheel, and 11 managed installation transitions against the exact published 1.8.4 wheel on Ubuntu/Python 3.12. Its build record records the actual commands. The original release was not fully qualified across Windows, ARM64, live vaults or providers.
+## Previous published software — v1.8.3 Stable
 
-The live source workflow is `CI_ACTIVE`. Later full source-CI checks are attached to their own commits and do not retroactively rewrite the original artifact's build record or prove real-host operation.
+[Download v1.8.3](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.3) ·
+[Release scope and limitations](release-1.8.3.md)
 
-Further no-op optimization, diacritic-aware passage repair, required-evidence planning and artifact-bound VISUAL_ARTIST work are not implemented by the compact-output release. Automatic native chat hooks remain outside its scope. Smaller JSON is not a measured billing or provider-token saving.
+Version 1.8.3 introduced the local SQLite FTS5 full-text projection and
+broader adoption discovery, retaining managed installation and earlier
+compatibility contracts. Its staged-copy legacy recovery evidence remains
+part of the historical compatibility record.
 
-## Previous release and rollback source: 1.8.4
+## Previous published software — v1.8.2 Stable
 
-[Download 1.8.4](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4) · [Historical release scope](release-1.8.4.md).
+[Download v1.8.2](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.2) ·
+[Release scope and limitations](release-1.8.2.md)
 
-Retain the exact previous wheel before activating an update:
+Version 1.8.2 made the public repository surface English and added the
+fail-closed language gate retained by 1.8.3.
 
-```text
-b3fe658c5071b17e1835be65cc10df3c025dd03677c1be45c9b8aeb977d011d9
-```
+## Earlier published software — v1.8.1 Stable
 
-Use the [managed update route](install-and-update.md). Package rollback and restoring project documents are separate operations.
+[Download v1.8.1](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.1) ·
+[Release scope and limitations](release-1.8.1.md)
 
-## Development source and earlier versions
+Version 1.8.1 introduced managed installation, host-footer and adoption
+hardening. It was the exact rollback source for a 1.8.2 update and remains the
+compatibility bridge from the 1.8.0 knowledge-layer release.
 
-Contributors can obtain the current maintenance source with:
+## Earlier published software — v1.8.0 Stable
 
-```text
+[Download v1.8.0](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.0) ·
+[Release scope and limitations](release-1.8.0.md)
+
+Version 1.8.0 introduced the local knowledge layer. Its read-only adoption and
+provider-neutral footer contracts remain compatible with this release.
+
+Contributors who deliberately need the current source can use:
+
+```powershell
 git clone --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 ```
 
-Use the release tag and wheel for exact release reproduction. [History](history.md) separates previous records from current instructions; [baseline maintenance](release-baselines.md) describes retained compatibility test inputs.
+For ordinary use, follow the immutable release instructions in
+[Get started](start-here.md).
+
+## Compatibility and verification
+
+The records below describe the earlier 1.8.4 and predecessor qualification.
+The original 1.8.5 artifact has the distinct scope stated above.
+
+The exact v1.8.4 source, four release assets and managed installation route are
+published together. The [1.8.4 roadmap](roadmap-1.8.4.md) records audit,
+upgrade and presentation qualification. The [1.8.3 roadmap](roadmap-1.8.3.md) records the full-text
+and compatibility evidence; the [1.8.2 roadmap](roadmap-1.8.2.md) records the
+English surface; the [1.8.1 roadmap](roadmap-1.8.1.md)
+records the integration boundaries retained by this release. The [1.8.0
+release](release-1.8.0.md) remains the knowledge-layer compatibility reference,
+with v1.7.6 retained for the normal offline recovery route.
+
+| Item | Current boundary |
+|---|---|
+| Python | 3.11, 3.12, 3.13 and 3.14 |
+| Tested systems | Windows and Ubuntu |
+| CI | Windows and Ubuntu; Python 3.11–3.14 plus immutable historical writers |
+| Runtime dependencies | None |
+| Distribution | Exact Git tag plus four verified GitHub Release assets |
+| License | [Apache-2.0](../LICENSE) |
+
+See [Platforms and CI](platforms.md) and [Contracts and compatibility](contracts-and-compatibility.md).
+Green CI proves the checks it runs; it does not prove every roadmap target or
+real-host cost claim.
+
+## History
+
+- [Changelog](../CHANGELOG.md) — dated release history and unreleased documentation changes.
+- [1.7.6 scope](release-1.7.6.md) — managed delivery and recovery baseline retained by 1.8.0.
+- [1.7.0 scope](release-1.7.0.md) — earlier runtime and publication limitations.
+- [1.7.3 scope](release-1.7.3.md) — reliability work retained by 1.7.4 and 1.7.5.
+- [Product roadmap](roadmap.md) — latest plan and earlier English plan snapshot.
+
+The following diagram records historical foundation milestones.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/docs/roadmap-dark.svg">
+  <img src="../assets/docs/roadmap.svg" alt="Historical foundation milestones through version 1.0.0, not completion of the current roadmap">
+</picture>
+
+[Back to documentation](README.md)
