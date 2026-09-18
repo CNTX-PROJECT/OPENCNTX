@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from release_version_gate import ReleaseVersionError, _git, _project_version, _stable_tags
+from release_version_gate import (
+    ReleaseVersionError,
+    StableVersion,
+    _git,
+    _project_version,
+    _stable_tags,
+)
 
 MAINTENANCE_FILES = {
     "README.md",
@@ -62,6 +69,46 @@ def allowed_change(status: str, path: str) -> bool:
     }
 
 
+def _validate_release_metadata_transition(
+    source_text: str,
+    current_text: str,
+    *,
+    version: str,
+) -> None:
+    """Allow only candidate-to-published state after the tagged build."""
+    try:
+        source_project = tomllib.loads(source_text)
+        current_project = tomllib.loads(current_text)
+    except tomllib.TOMLDecodeError as exc:
+        raise ReleaseVersionError("release metadata TOML is invalid") from exc
+
+    def release_table(project: dict[str, Any]) -> dict[str, Any]:
+        tool = project.get("tool")
+        opencntx = tool.get("opencntx") if isinstance(tool, dict) else None
+        if not isinstance(opencntx, dict) or not isinstance(opencntx.get("release"), dict):
+            raise ReleaseVersionError("release metadata table is missing")
+        return opencntx["release"]
+
+    def without_release_state(project: dict[str, Any]) -> dict[str, Any]:
+        tool = project["tool"]
+        opencntx = tool["opencntx"]
+        del opencntx["release"]
+        return project
+
+    source_release = release_table(source_project)
+    current_release = release_table(current_project)
+    if without_release_state(source_project) != without_release_state(current_project):
+        raise ReleaseVersionError("post-release pyproject changes packaging metadata")
+    if source_release.get("status") != "local-candidate":
+        raise ReleaseVersionError("tagged pyproject is not a local release candidate")
+    if current_release != {"published_version": version, "status": "published"}:
+        raise ReleaseVersionError("pyproject release state is not the exact published version")
+    if StableVersion.parse(str(source_release.get("published_version"))) >= StableVersion.parse(
+        version
+    ):
+        raise ReleaseVersionError("pyproject release state did not advance")
+
+
 def inspect_maintenance(repository: Path) -> dict[str, Any]:
     """Report content alignment; do not claim ancestry or artifact equivalence."""
     root = repository.resolve()
@@ -83,7 +130,6 @@ def inspect_maintenance(repository: Path) -> dict[str, Any]:
     # Includes all source/schema bytes, build metadata, dependencies and legal identity.
     protected = [
         "src",
-        "pyproject.toml",
         "MANIFEST.in",
         "LICENSE",
         "requirements-quality.txt",
@@ -95,8 +141,18 @@ def inspect_maintenance(repository: Path) -> dict[str, Any]:
     changes = []
     for line in raw.splitlines():
         status, separator, path = line.partition("\t")
-        if not separator or not allowed_change(status, path):
+        release_state_update = path == "pyproject.toml" and status == "M"
+        if not separator or not (allowed_change(status, path) or release_state_update):
             raise ReleaseVersionError(f"unapproved maintenance path: {line}")
+        if path == "pyproject.toml":
+            if status != "M":
+                raise ReleaseVersionError("pyproject release state must be updated in place")
+            source_text = _git(root, "show", f"{source}:pyproject.toml")
+            try:
+                current_text = (root / "pyproject.toml").read_text(encoding="utf-8")
+            except (OSError, UnicodeError) as exc:
+                raise ReleaseVersionError("cannot read current pyproject metadata") from exc
+            _validate_release_metadata_transition(source_text, current_text, version=version)
         changes.append({"status": status, "path": path})
     if not changes:
         result = "TAG_CONTENT_ALIGNED"

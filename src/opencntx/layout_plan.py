@@ -247,7 +247,13 @@ def _repository_roots(source: Path) -> tuple[Path, ...]:
     if not source.is_dir():
         return ()
     roots: list[Path] = []
-    for current, child_dirs, child_files in os.walk(source, topdown=True, followlinks=False):
+
+    def fail_on_walk_error(error: OSError) -> None:
+        raise OSError("Git repository root discovery failed") from error
+
+    for current, child_dirs, child_files in os.walk(
+        source, topdown=True, followlinks=False, onerror=fail_on_walk_error
+    ):
         child_dirs.sort()
         child_files.sort()
         current_path = Path(current)
@@ -262,7 +268,12 @@ def _repository_roots(source: Path) -> tuple[Path, ...]:
 def _git_identities(source: Path) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     identities: list[dict[str, Any]] = []
     findings: list[dict[str, str]] = []
-    roots = _repository_roots(source)
+    try:
+        roots = _repository_roots(source)
+    except OSError:
+        return [], [
+            {"code": "GIT_IDENTITY_UNAVAILABLE", "operation": "", "path": str(source)}
+        ]
     if len(roots) > 64:
         findings.append(
             {"code": "GIT_BOUND_REACHED", "operation": "", "path": str(source)}
@@ -380,8 +391,12 @@ def _snapshot(
         elif source.is_dir():
             kind = "DIRECTORY"
             register(source, ".", directory=True)
+
+            def fail_on_walk_error(error: OSError) -> None:
+                raise OSError("Layout migration source scan failed") from error
+
             for current, child_dirs, child_files in os.walk(
-                source, topdown=True, followlinks=False
+                source, topdown=True, followlinks=False, onerror=fail_on_walk_error
             ):
                 child_dirs.sort()
                 child_files.sort()

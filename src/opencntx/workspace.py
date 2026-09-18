@@ -663,9 +663,16 @@ def _derived_storage_bytes(root: Path) -> int:
             code="derived_storage_invalid",
         )
     total = 0
+
+    def walk_error(error: OSError) -> None:
+        raise WorkspaceError(
+            f"Derived storage cannot be measured safely: {error}",
+            code="derived_storage_unavailable",
+        ) from error
+
     try:
         for current, directory_names, file_names in os.walk(
-            derived_root, topdown=True, followlinks=False
+            derived_root, topdown=True, followlinks=False, onerror=walk_error
         ):
             current_path = Path(current)
             for name in directory_names:

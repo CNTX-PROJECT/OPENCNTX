@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from opencntx.core import OpenCntxError
 from opencntx.layout_plan import (
@@ -96,6 +97,62 @@ class LayoutPlanTests(unittest.TestCase):
             self.assertEqual("STALE", stale["status"])
             self.assertIn("SOURCE_CHANGED", {item["code"] for item in stale["findings"]})
             self.assertTrue(verified["read_only"])
+
+    def test_source_walk_error_marks_snapshot_unreadable_and_blocks_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            base = Path(temporary_directory)
+            manifest = self._ready_project(base)
+
+            def fail_walk(_path: object, **kwargs: object) -> object:
+                onerror = kwargs.get("onerror")
+                self.assertTrue(callable(onerror))
+                onerror(PermissionError("synthetic source scan denial"))  # type: ignore[operator]
+                return iter(())
+
+            with (
+                patch("opencntx.layout_plan.os.walk", side_effect=fail_walk),
+                patch("opencntx.layout_plan._git_identities", return_value=([], [])),
+            ):
+                plan = build_layout_plan(manifest, base)
+
+            codes = {item["code"] for item in plan["findings"]}
+            self.assertEqual("BLOCKED", plan["status"])
+            self.assertIn("SOURCE_UNREADABLE", codes)
+
+    def test_git_root_discovery_error_is_reported_and_blocks_plan(self) -> None:
+        from opencntx.layout_plan import _git_identities
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            base = Path(temporary_directory)
+            manifest = self._ready_project(base)
+
+            def fail_walk(_path: object, **kwargs: object) -> object:
+                onerror = kwargs.get("onerror")
+                self.assertTrue(callable(onerror))
+                onerror(PermissionError("synthetic Git discovery denial"))  # type: ignore[operator]
+                return iter(())
+
+            def git_discovery_snapshot(
+                source: Path,
+                _destination: Path,
+                *,
+                maximum_files: int,
+                maximum_bytes: int,
+                maximum_path_length: int,
+            ) -> tuple[dict[str, object], list[dict[str, str]]]:
+                del maximum_files, maximum_bytes, maximum_path_length
+                identities, findings = _git_identities(source)
+                return {"bytes": 0, "git": identities}, findings
+
+            with (
+                patch("opencntx.layout_plan.os.walk", side_effect=fail_walk),
+                patch("opencntx.layout_plan._snapshot", side_effect=git_discovery_snapshot),
+            ):
+                plan = build_layout_plan(manifest, base)
+
+            codes = {item["code"] for item in plan["findings"]}
+            self.assertEqual("BLOCKED", plan["status"])
+            self.assertIn("GIT_IDENTITY_UNAVAILABLE", codes)
 
     def test_collision_path_length_protection_and_overlap_block(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

@@ -18,7 +18,16 @@ from itertools import islice
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from .knowledge_io import MAX_SCAN_ENTRIES, KnowledgeError, bounded_read, check_delivery, safe_path
+from .knowledge_io import (
+    MAX_SCAN_ENTRIES,
+    KnowledgeError,
+    bounded_read,
+    check_delivery,
+    is_link_or_reparse,
+    raise_walk_error,
+    safe_path,
+    validate_output_paths,
+)
 
 INDEX_FORMAT = "ocx-index-v1"
 SOURCE_NODE_FORMAT = "ocx-source-node-v1"
@@ -114,10 +123,12 @@ def _bounded_strings(value: object, field: str, maximum: int = 50) -> list[str]:
 
 def _root(root: Path) -> Path:
     try:
+        if is_link_or_reparse(root):
+            raise KnowledgeError("Project root must be a real directory.")
         selected = root.resolve(strict=True)
     except OSError as exc:
         raise KnowledgeError(f"Project root is unavailable: {root}") from exc
-    if not selected.is_dir() or selected.is_symlink():
+    if not selected.is_dir():
         raise KnowledgeError("Project root must be a real directory.")
     return selected
 
@@ -135,7 +146,9 @@ def _relative(root: Path, path: Path) -> str:
 def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
     selected: list[Path] = []
     visited_entries = 0
-    for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+    for current, directories, names in os.walk(
+        root, topdown=True, followlinks=False, onerror=raise_walk_error
+    ):
         visited_entries += len(directories) + len(names)
         if visited_entries > MAX_SCAN_ENTRIES:
             raise KnowledgeError("Source enumeration exceeds the entry budget.")
@@ -143,12 +156,13 @@ def _source_paths(root: Path, max_files: int, max_depth: int) -> list[Path]:
         directories[:] = sorted(
             name
             for name in directories
-            if name not in ADOPTION_SKIP_DIRECTORIES and not (current_path / name).is_symlink()
+            if name not in ADOPTION_SKIP_DIRECTORIES
+            and not is_link_or_reparse(current_path / name)
         )
         for name in sorted(names):
             candidate = current_path / name
             relative = _relative(root, candidate)
-            if candidate.is_symlink() or candidate.suffix.lower() not in TEXT_SUFFIXES:
+            if is_link_or_reparse(candidate) or candidate.suffix.lower() not in TEXT_SUFFIXES:
                 continue
             if len(PurePosixPath(relative).parts) > max_depth:
                 raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
@@ -414,9 +428,21 @@ def build_index(
         },
     }
     result = basis | {"index_digest": _digest(_canonical_json(basis))}
-    from .knowledge_io import safe_output
-
-    destination = safe_output(output or selected_root / ".opencntx" / "index-v1.json")
+    destination = validate_output_paths(
+        selected_root,
+        [output or selected_root / ".opencntx" / "index-v1.json"],
+        source_paths=[selected_root / relative for relative, _digest_value, _size, _text in records],
+        replaceable_paths=[
+            selected_root / ".opencntx" / "index-v1.json",
+            output or selected_root / ".opencntx" / "index-v1.json",
+        ],
+        reserved_paths=[
+            selected_root / ".opencntx" / "adoption-v1.json",
+            selected_root / ".opencntx" / "catalog.sqlite",
+            selected_root / ".opencntx" / "search-v2.json",
+            selected_root / ".opencntx" / "search-v2.sqlite",
+        ],
+    )[0]
     if _publish and (
         not destination.is_file() or destination.read_bytes() != _canonical_json(result)
     ):
@@ -754,12 +780,18 @@ def _adoption_finding(code: str, path: str, detail: str) -> dict[str, str]:
 
 def _adoption_candidates(root: Path, findings: list[dict[str, str]]) -> list[Path]:
     candidates: list[Path] = []
-    for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+    visited_entries = 0
+    for current, directories, names in os.walk(
+        root, topdown=True, followlinks=False, onerror=raise_walk_error
+    ):
+        visited_entries += len(directories) + len(names)
+        if visited_entries > MAX_SCAN_ENTRIES:
+            raise KnowledgeError("Source enumeration exceeds the entry budget.")
         current_path = Path(current)
         kept_directories: list[str] = []
         for name in sorted(directories):
             path = current_path / name
-            if path.is_symlink():
+            if is_link_or_reparse(path):
                 findings.append(
                     _adoption_finding(
                         "LINK_PRESENT",
@@ -773,7 +805,7 @@ def _adoption_candidates(root: Path, findings: list[dict[str, str]]) -> list[Pat
         for name in sorted(names):
             path = current_path / name
             relative = _relative(root, path)
-            if path.is_symlink():
+            if is_link_or_reparse(path):
                 findings.append(
                     _adoption_finding(
                         "LINK_PRESENT",
