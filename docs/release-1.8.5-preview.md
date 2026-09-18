@@ -1,4 +1,4 @@
-> Historical test-build note. The regular [1.8.5 release](releases.md) supersedes this preview. The preview tag remains, but there is currently no separate GitHub Release entry for it. Statements below describe its original publication, not current status.
+> Historical test-build note. The regular [1.8.5 release](releases.md) supersedes this preview. Its former `v1.8.5-preview.1` tag is no longer available on GitHub, and no separate preview release is currently listed. Statements below describe its original publication, not current status.
 
 # OPENCNTX 1.8.5 — experimental owner preview 1
 
