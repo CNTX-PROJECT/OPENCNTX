@@ -19,6 +19,10 @@ The original 1.8.5 build used a standard setuptools build with targeted tests, i
 
 The prior preview wheel also identifies itself as 1.8.5. Use exact hashes, not only filenames or `--version`, to distinguish the regular release. See [installation and replacement](install-and-update.md).
 
+## Distribution boundary
+
+PyPI and TestPyPI remain outside the current distribution route. A materially changed publication destination requires a new exact OWNER decision; this repository cleanup does not authorize a package-index upload.
+
 ## New local candidate builds
 
 The existing reproducible builder remains a development tool. It requires a clean checkout and an absent or empty output directory. It creates unpublished local candidates; it does not upload, overwrite an immutable release, or prove that every proposed feature is implemented.

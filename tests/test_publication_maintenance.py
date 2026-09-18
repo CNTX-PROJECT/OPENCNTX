@@ -69,9 +69,10 @@ class MaintenanceBoundaryTests(unittest.TestCase):
 
         root = Path(__file__).resolve().parents[1]
         with (
-            patch("publication_maintenance._stable_tags", return_value={
-                StableVersion.parse("9.9.9"): "v9.9.9"
-            }),
+            patch(
+                "publication_maintenance._stable_tags",
+                return_value={StableVersion.parse("9.9.9"): "v9.9.9"},
+            ),
             self.assertRaisesRegex(ReleaseVersionError, "latest stable"),
         ):
             inspect_maintenance(root)

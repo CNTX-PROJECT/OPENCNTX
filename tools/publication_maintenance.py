@@ -21,6 +21,8 @@ MAINTENANCE_FILES = {
     "assets/design-system/visual-baseline-v1.json",
     "tests/fixtures/quality/current-version-surfaces-v1.json",
     "tests/test_quality.py",
+    "tests/test_cli.py",
+    "tests/test_contracts.py",
     "tests/test_refactor_contract.py",
     "tests/fixtures/quality/cli-contract-1.8.5.json",
     "tests/test_public_roadmap.py",
