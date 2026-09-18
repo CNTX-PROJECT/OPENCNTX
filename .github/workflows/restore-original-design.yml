@@ -23,156 +23,32 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
-      - name: Restore the original source layout, not a generated redesign
+      - name: Restore original layout while retaining the existing page-length limit
         env:
           GH_TOKEN: ${{ github.token }}
           PYTHONPATH: src
           PYTHONDONTWRITEBYTECODE: '1'
         shell: python {0}
         run: |
-          import hashlib
-          import json
-          import os
-          from pathlib import Path
           import subprocess
-          import urllib.request
-
-          REPO = 'CNTX-PROJECT/OPENCNTX'
-          ORIGINAL = '6fc196b5ec90370c93c204a115ac58c73fd2bb32'
-          CURRENT = '7f46cc017792efa73d5c459d955ed7a1f7e99508'
-          BRANCH = 'fix/restore-original-design-20260918'
-          HEAD = os.environ['GITHUB_SHA']
-          ROOT = Path.cwd()
-          WORKFLOW = '.github/workflows/restore-original-design.yml'
-
-          def git(*args):
-              return subprocess.check_output(['git', *args], text=True, encoding='utf-8').strip()
-
-          def original(path):
-              return subprocess.check_output(['git', 'show', ORIGINAL + ':' + path]).decode('utf-8')
-
-          def api(path, method='GET', value=None):
-              data = None if value is None else json.dumps(value).encode('utf-8')
-              request = urllib.request.Request('https://api.github.com/repos/' + REPO + path,
-                  data=data, method=method, headers={
-                      'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
-                      'Accept': 'application/vnd.github+json',
-                      'Content-Type': 'application/json',
-                      'User-Agent': 'opencntx-original-design-restoration'})
-              with urllib.request.urlopen(request, timeout=30) as response:
-                  body = response.read(2_000_001)
-              if len(body) > 2_000_000:
-                  raise RuntimeError('Response too large')
-              return json.loads(body) if body else {}
-
-          if git('rev-parse', 'HEAD') != HEAD or git('rev-parse', 'HEAD^') != CURRENT:
-              raise RuntimeError('Unexpected restoration base')
-          if api('/git/ref/heads/main')['object']['sha'] != CURRENT:
-              raise RuntimeError('Main changed; do not overwrite subsequent user work')
-          protected_design = ['assets/brand', 'assets/docs', 'assets/design-system/tokens-v1.css',
-              'assets/design-system/tokens-v1.json', 'site/assets', 'site/components.html', 'src/opencntx/schemas']
-          if git('diff', '--name-only', ORIGINAL, CURRENT, '--', *protected_design):
-              raise RuntimeError('Original visual assets or schemas differ; stop for exact reconciliation')
-
-          changes = {}
-          readme = original('README.md')
-          readme = readme.replace('**v1.8.4 Stable release**',
-              '**[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5)**')
-          readme = readme.replace('OPENCNTX packages and verifies files. v1.8.4 also provides',
-              'OPENCNTX packages and verifies files. The current release also provides')
-          readme = readme.replace('releases/download/v1.8.4/opencntx-1.8.4-py3-none-any.whl',
-              'releases/download/v1.8.5/opencntx-1.8.5-py3-none-any.whl')
-          marker = 'guide](docs/knowledge-layer.md). It does not run an AI or interpret chat intent.\n'
-          assert marker in readme
-          readme = readme.replace(marker, marker + '\nVersion 1.8.5 adds optional compact search output. The [release scope](docs/release-1.8.5.md) records its delivered behavior and original qualification limits.\n')
-          changes['README.md'] = readme
-
-          index = original('docs/README.md')
-          index = index.replace('[Install and update 1.8.4]', '[Install and update 1.8.5]')
-          index = index.replace('| The latest development plan |',
-              '| Latest release and current work | [1.8.5 release](release-1.8.5.md) · [Current work](roadmap.md) |\n| Earlier development plans |')
-          start = index.index('Current software: **v1.8.4**.')
-          end = index.index('## Core package guides', start)
-          index = index[:start] + (
-              'Current published package: **1.8.5**. See the [1.8.5 release scope](release-1.8.5.md)\n'
-              'for delivered behavior and the original artifact qualification limits. The\n'
-              '[1.8.4 release scope](release-1.8.4.md) and [1.8.1 release scope](release-1.8.1.md)\n'
-              'retain the earlier compatibility and installation evidence.\n\n') + index[end:]
-          changes['docs/README.md'] = index
-
-          releases = original('docs/releases.md')
-          marker = '## Published software — v1.8.4 Stable'
-          assert marker in releases
-          current_section = (
-              '## Published package: v1.8.5\n\n'
-              '[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) ·\n'
-              '[Release scope and limitations](release-1.8.5.md) ·\n'
-              '[Installation and managed update](install-and-update.md)\n\n'
-              'Version 1.8.5 adds optional compact JSON output through `preview-search --compact`\n'
-              'while retaining the existing engine, formats and installer. The original build\n'
-              'records targeted source tests, installed-wheel checks and managed 1.8.4 transitions\n'
-              'on Ubuntu/Python 3.12, not full new platform or live-host qualification.\n'
-              'The remaining work is tracked separately in the [current roadmap](roadmap.md).\n\n'
-              'The published distribution contains `opencntx-1.8.5-py3-none-any.whl`,\n'
-              '`opencntx-1.8.5.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`. See\n'
-              '[publication identities](publication.json) and [artifact verification](release-artifacts.md).\n\n'
-              '## Previous published software — v1.8.4 Stable')
-          releases = releases.replace(marker, current_section)
-          releases = releases.replace('## Compatibility and verification\n',
-              '## Compatibility and verification\n\nThe records below describe the earlier 1.8.4 and predecessor qualification.\nThe original 1.8.5 artifact has the distinct scope stated above.\n')
-          changes['docs/releases.md'] = releases
-
-          old_changelog = original('CHANGELOG.md')
-          present = Path('CHANGELOG.md').read_text(encoding='utf-8')
-          new_entry = present.split('All notable OPENCNTX changes are recorded here.', 1)[0]
-          assert new_entry.startswith('# Changelog\n') and '## 1.8.5 -' in new_entry
-          changes['CHANGELOG.md'] = new_entry + old_changelog.split('# Changelog\n', 1)[1].lstrip('\n')
-
-          quality_path = 'tests/test_quality.py'
-          quality = Path(quality_path).read_text(encoding='utf-8')
-          assertion = 'self.assertLess(index.index("## Main routes"), index.index("## Optional project features"))'
-          assert assertion in quality
-          quality = quality.replace(assertion,
-              'self.assertLess(\n            index.index("## Core package guides"),\n            index.index("## Stable workspace guides"),\n        )')
-          changes[quality_path] = quality
-
-          import re
-          for path in ('README.md', 'docs/README.md', 'docs/releases.md'):
-              old = original(path)
-              restored = changes[path]
-              visual_blocks = re.findall(r'(?ms)^```mermaid\n.*?^```|<picture>.*?</picture>|!\[[^\n]*\]\([^\n]*\)', old)
-              if not visual_blocks or any(block not in restored for block in visual_blocks):
-                  raise RuntimeError('An original diagram or picture block was not preserved: ' + path)
-          # Regression test protects the exact original embedded diagrams and Mermaid source.
-          test_path = 'tests/test_publication_links.py'
-          tests = Path(test_path).read_text(encoding='utf-8')
-          injected = '\n    def test_original_visual_documentation_is_preserved(self) -> None:\n        root = Path(__file__).resolve().parents[1]\n'
-          for path in ('README.md', 'docs/README.md', 'docs/releases.md'):
-              blocks = re.findall(r'(?ms)^```mermaid\n.*?^```|<picture>.*?</picture>|!\[[^\n]*\]\([^\n]*\)', original(path))
-              injected += '        text = (root / ' + repr(path) + ').read_text(encoding="utf-8")\n'
-              for block in blocks:
-                  injected += '        self.assertIn(' + repr(block) + ', text)\n'
-          boundary = '\n\nif __name__ == "__main__":'
-          assert boundary in tests
-          changes[test_path] = tests.replace(boundary, injected + boundary)
-          for path, content in changes.items():
-              Path(path).write_text(content, encoding='utf-8')
-          subprocess.run(['python', 'tools/publication_links.py'], check=True, timeout=60)
-          for filename in ('test_publication_links.py', 'test_public_roadmap.py', 'test_quality.py', 'test_visual_site.py'):
-              subprocess.run(['python', '-m', 'unittest', 'discover', '-s', 'tests', '-p', filename],
-                  check=True, timeout=120)
-
-          if api('/git/ref/heads/' + BRANCH)['object']['sha'] != HEAD:
-              raise RuntimeError('Restoration branch changed concurrently')
-          elements = [{'path': path, 'mode': '100644', 'type': 'blob', 'content': content}
-              for path, content in changes.items()]
-          elements.append({'path': WORKFLOW, 'mode': '100644', 'type': 'blob', 'sha': None})
-          tree = api('/git/trees', 'POST', {'base_tree': git('rev-parse', 'HEAD^{tree}'), 'tree': elements})
-          commit = api('/git/commits', 'POST', {
-              'message': 'Restore original visual documentation and diagrams\n\nRestore the original README, documentation index, release-page diagram and complete changelog from 6fc196b5ec90370c93c204a115ac58c73fd2bb32. Preserve every original picture and Mermaid block exactly. Keep the already published 1.8.5 runtime and correct download references; no new redesign, release mutation, schema change or historical deletion. Add regression coverage for the restored visual blocks. Remove the one-shot restoration workflow from the final tree.',
-              'tree': tree['sha'], 'parents': [HEAD]})
-          api('/git/refs/heads/' + BRANCH, 'PATCH', {'sha': commit['sha'], 'force': False})
-          print(json.dumps({'status': 'ORIGINAL_VISUAL_DOCUMENTATION_RESTORED_ON_BRANCH',
-              'commit': commit['sha'], 'paths': sorted(changes),
-              'original_design_assets': 'BYTE_IDENTICAL', 'runtime_and_schemas': 'UNCHANGED',
-              'releases_changed': 0, 'deletions_from_original_project': 0}))
+          import textwrap
+          source = subprocess.check_output(['git', 'show', '2deed47ffd7008ecde10bb6041e504698f44361c:.github/workflows/restore-original-design.yml']).decode('utf-8')
+          script = textwrap.dedent(source.split('        run: |\n', 1)[1])
+          old = "or git('rev-parse', 'HEAD^') != CURRENT"
+          assert old in script
+          script = script.replace(old, "or git('merge-base', CURRENT, HEAD) != CURRENT")
+          old = "marker + '\\nVersion"
+          assert old in script
+          script = script.replace(old, "marker.rstrip('\\n') + ' Version")
+          old = "                  injected += '        self.assertIn(' + repr(block) + ', text)\\n'"
+          # Preserve exact strings without oversized physical Python source lines.
+          target = "        injected += '        self.assertIn(' + repr(block) + ', text)\\n'"
+          assert target in script
+          replacement = (
+              "        injected += '        self.assertIn(\\n'\n"
+              "        for offset in range(0, len(block), 50):\n"
+              "            injected += '            ' + repr(block[offset:offset + 50]) + '\\n'\n"
+              "        injected = injected.rstrip('\\n') + ',\\n            text,\\n        )\\n'"
+          )
+          script = script.replace(target, replacement)
+          exec(compile(script, '<exact-original-design-restoration>', 'exec'))
