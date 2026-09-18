@@ -68,12 +68,9 @@ technical evidence one link away. [Explore the visual tour](docs/visual-tour.md)
 
 ## Start in minutes
 
-With Python 3.11–3.14, Git and pipx available:
-
-```powershell
-pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5/opencntx-1.8.5-py3-none-any.whl"
-opencntx --version
-```
+With Python 3.11–3.14, Git and pipx available, use the
+[hash-verified installation guide](docs/start-here.md) to download and install
+the exact release wheel.
 
 Inside a small project:
 

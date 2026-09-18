@@ -17,9 +17,11 @@ Release verification is live in the public workflow (`CI_ACTIVE`).
 [Installation and managed update](install-and-update.md)
 
 Version 1.8.5 adds optional compact JSON output through `preview-search --compact`
-while retaining the existing engine, formats and installer. The original build
-records targeted source tests, installed-wheel checks and managed 1.8.4 transitions
-on Ubuntu/Python 3.12, not full new platform or live-host qualification.
+while retaining the existing engine, formats and installer. The earlier tag
+`v1.8.5-preview.1` remains in Git history, but there is currently no separate
+GitHub Release entry for that tag. The original build records targeted source
+tests, installed-wheel checks and managed 1.8.4 transitions on Ubuntu/Python
+3.12, not full new platform or live-host qualification.
 The remaining work is tracked separately in the [current roadmap](roadmap.md).
 
 The published distribution contains `opencntx-1.8.5-py3-none-any.whl`,

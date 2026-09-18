@@ -1,4 +1,4 @@
-> Historical test-build note. The regular [1.8.5 release](releases.md) supersedes this preview. Statements below describe its original publication, not current status.
+> Historical test-build note. The regular [1.8.5 release](releases.md) supersedes this preview. The preview tag remains, but there is currently no separate GitHub Release entry for it. Statements below describe its original publication, not current status.
 
 # OPENCNTX 1.8.5 — experimental owner preview 1
 
@@ -26,7 +26,7 @@ py -3.12 -m venv .opencntx-preview-env
 .\.opencntx-preview-env\Scripts\opencntx.exe preview-search "your query" --root .\project-copy --compact --delivery-report
 ```
 
-Keep the environment outside the indexed project root. The corresponding Linux executables are under `bin/`. A version result of `1.8.5` identifies this wheel's package metadata, not stable qualification. The GitHub tag is `v1.8.5-preview.1` and the release is marked prerelease and not latest. Retain exact wheel hashes to distinguish this build from any later 1.8.5 artifact.
+Keep the environment outside the indexed project root. The corresponding Linux executables are under `bin/`. A version result of `1.8.5` identifies this wheel's package metadata, not stable qualification. At its original publication, the GitHub tag was `v1.8.5-preview.1` and its release was marked prerelease and not latest. Retain exact wheel hashes to distinguish that test build from the later regular 1.8.5 artifact.
 
 ## Validation boundary
 

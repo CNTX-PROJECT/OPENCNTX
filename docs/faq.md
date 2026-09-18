@@ -110,9 +110,11 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. The immutable `v1.8.5` Production/Stable release is installed from its
-verified GitHub Release wheel. See [Install and update](install-and-update.md)
-for checksum verification and existing-installation detection.
+No. OPENCNTX is not published on PyPI. The current regular v1.8.5 release is
+available from its GitHub Release wheel, with the limited qualification scope
+described in the [release record](release-1.8.5.md). See
+[Install and update](install-and-update.md) to verify the checksum before you
+choose to install it.
 A current 404 response from a package index is not proof that a name is owned
 or reserved.
 
