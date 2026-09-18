@@ -4,17 +4,17 @@
 
 ## Orientation
 
-Current published release: **v1.8.5**. Its delivered addition is optional compact search serialization on the existing engine. Publication did not implement the entire proposed optimization plan.
+Current published release: **v1.8.6**. It hardens local scans and prevents index outputs from replacing source files, other indexes or protected managed data. The release retains the existing OCX v1 formats and does not complete the remaining product roadmap.
 
 This page is the current development overview. Historical task lists are records, not active instructions. It does not authorize changes to private project files or installed runtimes.
 
 ## Delivered product
 
-The regular 1.8.5 package and immutable artifacts are published. Compact output is implemented; ordinary search remains available. See [release status](releases.md) for actual artifact and test identities.
+The regular 1.8.6 package and immutable artifacts are published. Fail-closed scans and output-collision protections are implemented; earlier compact search remains available. See [release status](releases.md) for artifact identities and qualification evidence.
 
 ## Repository maintenance
 
-The publication-maintenance change aligns the public entry points with the published package, integrates the released runtime into the development line, separates historical navigation and adds automated publication/link checks. Exact maintenance outcomes and preservation boundaries are recorded in [repository maintenance](repository-maintenance.md); the associated pull request and CI are the execution evidence.
+The 1.8.5 publication-maintenance work aligned public entry points, separated historical navigation and added publication/link checks. Its exact outcomes and preservation boundaries are recorded in [repository maintenance](repository-maintenance.md); the current release has its own scope and CI evidence.
 
 ## Remaining product work
 

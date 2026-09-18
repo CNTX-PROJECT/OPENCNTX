@@ -10,15 +10,35 @@ roadmap checkbox is never a substitute for release evidence.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
-## Local candidate: v1.8.6
+## Published package: v1.8.6
 
-The 1.8.6 candidate hardens local directory scans and prevents index outputs
-from replacing project data. It preserves the existing OCX v1 formats and
-managed-install route. The candidate is not yet a downloadable regular release;
-v1.8.5 remains the current published package until the 1.8.6 source and
-artifacts are qualified and published. See the [1.8.6 scope](release-1.8.6.md).
+[Download v1.8.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.6) ·
+[Release scope and qualification](release-1.8.6.md) ·
+[Installation and managed update](install-and-update.md)
 
-## Published package: v1.8.5
+Version 1.8.6 makes directory scans fail closed when a source cannot be read,
+keeps knowledge and search scans inside the selected project scope, and rejects
+index outputs that collide with source files, links, other indexes or protected
+managed data. Existing OCX v1 formats and the managed installer remain
+compatible; this release does not activate a chat host or migrate projects.
+
+The immutable tag points to source commit
+`e3dc787e23402697e5659c92e070a204539e61f5`. Pull request #240 and the
+[post-merge CI run](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/35359277231)
+passed all 60 jobs. CI covers Windows and Ubuntu with Python 3.11–3.14,
+historical writers, the full source suite, packaging and installed-artifact
+smoke checks. Managed update acceptance from exact v1.8.4 and v1.8.5 wheels
+ran on both operating systems with Python 3.12. The final published wheel also
+passed 11 managed transitions from each baseline on Windows/Python 3.12.10.
+
+The release contains `opencntx-1.8.6-py3-none-any.whl`,
+`opencntx-1.8.6.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`. The
+[publication record](publication.json) pins each hash, release ID, source
+commit and exact v1.8.5 rollback wheel. The build record is unsigned and does
+not establish publisher identity; the source distribution's contents, but not
+its raw bytes, reproduced in independent builds.
+
+## Previous published package: v1.8.5
 
 [Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) ·
 [Release scope and limitations](release-1.8.5.md) ·
@@ -36,8 +56,9 @@ full-suite, coverage, cross-platform, live-vault or live-host qualification.
 The remaining work is tracked separately in the [current roadmap](roadmap.md).
 
 The published distribution contains `opencntx-1.8.5-py3-none-any.whl`,
-`opencntx-1.8.5.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`. See
-[publication identities](publication.json) and [artifact verification](release-artifacts.md).
+`opencntx-1.8.5.tar.gz`, `SHA256SUMS` and `BUILD-RECORD.json`. Its original
+limited qualification remains historical; it is not the evidence record for
+v1.8.6. See [artifact verification](release-artifacts.md).
 
 ## Previous published software — v1.8.4 Stable
 
@@ -109,8 +130,8 @@ For ordinary use, follow the immutable release instructions in
 
 ## Compatibility and verification
 
-The records below describe the earlier 1.8.4 and predecessor qualification.
-The original 1.8.5 artifact has the distinct scope stated above.
+The records below describe earlier 1.8.4 and predecessor qualification. The
+original v1.8.5 artifact retains the distinct, limited scope stated above.
 
 The exact v1.8.4 source, four release assets and managed installation route are
 published together. The [1.8.4 roadmap](roadmap-1.8.4.md) records audit,

@@ -1,6 +1,6 @@
 # Roadmap continuity and AUTO PILOT
 
-> Current download: **v1.8.5**. The original release evidence is limited to the [documented artifact checks](releases.md); retained Stable contracts are not a claim of full new platform or live-host qualification.
+> Current download: **v1.8.6**. The full source and packaging matrix covers Windows and Ubuntu with Python 3.11–3.14; native chat-host integration remains outside the release scope.
 
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
@@ -17,7 +17,7 @@ privacy, integrity, and evidence checks.
 
 ## Fast route
 
-The commands in this guide remain available in v1.8.5; this does not expand
+The commands in this guide remain available in v1.8.6; this does not expand
 the release's documented qualification. The
 [adaptive AI workflow](adaptive-ai-workflow.md) defines how
 different AI hosts may present a current-assignment or remaining-roadmap choice

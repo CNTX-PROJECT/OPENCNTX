@@ -44,14 +44,21 @@ same 0600/0700 semantics or performance. Never relax those tests to claim it doe
 
 Status label: `CI_ACTIVE`
 
-Every pull request and push to `main` runs eight jobs:
+Every pull request and push to `main` runs 60 jobs in the current workflow:
+
+- 8 core source and test jobs for the OS/Python pairs in the table below;
+- 20 managed-install jobs across the supported Python versions and retained
+  release baselines;
+- 32 historical-writer compatibility jobs across Windows and Ubuntu.
+
+The core source matrix is:
 
 | Operating system | Python 3.11 | Python 3.12 | Python 3.13 | Python 3.14 |
 |---|:---:|:---:|:---:|:---:|
 | Ubuntu | yes | yes | yes | yes |
 | Windows | yes | yes | yes | yes |
 
-Each job:
+Each of the eight core source jobs:
 
 1. checks out the exact commit;
 2. sets up the selected Python version;
@@ -66,8 +73,8 @@ Each job:
 8. installs, exercises, and uninstalls both selected artifacts outside the
    checkout.
 
-The eight job names are the operating-system and Python-version pairs. CI does not upload the
-temporary candidates or publish them to a release or package index.
+CI does not upload its temporary candidates or publish them to a release or
+package index.
 
 ## What counts as proof
 
@@ -77,8 +84,8 @@ CI proof.
 
 The live `main` ruleset is a separate repository setting. Expanding its required
 checks is not performed by this source change and needs its own approval after
-integration. The candidate is green only when all eight jobs on its exact commit
-are successful.
+integration. A release candidate is green only when the complete required
+workflow succeeds on its exact commit.
 
 Workspace transactions flush file bytes and then request a parent-directory
 flush. Ubuntu uses a directory file descriptor and `fsync`; Windows uses a

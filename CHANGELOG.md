@@ -2,10 +2,10 @@
 
 ## 1.8.6 - 2026-09-18
 
-Fail closed when a source or managed-storage scan cannot read a directory.
-Protect existing project files and managed outputs from index-output
-collisions. Existing v1 formats and package contracts are retained. See the
-[1.8.6 scope](docs/release-1.8.6.md).
+Published as the regular GitHub Release from the immutable `v1.8.6` tag. Fail
+closed when a source or managed-storage scan cannot read a directory. Protect
+existing project files and managed outputs from index-output collisions.
+Existing v1 formats and package contracts are retained. See the [1.8.6 scope](docs/release-1.8.6.md).
 
 ## 1.8.5 - 2026-09-17
 

@@ -702,7 +702,10 @@ class PublicQualityTests(unittest.TestCase):
         publication = json.loads((DOCS / "publication.json").read_text(encoding="utf-8"))
         self.assertEqual("regular", publication["release_kind"])
         self.assertEqual(version, publication["version"])
-        self.assertEqual("targeted-ubuntu-python312", publication["artifact_qualification"])
+        self.assertEqual(
+            "full-ci-windows-ubuntu-python311-314",
+            publication["artifact_qualification"],
+        )
         self.assertNotIn("Development Status :: 4 - Beta", project["classifiers"])
         self.assertNotIn("Development Status :: 3 - Alpha", project["classifiers"])
         changelog = CHANGELOG.read_text(encoding="utf-8")

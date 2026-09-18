@@ -1,6 +1,6 @@
 # Start here
 
-> Current download: **v1.8.5**. The original release evidence is limited to the [documented artifact checks](releases.md); retained Stable contracts are not a claim of full new platform or live-host qualification.
+> Current download: **v1.8.6**. The source and packaging matrix covers Windows and Ubuntu with Python 3.11–3.14; managed updates from v1.8.4 and v1.8.5 were tested on both systems with Python 3.12. Native chat-host integration is outside the release scope.
 
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
@@ -27,13 +27,13 @@ dependency.
 Other operating systems may work, but the live CI matrix does not prove them.
 OPENCNTX needs no account, API key, database, cloud service, or AI provider.
 
-The instructions below target v1.8.5. Check the matching
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5)
+The instructions below target v1.8.6. Check the matching
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.6)
 for published availability; a source checkout or PR is not a release.
 
 ## 2. Install the current release
 
-Install immutable `v1.8.5` only after its exact Git tag and matching
+Install immutable `v1.8.6` only after its exact Git tag and matching
 GitHub Release are published. OPENCNTX is not published on PyPI or
 TestPyPI.
 
@@ -42,10 +42,10 @@ verify its pinned SHA-256 before installing:
 
 ```powershell
 $ErrorActionPreference = 'Stop'
-$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5'
-$asset = 'opencntx-1.8.5-py3-none-any.whl'
-$expected = '83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce'
-$download = Join-Path $env:TEMP ("opencntx-1.8.5-" + [guid]::NewGuid().ToString('N') + '.whl')
+$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.6'
+$asset = 'opencntx-1.8.6-py3-none-any.whl'
+$expected = '47c96b399373a6ac7f16f3af9bff92a2546a8749376c88cced2b0e8c86e61633'
+$download = Join-Path $env:TEMP ("opencntx-1.8.6-" + [guid]::NewGuid().ToString('N') + '.whl')
 try {
     Invoke-WebRequest -Uri "$release/$asset" -OutFile $download
     $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -68,7 +68,7 @@ The following source-checkout routes are available when `pipx` is not the intend
 Open PowerShell:
 
 ```powershell
-git clone --branch v1.8.5 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.8.6 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python -m pip install .
 opencntx --version
@@ -83,7 +83,7 @@ launcher is available in PowerShell. Do not use unofficial installers.
 Open a terminal:
 
 ```bash
-git clone --branch v1.8.5 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
+git clone --branch v1.8.6 --depth 1 https://github.com/CNTX-PROJECT/OPENCNTX.git
 cd OPENCNTX
 python3 -m pip install .
 opencntx --help
@@ -104,7 +104,7 @@ opencntx --help
 opencntx --version
 ```
 
-The published release prints exactly `opencntx 1.8.5`.
+The published release prints exactly `opencntx 1.8.6`.
 
 ## 4. Open a small project
 
@@ -224,7 +224,7 @@ adoption, technique cards and footer profiles.
 ## Upgrade or remove OPENCNTX
 
 Use the independent read-only inventory before an upgrade. The
-[1.8.5 installation guide](install-and-update.md) gives the exact managed
+[1.8.6 installation guide](install-and-update.md) gives the exact managed
 update, offline rollback, fresh-shell resume and targeted repair commands.
 
 To remove the package from the active Python environment:
@@ -242,8 +242,8 @@ pipx uninstall opencntx
 This does not remove your projects, workspaces, or context packages. Delete
 those separately only after reviewing the exact target.
 
-The immutable `v1.8.5` GitHub Release contains exactly
-`opencntx-1.8.5-py3-none-any.whl`, `opencntx-1.8.5.tar.gz`, `SHA256SUMS`,
+The immutable `v1.8.6` GitHub Release contains exactly
+`opencntx-1.8.6-py3-none-any.whl`, `opencntx-1.8.6.tar.gz`, `SHA256SUMS`,
 and `BUILD-RECORD.json`. OPENCNTX has no PyPI or TestPyPI package. Contributors can read
 [Release artifacts](release-artifacts.md) for local verification builds,
 checksums, reproducibility limits, and the separate publication gate.

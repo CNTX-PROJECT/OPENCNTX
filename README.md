@@ -4,7 +4,7 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5)**
+Local first · Any model · Your files, your decisions · **[Download v1.8.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.6)**
 
 [Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
 
