@@ -23,6 +23,7 @@ MAINTENANCE_FILES = {
     "tests/test_quality.py",
     "tests/test_cli.py",
     "tests/test_contracts.py",
+    "tests/r12_install_simulator.py",
     "tests/test_refactor_contract.py",
     "tests/fixtures/quality/cli-contract-1.8.5.json",
     "tests/test_public_roadmap.py",

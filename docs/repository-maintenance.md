@@ -21,3 +21,7 @@ Historical writer tests and stored-data fixtures remain intact. The old 0.3.0 wh
 ## Closing a publication
 
 A publication is complete only after the intended source changes are merged through required checks, public instructions match the actual release, artifact identities are verified, remaining product work is described truthfully, and the publication's temporary branches and pull requests are resolved. Never check off unimplemented product work to make the page look complete.
+
+## Transition-fixture compatibility
+
+The retained historical simulator created a PROVEN card with no evidence, which older writers permitted and 1.8.4 correctly rejects. The 1.8.4+ fixture now creates a real temporary source, records its digest, saves the card and retires that source before the upgrade snapshot. The unchanged post-upgrade checks still require STALE recall and byte-identical stored card data. Older-writer empty-evidence cases remain tested. Runtime validation was not weakened.
