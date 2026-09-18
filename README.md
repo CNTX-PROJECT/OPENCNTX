@@ -68,27 +68,9 @@ technical evidence one link away. [Explore the visual tour](docs/visual-tour.md)
 
 ## Start in minutes
 
-With Python 3.11–3.14, Git and pipx available, download the published wheel
-to a unique temporary path and check its SHA-256 before installing:
-
-```powershell
-$ErrorActionPreference = 'Stop'
-$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5'
-$asset = 'opencntx-1.8.5-py3-none-any.whl'
-$expected = '83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce'
-$download = Join-Path $env:TEMP ("opencntx-1.8.5-" + [guid]::NewGuid().ToString('N') + '.whl')
-try {
-    Invoke-WebRequest -Uri "$release/$asset" -OutFile $download
-    $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
-    if ($actual -ne $expected) { throw 'OPENCNTX wheel checksum mismatch' }
-    pipx install $download
-    if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX installation failed' }
-    opencntx --version
-    if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX version check failed' }
-} finally {
-    Remove-Item -LiteralPath $download -Force -ErrorAction SilentlyContinue
-}
-```
+With Python 3.11–3.14, Git and pipx available, use the
+[hash-verified installation guide](docs/start-here.md) to download and install
+the exact release wheel.
 
 Inside a small project:
 

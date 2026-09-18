@@ -133,22 +133,8 @@ opencntx knowledge footer --status "Ready" --now "Inspect results"</code></pre>
             <p>Install an immutable release, enter a small project, and keep the complete flow visible.</p>
             <p><a href="../docs/start-here.md">Read the complete installation and rollback guide</a></p>
           </div>
-          <pre class="code-block" aria-label="OPENCNTX first-run commands"><code>$ErrorActionPreference = 'Stop'
-$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5'
-$asset = 'opencntx-1.8.5-py3-none-any.whl'
-$expected = '83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce'
-$download = Join-Path $env:TEMP ("opencntx-1.8.5-" + [guid]::NewGuid().ToString('N') + '.whl')
-try {
-  Invoke-WebRequest -Uri "$release/$asset" -OutFile $download
-  $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
-  if ($actual -ne $expected) { throw 'OPENCNTX wheel checksum mismatch' }
-  pipx install $download
-  if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX installation failed' }
-  opencntx --version
-  if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX version check failed' }
-} finally {
-  Remove-Item -LiteralPath $download -Force -ErrorAction SilentlyContinue
-}
+          <pre class="code-block" aria-label="OPENCNTX first-run commands"><code>pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5/opencntx-1.8.5-py3-none-any.whl"
+opencntx --version
 opencntx init
 opencntx pack --preview
 opencntx pack
