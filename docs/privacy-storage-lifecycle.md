@@ -1,6 +1,6 @@
 # Privacy, storage, and format lifecycle
 
-> Contract reference. Earlier version numbers identify when behavior was introduced, not the current download. See [release status](releases.md) for 1.8.5 and its evidence boundaries.
+> Contract reference. Earlier version numbers identify when behavior was introduced, not the current download. See [release status](releases.md) for v1.8.6 and its evidence boundaries.
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 

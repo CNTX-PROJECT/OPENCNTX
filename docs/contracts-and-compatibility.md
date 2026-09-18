@@ -130,8 +130,10 @@ complete, safe, or automatically migratable.
 ## Platform boundary
 
 The Stable source supports Python 3.11, 3.12, 3.13, and 3.14 on Windows and
-Ubuntu. Only a successful live run of all eight operating-system and Python
-pairs on the exact commit proves that commit. The current GitHub ruleset is a
-separate setting and is not changed by these source files.
+Ubuntu. The eight core source/test jobs cover each operating-system and Python
+pair on the exact commit. Managed-install and historical-writer compatibility
+jobs run in addition; the full workflow must succeed for a green release
+qualification. The current GitHub ruleset is a separate setting and is not
+changed by these source files.
 
 [Documentation home](README.md)

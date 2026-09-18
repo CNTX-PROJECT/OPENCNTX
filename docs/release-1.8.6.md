@@ -1,9 +1,11 @@
 # OPENCNTX 1.8.6
 
-This release hardens local scans and protects existing project data when an
-index is written. The final tagged source commit and its GitHub Actions run are
-the release qualification record; this page does not claim that a candidate is
-published before a regular GitHub Release exists.
+The regular [GitHub Release v1.8.6](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.6)
+was published from immutable tag `v1.8.6`, source commit
+`e3dc787e23402697e5659c92e070a204539e61f5`, tree
+`2295087f4b89f0d125cd451485163b6d01e8375b`. Pull request #240 and the
+[post-merge CI run](https://github.com/CNTX-PROJECT/OPENCNTX/actions/runs/35359277231)
+completed successfully; all 60 jobs in the main run passed.
 
 ## Delivered scope
 
@@ -19,10 +21,12 @@ published before a regular GitHub Release exists.
 
 ## Compatibility and boundaries
 
-The managed-install acceptance matrix verifies direct updates and exact
-rollback from the published 1.8.5 and 1.8.4 wheels on Windows and Ubuntu with
-Python 3.12. Other supported Python versions run the source, packaging and
-smoke-test matrix. The exact previous wheel remains the rollback input.
+The full source, packaging and smoke-test matrix covers Windows and Ubuntu
+with Python 3.11–3.14. Managed-install acceptance verifies direct updates,
+rollback, reapply, resume and cleanup from the exact published 1.8.5 and 1.8.4
+wheels on Windows and Ubuntu with Python 3.12. The final release wheel also
+passed 11 managed transitions from each exact baseline on Windows/Python
+3.12.10. The exact previous wheel remains the rollback input.
 
 This release makes no provider-token savings or host-integration claims. The
 scans remain local and bounded; an unreadable source is an error that requires
@@ -30,6 +34,13 @@ owner attention rather than a partial success.
 
 ## Artifacts
 
-A regular release provides a wheel, source distribution, `SHA256SUMS` and
-`BUILD-RECORD.json`. Once published, [publication identities](publication.json)
-records their exact hashes, tag commit and rollback wheel.
+The regular release provides a wheel, source distribution, `SHA256SUMS` and
+`BUILD-RECORD.json`. The [publication record](publication.json) pins all four
+hashes, the release ID, tag commit and exact v1.8.5 rollback wheel. The wheel
+SHA-256 is
+`47c96b399373a6ac7f16f3af9bff92a2546a8749376c88cced2b0e8c86e61633`.
+
+The build record is an unsigned local record, not a signed publisher identity.
+The wheel bytes reproduced in independent builds. The source distribution's
+contents reproduced, but byte-for-byte identity of its compressed archive is
+not claimed.

@@ -1,6 +1,6 @@
 # Frequently asked questions
 
-> Current download: **v1.8.5**. The original release evidence is limited to the [documented artifact checks](releases.md); retained Stable contracts are not a claim of full new platform or live-host qualification.
+> Current download: **v1.8.6**. The release passed the full Windows/Ubuntu source and packaging matrix for Python 3.11–3.14 and managed update checks from v1.8.4 and v1.8.5 on Python 3.12. Native chat-host integration is outside the release scope.
 
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
@@ -110,9 +110,9 @@ separate prevents the tool or executor from approving its own work.
 
 ## Is OPENCNTX on PyPI?
 
-No. OPENCNTX is not published on PyPI. The current regular v1.8.5 release is
-available from its GitHub Release wheel, with the limited qualification scope
-described in the [release record](release-1.8.5.md). See
+No. OPENCNTX is not published on PyPI. The current regular v1.8.6 release is
+available from its GitHub Release wheel. Its qualification and boundaries are
+described in the [release record](release-1.8.6.md). See
 [Install and update](install-and-update.md) to verify the checksum before you
 choose to install it.
 A current 404 response from a package index is not proof that a name is owned
@@ -120,9 +120,9 @@ or reserved.
 
 ## Are wheel or sdist release assets available?
 
-The immutable `v1.8.5` Release has
-exactly `opencntx-1.8.5-py3-none-any.whl`,
-`opencntx-1.8.5.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
+The immutable `v1.8.6` Release has
+exactly `opencntx-1.8.6-py3-none-any.whl`,
+`opencntx-1.8.6.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`. Locally built
 files remain verification builds unless they match an attached Release
 asset. See
 [Release artifacts](release-artifacts.md) for
@@ -132,7 +132,7 @@ gate.
 ## Where should I start?
 
 For completed and planned work, read the [roadmap overview](roadmap.md),
-[1.8.5 release roadmap](roadmap.md), [1.8.5 release scope](release-1.8.5.md),
+[1.8.6 release scope](release-1.8.6.md), [1.8.5 release scope](release-1.8.5.md),
 and [1.8.1 release scope](release-1.8.1.md).
 
 Use [Start here](start-here.md) for installation and your first package.

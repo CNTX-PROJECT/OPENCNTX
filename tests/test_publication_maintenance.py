@@ -206,7 +206,7 @@ status = "local-candidate"
 
         with (
             patch("publication_maintenance._git", side_effect=clean_git),
-            patch("publication_maintenance._project_version", return_value=StableVersion.parse("1.8.5")),
+            patch("publication_maintenance._project_version", return_value=StableVersion.parse("1.8.6")),
             patch(
                 "publication_maintenance._stable_tags",
                 return_value={StableVersion.parse("9.9.9"): "v9.9.9"},
@@ -230,7 +230,7 @@ status = "local-candidate"
 
         with (
             patch("publication_maintenance._git", side_effect=changed_runtime),
-            patch("publication_maintenance._project_version", return_value=StableVersion.parse("1.8.5")),
+            patch("publication_maintenance._project_version", return_value=StableVersion.parse("1.8.6")),
             self.assertRaisesRegex(ReleaseVersionError, "runtime or packaging"),
         ):
             inspect_maintenance(Path(__file__).resolve().parents[1])

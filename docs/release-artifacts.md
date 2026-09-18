@@ -2,20 +2,20 @@
 
 [Documentation](README.md) · [Current release](releases.md) · [Install or update](install-and-update.md)
 
-> Current download: **v1.8.5**. The original artifact evidence is the limited set described below, not a full new Stable-platform certification.
+> Current download: **v1.8.6**. Its full source and packaging matrix covers Windows and Ubuntu with Python 3.11–3.14; managed updates from v1.8.4 and v1.8.5 were checked on both systems with Python 3.12.
 
 ## Exact published files
 
-The immutable [v1.8.5 release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) contains:
+The immutable [v1.8.6 release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.6) contains:
 
-- `opencntx-1.8.5-py3-none-any.whl`
-- `opencntx-1.8.5.tar.gz`
+- `opencntx-1.8.6-py3-none-any.whl`
+- `opencntx-1.8.6.tar.gz`
 - `SHA256SUMS`
 - `BUILD-RECORD.json`
 
-[publication.json](publication.json) records all four SHA-256 values and the exact source commit. Compare the downloaded files with those values before installation. A checksum proves identity, not software correctness or publisher identity by itself.
+[publication.json](publication.json) records all four SHA-256 values, release ID, source commit and exact v1.8.5 rollback wheel. Compare the downloaded files with those values before installation. A checksum proves identity, not software correctness or publisher identity by itself.
 
-The original 1.8.5 build used a standard setuptools build with targeted tests, installed-wheel checks and managed 1.8.4 transitions on Ubuntu/Python 3.12. Its build record is not the standard reproducible-builder record. Do not claim the standard verifier qualified these original artifacts or replace them when their record format differs.
+The v1.8.6 release record is unsigned and does not establish publisher identity. Its wheel bytes reproduced in independent builds; source contents reproduced, but raw source-archive bytes did not. The earlier v1.8.5 artifact retains its original targeted Ubuntu/Python 3.12 qualification and distinct build record.
 
 The prior preview wheel also identifies itself as 1.8.5. Use exact hashes, not only filenames or `--version`, to distinguish the regular release. See [installation and replacement](install-and-update.md).
 
@@ -39,7 +39,7 @@ PowerShell:
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.8.6 --expected-commit $commit --expected-tree $tree
 ```
 
 Linux:
@@ -49,16 +49,16 @@ python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0
 commit="$(git rev-parse HEAD)"
 tree="$(git rev-parse 'HEAD^{tree}')"
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.6 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
-These verification commands apply to the standard builder's local records, not the differently scoped original 1.8.5 publication record.
+These commands verify a local build against its exact source commit and tree. They do not upload files or replace an immutable GitHub Release; compare any release download with the exact hashes in `publication.json`.
 
 ## Installation smoke checks
 
 ```text
-python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.5-py3-none-any.whl --expected-version 1.8.5
-python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.5.tar.gz --expected-version 1.8.5
+python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.6-py3-none-any.whl --expected-version 1.8.6
+python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.6.tar.gz --expected-version 1.8.6
 ```
 
 A smoke check is not full platform, recovery, live-vault or provider qualification. The source CI tests and original release checks have separate commit and artifact identities.

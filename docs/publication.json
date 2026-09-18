@@ -1,20 +1,20 @@
 {
   "format": "opencntx-publication-v1",
-  "version": "1.8.5",
-  "tag": "v1.8.5",
-  "source_commit": "734ad894e20a34013f155ba8e7d3172cedd24c2e",
-  "release_id": 391069088,
+  "version": "1.8.6",
+  "tag": "v1.8.6",
+  "source_commit": "e3dc787e23402697e5659c92e070a204539e61f5",
+  "release_id": 391566686,
   "release_kind": "regular",
-  "artifact_qualification": "targeted-ubuntu-python312",
+  "artifact_qualification": "full-ci-windows-ubuntu-python311-314",
   "artifacts": {
-    "opencntx-1.8.5-py3-none-any.whl": "83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce",
-    "opencntx-1.8.5.tar.gz": "0e048493d212a896433cb3aed5555aeb61d3098f78c8da575c6e86205bfedd9f",
-    "SHA256SUMS": "0dd385e89c501bc5608ec8421d12ac1fa98ecaeb91347319aaac2ef925cbc022",
-    "BUILD-RECORD.json": "beeef4ac409a106cb4bc052e934e20863ffc0c76085b864747d4105323e1d467"
+    "opencntx-1.8.6-py3-none-any.whl": "47c96b399373a6ac7f16f3af9bff92a2546a8749376c88cced2b0e8c86e61633",
+    "opencntx-1.8.6.tar.gz": "66b2459b44010dcc4fc964c2fd7e8819f67d6469a7fa913865f5934975debeeb",
+    "SHA256SUMS": "4d918f679a6a2e000894112a840243a938b9b69b498d0daed3dcae58ce0bf7b5",
+    "BUILD-RECORD.json": "e17835d4d10a74b54d900249481bedac950d60c200e615a1a124490cee647281"
   },
   "rollback": {
-    "version": "1.8.4",
-    "wheel": "opencntx-1.8.4-py3-none-any.whl",
-    "sha256": "b3fe658c5071b17e1835be65cc10df3c025dd03677c1be45c9b8aeb977d011d9"
+    "version": "1.8.5",
+    "wheel": "opencntx-1.8.5-py3-none-any.whl",
+    "sha256": "83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce"
   }
 }

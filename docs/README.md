@@ -12,17 +12,18 @@ pack, inspect and verify. Workspace and continuity are optional.
 
 | You need… | Read |
 |---|---|
-| Installation, a first package, updates or removal | [Install and update 1.8.5](install-and-update.md) · [Get started](start-here.md) |
+| Installation, a first package, updates or removal | [Install and update 1.8.6](install-and-update.md) · [Get started](start-here.md) |
 | A short explanation of the product | [How it works](how-it-works.md) · [Knowledge layer](knowledge-layer.md) |
-| Latest release and current work | [1.8.5 release](release-1.8.5.md) · [Current work](roadmap.md) |
+| Latest release and current work | [1.8.6 release](release-1.8.6.md) · [Current work](roadmap.md) |
 | Earlier development plans | [1.8.4 qualification roadmap](roadmap-1.8.4.md); [1.8.3 release roadmap](roadmap-1.8.3.md); [1.8.2 release roadmap](roadmap-1.8.2.md); [1.8.1 release roadmap](roadmap-1.8.1.md); [1.8.0 release roadmap](roadmap-1.8.0.md); [Roadmap](roadmap.md); [complete historical plan](roadmap-plan.md) |
 | Published software versus future work | [Releases and current status](releases.md) |
 | Help with a failure | [Troubleshooting](troubleshooting.md) · [Support](../SUPPORT.md) |
 
-Current published package: **1.8.5**. See the [1.8.5 release scope](release-1.8.5.md)
-for delivered behavior and the original artifact qualification limits. The
-[1.8.4 release scope](release-1.8.4.md) and [1.8.1 release scope](release-1.8.1.md)
-retain the earlier compatibility and installation evidence.
+Current published package: **1.8.6**. See the [1.8.6 release scope](release-1.8.6.md)
+for delivered behavior, platform coverage and evidence boundaries. The
+[1.8.5 release scope](release-1.8.5.md), [1.8.4 release scope](release-1.8.4.md)
+and [1.8.1 release scope](release-1.8.1.md) retain earlier compatibility and
+installation evidence.
 
 ## Core package guides
 
