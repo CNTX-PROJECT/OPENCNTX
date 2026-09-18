@@ -4,6 +4,8 @@
 
 Current published package: **1.8.5**. Start with one task. Workspace, indexed search and continuity are optional; you do not need to read every specification first.
 
+The default route remains [Get started](start-here.md): initialize, preview, pack and verify.
+
 ## Main routes
 
 | You need | Read |
@@ -33,4 +35,4 @@ Earlier release scopes and plans are available from [history and maintenance](hi
 
 The published package adds optional compact search serialization to the existing implementation. It does not complete all planned optimizations, enable native chat hooks or establish universal token savings. See [release status](releases.md).
 
-[Security policy](../SECURITY.md) · [Contributing](../CONTRIBUTING.md) · [Project home](../README.md)
+[Visual system](visual-system.md) · [Security policy](../SECURITY.md) · [Contributing](../CONTRIBUTING.md) · [Project home](../README.md)

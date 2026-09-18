@@ -236,25 +236,39 @@ class PublicQualityTests(unittest.TestCase):
                     self.assertTrue(resolved.exists())
 
     def test_docs_index_links_every_guide(self) -> None:
-        index_links = {Path(target).as_posix() for target in _local_links(DOCS / "README.md")}
-        self.assertEqual(GUIDES, index_links & GUIDES)
-
+        # Current navigation deliberately uses two levels rather than 65 entry links.
+        reached = {DOCS / "README.md"}
+        frontier = set(reached)
+        for _ in range(3):
+            next_pages = set()
+            for page in frontier:
+                for target in _local_links(page):
+                    candidate = (page.parent / target).resolve()
+                    if (
+                        candidate.is_relative_to(DOCS)
+                        and candidate.suffix == ".md"
+                        and candidate.is_file()
+                    ):
+                        next_pages.add(candidate)
+            frontier = next_pages - reached
+            reached.update(next_pages)
+        self.assertTrue({DOCS / guide for guide in GUIDES}.issubset(reached))
         for guide_name in GUIDES:
             guide = DOCS / guide_name
-            text = guide.read_text(encoding="utf-8")
-            headings = [line for line in text.splitlines() if line.startswith("# ")]
+            headings = [
+                line
+                for line in guide.read_text(encoding="utf-8").splitlines()
+                if line.startswith("# ")
+            ]
             self.assertEqual(1, len(headings), guide_name)
             self.assertIn("README.md", _local_links(guide), guide_name)
-
-        command_text = (DOCS / "commands.md").read_text(encoding="utf-8")
-        documented_paths = tuple(COMMAND_ROW.findall(command_text))
-        executable_paths = _parser_leaf_command_paths(build_parser())
-        self.assertEqual(
-            ORIENTATION_COMMAND_PATHS + executable_paths,
-            documented_paths,
+        documented_paths = tuple(
+            COMMAND_ROW.findall((DOCS / "commands.md").read_text(encoding="utf-8"))
         )
-        self.assertEqual(82, len(executable_paths))
-        self.assertEqual(87, len(documented_paths))
+        executable_paths = _parser_leaf_command_paths(build_parser())
+        self.assertEqual(ORIENTATION_COMMAND_PATHS + executable_paths, documented_paths)
+        self.assertEqual(83, len(executable_paths))
+        self.assertEqual(88, len(documented_paths))
 
     def test_public_shell_examples_are_accepted_by_the_real_parser(self) -> None:
         parser = build_parser()
@@ -312,22 +326,28 @@ class PublicQualityTests(unittest.TestCase):
                 text = markdown.read_text(encoding="utf-8")
                 self.assertNotIn("installation.md", text)
                 self.assertNotIn("getting-started.md", text)
-
+        # Each guide retains a visible route back, without enforcing seven duplicate links.
         for guide_name in GUIDES:
             with self.subTest(guide=guide_name):
-                lines = (DOCS / guide_name).read_text(encoding="utf-8").splitlines()
-                self.assertIn(PRIMARY_NAVIGATION, lines[:5])
-
-        self.assertIn(README_NAVIGATION, README.read_text(encoding="utf-8"))
-
-        docs_index = (DOCS / "README.md").read_text(encoding="utf-8")
-        start_here = (DOCS / "start-here.md").read_text(encoding="utf-8")
-        self.assertIn("The default route remains", docs_index)
-        self.assertIn("path is the default route", start_here)
-        self.assertLess(
-            docs_index.index("## Core package guides"),
-            docs_index.index("## Stable workspace guides"),
+                header = "\n".join(
+                    (DOCS / guide_name).read_text(encoding="utf-8").splitlines()[:12]
+                )
+                self.assertIn("README.md)", header)
+        readme_links = set(_local_links(README))
+        self.assertTrue(
+            {
+                "docs/start-here.md",
+                "docs/README.md",
+                "docs/roadmap.md",
+                "docs/releases.md",
+            }.issubset(readme_links)
         )
+        index = (DOCS / "README.md").read_text(encoding="utf-8")
+        self.assertIn("The default route remains", index)
+        self.assertIn(
+            "path is the default route", (DOCS / "start-here.md").read_text(encoding="utf-8")
+        )
+        self.assertLess(index.index("## Main routes"), index.index("## Optional project features"))
 
     def test_layout_and_continuity_quick_routes_are_complete(self) -> None:
         layout = (DOCS / "layout.md").read_text(encoding="utf-8")

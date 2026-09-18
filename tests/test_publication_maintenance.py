@@ -47,9 +47,11 @@ class MaintenanceBoundaryTests(unittest.TestCase):
         from publication_maintenance import inspect_maintenance
         from release_version_gate import ReleaseVersionError
 
-        with patch("publication_maintenance._git", return_value=" M README.md"):
-            with self.assertRaisesRegex(ReleaseVersionError, "clean"):
-                inspect_maintenance(Path("."))
+        with (
+            patch("publication_maintenance._git", return_value=" M README.md"),
+            self.assertRaisesRegex(ReleaseVersionError, "clean"),
+        ):
+            inspect_maintenance(Path("."))
 
 
 if __name__ == "__main__":

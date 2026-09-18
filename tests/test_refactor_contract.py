@@ -65,6 +65,7 @@ class RefactorContractTests(unittest.TestCase):
                 "cli_lifecycle.py",
                 "cli_layout.py",
                 "cli_knowledge.py",
+                "cli_preview.py",
                 "cli_tasks.py",
                 "cli_workspace.py",
             },
@@ -113,6 +114,12 @@ class RefactorContractTests(unittest.TestCase):
 
     def test_cli_golden_outputs_match_the_exact_basis(self) -> None:
         contract = json.loads((FIXTURES / "cli-contract-v1.json").read_text(encoding="utf-8"))
+        overlay = json.loads((FIXTURES / "cli-contract-1.8.5.json").read_text(encoding="utf-8"))
+        self.assertEqual("734ad894e20a34013f155ba8e7d3172cedd24c2e", overlay["basis_commit"])
+        self.assertEqual({"root-help"}, set(overlay["overrides"]))
+        for name, fields in overlay["overrides"].items():
+            self.assertEqual({"stdout_sha256"}, set(fields))
+            contract["cases"][name].update(fields)
         environment = os.environ.copy()
         environment["PYTHONPATH"] = str(ROOT / "src")
         environment["PYTHONDONTWRITEBYTECODE"] = "1"

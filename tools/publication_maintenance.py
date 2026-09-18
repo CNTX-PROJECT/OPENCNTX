@@ -6,7 +6,7 @@ import json
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from release_version_gate import ReleaseVersionError, _git, _project_version
+from release_version_gate import ReleaseVersionError, _git, _project_version, _stable_tags
 
 MAINTENANCE_FILES = {
     "README.md",
@@ -21,6 +21,8 @@ MAINTENANCE_FILES = {
     "assets/design-system/visual-baseline-v1.json",
     "tests/fixtures/quality/current-version-surfaces-v1.json",
     "tests/test_quality.py",
+    "tests/test_refactor_contract.py",
+    "tests/fixtures/quality/cli-contract-1.8.5.json",
     "tests/test_public_roadmap.py",
     "tests/test_publication_maintenance.py",
     "tests/test_publication_links.py",
@@ -66,6 +68,9 @@ def inspect_maintenance(repository: Path) -> dict[str, Any]:
     version = str(_project_version(root))
     if record.get("format") != "opencntx-publication-v1" or record.get("version") != version:
         raise ReleaseVersionError("publication and package version differ")
+    tags = _stable_tags(root)
+    if not tags or str(max(tags)) != version:
+        raise ReleaseVersionError("maintenance version differs from the latest stable tag")
     tag = f"v{version}"
     if record.get("tag") != tag:
         raise ReleaseVersionError("publication tag differs")

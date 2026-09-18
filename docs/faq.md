@@ -130,7 +130,7 @@ gate.
 ## Where should I start?
 
 For completed and planned work, read the [roadmap overview](roadmap.md),
-[1.8.5 release roadmap](roadmap-1.8.5.md), [1.8.5 release scope](release-1.8.5.md),
+[1.8.5 release roadmap](roadmap.md), [1.8.5 release scope](release-1.8.5.md),
 and [1.8.1 release scope](release-1.8.1.md).
 
 Use [Start here](start-here.md) for installation and your first package.

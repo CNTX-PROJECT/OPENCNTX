@@ -288,9 +288,13 @@ def main(argv: list[str] | None = None) -> int:
     arguments = _parser().parse_args(argv)
     try:
         if arguments.maintenance:
+            from publication_maintenance import ReleaseVersionError as MaintenanceError
             from publication_maintenance import inspect_maintenance
 
-            result = inspect_maintenance(arguments.repository)
+            try:
+                result = inspect_maintenance(arguments.repository)
+            except MaintenanceError as error:
+                raise ReleaseVersionError(str(error)) from error
             if (
                 arguments.expected_version is not None
                 and result["project_version"] != arguments.expected_version

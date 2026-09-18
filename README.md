@@ -20,7 +20,7 @@ The release does not implement the entire proposed optimization roadmap. Its ori
 
 ## Start with one task
 
-Follow the [installation guide](docs/install-and-update.md). Inside a small project:
+[Get started](docs/start-here.md) with the [installation guide](docs/install-and-update.md). Inside a small project:
 
 ```text
 opencntx init
@@ -56,4 +56,4 @@ OPENCNTX does not contain or run an AI model. It does not automatically activate
 
 The exact downloadable source is tagged `v1.8.5`. Maintenance on `main` may update documentation and verification tooling without changing the released runtime or replacing its immutable artifacts.
 
-[Security](docs/security.md) · [Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) · [License](LICENSE)
+[Workspace](docs/workspace.md) · [Visual system](docs/visual-system.md) · [Security](docs/security.md) · [Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) · [License](LICENSE)

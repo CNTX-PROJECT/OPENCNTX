@@ -85,9 +85,12 @@ def check_links(root: Path) -> dict[str, object]:
             target = (page.parent / unquote(parsed.path)).resolve() if parsed.path else page
             if not target.is_relative_to(root) or not target.exists():
                 errors.append(f"{page.relative_to(root)}: missing target {link}")
-            elif parsed.fragment and target.suffix in {".md", ".html"}:
-                if unquote(parsed.fragment) not in anchors(target.read_text(encoding="utf-8")):
-                    errors.append(f"{page.relative_to(root)}: missing anchor {link}")
+            elif (
+                parsed.fragment
+                and target.suffix in {".md", ".html"}
+                and unquote(parsed.fragment) not in anchors(target.read_text(encoding="utf-8"))
+            ):
+                errors.append(f"{page.relative_to(root)}: missing anchor {link}")
     return {
         "pages": len(pages),
         "links": count,

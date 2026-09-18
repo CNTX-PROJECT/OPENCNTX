@@ -106,6 +106,7 @@ required arguments and repeatable options.
 | 85 | `opencntx knowledge visual apply` | apply the exact preview after a complete human-approved review |
 | 86 | `opencntx knowledge visual rollback` | restore the original document only when no later edits would be overwritten |
 | 87 | `opencntx knowledge footer` | render a provider-neutral footer contract or a negotiated host envelope |
+| 88 | `opencntx preview-search` | Search with optional compact JSON serialization. |
 
 ## Roadmap flow
 

@@ -1,0 +1,9 @@
+{
+  "format": "opencntx-cli-contract-overlay-v1",
+  "basis_commit": "734ad894e20a34013f155ba8e7d3172cedd24c2e",
+  "overrides": {
+    "root-help": {
+      "stdout_sha256": "887da5589e8a59149b62aa045e91560d2c95a1a3b3848e9881251c3f870312e4"
+    }
+  }
+}

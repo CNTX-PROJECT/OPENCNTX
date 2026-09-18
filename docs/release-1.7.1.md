@@ -13,7 +13,7 @@ Private note references and local filesystem paths are not published.
 
 The current release metadata, installation examples and artifact names target
 1.7.1. Published availability is established by the matching
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.7.1).
+[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/tree/6b80cc41529653eac0b16b4238a4b7692eebb4f7).
 
 ## What did not change
 
