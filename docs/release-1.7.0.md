@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.0 — Release scope and known limitations
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Public roadmap](roadmap.md) · [Changelog](../CHANGELOG.md)
 
 ## What this release changes

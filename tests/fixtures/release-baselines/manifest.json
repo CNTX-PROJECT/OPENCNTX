@@ -1,0 +1,21 @@
+{
+  "format": "opencntx-maintenance-baselines-v1",
+  "baselines": [
+    {
+      "version": "0.3.0",
+      "file": "opencntx-0.3.0-py3-none-any.whl",
+      "kind": "ORIGINAL_PUBLISHED_BYTES",
+      "sha256": "6dee59d5255c73278400c05217abb298abb50a51f5998c7fb9d1c41e8e027cc6"
+    },
+    {
+      "version": "1.7.6",
+      "file": "opencntx-1.7.6-py3-none-any.whl",
+      "kind": "SOURCE_REBUILT_NOT_ORIGINAL",
+      "sha256": "b756083172adc0344f04a0579717d9806f77a31670d560140b07c85dffb4bfe2",
+      "source_commit": "776f5dbf56c655ea52da61fae33123995e4d5d9d",
+      "source_tree": "f7f8ef8b5f198e1fc0643736aad8776eb91398bd",
+      "original_missing_wheel_sha256": "b27d08f9851b9a8f1a30cb7fc71c3e94eedb579141cdce3609424b753071785f",
+      "python": "3.13.15"
+    }
+  ]
+}

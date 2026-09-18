@@ -1,5 +1,7 @@
 # Adaptive AI workflow
 
+> Contract reference. Earlier version numbers identify when behavior was introduced, not the current download. See [release status](releases.md) for 1.8.5 and its evidence boundaries.
+
 [Overview](../README.md) · [Get started](start-here.md) · [Roadmap continuity](continuity.md) · [Security](security.md) · [All guides](README.md)
 
 > **Stable in v1.6.0:** this page describes the released R11 workflow and R12
@@ -62,7 +64,7 @@ Important exact decisions, such as publication or a changed risk boundary,
 still use one explicit copyable command.
 
 These are host-integration contracts, not separate CLI commands. v1.3.0
-introduced the contracts; the current v1.6.0 flow continues to use its documented
+introduced the contracts; the retained flow continues to use its documented
 `opencntx flow start ... --approval "AUTO PILOT"` route.
 
 ## Durable state, not chat memory
@@ -165,7 +167,7 @@ reported; they do not erase or rewrite local truth.
 
 The v1.6.0 release provides the neutral target, batch and visual contracts. It does not
 bundle a connector for every external product and does not authorize network
-writes. The Stable v1.6.0 private Git/GitHub replica remains the only released
+writes. The retained private Git/GitHub replica remains the only released
 optional remote continuity route described in [Roadmap continuity](continuity.md).
 
 ## Release boundary

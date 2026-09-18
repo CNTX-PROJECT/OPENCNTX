@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.0 — implementation and release roadmap
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 The 1.8.0 release is the additive knowledge-layer release. It keeps the 1.7.6

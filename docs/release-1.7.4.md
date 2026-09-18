@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.4 — Project roadmap routing
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [Project roadmaps](project-roadmaps.md) · [Releases](releases.md) · [Roadmap](roadmap.md)
 
 Version 1.7.4 adds a small provider-neutral planning layer for routing project

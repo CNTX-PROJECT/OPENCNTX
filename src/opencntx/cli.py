@@ -1,4 +1,4 @@
-"""Stable command-line facade for OPENCNTX."""
+"""Stable command-line facade plus explicitly opt-in owner preview."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from .cli_continuity import dispatch_continuity, register_continuity_commands
 from .cli_core import dispatch_core, init_project, register_core_commands
 from .cli_knowledge import dispatch_knowledge, register_knowledge_commands
 from .cli_layout import dispatch_layout, register_layout_commands
+from .cli_preview import dispatch_preview, register_preview_commands
 from .cli_workspace import dispatch_workspace, register_workspace_commands
 from .core import OpenCntxError
 from .integrity import IntegrityError
@@ -41,6 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_continuity_commands(subparsers)
     register_layout_commands(subparsers)
     register_knowledge_commands(subparsers)
+    register_preview_commands(subparsers)
     return parser
 
 
@@ -66,6 +68,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = dispatch_layout(args)
         if result is None:
             result = dispatch_knowledge(args)
+        if result is None:
+            result = dispatch_preview(args)
         return 2 if result is None else result
     except (IntegrityError, KnowledgeError, OpenCntxError, WorkspaceError) as exc:
         detail = (

@@ -1,5 +1,7 @@
 # OPENCNTX 1.8.4 — audit hardening and portable presentation
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 **Stable release scope, 2026-09-17.** See the

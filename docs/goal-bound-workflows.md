@@ -1,4 +1,4 @@
-# Goal-bound workflows in v1.5.0
+# Goal-bound workflows
 
 [Overview](../README.md) · [Get started](start-here.md) · [All guides](README.md)
 

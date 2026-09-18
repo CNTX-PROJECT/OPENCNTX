@@ -14,6 +14,9 @@ target_version: 1.7.3
 publication_scope: release-and-continuing-roadmap
 ---
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
+
 # OPENCNTX 1.7.3 — Reliable progress, memory and updates
 
 [Roadmap home](roadmap.md) · [Documentation](README.md) · [Releases](releases.md) · [Project home](../README.md)

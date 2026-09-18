@@ -52,3 +52,5 @@ Windows action route and an actual restarted handoff. This combined proof does
 not extend enforcement to arbitrary Codex tools, untrusted supervisors or an
 active installation. Host limits in [the reference contract](REFERENCE_FIXTURE_HOST.md)
 continue to apply.
+
+[Technical reference](reference.md) · [Current release](releases.md)

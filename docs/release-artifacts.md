@@ -1,141 +1,68 @@
 # Release artifacts
 
-[Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
+[Documentation](README.md) · [Current release](releases.md) · [Install or update](install-and-update.md)
 
-This page defines the four files for the `v1.8.4` GitHub Release and
-explains how contributors reproduce the exact local build. It does not grant
-authority to publish a new release or package-index upload.
+> Current download: **v1.8.5**. The original artifact evidence is the limited set described below, not a full new Stable-platform certification.
 
-## Current public distribution
+## Exact published files
 
-The Stable release target is `v1.8.4`; published availability is established only by its
-[GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.4).
-Install or update it from the verified wheel as described in
-[Install and update](install-and-update.md).
+The immutable [v1.8.5 release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) contains:
 
-- OPENCNTX is not published on PyPI or TestPyPI.
-- The historical `v0.2.0` GitHub Release has no wheel, sdist, checksum, or
-  build record attached to it.
-- The v1.8.4 GitHub Release must contain exactly the four files named below.
+- `opencntx-1.8.5-py3-none-any.whl`
+- `opencntx-1.8.5.tar.gz`
+- `SHA256SUMS`
+- `BUILD-RECORD.json`
 
-Its published artifacts are `opencntx-1.8.4-py3-none-any.whl`,
-`opencntx-1.8.4.tar.gz`, `SHA256SUMS`, and `BUILD-RECORD.json`.
+[publication.json](publication.json) records all four SHA-256 values and the exact source commit. Compare the downloaded files with those values before installation. A checksum proves identity, not software correctness or publisher identity by itself.
 
-Any file built locally is a verification build until it is one of the
-four exact assets attached to the immutable GitHub Release.
+The original 1.8.5 build used a standard setuptools build with targeted tests, installed-wheel checks and managed 1.8.4 transitions on Ubuntu/Python 3.12. Its build record is not the standard reproducible-builder record. Do not claim the standard verifier qualified these original artifacts or replace them when their record format differs.
 
-## Reproducible local v1.8.4 output
+The prior preview wheel also identifies itself as 1.8.5. Use exact hashes, not only filenames or `--version`, to distinguish the regular release. See [installation and replacement](install-and-update.md).
 
-The local release helper emits exactly four v1.8.4 files:
+## Distribution boundary
 
-1. `opencntx-1.8.4-py3-none-any.whl`;
-2. `opencntx-1.8.4.tar.gz`;
-3. `SHA256SUMS` for those two artifacts;
-4. `BUILD-RECORD.json`.
+PyPI and TestPyPI remain outside the current distribution route. A materially changed publication destination requires a new exact OWNER decision; this repository cleanup does not authorize a package-index upload.
 
-The build record binds the source commit, source tree, source timestamp,
-Python version, pinned build frontend and backend, artifact names, sizes, and hashes. It is
-an unsigned technical record. It is not a cryptographic attestation and does
-not prove publisher identity, safety, approval, or publication origin.
+## New local candidate builds
 
-## Build twice from a clean commit
+The existing reproducible builder remains a development tool. It requires a clean checkout and an absent or empty output directory. It creates unpublished local candidates; it does not upload, overwrite an immutable release, or prove that every proposed feature is implemented.
 
-Contributor builds require a clean checkout and the pinned build frontend.
-The output directory must be absent or empty.
+Pinned toolchain:
+
+```text
+python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
+```
 
 PowerShell:
 
 ```powershell
-python -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
 $commit = git rev-parse HEAD
 $tree = git rev-parse 'HEAD^{tree}'
 python tools/release_artifacts.py build --repository . --output dist --expected-commit $commit --expected-tree $tree
-python tools/release_artifacts.py verify --directory dist --expected-version 1.8.4 --expected-commit $commit --expected-tree $tree
+python tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit $commit --expected-tree $tree
 ```
 
-Ubuntu:
+Linux:
 
-```bash
+```sh
 python3 -m pip install --disable-pip-version-check build==1.3.0 setuptools==83.0.0
-commit=$(git rev-parse HEAD)
-tree=$(git rev-parse 'HEAD^{tree}')
+commit="$(git rev-parse HEAD)"
+tree="$(git rev-parse 'HEAD^{tree}')"
 python3 tools/release_artifacts.py build --repository . --output dist --expected-commit "$commit" --expected-tree "$tree"
-python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.4 --expected-commit "$commit" --expected-tree "$tree"
+python3 tools/release_artifacts.py verify --directory dist --expected-version 1.8.5 --expected-commit "$commit" --expected-tree "$tree"
 ```
 
-The helper exports the exact Git tree to two independent temporary source
-directories and runs the normal PEP 517 build in each. It refuses a dirty
-worktree, a mismatched commit or tree, unsafe archive members, ambiguous
-metadata, missing files, unexpected output, or a checksum mismatch.
+These verification commands apply to the standard builder's local records, not the differently scoped original 1.8.5 publication record.
 
-Nothing in this command uploads an artifact or contacts a package index. The
-build frontend may install its declared build requirements through normal
-Python packaging behavior if they are not already present.
+## Installation smoke checks
 
-## Reproducibility claims
-
-The verification separates three facts:
-
-- the two wheels must be byte-identical;
-- the two sdists must contain identical paths and file bytes;
-- raw sdist byte identity is reported separately.
-
-Tar and gzip metadata can make two logically equal sdists differ as raw
-compressed bytes. OPENCNTX does not call all artifacts byte-reproducible unless
-both files actually meet that stronger test.
-
-## Installation and removal smoke
-
-Each of the eight Windows/Ubuntu and Python 3.11/3.12/3.13/3.14 CI jobs builds twice,
-then tests both the wheel and sdist from an isolated environment. Each artifact
-must support:
-
-- installation without runtime dependencies;
-- `opencntx --version` and `opencntx --help`;
-- `init`, `pack --preview`, `pack`, and `verify` outside the checkout;
-- uninstall with no remaining distribution metadata or console entrypoint.
-
-Run the same bounded smoke for both local artifacts:
-
-```powershell
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.4-py3-none-any.whl --expected-version 1.8.4
-python tools/release_artifacts.py smoke --artifact dist\opencntx-1.8.4.tar.gz --expected-version 1.8.4
+```text
+python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.5-py3-none-any.whl --expected-version 1.8.5
+python tools/release_artifacts.py smoke --artifact dist/opencntx-1.8.5.tar.gz --expected-version 1.8.5
 ```
 
-This tests a local verification build. It is not proof that an external package-index
-installation works.
+A smoke check is not full platform, recovery, live-vault or provider qualification. The source CI tests and original release checks have separate commit and artifact identities.
 
-## Separate publication gate
+## Retention and history
 
-A public release needs a separate exact decision and fresh evidence. Before
-publication, the release owner must:
-
-1. bind package version, exact tag, commit, tree, and artifact version;
-2. build from the exact clean commit and tree;
-3. verify checksums, the build record, both installation routes, uninstall,
-   and all eight CI jobs;
-4. check the package-index namespace again at that time;
-5. approve the exact GitHub Release mutation separately;
-6. verify the bytes downloaded from the real publication channel.
-
-A PyPI 404 at one moment is not ownership or reservation evidence. This
-repository contains no PyPI token, trusted-publishing configuration, OIDC
-permission, or publication command. PyPI and TestPyPI remain outside the
-current distribution route. Adding either one requires a materially changed
-situation and a new exact OWNER decision; a local build or green test cannot
-grant that authority.
-
-Every post-release change requires a newer package version before GitHub review,
-including documentation, metadata, tests, gate code, deletions and release
-material. A stable tag is immutable; a newer version permits review but still
-does not grant a release decision.
-
-## Related pages
-
-- [Start here](start-here.md)
-- [Platforms and CI](platforms.md)
-- [Troubleshooting](troubleshooting.md)
-- [Security](security.md)
-- [Contribution guide](../CONTRIBUTING.md)
-
-[Documentation home](README.md)
+Do not discard an exact active rollback wheel when replacing a package. The [baseline guide](release-baselines.md) distinguishes preserved original compatibility inputs from rebuilt test fixtures. [History](history.md) contains the before-cleanup archive and earlier records.

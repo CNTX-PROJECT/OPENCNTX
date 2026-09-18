@@ -196,7 +196,9 @@ def _post_release_paths(
             and all(part not in {"", ".", ".."} for part in path.split("/"))
         )
         if not status or not safe_path:
-            raise ReleaseVersionError(f"cannot determine post-release changed path: {status}:{path}")
+            raise ReleaseVersionError(
+                f"cannot determine post-release changed path: {status}:{path}"
+            )
         changed_paths.append(path)
     return sorted(changed_paths)
 
@@ -249,8 +251,7 @@ def inspect_release_version(
                 head=head,
             )
             raise ReleaseVersionError(
-                "post-release changes require a new version: "
-                + ", ".join(post_release_paths)
+                "post-release changes require a new version: " + ", ".join(post_release_paths)
             )
     else:
         result = "UNRELEASED_VERSION_AHEAD"
@@ -275,16 +276,36 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--repository", type=Path, default=Path.cwd())
     parser.add_argument("--expected-version")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--maintenance",
+        action="store_true",
+        help="verify unchanged released runtime with bounded documentation and verification maintenance",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     arguments = _parser().parse_args(argv)
     try:
-        result = inspect_release_version(
-            arguments.repository,
-            expected_version=arguments.expected_version,
-        )
+        if arguments.maintenance:
+            from publication_maintenance import ReleaseVersionError as MaintenanceError
+            from publication_maintenance import inspect_maintenance
+
+            try:
+                result = inspect_maintenance(arguments.repository)
+            except MaintenanceError as error:
+                raise ReleaseVersionError(str(error)) from error
+            if (
+                arguments.expected_version is not None
+                and result["project_version"] != arguments.expected_version
+            ):
+                raise ReleaseVersionError("unexpected maintenance package version")
+            inspect_current_version_surfaces(arguments.repository)
+        else:
+            result = inspect_release_version(
+                arguments.repository,
+                expected_version=arguments.expected_version,
+            )
     except ReleaseVersionError as exc:
         print(f"RELEASE_VERSION_ERROR: {exc}")
         return 1

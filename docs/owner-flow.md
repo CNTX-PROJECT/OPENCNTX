@@ -1,5 +1,7 @@
 # OWNER flow
 
+> Contract reference. Earlier version numbers identify when behavior was introduced, not the current download. See [release status](releases.md) for 1.8.5 and its evidence boundaries.
+
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
 > **Stable and optional:** this task lifecycle belongs to the workspace route.
@@ -80,7 +82,7 @@ retained in v1.6.0, adds a provider-neutral host contract that first asks
 whether approval covers only
 the current assignment or the bounded remaining roadmap. Clickable controls
 and copyable CLI text have identical authority; displaying either is not
-approval. Stable v1.6.0 workspace commands retain the flow documented here.
+approval. retained workspace commands retain the flow documented here.
 
 ## 4. Rebuild knowledge and build context
 

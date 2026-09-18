@@ -8,7 +8,7 @@
 writing. The independent entry point also provides `install`, `update`,
 `resume`, and `repair`; candidate and rollback hashes are mandatory for an
 existing installation. Follow the exact checksum and recovery walkthrough in
-[Install and update OPENCNTX 1.8.4](install-and-update.md).
+[Install and update OPENCNTX 1.8.5](install-and-update.md).
 
 For provider-neutral, read-only root, naming, owner, allowlist, duplicate, and
 stop-rule checks, see [Bounded workspace order](layout.md).
@@ -106,6 +106,7 @@ required arguments and repeatable options.
 | 85 | `opencntx knowledge visual apply` | apply the exact preview after a complete human-approved review |
 | 86 | `opencntx knowledge visual rollback` | restore the original document only when no later edits would be overwritten |
 | 87 | `opencntx knowledge footer` | render a provider-neutral footer contract or a negotiated host envelope |
+| 88 | `opencntx preview-search` | Search with optional compact JSON serialization. |
 
 ## Roadmap flow
 
@@ -341,3 +342,11 @@ digests remain controlling.
 - [Troubleshooting](troubleshooting.md)
 
 [Documentation home](README.md)
+
+## Compact search output
+
+```text
+opencntx preview-search "query" --root . --compact --delivery-report
+```
+
+This 1.8.5 route uses the existing full-text engine. `--compact` changes serialization, not result selection. Without it the route emits pretty JSON. Source-byte, estimated-token and delivery-output limits retain the original engine semantics; this is not a provider-token counter.

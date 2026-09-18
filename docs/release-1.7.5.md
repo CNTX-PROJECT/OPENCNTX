@@ -1,5 +1,7 @@
 # OPENCNTX 1.7.5 — engine and visual release
 
+> Historical version record, not the active backlog. [Current release](releases.md) · [Current work](roadmap.md) · [History](history.md).
+
 [Overview](../README.md) · [Get started](start-here.md) · [Releases](releases.md) · [Roadmap](roadmap.md)
 
 This page records the bounded scope of the published `1.7.5` release. The

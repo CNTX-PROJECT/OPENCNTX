@@ -41,3 +41,5 @@ claim that semantic source interpretation or arbitrary Codex tools are enforced.
 Source snapshots and evidence are immutable proof inputs, not mutable live
 working files. Their later modification invalidates the bound native evidence.
 Revised sources need distinct snapshots, retaining older evidence for history.
+
+[Technical reference](reference.md) · [Current release](releases.md)

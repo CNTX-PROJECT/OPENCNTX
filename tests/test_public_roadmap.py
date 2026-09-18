@@ -30,7 +30,7 @@ class PublicRoadmapTests(unittest.TestCase):
                 self.assertIn("roadmap.md", text)
                 self.assertIn("releases.md", text)
                 self.assertIn(str(published), text)
-        overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
+        overview = (ROOT / "docs/history.md").read_text(encoding="utf-8")
         self.assertIn("roadmap-plan.md", overview)
         self.assertIn("Fixed historical English snapshot", overview)
         self.assertIn(
@@ -67,18 +67,18 @@ class PublicRoadmapTests(unittest.TestCase):
 
     def test_release_scope_and_continuing_plan_are_distinct(self) -> None:
         plan = (ROOT / "docs/roadmap-plan.md").read_text(encoding="utf-8")
-        overview = (ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
+        overview = (ROOT / "docs/history.md").read_text(encoding="utf-8")
         releases = (ROOT / "docs/releases.md").read_text(encoding="utf-8")
         with (ROOT / "pyproject.toml").open("rb") as project_file:
             published = tomllib.load(project_file)["tool"]["opencntx"]["release"][
                 "published_version"
             ]
         self.assertIn("published_baseline: 1.7.3", plan)
-        self.assertIn(f"Published software — v{published} Stable", releases)
-        self.assertIn("release scope", releases)
+        self.assertIn(f"Published package: v{published}", releases)
+        self.assertIn("release scope", releases.lower())
         self.assertIn("remaining work", releases.lower())
         self.assertIn("twelve failed tasks out of one hundred", overview)
-        self.assertIn("two long routes of 100 tasks each", overview)
+        self.assertIn("Two long routes of 100 tasks each", overview)
 
     def test_public_pages_exclude_private_material_and_old_language(self) -> None:
         for name in PUBLIC_PAGES:

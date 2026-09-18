@@ -36,3 +36,5 @@ with visible superseded status. AI_PROPOSAL stays a proposal after copying;
 UNKNOWN is not promoted to OWNER. A new trusted OWNER message can establish an
 explicit new revision/request, but this projection performs no action and grants
 no authority itself. New execution still needs the current bound native scope.
+
+[Technical reference](reference.md) · [Current release](releases.md)

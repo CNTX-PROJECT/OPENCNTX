@@ -1,4 +1,4 @@
-# The OPENCNTX 1.8.3 knowledge layer
+# Knowledge and search
 
 [Overview](../README.md) · [Get started](start-here.md) · [How it works](how-it-works.md) · [Workspace](workspace.md) · [Commands](commands.md) · [Security](security.md) · [All guides](README.md)
 
@@ -131,3 +131,7 @@ external search services are not runtime dependencies. SQLite FTS5 is used
 only when the Python runtime exposes that local capability.
 
 [Security](security.md) · [Contracts and compatibility](contracts-and-compatibility.md) · [Releases](releases.md)
+
+## Compact output in 1.8.5
+
+`opencntx preview-search "query" --root . --compact --delivery-report` preserves the existing result while removing formatting whitespace. The ordinary index search is unchanged. See [release status](releases.md) for limits and [commands](commands.md) for syntax.

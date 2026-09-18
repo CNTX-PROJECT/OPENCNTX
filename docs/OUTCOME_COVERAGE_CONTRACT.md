@@ -34,3 +34,5 @@ R15-07 connects the resulting matrix to relevant output/finalization.
 Proof remains generic local fixtures; there is no claim to have inspected any
 real private collection. Source completeness is relative to the explicitly
 bound collection, not an unexamined external universe. V1 stays unchanged.
+
+[Technical reference](reference.md) · [Current release](releases.md)

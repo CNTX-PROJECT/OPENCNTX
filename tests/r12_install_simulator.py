@@ -279,12 +279,16 @@ def _upgrade_from_baseline(
                 "-B",
                 "-c",
                 (
-                    "from pathlib import Path; "
+                    "from pathlib import Path; import hashlib; from opencntx import __version__; "
                     "from opencntx.knowledge import make_technique_card, save_technique; "
+                    "evidence=Path('retired-evidence.txt'); "
+                    "evidence.write_text('Historical fixture source', encoding='utf-8'); "
+                    "digests=([hashlib.sha256(evidence.read_bytes()).hexdigest()] "
+                    "if tuple(map(int,__version__.split('.'))) >= (1,8,4) else []); "
                     "card=make_technique_card(technique_id='legacy-procedure', name='Legacy procedure', "
                     "trigger='Upgrade fixture', preconditions=[], steps=['Inspect'], tools=[], "
-                    "risks=[], outputs=[], source_digests=[], verification_state='PROVEN'); "
-                    "save_technique(Path.cwd(), card)"
+                    "risks=[], outputs=[], source_digests=digests, verification_state='PROVEN'); "
+                    "save_technique(Path.cwd(), card); evidence.unlink()"
                 ),
             ],
             cwd=project,

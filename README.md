@@ -4,97 +4,56 @@
 
 **Keep your project knowledge. Give AI just what it needs.**
 
-Local first · Any model · Your files, your decisions · **v1.8.4 Stable release**
+Local first · Provider-neutral · Explicit, verifiable context
 
-[Get started](docs/start-here.md) · [Documentation](docs/README.md) · [Roadmap](docs/roadmap.md) · [Releases](docs/releases.md) · [Support](SUPPORT.md)
+**[Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5)** · [Install or update](docs/install-and-update.md) · [Documentation](docs/README.md) · [Current work](docs/roadmap.md)
 
 </div>
 
-You should not have to explain your project from scratch in every new AI conversation. Keep useful knowledge locally, select the context for one task, and retain a clear place to resume.
+OPENCNTX creates small context packages from local project files. Keep source knowledge, review what a task needs, verify selected bytes and retain a clear place to resume.
 
-## Three places, three clear jobs
+## What is available
 
-![Your local workspace holds project knowledge; GitHub is an optional remote copy; a notes app is a readable view.](assets/docs/knowledge-ecosystem.svg)
+The published **1.8.5** package retains the core, workspace, continuity, search and managed-install routes. Its additional command, `preview-search --compact`, emits the existing search result as compact JSON. The command spelling comes from the earlier test build; the current download is a regular release.
 
-| Place | What belongs there? | Why it helps |
-|---|---|---|
-| **Local workspace — the original** | Context, sources, decisions, skills and agent instructions, technical knowledge, evidence and roadmaps. | Knowledge survives a closed chat; you control the files. |
-| **GitHub — a recommended remote copy** | Selected files and version history, usually in a private repository. | Recover a reviewed version or continue elsewhere. Configure Git and synchronization separately. |
-| **A notes app — your readable view** | Simple explanations, linked knowledge, progress and roadmaps. | Understand the project without reading technical logs. Use Obsidian or another Markdown-friendly app. |
+The release does not implement the entire proposed optimization roadmap. Its original artifact evidence covers targeted product tests, installed-wheel checks and managed 1.8.4 update/rollback checks on Ubuntu with Python 3.12. [Release status and limitations](docs/releases.md) distinguishes that evidence from later source-CI results.
 
-GitHub holds only committed and pushed files; keep separate backups for untracked, large or sensitive data. Never put private knowledge in a public repository. The notes app is a presentation layer, not a second OPENCNTX store. Your AI host decides how to use stored skills and instructions; installing OPENCNTX does not automatically enable GitHub or notes-app synchronization.
+## Start with one task
 
-## From a question to a finished step
+[Get started](docs/start-here.md) with the [installation guide](docs/install-and-update.md). Inside a small project:
 
-![Choose a task, load relevant context, work and verify, save evidence, then continue.](assets/docs/task-journey.svg)
-
-1. **Choose the next task:** goal, current step and relevant decisions.
-2. **Give AI useful context:** preview selected files and build a small package.
-3. **Work and check:** you or your AI tool perform the task and verify the result.
-4. **Save and continue:** record evidence and preserve the next step.
-
-OPENCNTX packages and verifies files. v1.8.4 also provides a local knowledge
-layer for hierarchical sources, full-text search, typed links, explainable
-results, technique memory, safe adoption and provider-neutral footers. See the [knowledge layer
-guide](docs/knowledge-layer.md). It does not run an AI or interpret chat intent.
-
-## Small fix or mega project?
-
-Task size sets the level of detail. **Its relationship to the existing goal determines whether a new child roadmap is needed.**
-
-| Work size | Example | Follow-up |
-|---|---|---|
-| **Small** | A setting or paragraph. | One check in the relevant existing roadmap; verify and close. |
-| **Medium** | A few connected changes. | A short prepare → implement → check checklist in the active roadmap. |
-| **Large** | An independent feature or migration. | A child roadmap for a distinct outcome; extend the current child for related work. |
-| **Mega** | Several independent deliverables. | One master, child roadmaps, dependencies and evidenced checkpoints. |
-
-```mermaid
-flowchart TD
-    M["Project master"] --> A["Child A: current outcome"]
-    M --> B["Child B: independent outcome"]
-    A --> C["Current step + relevant context"]
-    C --> D["Work → verify → save evidence"]
-    D --> E["Next step or completed outcome"]
-    C -. "Side question" .-> P["Remember return step"]
-    P -. "Resume" .-> C
-```
-
-A new chat resumes saved work; it does not by itself require another roadmap. Your host must connect its work to the saved state. [Roadmap rules](docs/project-roadmaps.md) · [Continuity example](docs/continuity.md)
-
-## A knowledge base you can actually read
-Keep short summaries, decisions and linked roadmaps in your notes app, with
-technical evidence one link away. [Explore the visual tour](docs/visual-tour.md).
-
-## Start in minutes
-
-With Python 3.11–3.14, Git and pipx available:
-
-```powershell
-pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.4/opencntx-1.8.4-py3-none-any.whl"
-opencntx --version
-```
-
-Inside a small project:
-
-```powershell
+```text
 opencntx init
 opencntx pack --preview
 opencntx pack
 opencntx verify
 ```
 
-Choose files in `opencntx.toml` and inspect `.opencntx/latest/CONTEXT.md` before sharing. [Get started](docs/start-here.md) covers installation, configuration and removal. No account, API key or built-in model is required.
+Choose files in `opencntx.toml` and inspect `.opencntx/latest/CONTEXT.md` before sharing. [Core commands](docs/core.md) explains this route.
 
-## Go deeper when you need to
+For optional indexed search:
 
-| Question | Guide |
+```text
+opencntx knowledge index build --root .
+opencntx preview-search "your query" --root . --compact --delivery-report
+```
+
+The ordinary `knowledge index search` route remains available. Compact JSON preserves the result fields; smaller output is not a measured provider-token or billing guarantee.
+
+## Read only what you need
+
+| Goal | Guide |
 |---|---|
-| How does a context package work? | [How it works](docs/how-it-works.md) |
-| Where do knowledge, instructions and tasks live? | [Workspace](docs/workspace.md) |
-| Which command or recovery route do I need? | [Install or update](docs/install-and-update.md) · [Commands](docs/commands.md) · [Troubleshooting](docs/troubleshooting.md) |
-| What is delivered versus planned? | [Releases](docs/releases.md) · [Roadmap](docs/roadmap.md) |
+| Install, update or recover | [Install and update](docs/install-and-update.md) |
+| Understand context selection | [How it works](docs/how-it-works.md) |
+| Use optional project features | [Documentation](docs/README.md) · [Commands](docs/commands.md) |
+| See delivered behavior and remaining work | [Releases](docs/releases.md) · [Current work](docs/roadmap.md) |
+| Investigate earlier versions | [History and maintenance](docs/history.md) |
 
-Verification proves matching bytes, not truth or task success. You decide what leaves your computer. [Security](docs/security.md) · [Private vulnerability reporting](SECURITY.md)
+## Boundaries
 
-[Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) · [Visual system](docs/visual-system.md) · [Changelog](CHANGELOG.md) · [Apache-2.0](LICENSE)
+OPENCNTX does not contain or run an AI model. It does not automatically activate chat hooks, synchronize a notes app or send project files to a provider. Optional integrations need separate configuration and authorization. Verification proves matching bytes, not truth or task success.
+
+The exact downloadable source is tagged `v1.8.5`. Maintenance on `main` may update documentation and verification tooling without changing the released runtime or replacing its immutable artifacts.
+
+[Workspace](docs/workspace.md) · [Visual system](docs/visual-system.md) · [Security](docs/security.md) · [Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) · [License](LICENSE)
