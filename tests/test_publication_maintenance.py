@@ -53,6 +53,46 @@ class MaintenanceBoundaryTests(unittest.TestCase):
         ):
             inspect_maintenance(Path("."))
 
+    def test_actual_checkout_matches_the_published_runtime(self) -> None:
+        from publication_maintenance import inspect_maintenance
+        from release_version_gate import inspect_current_version_surfaces
+
+        root = Path(__file__).resolve().parents[1]
+        result = inspect_maintenance(root)
+        self.assertEqual("RELEASE_RUNTIME_ALIGNED_MAINTENANCE", result["result"])
+        self.assertFalse(result["artifact_equivalence_claimed"])
+        self.assertEqual(12, inspect_current_version_surfaces(root)["surface_count"])
+
+    def test_newer_stable_tag_blocks_stale_maintenance(self) -> None:
+        from publication_maintenance import inspect_maintenance
+        from release_version_gate import ReleaseVersionError, StableVersion
+
+        root = Path(__file__).resolve().parents[1]
+        with (
+            patch("publication_maintenance._stable_tags", return_value={
+                StableVersion.parse("9.9.9"): "v9.9.9"
+            }),
+            self.assertRaisesRegex(ReleaseVersionError, "latest stable"),
+        ):
+            inspect_maintenance(root)
+
+    def test_runtime_diff_blocks_a_same_version_maintenance_claim(self) -> None:
+        from publication_maintenance import inspect_maintenance
+        from release_version_gate import ReleaseVersionError
+
+        real_git = _module._git
+
+        def changed_runtime(root: Path, *args: str) -> str:
+            if args[:2] == ("diff", "--name-only"):
+                return "src/opencntx/cli.py"
+            return real_git(root, *args)
+
+        with (
+            patch("publication_maintenance._git", side_effect=changed_runtime),
+            self.assertRaisesRegex(ReleaseVersionError, "runtime or packaging"),
+        ):
+            inspect_maintenance(Path(__file__).resolve().parents[1])
+
 
 if __name__ == "__main__":
     unittest.main()
