@@ -31,22 +31,37 @@ The instructions below target v1.8.5. Check the matching
 [GitHub Release](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5)
 for published availability; a source checkout or PR is not a release.
 
-## 2. Install the Stable release
+## 2. Install the current release
 
 Install immutable `v1.8.5` only after its exact Git tag and matching
 GitHub Release are published. OPENCNTX is not published on PyPI or
 TestPyPI.
 
-With `pipx` available, install the verified release wheel:
+With `pipx` available, download the wheel to a unique temporary path and
+verify its pinned SHA-256 before installing:
 
 ```powershell
-pipx install "https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5/opencntx-1.8.5-py3-none-any.whl"
-opencntx --version
+$ErrorActionPreference = 'Stop'
+$release = 'https://github.com/CNTX-PROJECT/OPENCNTX/releases/download/v1.8.5'
+$asset = 'opencntx-1.8.5-py3-none-any.whl'
+$expected = '83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce'
+$download = Join-Path $env:TEMP ("opencntx-1.8.5-" + [guid]::NewGuid().ToString('N') + '.whl')
+try {
+    Invoke-WebRequest -Uri "$release/$asset" -OutFile $download
+    $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($actual -ne $expected) { throw 'OPENCNTX wheel checksum mismatch' }
+    pipx install $download
+    if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX installation failed' }
+    opencntx --version
+    if ($LASTEXITCODE -ne 0) { throw 'OPENCNTX version check failed' }
+} finally {
+    Remove-Item -LiteralPath $download -Force -ErrorAction SilentlyContinue
+}
 opencntx --help
 ```
 
-Verify `SHA256SUMS` first when installing a downloaded wheel. The following source-checkout routes remain
-available when `pipx` is not the intended environment.
+For an existing managed installation, use the [managed update guide](install-and-update.md).
+The following source-checkout routes are available when `pipx` is not the intended environment.
 
 ### Windows
 
@@ -89,7 +104,7 @@ opencntx --help
 opencntx --version
 ```
 
-The Stable release prints exactly `opencntx 1.8.5`.
+The published release prints exactly `opencntx 1.8.5`.
 
 ## 4. Open a small project
 

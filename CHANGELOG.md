@@ -4,7 +4,7 @@
 
 Regular release: optional compact JSON output through `preview-search --compact`, retaining the existing engine and managed installer. [Release scope](docs/release-1.8.5.md) and [current status](docs/releases.md) describe the original artifact's limited qualification. The live source workflow is `CI_ACTIVE`; source checks do not retroactively change an immutable build record.
 
-Publication maintenance aligns current guides, separates historical navigation, retains local compatibility inputs and checks links and runtime identity. It does not replace published artifacts or implement all proposed product optimizations.
+Publication maintenance aligns current guides, separates historical navigation, retains local compatibility inputs and checks links and runtime identity. The audit also makes quick-install examples verify the published wheel hash, labels 1.8.5 as a regular limited-scope release, and distinguishes the retained preview tag from a current GitHub Release entry. It does not replace published artifacts or implement all proposed product optimizations.
 
 
 All notable OPENCNTX changes are recorded here.
