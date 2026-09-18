@@ -347,7 +347,10 @@ class PublicQualityTests(unittest.TestCase):
         self.assertIn(
             "path is the default route", (DOCS / "start-here.md").read_text(encoding="utf-8")
         )
-        self.assertLess(index.index("## Main routes"), index.index("## Optional project features"))
+        self.assertLess(
+            index.index("## Core package guides"),
+            index.index("## Stable workspace guides"),
+        )
 
     def test_layout_and_continuity_quick_routes_are_complete(self) -> None:
         layout = (DOCS / "layout.md").read_text(encoding="utf-8")
