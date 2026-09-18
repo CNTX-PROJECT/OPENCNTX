@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencntx"
-version = "1.8.5"
+version = "1.8.6"
 description = "Local, bounded context packages with optional compact search output."
-readme = "docs/release-1.8.5.md"
+readme = "docs/release-1.8.6.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -83,4 +83,4 @@ show_missing = true
 
 [tool.opencntx.release]
 published_version = "1.8.5"
-status = "published"
+status = "local-candidate"

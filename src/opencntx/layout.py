@@ -287,7 +287,18 @@ def _audit_root(
     duplicates: dict[str, list[tuple[str, str]]] = {}
     stop = contract["stop_rule"]
     duplicate_policy = contract["duplicate_ownership"]
-    for current, child_dirs, child_files in os.walk(root, topdown=True, followlinks=False):
+
+    def walk_error(error: OSError) -> None:
+        failed_path = Path(error.filename) if error.filename else root
+        try:
+            relative = failed_path.relative_to(root).as_posix()
+        except ValueError:
+            relative = "."
+        findings.append(_finding("SCAN_UNREADABLE", root_id, relative, "Cannot scan directory."))
+
+    for current, child_dirs, child_files in os.walk(
+        root, topdown=True, followlinks=False, onerror=walk_error
+    ):
         child_dirs.sort()
         child_files.sort()
         current_path = Path(current)

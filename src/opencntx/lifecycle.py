@@ -530,7 +530,16 @@ def _safe_files(root: Path) -> list[Path]:
             raise LifecycleError(
                 "Managed storage contains an unsafe top-level path.", code="lifecycle_path_unsafe"
             )
-        for current_text, directories, names in os.walk(top, topdown=True, followlinks=False):
+
+        def fail_on_scan_error(error: OSError) -> None:
+            raise LifecycleError(
+                "Managed storage could not be measured safely.",
+                code="lifecycle_storage_changed",
+            ) from error
+
+        for current_text, directories, names in os.walk(
+            top, topdown=True, followlinks=False, onerror=fail_on_scan_error
+        ):
             current = Path(current_text)
             safe_directories: list[str] = []
             for directory_name in sorted(directories):

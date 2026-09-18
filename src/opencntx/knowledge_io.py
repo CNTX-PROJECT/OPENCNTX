@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import re
 import stat
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -74,6 +74,108 @@ def safe_output(path: Path) -> Path:
     if existing != anchor:
         safe_path(anchor, existing.relative_to(anchor).as_posix(), directory=existing != selected)
     return selected
+
+
+def paths_alias(left: Path, right: Path) -> bool:
+    """Return whether two paths address the same filesystem object or location."""
+    first = left.expanduser().absolute()
+    second = right.expanduser().absolute()
+    try:
+        if os.path.samefile(first, second):
+            return True
+    except (OSError, RuntimeError, ValueError):
+        pass
+    try:
+        normalized_first = first.resolve(strict=False)
+        normalized_second = second.resolve(strict=False)
+    except (OSError, RuntimeError):
+        normalized_first = first
+        normalized_second = second
+    return os.path.normcase(os.path.normpath(os.fspath(normalized_first))) == os.path.normcase(
+        os.path.normpath(os.fspath(normalized_second))
+    )
+
+
+def validate_output_paths(
+    root: Path,
+    outputs: Iterable[Path],
+    *,
+    source_paths: Iterable[Path] = (),
+    replaceable_paths: Iterable[Path] = (),
+    reserved_paths: Iterable[Path] = (),
+) -> list[Path]:
+    """Reject output collisions before an index projection can replace a file."""
+    selected_root = root.resolve(strict=True)
+    destinations = [safe_output(path) for path in outputs]
+    sources = tuple(source_paths)
+    replaceable = tuple(replaceable_paths)
+    reserved = tuple(reserved_paths)
+    for index, destination in enumerate(destinations):
+        for other in destinations[index + 1 :]:
+            if paths_alias(destination, other):
+                raise KnowledgeError("Index outputs must not alias one another.")
+        for source in sources:
+            if paths_alias(destination, source):
+                raise KnowledgeError("Index output must not replace a project source file.")
+        for protected in reserved:
+            if paths_alias(destination, protected):
+                raise KnowledgeError("Index output conflicts with another managed product file.")
+
+        try:
+            relative = destination.relative_to(selected_root)
+        except ValueError:
+            relative = None
+        if relative is not None:
+            if len(relative.parts) < 2 or relative.parts[0].casefold() != ".opencntx":
+                raise KnowledgeError("Index output must not replace project-owned data.")
+            if len(relative.parts) > 1 and relative.parts[1].casefold() in {
+                "derived",
+                "executors",
+                "latest",
+                "lifecycle",
+                "receipts",
+                "recovery",
+                "transactions",
+            }:
+                raise KnowledgeError("Index output must not replace managed owner data.")
+
+        try:
+            info = destination.lstat()
+        except FileNotFoundError:
+            continue
+        except OSError as exc:
+            raise KnowledgeError("Index output metadata is unavailable.") from exc
+        if not stat.S_ISREG(info.st_mode):
+            raise KnowledgeError("Index output must be a regular file.")
+        if info.st_nlink > 1:
+            raise KnowledgeError("Index output must not be a hard link.")
+
+        if relative is None:
+            continue
+        if not any(paths_alias(destination, allowed) for allowed in replaceable):
+            raise KnowledgeError("Index output must not replace an unrelated product file.")
+    return destinations
+
+
+def raise_walk_error(error: OSError) -> None:
+    """Turn os.walk scan failures into fail-closed knowledge errors."""
+    filename = error.filename
+    if filename is None:
+        raise KnowledgeError("Source enumeration failed because a directory could not be read.") from error
+    try:
+        display_path = os.fsdecode(filename)
+    except (TypeError, ValueError):
+        display_path = "an unreadable directory"
+    raise KnowledgeError(f"Source enumeration failed for {display_path}.") from error
+
+
+def is_link_or_reparse(path: Path) -> bool:
+    """Recognize symbolic links and Windows junctions without following them."""
+    try:
+        info = path.lstat()
+    except OSError as exc:
+        raise KnowledgeError(f"Source path metadata is unavailable: {path}.") from exc
+    return stat.S_ISLNK(info.st_mode) or bool(getattr(info, "st_file_attributes", 0) & 0x0400)
 
 
 def check_delivery(relative: str, text: str, digest: str) -> None:

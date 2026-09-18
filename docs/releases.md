@@ -10,6 +10,14 @@ roadmap checkbox is never a substitute for release evidence.
 
 Release verification is live in the public workflow (`CI_ACTIVE`).
 
+## Local candidate: v1.8.6
+
+The 1.8.6 candidate hardens local directory scans and prevents index outputs
+from replacing project data. It preserves the existing OCX v1 formats and
+managed-install route. The candidate is not yet a downloadable regular release;
+v1.8.5 remains the current published package until the 1.8.6 source and
+artifacts are qualified and published. See the [1.8.6 scope](release-1.8.6.md).
+
 ## Published package: v1.8.5
 
 [Download v1.8.5](https://github.com/CNTX-PROJECT/OPENCNTX/releases/tag/v1.8.5) ·

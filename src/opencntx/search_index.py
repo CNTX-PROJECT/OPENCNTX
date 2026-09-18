@@ -33,9 +33,13 @@ from .knowledge_io import (
     MAX_SCAN_ENTRIES,
     bounded_read,
     check_delivery,
+    is_link_or_reparse,
+    paths_alias,
     publication_lock,
+    raise_walk_error,
     safe_output,
     safe_path,
+    validate_output_paths,
 )
 
 SEARCH_INDEX_FORMAT = "ocx-search-index-v2"
@@ -128,7 +132,9 @@ def _candidate_paths(
     candidates: list[SearchCandidate] = []
     total_bytes = 0
     visited_entries = 0
-    for current, directories, names in os.walk(root, topdown=True, followlinks=False):
+    for current, directories, names in os.walk(
+        root, topdown=True, followlinks=False, onerror=raise_walk_error
+    ):
         visited_entries += len(directories) + len(names)
         if visited_entries > MAX_SCAN_ENTRIES:
             raise KnowledgeError("Source enumeration exceeds the entry budget.")
@@ -136,12 +142,13 @@ def _candidate_paths(
         directories[:] = sorted(
             name
             for name in directories
-            if name not in SEARCH_SKIP_DIRECTORIES and not (current_path / name).is_symlink()
+            if name not in SEARCH_SKIP_DIRECTORIES
+            and not is_link_or_reparse(current_path / name)
         )
         for name in sorted(names):
             path = current_path / name
             relative = _relative(root, path)
-            if path.is_symlink() or path.suffix.lower() not in TEXT_SUFFIXES:
+            if is_link_or_reparse(path) or path.suffix.lower() not in TEXT_SUFFIXES:
                 continue
             if len(PurePosixPath(relative).parts) > max_depth:
                 raise KnowledgeError(f"Source depth exceeds max_depth: {relative}")
@@ -360,6 +367,47 @@ def _fts5_available() -> bool:
 
 def _database_path(root: Path, index: Path | None) -> Path:
     return safe_output(index or root / ".opencntx" / SEARCH_INDEX_FILENAME)
+
+
+def _validated_search_outputs(
+    root: Path,
+    destination: Path,
+    legacy_output: Path | None,
+    *,
+    source_paths: list[Path] | None = None,
+) -> tuple[Path, Path | None]:
+    """Validate both projections together before any index publication begins."""
+    sources = source_paths or []
+    store = root / ".opencntx"
+    destination = validate_output_paths(
+        root,
+        [destination],
+        source_paths=sources,
+        replaceable_paths=[store / SEARCH_INDEX_FILENAME, destination],
+        reserved_paths=[
+            store / "adoption-v1.json",
+            store / "catalog.sqlite",
+            store / "index-v1.json",
+            store / "search-v2.json",
+        ],
+    )[0]
+    if legacy_output is None:
+        return destination, None
+    legacy_output = validate_output_paths(
+        root,
+        [legacy_output],
+        source_paths=sources,
+        replaceable_paths=[store / "index-v1.json", legacy_output],
+        reserved_paths=[
+            store / "adoption-v1.json",
+            store / "catalog.sqlite",
+            store / SEARCH_INDEX_FILENAME,
+            store / "search-v2.json",
+        ],
+    )[0]
+    if paths_alias(destination, legacy_output):
+        raise KnowledgeError("Index outputs must not alias one another.")
+    return destination, legacy_output
 
 
 def _meta_read(connection: sqlite3.Connection) -> dict[str, Any]:
@@ -690,6 +738,9 @@ def build_search_index(
     selected_root = _root(root)
     scope = _scope(max_files=max_files, max_bytes=max_bytes, max_depth=max_depth)
     destination = _database_path(selected_root, index)
+    destination, legacy_output = _validated_search_outputs(
+        selected_root, destination, legacy_output
+    )
     store = safe_path(selected_root, ".opencntx", directory=True)
     if store.is_symlink() or (store.exists() and not store.is_dir()):
         raise KnowledgeError("The project metadata store is not a safe product-owned directory.")
@@ -717,6 +768,12 @@ def build_search_index(
         max_files=max_files,
         max_bytes=max_bytes,
         max_depth=max_depth,
+    )
+    destination, legacy_output = _validated_search_outputs(
+        selected_root,
+        destination,
+        legacy_output,
+        source_paths=[candidate.path for candidate in candidates],
     )
     previous = _previous_documents(
         destination, root=selected_root, scope_digest=_scope_digest(scope)

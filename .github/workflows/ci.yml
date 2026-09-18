@@ -107,6 +107,8 @@ jobs:
           - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.3"}
           - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.4"}
           - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.4"}
+          - {os: ubuntu-latest, python-version: "3.12", baseline-version: "1.8.5"}
+          - {os: windows-latest, python-version: "3.12", baseline-version: "1.8.5"}
     env:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUTF8: "1"
@@ -149,6 +151,7 @@ jobs:
               "1.8.2": "527de5197a231365bbf55dc36fe407956548f963f5dbd34fa4f54e3c2e226554",
               "1.8.3": "ae65a2885250c140c142b9d9a21521a91248c9128f7d9967d7ff44ec92b1005f",
               "1.8.4": "b3fe658c5071b17e1835be65cc10df3c025dd03677c1be45c9b8aeb977d011d9",
+              "1.8.5": "83f653461d8718a73451bce8769177b166b06f045eb49cd59fc9edebb16cb5ce",
           }
           baseline = pathlib.Path(f"dist/opencntx-{version}-py3-none-any.whl")
           if version == "1.7.6":
@@ -174,16 +177,16 @@ jobs:
       - name: Require update, rollback, reapply, resume, and cleanup
         run: >-
           python tools/managed_install_acceptance.py
-          --candidate dist/opencntx-1.8.5-py3-none-any.whl
+          --candidate dist/opencntx-1.8.6-py3-none-any.whl
           --baseline dist/opencntx-${{ matrix.baseline-version }}-py3-none-any.whl
-          --expected-candidate 1.8.5
+          --expected-candidate 1.8.6
           --expected-baseline ${{ matrix.baseline-version }}
           --expected-baseline-sha256 ${{ env.BASELINE_SHA256 }}
       - name: Preserve existing projects through update and failed activation
         if: matrix.python-version == '3.12'
         run: >-
           python tests/r12_install_simulator.py
-          --candidate dist/opencntx-1.8.5-py3-none-any.whl
+          --candidate dist/opencntx-1.8.6-py3-none-any.whl
           --baseline dist/opencntx-${{ matrix.baseline-version }}-py3-none-any.whl
           --cycles 4
 
@@ -289,7 +292,19 @@ jobs:
         if: >-
           matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13' &&
           github.event_name != 'pull_request'
-        run: python tools/release_version_gate.py --repository . --maintenance
+        shell: python {0}
+        run: |
+          import pathlib
+          import subprocess
+          import sys
+          import tomllib
+
+          with pathlib.Path("pyproject.toml").open("rb") as project_file:
+              release = tomllib.load(project_file)["tool"]["opencntx"]["release"]
+          command = [sys.executable, "tools/release_version_gate.py", "--repository", "."]
+          if release.get("status") != "local-candidate":
+              command.append("--maintenance")
+          subprocess.run(command, check=True)
 
       - name: Verify public navigation and baseline fixture hashes
         run: python tools/publication_links.py

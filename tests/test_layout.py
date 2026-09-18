@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from opencntx.core import OpenCntxError
 from opencntx.layout import SCHEMA_ID, audit_layout, load_order_contract
@@ -138,6 +139,29 @@ class LayoutContractTests(unittest.TestCase):
 
             self.assertEqual("STOPPED", report.status)
             self.assertIn("SCAN_BOUND_REACHED", {item.code for item in report.findings})
+
+    def test_walk_error_is_reported_and_cannot_return_green(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            base = Path(temporary_directory)
+            project = base / "PROJECT"
+            project.mkdir()
+            unreadable = project / "UNREADABLE"
+            contract = write_contract(base)
+
+            def failing_walk(root: Path, *, topdown: bool, followlinks: bool, onerror):
+                self.assertTrue(topdown)
+                self.assertFalse(followlinks)
+                onerror(PermissionError(13, "Permission denied", str(unreadable)))
+                yield str(root), [], []
+
+            with patch("opencntx.layout.os.walk", side_effect=failing_walk):
+                report = audit_layout(contract, base)
+
+            self.assertEqual("NEEDS_ACTION", report.status)
+            self.assertIn(
+                ("SCAN_UNREADABLE", "UNREADABLE"),
+                {(finding.code, finding.path) for finding in report.findings},
+            )
 
     def test_contract_is_closed_versioned_and_rejects_duplicate_keys(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
